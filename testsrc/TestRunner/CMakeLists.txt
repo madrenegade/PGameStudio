@@ -1,0 +1,19 @@
+cmake_minimum_required (VERSION 2.8)
+project (TestRunner)
+
+include("../../common.cmake")
+
+file(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/*")
+
+find_package(GTEST REQUIRED)
+
+add_executable(TestRunner ${Project_Sources})
+
+add_dependencies(TestRunner MathTests CoreTests)
+
+target_link_libraries(TestRunner
+    ${GTEST_LIBRARIES}
+    MathTests
+    CoreTests
+)
+
