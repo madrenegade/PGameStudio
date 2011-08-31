@@ -4,7 +4,9 @@ project (UtilitiesTests)
 include("../../common.cmake")
 include_directories(${SRC_DIR}/Utilities)
 
-file(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/Utilities/*")
+file(GLOB Project_Sources 
+    "${PROJECT_SOURCE_DIR}/Utilities/*"
+    "${PROJECT_SOURCE_DIR}/Utilities/Memory/*")
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 

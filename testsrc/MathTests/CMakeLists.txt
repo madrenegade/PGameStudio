@@ -11,6 +11,6 @@ add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 add_dependencies(${PROJECT_NAME} Math)
 
 target_link_libraries(${PROJECT_NAME}
-    PGameStudio.Math  
+    Math  
 )
 

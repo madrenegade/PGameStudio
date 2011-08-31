@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 SUBDIRS(Math)
 SUBDIRS(Utilities)
-SUBDIRS(Core)
+#SUBDIRS(Core)
 
-SUBDIRS(Platform.Linux)
+#SUBDIRS(Platform.Linux)
 
 #SUBDIRS(Input)
 
@@ -33,5 +33,5 @@ SUBDIRS(Platform.Linux)
 
 #SUBDIRS(Particles)
 
-SUBDIRS(Game)
-SUBDIRS(Demo)
+#SUBDIRS(Game)
+#SUBDIRS(Demo)

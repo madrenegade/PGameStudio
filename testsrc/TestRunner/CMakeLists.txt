@@ -9,11 +9,11 @@ find_package(GTEST REQUIRED)
 
 add_executable(TestRunner ${Project_Sources})
 
-add_dependencies(TestRunner MathTests CoreTests)
+add_dependencies(TestRunner MathTests UtilitiesTests)
 
 target_link_libraries(TestRunner
     ${GTEST_LIBRARIES}
     MathTests
-    CoreTests
+    UtilitiesTests
 )
 

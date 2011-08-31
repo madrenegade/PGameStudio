@@ -6,3 +6,7 @@ cmake_install.cmake
 *.cbp
 Project.layout
 bin
+/nbproject/private/
+/build/src/
+/build/testsrc/
+nbproject

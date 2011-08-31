@@ -3,6 +3,14 @@ project (Utilities)
 
 include("../../common.cmake")
 
-file(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*")
+file(GLOB Project_Sources 
+	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
+	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/*")
+
+find_package(GLOG REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
+
+target_link_libraries(${PROJECT_NAME}
+    ${GLOG_LIBRARIES}
+)

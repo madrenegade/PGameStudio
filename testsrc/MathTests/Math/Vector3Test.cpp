@@ -152,17 +152,40 @@ TEST(Vector3Test, Length0_0_Minus3)
     EXPECT_EQ(3, v.Length());
 }
 
-TEST(Vector3Test, LenghtSquared)
+TEST(Vector3Test, LenghtSquared1_0_0)
 {
-    FAIL();
+    const Vector3 v(1, 0, 0);
+    EXPECT_EQ(1, v.LengthSquared());
+}
+
+TEST(Vector3Test, LenghtSquared0_4_0)
+{
+    const Vector3 v(0, 4, 0);
+    EXPECT_EQ(16, v.LengthSquared());
+}
+
+TEST(Vector3Test, LenghtSquared0_0_Minus3)
+{
+    const Vector3 v(0, 0, -3);
+    EXPECT_EQ(9, v.LengthSquared());
 }
 
 TEST(Vector3Test, CrossProduct)
 {
-    FAIL();
+    const Vector3 v1(3, -3, 1);
+    const Vector3 v2(4, 9, 2);
+    
+    const Vector3 result(v1.Cross(v2));
+    
+    EXPECT_EQ(-15, result.X);
+    EXPECT_EQ(-2, result.Y);
+    EXPECT_EQ(39, result.Z);
 }
 
 TEST(Vector3Test, DotProduct)
 {
-    FAIL();
+    const Vector3 v1(10, 2, 30);
+    const Vector3 v2(3, 9, 4);
+    
+    EXPECT_EQ(168, v1.Dot(v2));
 }
