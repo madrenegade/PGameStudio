@@ -12,6 +12,7 @@ namespace Utilities
 		{
 		public:
             MemoryTracker();
+            ~MemoryTracker();
             
             void trackAllocation(void* ptr, size_t bytes, const std::type_info& type);
             void trackDeallocation(void* ptr, size_t bytes, const std::type_info& type);
@@ -27,7 +28,8 @@ namespace Utilities
             void assertThatPointerIsTracked(const AllocationInfo& actual) const;
             void assertDetailsMatch(const AllocationInfo& expected, const AllocationInfo& actual) const;
 
-            std::map<const void*, AllocationInfo> blocks;
+            typedef std::map<const void*, AllocationInfo> BlockMap;
+            BlockMap blocks;
 
             size_t memorySize;
 		};

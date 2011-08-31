@@ -21,6 +21,12 @@ namespace Utilities
         {
         public:
             MemoryManager(size_t threshold, size_t maxMemoryForSmallObjects, size_t maxMemoryForLargeObjects);
+            
+            template<typename T>
+            T* construct(const T& obj)
+            {
+                return new (allocate<T>(1)) T(obj);
+            }
 
             template<typename T>
             T* allocate(size_t n)

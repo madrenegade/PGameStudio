@@ -1,6 +1,7 @@
 #include "Utilities/Memory/MemoryTracker.h"
 #include "AbstractMemoryManager.h"
 #include "AllocationException.h"
+#include "MemoryManager.h"
 #include <glog/logging.h>
 
 namespace Utilities
@@ -12,6 +13,31 @@ namespace Utilities
         : memorySize(0)
         {
 
+        }
+        
+        MemoryTracker::~MemoryTracker()
+        {
+            if(memorySize > 0)
+            {
+                if(blocks.size() == 1)
+                {
+                    LOG(ERROR) << "1 memory leak detected (" << memorySize << " bytes)";
+                }
+                else
+                {
+                   LOG(ERROR) << blocks.size() << " memory leaks detected (" << memorySize << " bytes)"; 
+                }
+                
+                for(BlockMap::const_iterator i = blocks.begin(); i != blocks.end(); ++i)
+                {
+                    const AllocationInfo& allocationInfo(i->second);
+                    
+                    VLOG(1) << "Memory leak information" << std::endl
+                        << "Address " << allocationInfo.getPointer() << std::endl
+                        << "Size: " << allocationInfo.getSize() << std::endl
+                        << "Type: " << allocationInfo.getType();
+                }
+            }
         }
 
         void MemoryTracker::trackAllocation(void* ptr, size_t bytes, const std::type_info& type)

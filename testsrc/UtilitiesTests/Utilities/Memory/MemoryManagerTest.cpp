@@ -31,7 +31,7 @@ TEST(MemoryManagerTest, allocate)
 {
     MemoryManager memory(2, 1, 4);
     
-    int* ptr = new(memory.allocate<int>(1)) int(5);
+    int* ptr = memory.construct(static_cast<int>(5));
     
     EXPECT_EQ(5, *ptr);
 }
