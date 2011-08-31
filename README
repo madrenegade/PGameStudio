@@ -1,5 +1,5 @@
 Build instructions
 ------------------
-mkdir build
+./clean.sh
 cd build
 cmake -G "CodeBlocks - Unix Makefiles" ..
