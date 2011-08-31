@@ -5,8 +5,8 @@
  * Created on August 31, 2011, 3:01 PM
  */
 
-#ifndef ALLOCATIONEXCEPTION_H
-#define	ALLOCATIONEXCEPTION_H
+#ifndef UTILITIES_MEMORY_ALLOCATIONEXCEPTION_H
+#define	UTILITIES_MEMORY_ALLOCATIONEXCEPTION_H
 
 #include <stdexcept>
 
@@ -24,5 +24,5 @@ namespace Utilities
 }
 
 
-#endif	/* ALLOCATIONEXCEPTION_H */
+#endif	/* UTILITIES_MEMORY_ALLOCATIONEXCEPTION_H */
 

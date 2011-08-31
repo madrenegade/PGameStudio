@@ -7,10 +7,13 @@ namespace Utilities
 {
 	namespace Memory
 	{
-	    template<typename T>
 	    class SmallObjectMemoryManager : public AbstractMemoryManager
 	    {
-
+        public:
+            SmallObjectMemoryManager(size_t maxMemory);
+            
+            virtual pointer allocate(size_t n, unsigned char prealloc);
+			virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n);
 	    };
 	}
 }

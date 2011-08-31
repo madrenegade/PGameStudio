@@ -4,6 +4,8 @@
 #include <typeinfo>
 #include "Utilities/Memory/MemoryTracker.h"
 
+#include <glog/logging.h>
+
 namespace Utilities
 {
 	namespace Memory
@@ -11,47 +13,30 @@ namespace Utilities
 		class AbstractMemoryManager
 		{
 		public:
+            typedef unsigned char* pointer;
+            typedef const unsigned char* const_pointer;
+            
 			virtual ~AbstractMemoryManager();
-
-			template<typename T>
-			T* allocate(size_t n)
-			{
-			    const size_t BYTES_TO_ALLOCATE = n * sizeof(T);
-
-			    #ifdef DEBUG
-			    void* ptr = allocate(BYTES_TO_ALLOCATE, PREALLOCATION_BYTE);
-			    #else
-			    void* ptr = allocate(BYTES_TO_ALLOCATE, 0);
-			    #endif
-
-			    memoryTracker.trackAllocation(ptr, BYTES_TO_ALLOCATE, typeid(T));
-
-                return reinterpret_cast<T*>(ptr);
-			}
-
-			template<typename T>
-			void deallocate(T* ptr, size_t n)
-			{
-			    const size_t BYTES_TO_DEALLOCATE = n * sizeof(T);
-
-			    deallocate(reinterpret_cast<void*>(ptr), BYTES_TO_DEALLOCATE);
-
-			    memoryTracker.trackDeallocation(ptr, BYTES_TO_DEALLOCATE, typeid(T));
-			}
-
+            
+			virtual pointer allocate(size_t n, unsigned char prealloc) = 0;
+			virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n) = 0;
+            
+            const size_t getMaxMemory() const;
+            
+            virtual const size_t getFreeMemory() const;
+            
+            MemoryTracker* getTracker();
+            
 		protected:
-			AbstractMemoryManager();
-
-			// allocate n bytes
-			virtual void* allocate(size_t n, unsigned char prealloc) = 0;
-
-			// deallocate n bytes
-			virtual void deallocate(void* ptr, size_t n) = 0;
-
-        private:
-            static const unsigned char PREALLOCATION_BYTE = 'a';
-
+			AbstractMemoryManager(size_t maxMemory);
+            
+            void setMemory(unsigned char* ptr, size_t n, unsigned char to) const;
+            
+            const size_t maxMemory;
+            
             MemoryTracker memoryTracker;
+            
+            static const unsigned char PREALLOCATION_BYTE = 'a';
 		};
 	}
 }
