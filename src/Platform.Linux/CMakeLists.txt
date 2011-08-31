@@ -3,6 +3,8 @@ project (Platform.Linux)
 
 include("../../common.cmake")
 
-file(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*")
+file(GLOB Project_Sources 
+	"${PROJECT_SOURCE_DIR}/Platform/*"
+	"${PROJECT_SOURCE_DIR}/Platform/Linux/*")
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})

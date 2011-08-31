@@ -6,32 +6,32 @@ SUBDIRS(Core)
 
 SUBDIRS(Platform.Linux)
 
-SUBDIRS(Input)
+#SUBDIRS(Input)
 
-SUBDIRS(Geometry)
-SUBDIRS(Graphics)
-SUBDIRS(GUI)
+#SUBDIRS(Geometry)
+#SUBDIRS(Graphics)
+#SUBDIRS(GUI)
 
-SUBDIRS(RenderContextLinuxOpenGL3)
-SUBDIRS(Renderer.OpenGL3)
+#SUBDIRS(RenderContextLinuxOpenGL3)
+#SUBDIRS(Renderer.OpenGL3)
 
-SUBDIRS(Scripting)
-SUBDIRS(Scripting.Lua)
-SUBDIRS(Scripting.Angelscript)
+#SUBDIRS(Scripting)
+#SUBDIRS(Scripting.Lua)
+#SUBDIRS(Scripting.Angelscript)
 
-SUBDIRS(Sound)
-SUBDIRS(Sound.OpenAL)
+#SUBDIRS(Sound)
+#SUBDIRS(Sound.OpenAL)
 
-SUBDIRS(Physics)
-SUBDIRS(Physics.Bullet)
+#SUBDIRS(Physics)
+#SUBDIRS(Physics.Bullet)
 
-SUBDIRS(Terrain)
+#SUBDIRS(Terrain)
 
-SUBDIRS(AI)
+#SUBDIRS(AI)
 
-SUBDIRS(Atmosphere)
+#SUBDIRS(Atmosphere)
 
-SUBDIRS(Particles)
+#SUBDIRS(Particles)
 
 SUBDIRS(Game)
 SUBDIRS(Demo)
