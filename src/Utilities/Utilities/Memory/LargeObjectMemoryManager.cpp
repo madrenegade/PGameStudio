@@ -18,9 +18,9 @@ namespace Utilities
             
         }
         
-        AbstractMemoryManager::pointer LargeObjectMemoryManager::allocate(size_t n, unsigned char prealloc)
+        pointer LargeObjectMemoryManager::allocate(size_t n, char prealloc)
         {
-            unsigned char* ptr = new unsigned char[n];
+            char* ptr = new char[n];
             
             setMemory(ptr, n, prealloc);
             

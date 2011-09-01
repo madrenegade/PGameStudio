@@ -23,38 +23,23 @@ namespace Utilities
             
         }
         
-        AbstractMemoryManager::pointer MemoryManager::allocate(size_t n, unsigned char prealloc)
+        pointer MemoryManager::allocate(size_t bytes, char prealloc)
         {
-            if(n <= threshold)
+            AbstractMemoryManager* manager = getManagerFor(bytes);
+            
+            if(manager->getFreeMemory() < bytes)
             {
-                if(smallObjects.getFreeMemory() < n)
-                {
-                    throw OutOfMemoryException();
-                }
-                
-                return smallObjects.allocate(n, prealloc);
+                throw OutOfMemoryException();
             }
-            else
-            {
-                if(largeObjects.getFreeMemory() < n)
-                {
-                    throw OutOfMemoryException();
-                }
                 
-                return largeObjects.allocate(n, prealloc);
-            }
+            return manager->allocate(bytes, prealloc);
         }
         
         void MemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n)
         {
-            if(n <= threshold)
-            {
-                smallObjects.deallocate(ptr, sizeOfOne, n);
-            }
-            else
-            {
-                largeObjects.deallocate(ptr, sizeOfOne, n);
-            }
+            const size_t BYTES_TO_DEALLOCATE = n * sizeOfOne;
+            
+            getManagerFor(BYTES_TO_DEALLOCATE)->deallocate(ptr, sizeOfOne, n);
         }
         
         const size_t MemoryManager::getFreeMemory() const
@@ -62,16 +47,19 @@ namespace Utilities
             return smallObjects.getFreeMemory() + largeObjects.getFreeMemory();
         }
         
-        MemoryTracker* MemoryManager::getTrackerFor(size_t bytes)
+        AbstractMemoryManager* MemoryManager::getManagerFor(size_t bytes)
         {
             if(bytes <= threshold)
             {
-                return smallObjects.getTracker();
+                return &smallObjects;
             }
-            else
-            {
-                return largeObjects.getTracker();
-            }
+            
+            return &largeObjects;
+        }
+        
+        MemoryTracker* MemoryManager::getTrackerFor(size_t bytes)
+        {
+            return getManagerFor(bytes)->getTracker();
         }
     }
 }

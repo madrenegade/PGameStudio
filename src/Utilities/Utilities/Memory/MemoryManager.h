@@ -36,16 +36,18 @@ namespace Utilities
                 VLOG(1) << "Allocating " << BYTES_TO_ALLOCATE << " bytes";
 
 #ifdef DEBUG
-                void* ptr = allocate(BYTES_TO_ALLOCATE, PREALLOCATION_BYTE);
+                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, PREALLOCATION_BYTE);
 #else
-                pointer ptr = allocate(BYTES_TO_ALLOCATE, 0);
+                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, 0);
 #endif
 
                 VLOG(1) << "Allocated " << BYTES_TO_ALLOCATE << " bytes";
+                
+                T* ptr = reinterpret_cast<T*> (rawPtr);
 
-                getTrackerFor(BYTES_TO_ALLOCATE)->trackAllocation(ptr, BYTES_TO_ALLOCATE, typeid (T));
+                getTrackerFor(BYTES_TO_ALLOCATE)->trackAllocation(ptr, BYTES_TO_ALLOCATE);
 
-                return reinterpret_cast<T*> (ptr);
+                return ptr;
             }
 
             template<typename T>
@@ -59,13 +61,13 @@ namespace Utilities
 
                 VLOG(1) << "Deallocated " << BYTES_TO_DEALLOCATE << " bytes";
 
-                getTrackerFor(BYTES_TO_DEALLOCATE)->trackDeallocation(ptr, BYTES_TO_DEALLOCATE, typeid (T));
+                getTrackerFor(BYTES_TO_DEALLOCATE)->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
             }
             
             virtual const size_t getFreeMemory() const;
 
         protected:
-            virtual pointer allocate(size_t n, unsigned char prealloc);
+            virtual pointer allocate(size_t bytes, char prealloc);
             virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n);
 
         private:
@@ -74,6 +76,7 @@ namespace Utilities
             SmallObjectMemoryManager smallObjects;
             LargeObjectMemoryManager largeObjects;
             
+            AbstractMemoryManager* getManagerFor(size_t bytes);
             MemoryTracker* getTrackerFor(size_t bytes);
         };
     }

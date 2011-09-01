@@ -27,11 +27,29 @@ TEST(MemoryManagerTest, allocateShouldFailIfLimitForLargeObjectsIsExceeded)
     ASSERT_THROW(memory.allocate<int>(3), OutOfMemoryException);
 }
 
-TEST(MemoryManagerTest, allocate)
+TEST(MemoryManagerTest, allocateLargeObject)
 {
     MemoryManager memory(2, 1, 4);
-    
-    int* ptr = memory.construct(static_cast<int>(5));
-    
+
+    int* ptr = memory.construct(static_cast<int> (5));
+
     EXPECT_EQ(5, *ptr);
+}
+
+TEST(MemoryManagerTest, allocateSmallObject)
+{
+    MemoryManager memory(4, 4, 1);
+
+    int* ptr = memory.construct(static_cast<int> (5));
+
+    EXPECT_EQ(5, *ptr);
+}
+
+TEST(MemoryManagerTest, deallocateShouldUseCorrectManager)
+{
+    MemoryManager memory(2, 8, 8);
+    
+    long* ptr = memory.construct(5L);
+    
+    EXPECT_NO_THROW(memory.deallocate<long>(ptr, 1));
 }

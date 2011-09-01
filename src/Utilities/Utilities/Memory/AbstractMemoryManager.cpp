@@ -37,7 +37,7 @@ namespace Utilities
             return &memoryTracker;
         }
         
-        void AbstractMemoryManager::setMemory(unsigned char* ptr, size_t n, unsigned char to) const
+        void AbstractMemoryManager::setMemory(pointer ptr, size_t n, char to) const
         {
             for(int i = 0; i < n; ++i)
             {

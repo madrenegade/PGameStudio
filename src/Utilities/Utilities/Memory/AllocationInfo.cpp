@@ -9,13 +9,13 @@ namespace Utilities
             
         }
         
-        AllocationInfo::AllocationInfo(const void* ptr, size_t bytes, const std::type_info& type)
+        AllocationInfo::AllocationInfo(const_pointer ptr, size_t bytes, const std::type_info& type)
         : ptr(ptr), bytes(bytes), type(type.name())
         {
             
         }
         
-        const void* AllocationInfo::getPointer() const
+        const_pointer AllocationInfo::getPointer() const
         {
             return ptr;
         }

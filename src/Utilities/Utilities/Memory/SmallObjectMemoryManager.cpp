@@ -5,12 +5,12 @@ namespace Utilities
     namespace Memory
     {
         SmallObjectMemoryManager::SmallObjectMemoryManager(size_t maxMemory)
-        : AbstractMemoryManager(maxMemory)
+        : AbstractMemoryManager(maxMemory), stackSpace(pointer[maxMemory])
         {
             
         }
         
-        AbstractMemoryManager::pointer SmallObjectMemoryManager::allocate(size_t n, unsigned char prealloc)
+        pointer SmallObjectMemoryManager::allocate(size_t n, char prealloc)
         {
         }
         

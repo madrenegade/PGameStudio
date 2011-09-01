@@ -2,9 +2,10 @@
 #define UTILITIES_MEMORY_ABSTRACTMANAGER_H
 
 #include <typeinfo>
-#include "Utilities/Memory/MemoryTracker.h"
-
 #include <glog/logging.h>
+
+#include "Utilities/Memory/MemoryTracker.h"
+#include "Utilities/Memory/typedefs.h"
 
 namespace Utilities
 {
@@ -13,12 +14,9 @@ namespace Utilities
 		class AbstractMemoryManager
 		{
 		public:
-            typedef unsigned char* pointer;
-            typedef const unsigned char* const_pointer;
-            
 			virtual ~AbstractMemoryManager();
             
-			virtual pointer allocate(size_t n, unsigned char prealloc) = 0;
+			virtual pointer allocate(size_t n, char prealloc) = 0;
 			virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n) = 0;
             
             const size_t getMaxMemory() const;
@@ -30,13 +28,13 @@ namespace Utilities
 		protected:
 			AbstractMemoryManager(size_t maxMemory);
             
-            void setMemory(unsigned char* ptr, size_t n, unsigned char to) const;
+            void setMemory(pointer ptr, size_t n, char to) const;
             
             const size_t maxMemory;
             
             MemoryTracker memoryTracker;
             
-            static const unsigned char PREALLOCATION_BYTE = 'a';
+            static const char PREALLOCATION_BYTE = 'a';
 		};
 	}
 }

@@ -40,7 +40,7 @@ namespace Utilities
             }
         }
 
-        void MemoryTracker::trackAllocation(void* ptr, size_t bytes, const std::type_info& type)
+        void MemoryTracker::trackAllocation(const_pointer ptr, size_t bytes, const std::type_info& type)
         {
             verifyUnused(ptr);
 
@@ -56,7 +56,7 @@ namespace Utilities
             memorySize += bytes;
         }
 
-        void MemoryTracker::trackDeallocation(void* ptr, size_t bytes, const std::type_info& type)
+        void MemoryTracker::trackDeallocation(const_pointer ptr, size_t bytes, const std::type_info& type)
         {
             verify(ptr, bytes, type);
 
@@ -70,7 +70,7 @@ namespace Utilities
             return memorySize;
         }
 
-        void MemoryTracker::verifyUnused(void* ptr) const
+        void MemoryTracker::verifyUnused(const_pointer ptr) const
         {
             if (isTracked(ptr))
             {
@@ -84,7 +84,7 @@ namespace Utilities
             }
         }
 
-        void MemoryTracker::verify(void* ptr, size_t bytes, const std::type_info& type) const
+        void MemoryTracker::verify(const_pointer ptr, size_t bytes, const std::type_info& type) const
         {
             const AllocationInfo actual(AllocationInfo(ptr, bytes, type));
             
@@ -131,7 +131,7 @@ namespace Utilities
             }
         }
 
-        bool MemoryTracker::isTracked(const void* ptr) const
+        bool MemoryTracker::isTracked(const_pointer ptr) const
         {
             return blocks.find(ptr) != blocks.end();
         }

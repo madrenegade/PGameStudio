@@ -5,17 +5,21 @@
 
 namespace Utilities
 {
-	namespace Memory
-	{
-	    class SmallObjectMemoryManager : public AbstractMemoryManager
-	    {
+    namespace Memory
+    {
+
+        class SmallObjectMemoryManager : public AbstractMemoryManager
+        {
         public:
             SmallObjectMemoryManager(size_t maxMemory);
+
+            virtual pointer allocate(size_t n, char prealloc);
+            virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n);
             
-            virtual pointer allocate(size_t n, unsigned char prealloc);
-			virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n);
-	    };
-	}
+        private:
+            pointer stackSpace[];            
+        };
+    }
 }
 
 #endif // UTILITIES_MEMORY_SMALLOBJECTMEMORYMANAGER_H

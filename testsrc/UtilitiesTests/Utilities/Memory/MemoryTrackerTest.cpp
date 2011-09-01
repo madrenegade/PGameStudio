@@ -13,7 +13,7 @@ TEST(MemoryTrackerTest, getAllocatedMemorySizeShouldReturnZeroInitially)
 TEST(MemoryTrackerTest, getAllocatedMemorySize)
 {
     MemoryTracker tracker;
-    tracker.trackAllocation(0, 99, typeid(int));
+    tracker.trackAllocation<int>(0, 99);
     
     EXPECT_EQ(tracker.getAllocatedMemorySize(), 99);
 }
@@ -21,8 +21,8 @@ TEST(MemoryTrackerTest, getAllocatedMemorySize)
 TEST(MemoryTrackerTest, getAllocatedMemorySizeShouldProperlyUpdateOnNewAllocation)
 {
     MemoryTracker tracker;
-    tracker.trackAllocation(0, 99, typeid(int));
-    tracker.trackAllocation(&tracker, 1, typeid(int));
+    tracker.trackAllocation<int>(0, 99);
+    tracker.trackAllocation(&tracker, 1);
     
     EXPECT_EQ(tracker.getAllocatedMemorySize(), 100);
 }
@@ -30,8 +30,8 @@ TEST(MemoryTrackerTest, getAllocatedMemorySizeShouldProperlyUpdateOnNewAllocatio
 TEST(MemoryTrackerTest, getAllocatedMemorySizeShouldProperlyUpdateOnDeallocation)
 {
     MemoryTracker tracker;
-    tracker.trackAllocation(0, 100, typeid(int));
-    tracker.trackDeallocation(0, 100, typeid(int));
+    tracker.trackAllocation<int>(0, 100);
+    tracker.trackDeallocation<int>(0, 100);
     
     EXPECT_EQ(tracker.getAllocatedMemorySize(), 0);
 }
@@ -39,44 +39,44 @@ TEST(MemoryTrackerTest, getAllocatedMemorySizeShouldProperlyUpdateOnDeallocation
 TEST(MemoryTrackerTest, trackAllocationShouldFailForDuplicatePointers)
 {
     MemoryTracker tracker;
-    tracker.trackAllocation(0, 1, typeid(int));
+    tracker.trackAllocation<int>(0, 1);
     
-    ASSERT_THROW(tracker.trackAllocation(0, 1, typeid(int)), AllocationException);
+    ASSERT_THROW(tracker.trackAllocation<int>(0, 1), AllocationException);
 }
 
 TEST(MemoryTrackerTest, trackAllocationShouldFailForZeroSize)
 {
     MemoryTracker tracker;
     
-    ASSERT_THROW(tracker.trackAllocation(0, 0, typeid(int)), AllocationException);
+    ASSERT_THROW(tracker.trackAllocation<int>(0, 0), AllocationException);
 }
 
 TEST(MemoryTrackerTest, trackDeallocationShouldFailInitially)
 {
     MemoryTracker tracker;
-    ASSERT_THROW(tracker.trackDeallocation(0, 100, typeid(int)), AllocationException);
+    ASSERT_THROW(tracker.trackDeallocation<int>(0, 100), AllocationException);
 }
 
 TEST(MemoryTrackerTest, trackDeallocationShouldFailForInvalidPointer)
 {
     MemoryTracker tracker;
-    tracker.trackAllocation(0, 100, typeid(int));
+    tracker.trackAllocation<MemoryTracker>(0, 100);
     
-    ASSERT_THROW(tracker.trackDeallocation(&tracker, 100, typeid(int)), AllocationException);
+    ASSERT_THROW(tracker.trackDeallocation(&tracker, 100), AllocationException);
 }
 
 TEST(MemoryTrackerTest, trackDeallocationShouldFailForInvalidSize)
 {
     MemoryTracker tracker;
-    tracker.trackAllocation(0, 100, typeid(int));
+    tracker.trackAllocation<int>(0, 100);
     
-    ASSERT_THROW(tracker.trackDeallocation(0, 1, typeid(int)), AllocationException);
+    ASSERT_THROW(tracker.trackDeallocation<int>(0, 1), AllocationException);
 }
 
 TEST(MemoryTrackerTest, trackDeallocationShouldFailForInvalidType)
 {
     MemoryTracker tracker;
-    tracker.trackAllocation(0, 100, typeid(int));
+    tracker.trackAllocation<int>(0, 100);
     
-    ASSERT_THROW(tracker.trackDeallocation(0, 100, typeid(short)), AllocationException);
+    ASSERT_THROW(tracker.trackDeallocation<short>(0, 100), AllocationException);
 }

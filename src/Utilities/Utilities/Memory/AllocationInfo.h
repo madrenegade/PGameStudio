@@ -4,6 +4,8 @@
 #include <typeinfo>
 #include <string>
 
+#include "Utilities/Memory/typedefs.h"
+
 namespace Utilities
 {
     namespace Memory
@@ -13,15 +15,15 @@ namespace Utilities
         public:
             AllocationInfo();
             
-            AllocationInfo(const void* ptr, size_t bytes, const std::type_info& type);
+            AllocationInfo(const_pointer ptr, size_t bytes, const std::type_info& type);
             
-            const void* getPointer() const;
+            const_pointer getPointer() const;
             size_t getSize() const;
             
             const std::string& getType() const;
             
         private:
-            const void* ptr;
+            const_pointer ptr;
             
             size_t bytes;
 
