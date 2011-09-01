@@ -39,6 +39,8 @@ namespace Utilities
             
             void assertThatPointerIsTracked(const AllocationInfo& actual) const;
             void assertDetailsMatch(const AllocationInfo& expected, const AllocationInfo& actual) const;
+            
+            unsigned long getAddress(const_pointer ptr) const;
 
             typedef std::map<const_pointer, AllocationInfo> BlockMap;
             BlockMap blocks;

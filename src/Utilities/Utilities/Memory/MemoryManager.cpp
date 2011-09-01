@@ -23,7 +23,7 @@ namespace Utilities
             
         }
         
-        pointer MemoryManager::allocate(size_t bytes, char prealloc)
+        pointer MemoryManager::allocate(size_t bytes, pool_id pool, char prealloc)
         {
             AbstractMemoryManager* manager = getManagerFor(bytes);
             
@@ -32,14 +32,14 @@ namespace Utilities
                 throw OutOfMemoryException();
             }
                 
-            return manager->allocate(bytes, prealloc);
+            return manager->allocate(bytes, pool, prealloc);
         }
         
-        void MemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n)
+        void MemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool)
         {
             const size_t BYTES_TO_DEALLOCATE = n * sizeOfOne;
             
-            getManagerFor(BYTES_TO_DEALLOCATE)->deallocate(ptr, sizeOfOne, n);
+            getManagerFor(BYTES_TO_DEALLOCATE)->deallocate(ptr, sizeOfOne, n, pool);
         }
         
         const size_t MemoryManager::getFreeMemory() const

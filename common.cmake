@@ -18,6 +18,7 @@ elseif(${CMAKE_BUILD_TYPE} MATCHES "Profile")
 endif()
 
 if(${CMAKE_COMPILER_IS_GNUCXX})
+        add_definitions(-DGCC)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fPIC")
 endif()
 

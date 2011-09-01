@@ -1,7 +1,8 @@
 #include "Utilities/Memory/MemoryTracker.h"
-#include "AbstractMemoryManager.h"
-#include "AllocationException.h"
-#include "MemoryManager.h"
+#include "Utilities/Memory/AbstractMemoryManager.h"
+#include "Utilities/Memory/AllocationException.h"
+#include "Utilities/Memory/MemoryManager.h"
+
 #include <glog/logging.h>
 
 namespace Utilities
@@ -33,7 +34,7 @@ namespace Utilities
                     const AllocationInfo& allocationInfo(i->second);
                     
                     VLOG(1) << "Memory leak information" << std::endl
-                        << "Address " << allocationInfo.getPointer() << std::endl
+                        << "Address: " << getAddress(allocationInfo.getPointer()) << std::endl
                         << "Size: " << allocationInfo.getSize() << std::endl
                         << "Type: " << allocationInfo.getType();
                 }
@@ -76,7 +77,7 @@ namespace Utilities
             {
                 const AllocationInfo allocationInfo(blocks.at(ptr));
 
-                LOG(ERROR) << "Address " << ptr << " already in use" << std::endl
+                LOG(ERROR) << "Address " << getAddress(ptr) << " already in use" << std::endl
                     << "Size: " << allocationInfo.getSize() << std::endl
                     << "Type: " << allocationInfo.getType();
 
@@ -100,7 +101,7 @@ namespace Utilities
             if (!isTracked(actual.getPointer()))
             {
                 LOG(ERROR) << "Invalid deallocation" << std::endl
-                    << "Address: " << actual.getPointer() << " (invalid)" << std::endl
+                    << "Address: " << getAddress(actual.getPointer()) << " (invalid)" << std::endl
                     << "Size: " << actual.getSize() << std::endl
                     << "Type: " << actual.getType();
 
@@ -113,7 +114,7 @@ namespace Utilities
             if (actual.getSize() != expected.getSize())
             {
                 LOG(ERROR) << "Invalid deallocation" << std::endl
-                    << "Address: " << actual.getPointer() << std::endl
+                    << "Address: " << getAddress(actual.getPointer()) << std::endl
                     << "Size: " << actual.getSize() << " (expected " << expected.getSize() << ")" << std::endl
                     << "Type: " << actual.getType();
 
@@ -123,7 +124,7 @@ namespace Utilities
             if (actual.getType() != expected.getType())
             {
                 LOG(ERROR) << "Invalid deallocation" << std::endl
-                    << "Address: " << actual.getPointer() << std::endl
+                    << "Address: " << getAddress(actual.getPointer()) << std::endl
                     << "Size: " << actual.getSize() << std::endl
                     << "Type: " << actual.getType() << " (expected " << expected.getType() << ")";
 
@@ -134,6 +135,11 @@ namespace Utilities
         bool MemoryTracker::isTracked(const_pointer ptr) const
         {
             return blocks.find(ptr) != blocks.end();
+        }
+        
+        unsigned long MemoryTracker::getAddress(const_pointer ptr) const
+        {
+            return reinterpret_cast<unsigned long>(ptr);
         }
     }
 }

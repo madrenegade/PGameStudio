@@ -36,14 +36,14 @@ TEST(MemoryManagerTest, allocateLargeObject)
     EXPECT_EQ(5, *ptr);
 }
 
-TEST(MemoryManagerTest, allocateSmallObject)
-{
-    MemoryManager memory(4, 4, 1);
-
-    int* ptr = memory.construct(static_cast<int> (5));
-
-    EXPECT_EQ(5, *ptr);
-}
+//TEST(MemoryManagerTest, allocateSmallObject)
+//{
+//    MemoryManager memory(4, 4, 1);
+//
+//    int* ptr = memory.construct(static_cast<int> (5));
+//
+//    EXPECT_EQ(5, *ptr);
+//}
 
 TEST(MemoryManagerTest, deallocateShouldUseCorrectManager)
 {

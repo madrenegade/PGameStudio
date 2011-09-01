@@ -13,11 +13,8 @@ namespace Utilities
         public:
             SmallObjectMemoryManager(size_t maxMemory);
 
-            virtual pointer allocate(size_t n, char prealloc);
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n);
-            
-        private:
-            pointer stackSpace[];            
+            virtual pointer allocate(size_t n, pool_id pool, char prealloc);
+            virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool);          
         };
     }
 }

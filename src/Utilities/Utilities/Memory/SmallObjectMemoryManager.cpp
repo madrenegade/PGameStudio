@@ -5,16 +5,16 @@ namespace Utilities
     namespace Memory
     {
         SmallObjectMemoryManager::SmallObjectMemoryManager(size_t maxMemory)
-        : AbstractMemoryManager(maxMemory), stackSpace(pointer[maxMemory])
+        : AbstractMemoryManager(maxMemory)
         {
             
         }
         
-        pointer SmallObjectMemoryManager::allocate(size_t n, char prealloc)
+        pointer SmallObjectMemoryManager::allocate(size_t n, pool_id pool, char prealloc)
         {
         }
         
-		void SmallObjectMemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n)
+		void SmallObjectMemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool)
         {
             
         }

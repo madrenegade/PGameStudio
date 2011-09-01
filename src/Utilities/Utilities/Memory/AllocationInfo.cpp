@@ -1,4 +1,5 @@
 #include "Utilities/Memory/AllocationInfo.h"
+#include "Utilities/functions.h"
 
 namespace Utilities
 {
@@ -25,9 +26,9 @@ namespace Utilities
             return bytes;
         }
 
-        const std::string& AllocationInfo::getType() const
+        const std::string AllocationInfo::getType() const
         {
-            return type;
+            return demangle(type.c_str());
         }
     }
 }

@@ -23,25 +23,25 @@ namespace Utilities
             MemoryManager(size_t threshold, size_t maxMemoryForSmallObjects, size_t maxMemoryForLargeObjects);
             
             template<typename T>
-            T* construct(const T& obj)
+            T* construct(const T& obj, pool_id pool = 0)
             {
-                return new (allocate<T>(1)) T(obj);
+                return new (allocate<T>(1, pool)) T(obj);
             }
 
             template<typename T>
-            T* allocate(size_t n)
+            T* allocate(size_t n, pool_id pool = 0)
             {
                 const size_t BYTES_TO_ALLOCATE = n * sizeof (T);
 
-                VLOG(1) << "Allocating " << BYTES_TO_ALLOCATE << " bytes";
+                VLOG(1) << "Allocating " << BYTES_TO_ALLOCATE << " bytes in pool " << pool;
 
 #ifdef DEBUG
-                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, PREALLOCATION_BYTE);
+                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, pool, PREALLOCATION_BYTE);
 #else
-                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, 0);
+                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, pool);
 #endif
 
-                VLOG(1) << "Allocated " << BYTES_TO_ALLOCATE << " bytes";
+                VLOG(1) << "Allocated " << BYTES_TO_ALLOCATE << " bytes from pool " << pool;
                 
                 T* ptr = reinterpret_cast<T*> (rawPtr);
 
@@ -51,15 +51,15 @@ namespace Utilities
             }
 
             template<typename T>
-            void deallocate(const T* ptr, size_t n)
+            void deallocate(const T* ptr, size_t n, pool_id pool = 0)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
-                VLOG(1) << "Deallocating " << BYTES_TO_DEALLOCATE << " bytes";
+                VLOG(1) << "Deallocating " << BYTES_TO_DEALLOCATE << " bytes from pool " << pool;
 
-                deallocate(reinterpret_cast<const_pointer> (ptr), sizeof (T), n);
+                deallocate(reinterpret_cast<const_pointer> (ptr), sizeof (T), n, pool);
 
-                VLOG(1) << "Deallocated " << BYTES_TO_DEALLOCATE << " bytes";
+                VLOG(1) << "Deallocated " << BYTES_TO_DEALLOCATE << " bytes from pool " << pool;
 
                 getTrackerFor(BYTES_TO_DEALLOCATE)->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
             }
@@ -67,8 +67,8 @@ namespace Utilities
             virtual const size_t getFreeMemory() const;
 
         protected:
-            virtual pointer allocate(size_t bytes, char prealloc);
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n);
+            virtual pointer allocate(size_t bytes, pool_id pool = 0, char prealloc = 0);
+            virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool = 0);
 
         private:
             const size_t threshold;

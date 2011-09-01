@@ -16,8 +16,8 @@ namespace Utilities
 		public:
 			virtual ~AbstractMemoryManager();
             
-			virtual pointer allocate(size_t n, char prealloc) = 0;
-			virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n) = 0;
+			virtual pointer allocate(size_t n, pool_id pool = 0, char prealloc = 0) = 0;
+			virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id = 0) = 0;
             
             const size_t getMaxMemory() const;
             

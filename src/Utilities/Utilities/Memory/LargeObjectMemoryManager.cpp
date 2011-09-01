@@ -18,7 +18,7 @@ namespace Utilities
             
         }
         
-        pointer LargeObjectMemoryManager::allocate(size_t n, char prealloc)
+        pointer LargeObjectMemoryManager::allocate(size_t n, pool_id pool, char prealloc)
         {
             char* ptr = new char[n];
             
@@ -27,7 +27,7 @@ namespace Utilities
             return ptr;
         }
         
-		void LargeObjectMemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n)
+		void LargeObjectMemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool)
         {
             if(n == 0)
             {
