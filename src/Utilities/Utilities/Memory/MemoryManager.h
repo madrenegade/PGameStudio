@@ -11,6 +11,7 @@
 #include "Utilities/Memory/AbstractMemoryManager.h"
 #include "Utilities/Memory/SmallObjectMemoryManager.h"
 #include "Utilities/Memory/LargeObjectMemoryManager.h"
+#include "Utilities/Memory/MemoryManagerSettings.h"
 
 namespace Utilities
 {
@@ -20,7 +21,10 @@ namespace Utilities
         class MemoryManager : public AbstractMemoryManager
         {
         public:
-            MemoryManager(size_t threshold, size_t maxMemoryForSmallObjects, size_t maxMemoryForLargeObjects);
+            MemoryManager(const MemoryManagerSettings& settings);
+            
+            pool_id createPoolForSmallObjects(size_t size);
+            pool_id createPoolForLargeObjects(size_t size);
             
             template<typename T>
             T* construct(const T& obj, pool_id pool = 0)
@@ -67,17 +71,21 @@ namespace Utilities
             virtual const size_t getFreeMemory() const;
 
         protected:
-            virtual pointer allocate(size_t bytes, pool_id pool = 0, char prealloc = 0);
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool = 0);
+            virtual void createPool(size_t size, pool_id pool);
+            
+            pointer allocate(size_t bytes, pool_id pool, char prealloc = 0);
+            void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool);
 
         private:
-            const size_t threshold;
+            const MemoryManagerSettings settings;
 
             SmallObjectMemoryManager smallObjects;
             LargeObjectMemoryManager largeObjects;
             
             AbstractMemoryManager* getManagerFor(size_t bytes);
             MemoryTracker* getTrackerFor(size_t bytes);
+            
+            pool_id newestPool;
         };
     }
 }

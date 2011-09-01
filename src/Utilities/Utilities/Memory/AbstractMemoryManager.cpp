@@ -37,6 +37,11 @@ namespace Utilities
             return &memoryTracker;
         }
         
+        PoolManager* AbstractMemoryManager::getPoolManager()
+        {
+            return &poolManager;
+        }
+        
         void AbstractMemoryManager::setMemory(pointer ptr, size_t n, char to) const
         {
             for(int i = 0; i < n; ++i)

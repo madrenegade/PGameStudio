@@ -18,10 +18,9 @@ namespace Utilities
         class LargeObjectMemoryManager : public AbstractMemoryManager
         {
         public:
-            LargeObjectMemoryManager(size_t maxMemory);
+            LargeObjectMemoryManager(size_t maxMemory, size_t defaultPageSize);
             
-            virtual pointer allocate(size_t n, pool_id pool, char prealloc);
-			virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool);
+            virtual void createPool(size_t size, pool_id id);
         };
     }
 }

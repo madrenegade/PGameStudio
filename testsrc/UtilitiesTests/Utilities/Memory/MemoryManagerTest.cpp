@@ -5,51 +5,62 @@
 
 using namespace Utilities::Memory;
 
-TEST(MemoryManagerTest, ctorShouldFailForMaxMemoryZero1)
+class MemoryManagerTest : public testing::Test
 {
-    ASSERT_THROW(MemoryManager(64, 0, 1), std::invalid_argument);
+protected:
+    virtual void SetUp()
+    {
+    }
+};
+
+TEST_F(MemoryManagerTest, ctorShouldFailForMaxMemoryZero1)
+{
+    ASSERT_THROW(MemoryManager(MemoryManagerSettings(64, 0, 1)), std::invalid_argument);
 }
 
-TEST(MemoryManagerTest, ctorShouldFailForMaxMemoryZero2)
+TEST_F(MemoryManagerTest, ctorShouldFailForMaxMemoryZero2)
 {
-    ASSERT_THROW(MemoryManager(64, 1, 0), std::invalid_argument);
+    ASSERT_THROW(MemoryManager(MemoryManagerSettings(64, 0, 1)), std::invalid_argument);
 }
 
-TEST(MemoryManagerTest, allocateShouldFailIfLimitForSmallObjectsIsExceeded)
+TEST_F(MemoryManagerTest, allocateShouldFailIfLimitForSmallObjectsIsExceeded)
 {
-    MemoryManager memory(8, 1, 1);
+    MemoryManager memory(MemoryManagerSettings(8, 1, 1));
     ASSERT_THROW(memory.allocate<int>(1), OutOfMemoryException);
 }
 
-TEST(MemoryManagerTest, allocateShouldFailIfLimitForLargeObjectsIsExceeded)
+TEST_F(MemoryManagerTest, allocateShouldFailIfLimitForLargeObjectsIsExceeded)
 {
-    MemoryManager memory(8, 1, 1);
-    ASSERT_THROW(memory.allocate<int>(3), OutOfMemoryException);
+    MemoryManager memory(MemoryManagerSettings(8, 8, 8, 8, 8));
+    pool_id id = memory.createPoolForLargeObjects(4);
+    ASSERT_THROW(memory.allocate<int>(3, id), OutOfMemoryException);
 }
 
-TEST(MemoryManagerTest, allocateLargeObject)
+TEST_F(MemoryManagerTest, allocateLargeObject)
 {
-    MemoryManager memory(2, 1, 4);
+    MemoryManager memory(MemoryManagerSettings(2, 1, 4, 8, 8));
+    pool_id id = memory.createPoolForLargeObjects(4);
 
     int* ptr = memory.construct(static_cast<int> (5));
 
     EXPECT_EQ(5, *ptr);
 }
 
-//TEST(MemoryManagerTest, allocateSmallObject)
+//TEST_F(MemoryManagerTest, allocateSmallObject)
 //{
-//    MemoryManager memory(4, 4, 1);
+//    MemoryManager memory(MemoryManagerSettings(4, 4, 1));
 //
 //    int* ptr = memory.construct(static_cast<int> (5));
 //
 //    EXPECT_EQ(5, *ptr);
 //}
 
-TEST(MemoryManagerTest, deallocateShouldUseCorrectManager)
+TEST_F(MemoryManagerTest, deallocateShouldUseCorrectManager)
 {
-    MemoryManager memory(2, 8, 8);
+    MemoryManager memory(MemoryManagerSettings(2, 16, 8, 16, 8));
+    pool_id id = memory.createPoolForLargeObjects(8);
     
-    long* ptr = memory.construct(5L);
+    long* ptr = memory.construct(5L, id);
     
-    EXPECT_NO_THROW(memory.deallocate<long>(ptr, 1));
+    EXPECT_NO_THROW(memory.deallocate<long>(ptr, 1, id));
 }

@@ -11,10 +11,9 @@ namespace Utilities
         class SmallObjectMemoryManager : public AbstractMemoryManager
         {
         public:
-            SmallObjectMemoryManager(size_t maxMemory);
-
-            virtual pointer allocate(size_t n, pool_id pool, char prealloc);
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool);          
+            SmallObjectMemoryManager(size_t maxMemory, size_t defaultPageSize);
+            
+            virtual void createPool(size_t size, pool_id id);     
         };
     }
 }

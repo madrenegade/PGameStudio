@@ -6,37 +6,29 @@
  */
 
 #include "Utilities/Memory/LargeObjectMemoryManager.h"
-#include "LargeObjectMemoryManager.h"
+#include "Utilities/Memory/LargeObjectMemoryManager.h"
+#include "Utilities/Memory/FixedPageSizePool.h"
+#include "Utilities/Memory/OutOfMemoryException.h"
+#include "Utilities/Memory/constants.h"
 
 namespace Utilities
 {
     namespace Memory
     {
-        LargeObjectMemoryManager::LargeObjectMemoryManager(size_t maxMemory)
+        LargeObjectMemoryManager::LargeObjectMemoryManager(size_t maxMemory, size_t defaultPageSize)
         : AbstractMemoryManager(maxMemory)
         {
             
         }
         
-        pointer LargeObjectMemoryManager::allocate(size_t n, pool_id pool, char prealloc)
+        void LargeObjectMemoryManager::createPool(size_t size, pool_id id)
         {
-            char* ptr = new char[n];
-            
-            setMemory(ptr, n, prealloc);
-            
-            return ptr;
-        }
-        
-		void LargeObjectMemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool)
-        {
-            if(n == 0)
+            if(size > getFreeMemory())
             {
-                delete ptr;
+                throw OutOfMemoryException();
             }
-            else
-            {
-                delete[] ptr;
-            }
+            
+            poolManager.add(new FixedPageSizePool(size, size / 4), id);
         }
     }
 }

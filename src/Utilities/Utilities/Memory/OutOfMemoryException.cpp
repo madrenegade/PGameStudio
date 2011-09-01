@@ -4,11 +4,7 @@
  * 
  * Created on August 31, 2011, 5:06 PM
  */
-
-#include <stdexcept>
-
 #include "Utilities/Memory/OutOfMemoryException.h"
-#include "OutOfMemoryException.h"
 
 namespace Utilities
 {
