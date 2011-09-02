@@ -12,7 +12,7 @@ namespace Utilities
     namespace Memory
     {
         PoolMock::PoolMock()
-        : Pool(100), data(new char[100]), allocations(0), deallocations(0)
+        : Pool(4096), data(new char[4096]), allocations(0), deallocations(0)
         {
         }
         

@@ -29,26 +29,6 @@ namespace Utilities
             
             return id;
         }
-
-        size_t MemoryManager::getFreeMemory() const
-        {
-            size_t freeMemory = 0;
-            
-            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
-            {
-                freeMemory += i->second->getFreeMemory();
-            }
-            
-            return freeMemory;
-        }
-        
-        size_t MemoryManager::getFreeMemory(pool_id poolID) const
-        {
-#ifdef DEBUG
-            assertPoolExists(poolID);
-#endif
-            return pools.at(poolID)->getFreeMemory();
-        }
         
         Pool* MemoryManager::findPoolContaining(const_pointer ptr) const
         {

@@ -11,6 +11,10 @@
 #include <boost/scoped_array.hpp>
 
 #include "Utilities/Memory/typedefs.h"
+#include "Utilities/Memory/MemoryPoolSettings.h"
+#include "Utilities/Memory/SmallObjectAllocator.h"
+#include "Utilities/Memory/MediumObjectAllocator.h"
+#include "Utilities/Memory/LargeObjectAllocator.h"
 
 namespace Utilities
 {
@@ -20,19 +24,23 @@ namespace Utilities
         class Pool
         {
         public:
-            virtual pointer allocate(size_t bytes) = 0;
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects) = 0;
+            Pool(const MemoryPoolSettings& settings);
             
-            virtual bool contains(const_pointer ptr) const = 0;
+            pointer allocate(size_t bytes);
+            void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
             
-            size_t getFreeMemory() const;
+            size_t getMemoryUsage() const;
             
-        protected:
-            Pool(size_t size);
+            bool contains(const_pointer ptr) const;
             
-            virtual size_t getMemoryUsage() const = 0;
+        private:
+            const MemoryPoolSettings settings;
             
-            const size_t size;
+            SmallObjectAllocator smallObjects;
+            MediumObjectAllocator mediumObjects;
+            LargeObjectAllocator largeObjects;
+            
+            Allocator* getAllocatorFor(size_t bytes);
         };
     }
 }

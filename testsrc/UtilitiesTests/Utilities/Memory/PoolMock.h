@@ -24,9 +24,9 @@ namespace Utilities
             PoolMock();
             
             /**
-             * always returns the beginning of the 100-byte buffer
+             * always returns the beginning of the 4096-byte buffer
              * @param bytes - has no effect
-             * @return the beginning of the 100-byte buffer
+             * @return the beginning of the 4096-byte buffer
              */
             virtual pointer allocate(size_t bytes);
             

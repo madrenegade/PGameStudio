@@ -75,7 +75,7 @@ namespace Utilities
                 
                 pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
 
-                setMemory(rawPtr, BYTES_TO_ALLOCATE, 'a');
+                setMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
                 T* ptr = reinterpret_cast<T*> (rawPtr);
 #else
@@ -111,9 +111,6 @@ namespace Utilities
 
                 memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
             }
-
-            size_t getFreeMemory() const;
-            size_t getFreeMemory(pool_id poolID) const;
 
         private:
             boost::shared_ptr<MemoryTracker> memoryTracker;

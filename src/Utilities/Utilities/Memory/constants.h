@@ -16,6 +16,9 @@ namespace Utilities
         const size_t KByte = 1024 * Byte;
         const size_t MByte = 1024 * KByte;
         const size_t GByte = 1024 * MByte;
+        
+        const char ALLOCATED = 'a';
+        const char EMPTY = 'e';
     }
 }
 
