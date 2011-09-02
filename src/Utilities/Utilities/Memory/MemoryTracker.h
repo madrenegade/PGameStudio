@@ -1,7 +1,7 @@
 #ifndef UTILITIES_MEMORY_MEMORYTRACKER_H
 #define UTILITIES_MEMORY_MEMORYTRACKER_H
 
-#include <map>
+#include <vector>
 #include "Utilities/Memory/AllocationInfo.h"
 
 namespace Utilities
@@ -11,41 +11,38 @@ namespace Utilities
 		class MemoryTracker
 		{
 		public:
-            MemoryTracker();
-            ~MemoryTracker();
+            virtual ~MemoryTracker();
             
             template<typename T>
             void trackAllocation(const T* ptr, size_t bytes)
             {
                 trackAllocation(reinterpret_cast<const_pointer>(ptr), bytes, typeid(T));
+                memoryUsage += bytes;
             }
             
             template<typename T>
             void trackDeallocation(const T* ptr, size_t bytes)
             {
                 trackDeallocation(reinterpret_cast<const_pointer>(ptr), bytes, typeid(T));
+                memoryUsage -= bytes;
             }
-            
-            void trackAllocation(const_pointer ptr, size_t bytes, const std::type_info& type);
-            void trackDeallocation(const_pointer ptr, size_t bytes, const std::type_info& type);
 
-            size_t getAllocatedMemorySize() const;
+            size_t getMemoryUsage() const;
+            
+            void logMemoryLeaks() const;
+            
+            
+        protected:
+            MemoryTracker();
+            
+            virtual void trackAllocation(const_pointer ptr, size_t bytes, const std::type_info& type) = 0;
+            virtual void trackDeallocation(const_pointer ptr, size_t bytes, const std::type_info& type) = 0;
+            
+            typedef std::vector<AllocationInfo> MemoryDump;
+            virtual MemoryDump getMemoryDump() const = 0;
 
         private:
-            void verifyUnused(const_pointer ptr) const;
-            void verify(const_pointer ptr, size_t bytes, const std::type_info& type) const;
-            
-            bool isTracked(const_pointer ptr) const;
-            
-            void assertThatPointerIsTracked(const AllocationInfo& actual) const;
-            void assertDetailsMatch(const AllocationInfo& expected, const AllocationInfo& actual) const;
-            
-            unsigned long getAddress(const_pointer ptr) const;
-
-            typedef std::map<const_pointer, AllocationInfo> BlockMap;
-            BlockMap blocks;
-
-            size_t memorySize;
+            size_t memoryUsage;
 		};
 	}
 }

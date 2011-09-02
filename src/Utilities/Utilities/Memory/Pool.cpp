@@ -12,9 +12,14 @@ namespace Utilities
     namespace Memory
     {
         Pool::Pool(size_t size)
-        : size(size), data(new char[size])
+        : size(size)
         {
             
+        }
+        
+        size_t Pool::getFreeMemory() const
+        {
+            return size - getMemoryUsage();
         }
     }
 }

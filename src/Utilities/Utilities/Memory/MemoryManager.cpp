@@ -4,108 +4,83 @@
  * 
  * Created on August 31, 2011, 3:34 PM
  */
-
-#include <stdlib.h>
 #include <stdexcept>
 
 #include "Utilities/Memory/MemoryManager.h"
-#include "Utilities/Memory/MemoryManager.h"
-#include "Utilities/Memory/OutOfMemoryException.h"
-#include "Utilities/Memory/Pool.h"
-#include "Utilities/Memory/AllocationException.h"
 
 namespace Utilities
 {
     namespace Memory
     {
 
-        MemoryManager::MemoryManager(const MemoryManagerSettings& settings)
-        : AbstractMemoryManager(settings.maxMemoryForSmallObjects + settings.maxMemoryForLargeObjects), settings(settings),
-        smallObjects(settings.maxMemoryForSmallObjects, settings.smallObjectDefaultPageSize),
-        largeObjects(settings.maxMemoryForLargeObjects, settings.largeObjectDefaultPageSize),
-        newestPool(0)
+        MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
+        : memoryTracker(memoryTracker)
         {
-
         }
 
-        pool_id MemoryManager::createPoolForSmallObjects(size_t size)
+        size_t MemoryManager::getFreeMemory() const
         {
-            pool_id id = newestPool;
-            smallObjects.createPool(size, id);
-            ++newestPool;
+            size_t freeMemory = 0;
             
-            return id;
-        }
-
-        pool_id MemoryManager::createPoolForLargeObjects(size_t size)
-        {
-            pool_id id = newestPool;
-            largeObjects.createPool(size, id);
-            ++newestPool;
-            
-            return id;
-        }
-
-        pointer MemoryManager::allocate(size_t bytes, pool_id poolId, char prealloc)
-        {
-            AbstractMemoryManager* manager = getManagerFor(bytes);
-
-            if (manager->getFreeMemory() < bytes)
+            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
-                throw OutOfMemoryException();
+                freeMemory += i->second->getFreeMemory();
             }
             
-            Pool* pool = manager->getPoolManager()->get(poolId);
-            
-            pointer ptr = pool->allocate(bytes);
-            
-            setMemory(ptr, bytes, prealloc);
-            
-            return ptr;
-        }
-
-        void MemoryManager::deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id poolId)
-        {
-            const size_t BYTES_TO_DEALLOCATE = n * sizeOfOne;
-            
-            AbstractMemoryManager* manager = getManagerFor(BYTES_TO_DEALLOCATE);
-            
-            Pool* pool = manager->getPoolManager()->get(poolId);
-            
-            if(n == 1)
-            {
-                pool->deallocate(ptr, BYTES_TO_DEALLOCATE);
-            }
-            else
-            {
-                pool->deallocateArray(ptr, BYTES_TO_DEALLOCATE);
-            }
-        }
-
-        const size_t MemoryManager::getFreeMemory() const
-        {
-            return smallObjects.getFreeMemory() + largeObjects.getFreeMemory();
-        }
-
-        AbstractMemoryManager* MemoryManager::getManagerFor(size_t bytes)
-        {
-            if (bytes <= settings.threshold)
-            {
-                return &smallObjects;
-            }
-
-            return &largeObjects;
-        }
-
-        MemoryTracker* MemoryManager::getTrackerFor(size_t bytes)
-        {
-            return getManagerFor(bytes)->getTracker();
+            return freeMemory;
         }
         
-        void MemoryManager::createPool(size_t size, pool_id pool)
+        size_t MemoryManager::getFreeMemory(pool_id poolID) const
         {
-            throw std::logic_error("MemoryManager cannot create pools");
+#ifdef DEBUG
+            assertPoolExists(poolID);
+#endif
+            return pools.at(poolID)->getFreeMemory();
         }
+        
+        Pool* MemoryManager::findPoolContaining(const_pointer ptr) const
+        {
+            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
+            {
+                if(i->second->contains(ptr))
+                {
+                    return i->second.get();
+                }
+            }
+            
+            throw std::logic_error("Pointer not found in registered pools");
+        }
+        
+        pool_id MemoryManager::findPoolIdFor(Pool* pool) const
+        {
+            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
+            {
+                if(i->second.get() == pool)
+                {
+                    return i->first;
+                }
+            }
+            
+            throw std::logic_error("Pool id not found for given pool");
+        }
+        
+#ifdef DEBUG
+        void MemoryManager::assertPoolExists(pool_id poolID) const
+        {
+            if(pools.find(poolID) == pools.end())
+            {
+                throw std::logic_error("Invalid pool id");
+            }
+        }
+        
+        void MemoryManager::setMemory(pointer ptr, size_t bytes, char c)
+        {
+            for(size_t i = 0; i < bytes; ++i)
+            {
+                ptr[i] = c;
+            }
+        }
+#endif
     }
 }
 

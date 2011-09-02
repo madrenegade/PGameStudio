@@ -21,16 +21,18 @@ namespace Utilities
         {
         public:
             virtual pointer allocate(size_t bytes) = 0;
+            virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects) = 0;
             
-            virtual void deallocate(const_pointer ptr, size_t bytes) = 0;
-            virtual void deallocateArray(const_pointer ptr, size_t bytes) = 0;
+            virtual bool contains(const_pointer ptr) const = 0;
+            
+            size_t getFreeMemory() const;
             
         protected:
             Pool(size_t size);
             
-            const size_t size;
+            virtual size_t getMemoryUsage() const = 0;
             
-            boost::scoped_array<char> data;
+            const size_t size;
         };
     }
 }

@@ -14,6 +14,7 @@ namespace Utilities
     {
         typedef char* pointer;
         typedef const char* const_pointer;
+        
         typedef unsigned int pool_id;
     }
 }

@@ -8,84 +8,125 @@
 #ifndef UTILITIES_MEMORY_MEMORYMANAGER_H
 #define	UTILITIES_MEMORY_MEMORYMANAGER_H
 
-#include "Utilities/Memory/AbstractMemoryManager.h"
-#include "Utilities/Memory/SmallObjectMemoryManager.h"
-#include "Utilities/Memory/LargeObjectMemoryManager.h"
-#include "Utilities/Memory/MemoryManagerSettings.h"
+#include <boost/shared_ptr.hpp>
+#include <glog/logging.h>
+#include <glog/raw_logging.h>
+#include <map>
+
+#include "Utilities/Memory/typedefs.h"
+#include "Utilities/Memory/Pool.h"
+#include "Utilities/Memory/MemoryTracker.h"
 
 namespace Utilities
 {
     namespace Memory
     {
-
-        class MemoryManager : public AbstractMemoryManager
+        class MemoryManager
         {
         public:
-            MemoryManager(const MemoryManagerSettings& settings);
-            
-            pool_id createPoolForSmallObjects(size_t size);
-            pool_id createPoolForLargeObjects(size_t size);
-            
+            MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker);
+
+            /**
+             * registers a new memory pool and returns an id to access it
+             * 
+             * @param pool - the pool to register
+             * @return the id the pool is registered to
+             */
+            pool_id registerMemoryPool(Pool* pool);
+
+            /**
+             * construct the given object in the given memory pool
+             * @param obj - the object to place in the pool
+             * @param poolID - the pool to place the object in
+             * @return a pointer to the object
+             */
             template<typename T>
-            T* construct(const T& obj, pool_id pool = 0)
+            T* construct(const T& obj, pool_id poolID = 0)
             {
-                return new (allocate<T>(1, pool)) T(obj);
+                return new (allocate<T > (1, poolID)) T(obj);
             }
 
+            /**
+             * destruct the given object, the pool is automatically detected
+             * @param ptr - a pointer to the object to destroy
+             */
             template<typename T>
-            T* allocate(size_t n, pool_id pool = 0)
+            void destruct(const T* ptr)
             {
-                const size_t BYTES_TO_ALLOCATE = n * sizeof (T);
+                deallocate<T > (ptr, 1);
+            }
 
-                VLOG(1) << "Allocating " << BYTES_TO_ALLOCATE << " bytes in pool " << pool;
+            /**
+             * allocate space for a bunch of objects
+             * @param numObjects - the amount of objects to allocate space for
+             * @param poolID - the pool in which the space should be allocated
+             * @return a pointer to the beginning of the allocated space
+             */
+            template<typename T>
+            T* allocate(size_t numObjects, pool_id poolID = 0)
+            {
+                const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
+
+                RAW_VLOG(1, "Allocating %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
 
 #ifdef DEBUG
-                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, pool, PREALLOCATION_BYTE);
+                assertPoolExists(poolID);
+                
+                pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
+
+                setMemory(rawPtr, BYTES_TO_ALLOCATE, 'a');
+
+                T* ptr = reinterpret_cast<T*> (rawPtr);
 #else
-                pointer rawPtr = allocate(BYTES_TO_ALLOCATE, pool);
+                T* ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
 #endif
 
-                VLOG(1) << "Allocated " << BYTES_TO_ALLOCATE << " bytes from pool " << pool;
-                
-                T* ptr = reinterpret_cast<T*> (rawPtr);
+                RAW_VLOG(1, "Allocated %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
 
-                getTrackerFor(BYTES_TO_ALLOCATE)->trackAllocation(ptr, BYTES_TO_ALLOCATE);
+                memoryTracker->trackAllocation(ptr, BYTES_TO_ALLOCATE);
 
                 return ptr;
             }
 
+            /**
+             * deallocate space for a bunch of objects
+             * @param ptr - the starting address of the space to deallocate
+             * @param n - the amount of objects to determine how much space must be deallocated
+             */
             template<typename T>
-            void deallocate(const T* ptr, size_t n, pool_id pool = 0)
+            void deallocate(const T* ptr, size_t n)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
-                VLOG(1) << "Deallocating " << BYTES_TO_DEALLOCATE << " bytes from pool " << pool;
+                RAW_VLOG(1, "Deallocating %i bytes", BYTES_TO_DEALLOCATE);
 
-                deallocate(reinterpret_cast<const_pointer> (ptr), sizeof (T), n, pool);
+                const_pointer rawPtr = reinterpret_cast<const_pointer> (ptr);
 
-                VLOG(1) << "Deallocated " << BYTES_TO_DEALLOCATE << " bytes from pool " << pool;
+                Pool* pool = findPoolContaining(rawPtr);
 
-                getTrackerFor(BYTES_TO_DEALLOCATE)->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
+                pool->deallocate(rawPtr, sizeof (T), n);
+
+                RAW_VLOG(1, "Deallocated %i bytes from pool %i", BYTES_TO_DEALLOCATE, findPoolIdFor(pool));
+
+                memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
             }
-            
-            virtual const size_t getFreeMemory() const;
 
-        protected:
-            virtual void createPool(size_t size, pool_id pool);
-            
-            pointer allocate(size_t bytes, pool_id pool, char prealloc = 0);
-            void deallocate(const_pointer ptr, size_t sizeOfOne, size_t n, pool_id pool);
+            size_t getFreeMemory() const;
+            size_t getFreeMemory(pool_id poolID) const;
 
         private:
-            const MemoryManagerSettings settings;
+            boost::shared_ptr<MemoryTracker> memoryTracker;
 
-            SmallObjectMemoryManager smallObjects;
-            LargeObjectMemoryManager largeObjects;
-            
-            AbstractMemoryManager* getManagerFor(size_t bytes);
-            MemoryTracker* getTrackerFor(size_t bytes);
-            
-            pool_id newestPool;
+            typedef std::map<pool_id, boost::shared_ptr<Pool> > PoolMap;
+            PoolMap pools;
+
+            Pool* findPoolContaining(const_pointer ptr) const;
+            pool_id findPoolIdFor(Pool* pool) const;
+
+#ifdef DEBUG
+            void assertPoolExists(pool_id poolID) const;
+            static void setMemory(pointer ptr, size_t bytes, char c);
+#endif
         };
     }
 }
