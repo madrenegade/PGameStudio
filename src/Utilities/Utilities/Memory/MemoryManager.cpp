@@ -14,8 +14,20 @@ namespace Utilities
     {
 
         MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
-        : memoryTracker(memoryTracker)
+        : memoryTracker(memoryTracker), latestPoolID(0)
         {
+        }
+        
+        pool_id MemoryManager::registerMemoryPool(const boost::shared_ptr<Pool>& pool)
+        {
+            assertPoolIsUnique(pool);
+            
+            pool_id id = latestPoolID;
+            
+            pools[id] = pool;
+            ++latestPoolID;
+            
+            return id;
         }
 
         size_t MemoryManager::getFreeMemory() const
@@ -62,6 +74,17 @@ namespace Utilities
             }
             
             throw std::logic_error("Pool id not found for given pool");
+        }
+        
+        void MemoryManager::assertPoolIsUnique(const boost::shared_ptr<Pool>& pool) const
+        {
+            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
+            {
+                if(i->second == pool)
+                {
+                    throw std::logic_error("This pool is already registered");
+                }
+            }
         }
         
 #ifdef DEBUG

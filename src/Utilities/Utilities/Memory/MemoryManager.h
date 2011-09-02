@@ -28,11 +28,12 @@ namespace Utilities
 
             /**
              * registers a new memory pool and returns an id to access it
+             * the first registration always returns 0 as the id
              * 
              * @param pool - the pool to register
              * @return the id the pool is registered to
              */
-            pool_id registerMemoryPool(Pool* pool);
+            pool_id registerMemoryPool(const boost::shared_ptr<Pool>& pool);
 
             /**
              * construct the given object in the given memory pool
@@ -119,9 +120,13 @@ namespace Utilities
 
             typedef std::map<pool_id, boost::shared_ptr<Pool> > PoolMap;
             PoolMap pools;
+            
+            pool_id latestPoolID;
 
             Pool* findPoolContaining(const_pointer ptr) const;
             pool_id findPoolIdFor(Pool* pool) const;
+            
+            void assertPoolIsUnique(const boost::shared_ptr<Pool>& pool) const;
 
 #ifdef DEBUG
             void assertPoolExists(pool_id poolID) const;
