@@ -12,6 +12,7 @@
 
 #include <map>
 #include <boost/scoped_array.hpp>
+#include <unordered_map>
 
 namespace Utilities
 {
@@ -49,7 +50,7 @@ namespace Utilities
             
             const unsigned int pageCount;
             
-            typedef std::map<const_pointer, unsigned int> PageMap;
+            typedef std::unordered_map<const_pointer, unsigned int> PageMap;
             PageMap allocations;
         };
     }

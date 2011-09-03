@@ -13,6 +13,7 @@
 #include <glog/logging.h>
 #include <bitset>
 #include <cmath>
+#include <list>
 
 namespace Utilities
 {
@@ -30,43 +31,56 @@ namespace Utilities
             unsigned long poolStart = reinterpret_cast<unsigned long> (data.get());
 
             // all data must go in exactly one block so the first free block is searched
-            for (unsigned int page = 0; page < pageCount; ++page)
-            {
-                if(freeBlocks[page] > 0)
-                {
-                    pointer startOfPage = &data[page * pageSize];
-                    unsigned long pageOffset = reinterpret_cast<unsigned long> (startOfPage) - poolStart;
-
-                    VLOG(1) << "testing page " << page << " at offset " << pageOffset;
-
-                    int firstFreeBlock = findFreeBlockIn(page);
-
-                    if(firstFreeBlock != -1)
+//            for (unsigned int page = 0; page < pageCount; ++page)
+//            {
+//                if (freeBlocks[page] > 0)
+//                {
+            unsigned page = pagesWithFreeBlocks.front();
+                    pointer ptr = allocateBlockIn(page, poolStart);
+                    
+                    if(ptr != 0)
                     {
-                        VLOG(1) << "Using block " << firstFreeBlock << " in page " << page;
-
-                        pointer ptr = startOfPage + (blockSize * firstFreeBlock);
-
-                        registerPointer(ptr, page);
-                        markBlockAsUsed(firstFreeBlock, page);
-
                         return ptr;
                     }
-                }
-            }
-            
+//                }
+//            }
+
             throw OutOfMemoryException();
 
+        }
+
+        pointer SmallObjectAllocator::allocateBlockIn(unsigned int page, unsigned long poolStart)
+        {
+            pointer startOfPage = &data[page * pageSize];
+            unsigned long pageOffset = reinterpret_cast<unsigned long> (startOfPage) - poolStart;
+
+            VLOG(1) << "testing page " << page << " at offset " << pageOffset;
+
+            int firstFreeBlock = findFreeBlockIn(page);
+
+            if (firstFreeBlock != -1)
+            {
+                VLOG(1) << "Using block " << firstFreeBlock << " in page " << page;
+
+                pointer ptr = startOfPage + (blockSize * firstFreeBlock);
+
+                registerPointer(ptr, page);
+                markBlockAsUsed(firstFreeBlock, page);
+
+                return ptr;
+            }
+            
+            return 0;
         }
 
         void SmallObjectAllocator::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
             unsigned int page = allocations[ptr];
-            
+
             pointer startOfPage = &data[page * pageSize];
-            
-            unsigned long diff = reinterpret_cast<unsigned long>(ptr) - reinterpret_cast<unsigned long>(startOfPage);
-            
+
+            unsigned long diff = reinterpret_cast<unsigned long> (ptr) - reinterpret_cast<unsigned long> (startOfPage);
+
             markBlockAsFree(diff / blockSize, page);
         }
 
@@ -85,11 +99,12 @@ namespace Utilities
         void SmallObjectAllocator::initializePageTails()
         {
             freeBlocks.reserve(pageCount);
-            
+
             for (unsigned int page = 0; page < pageCount; ++page)
             {
                 freeBlocks[page] = getBlocksPerPage();
-                
+                pagesWithFreeBlocks.push_front(page);
+
                 pointer tail = getTailFor(page);
                 fillMemory(tail, blockSize, 255); // set all bits to 1
             }
@@ -98,19 +113,19 @@ namespace Utilities
         pointer SmallObjectAllocator::getTailFor(unsigned int page) const
         {
             const size_t pageStart = pageSize * page;
-            
+
             // offset of the last block (the allocation bitmask)
             const size_t blockOffset = blockSize * (getBlocksPerPage() - 1);
-            
+
             return &data[pageStart + blockOffset];
         }
 
         int SmallObjectAllocator::findFreeBlockIn(unsigned int page) const
         {
             const size_t BLOCKS_PER_PAGE = getBlocksPerPage();
-            
+
             pointer tail = getTailFor(page);
-            
+
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
 
             // split tail block in parts of 8 bytes
@@ -134,35 +149,45 @@ namespace Utilities
                     }
                 }
             }
-            
+
             return -1;
         }
-        
+
         void SmallObjectAllocator::markBlockAsUsed(unsigned int block, unsigned int page)
         {
             freeBlocks[page] -= 1;
             
+            if(freeBlocks[page] == 0)
+            {
+                pagesWithFreeBlocks.remove(page);
+            }
+
             pointer tail = getTailFor(page);
-            
+
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
-            
+
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
-            
+
             // 1 << block creates a bitmask where the given block is 1 and the rest zero
             // with ~ this is negated so that all bits are one except the given block
             *tailPart &= ~(1 << block);
         }
-        
+
         void SmallObjectAllocator::markBlockAsFree(unsigned int block, unsigned int page)
         {
             freeBlocks[page] += 1;
             
+            if(freeBlocks[page] == 1)
+            {
+                pagesWithFreeBlocks.push_front(page);
+            }
+
             pointer tail = getTailFor(page);
-            
+
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
-            
+
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
-            
+
             *tailPart |= (1 << block);
         }
     }

@@ -11,6 +11,7 @@
 #include "Utilities/Memory/Allocator.h"
 
 #include <vector>
+#include <list>
 
 /**
  * The small object allocator uses fixed block sizes. At the end of each page
@@ -57,7 +58,13 @@ namespace Utilities
             void markBlockAsUsed(unsigned int block, unsigned int page);
             void markBlockAsFree(unsigned int block, unsigned int page);
             
+            pointer allocateBlockIn(unsigned int page, unsigned long poolStart);
+            
+            // index is the page and value is the amount of free blocks
             std::vector<unsigned int> freeBlocks;
+            
+            // pair<page, freeBlocks>
+            std::list<unsigned int> pagesWithFreeBlocks;
         };
     }
 }
