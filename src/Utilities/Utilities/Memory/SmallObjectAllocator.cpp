@@ -30,7 +30,7 @@ namespace Utilities
             unsigned long poolStart = reinterpret_cast<unsigned long> (data.get());
 
             // all data must go in exactly one block so the first free block is searched
-            for (unsigned int page = 0; page < getPageCount(); ++page)
+            for (unsigned int page = 0; page < pageCount; ++page)
             {
                 if(freeBlocks[page] > 0)
                 {
@@ -84,9 +84,9 @@ namespace Utilities
 
         void SmallObjectAllocator::initializePageTails()
         {
-            freeBlocks.reserve(getPageCount());
+            freeBlocks.reserve(pageCount);
             
-            for (unsigned int page = 0; page < getPageCount(); ++page)
+            for (unsigned int page = 0; page < pageCount; ++page)
             {
                 freeBlocks[page] = getBlocksPerPage();
                 

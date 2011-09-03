@@ -34,7 +34,6 @@ namespace Utilities
             
             void registerPointer(const_pointer ptr, unsigned int page);
             
-            unsigned int getPageCount() const;
             unsigned int getBlocksPerPage() const;
             
             virtual size_t getLargestFreeArea() const = 0;
@@ -47,6 +46,8 @@ namespace Utilities
             const size_t maxSize;
             const size_t pageSize;
             const size_t blockSize;
+            
+            const unsigned int pageCount;
             
             typedef std::map<const_pointer, unsigned int> PageMap;
             PageMap allocations;

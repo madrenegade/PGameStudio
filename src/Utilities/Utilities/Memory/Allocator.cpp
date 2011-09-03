@@ -22,7 +22,8 @@ namespace Utilities
     {
 
         Allocator::Allocator(size_t maxSize, size_t pageSize, size_t blockSize)
-        : memoryUsage(0), data(new char[maxSize]), maxSize(maxSize), pageSize(pageSize), blockSize(blockSize)
+        : memoryUsage(0), data(new char[maxSize]), maxSize(maxSize), pageSize(pageSize), blockSize(blockSize),
+            pageCount(maxSize / pageSize)
         {
 #ifdef DEBUG
             if (maxSize % pageSize != 0)
@@ -73,11 +74,6 @@ namespace Utilities
         void Allocator::registerPointer(const_pointer ptr, unsigned int page)
         {
             allocations[ptr] = page;
-        }
-
-        unsigned int Allocator::getPageCount() const
-        {
-            return maxSize / pageSize;
         }
         
         unsigned int Allocator::getBlocksPerPage() const
