@@ -23,7 +23,7 @@ namespace Utilities
 
         Allocator::Allocator(size_t maxSize, size_t pageSize, size_t blockSize)
         : memoryUsage(0), data(new char[maxSize]), maxSize(maxSize), pageSize(pageSize), blockSize(blockSize),
-            pageCount(maxSize / pageSize)
+            pageCount(maxSize / pageSize), allocations(3)
         {
 #ifdef DEBUG
             if (maxSize % pageSize != 0)

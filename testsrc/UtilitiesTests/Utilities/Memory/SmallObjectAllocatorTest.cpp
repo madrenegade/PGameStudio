@@ -8,7 +8,7 @@
 
 using namespace Utilities::Memory;
 
-const size_t maxSize = 4 * MByte;
+const size_t maxSize = 16 * MByte;
     const size_t pageSize = 1 * KByte;
     const size_t blockSize = 32 * Byte;
     
@@ -51,6 +51,11 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
         ptrs[i] = new char[blockSize];
     }
     
+    for(size_t i = 0; i < allocations; ++i)
+    {
+        delete[] ptrs[i];
+    }
+    
     auto end = std::chrono::system_clock::now();
     
     long diff = std::chrono::duration_cast<ms>(end - start).count();
@@ -64,7 +69,12 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
     
     for(size_t i = 0; i < allocations; ++i)
     {
-        allocator->allocate(1);
+        ptrs[i] = allocator->allocate(blockSize);
+    }
+    
+    for(size_t i = 0; i < allocations; ++i)
+    {
+        allocator->deallocate(ptrs[i], blockSize, 1);
     }
     
     end = std::chrono::system_clock::now();

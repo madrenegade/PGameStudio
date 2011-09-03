@@ -28,39 +28,30 @@ namespace Utilities
 
         pointer SmallObjectAllocator::allocate(size_t bytes)
         {
-            unsigned long poolStart = reinterpret_cast<unsigned long> (data.get());
-
-            // all data must go in exactly one block so the first free block is searched
-//            for (unsigned int page = 0; page < pageCount; ++page)
-//            {
-//                if (freeBlocks[page] > 0)
-//                {
-            unsigned page = pagesWithFreeBlocks.front();
-                    pointer ptr = allocateBlockIn(page, poolStart);
-                    
-                    if(ptr != 0)
-                    {
-                        return ptr;
-                    }
-//                }
-//            }
-
-            throw OutOfMemoryException();
-
+            if(pagesWithFreeBlocks.empty())
+            {
+                throw OutOfMemoryException();
+            }
+            
+            unsigned page = pagesWithFreeBlocks.begin()->first;
+            
+            return allocateBlockIn(page);
         }
 
-        pointer SmallObjectAllocator::allocateBlockIn(unsigned int page, unsigned long poolStart)
+        pointer SmallObjectAllocator::allocateBlockIn(unsigned int page)
         {
+            unsigned long poolStart = reinterpret_cast<unsigned long> (data.get());
+            
             pointer startOfPage = &data[page * pageSize];
             unsigned long pageOffset = reinterpret_cast<unsigned long> (startOfPage) - poolStart;
 
-            VLOG(1) << "testing page " << page << " at offset " << pageOffset;
+            //VLOG(1) << "testing page " << page << " at offset " << pageOffset;
 
             int firstFreeBlock = findFreeBlockIn(page);
 
             if (firstFreeBlock != -1)
             {
-                VLOG(1) << "Using block " << firstFreeBlock << " in page " << page;
+                //VLOG(1) << "Using block " << firstFreeBlock << " in page " << page;
 
                 pointer ptr = startOfPage + (blockSize * firstFreeBlock);
 
@@ -69,7 +60,7 @@ namespace Utilities
 
                 return ptr;
             }
-            
+
             return 0;
         }
 
@@ -103,7 +94,8 @@ namespace Utilities
             for (unsigned int page = 0; page < pageCount; ++page)
             {
                 freeBlocks[page] = getBlocksPerPage();
-                pagesWithFreeBlocks.push_front(page);
+                //pagesWithFreeBlocks.push_front(page);
+                pagesWithFreeBlocks[page] = getBlocksPerPage();
 
                 pointer tail = getTailFor(page);
                 fillMemory(tail, blockSize, 255); // set all bits to 1
@@ -156,10 +148,11 @@ namespace Utilities
         void SmallObjectAllocator::markBlockAsUsed(unsigned int block, unsigned int page)
         {
             freeBlocks[page] -= 1;
-            
-            if(freeBlocks[page] == 0)
+
+            if (freeBlocks[page] == 0)
             {
-                pagesWithFreeBlocks.remove(page);
+                pagesWithFreeBlocks.erase(page);
+                //pagesWithFreeBlocks.remove(page);
             }
 
             pointer tail = getTailFor(page);
@@ -176,10 +169,10 @@ namespace Utilities
         void SmallObjectAllocator::markBlockAsFree(unsigned int block, unsigned int page)
         {
             freeBlocks[page] += 1;
-            
-            if(freeBlocks[page] == 1)
+
+            if (freeBlocks[page] == 1)
             {
-                pagesWithFreeBlocks.push_front(page);
+                pagesWithFreeBlocks[page] = 1;
             }
 
             pointer tail = getTailFor(page);
