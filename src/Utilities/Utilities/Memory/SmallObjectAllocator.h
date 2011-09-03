@@ -10,11 +10,17 @@
 
 #include "Utilities/Memory/Allocator.h"
 
+#include <vector>
+
+/**
+ * The small object allocator uses fixed block sizes. At the end of each page
+ * there is one block with a bitmask of allocated and free blocks.
+ */
+
 namespace Utilities
 {
     namespace Memory
     {
-
         class SmallObjectAllocator : public Allocator
         {
         public:
@@ -28,14 +34,30 @@ namespace Utilities
             virtual size_t getFreeMemory() const;
             
         private:
+            /**
+             * Set each bit of the last block of each page to one.
+             * This marks all blocks in the page as free.
+             */
             void initializePageTails();
             
+            /**
+             * get the starting address of a page
+             * @param page
+             * @return the starting address of the given page
+             */
             pointer getTailFor(unsigned int page) const;
             
+            /**
+             * find a free block using the page tail bitmask
+             * @param page - the page to search for free blocks in
+             * @return a block number or -1 if no block is free
+             */
             int findFreeBlockIn(unsigned int page) const;
             
             void markBlockAsUsed(unsigned int block, unsigned int page);
             void markBlockAsFree(unsigned int block, unsigned int page);
+            
+            std::vector<unsigned int> freeBlocks;
         };
     }
 }
