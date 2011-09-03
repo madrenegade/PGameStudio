@@ -26,6 +26,16 @@ namespace Utilities
         protected:
             virtual size_t getLargestFreeArea() const;
             virtual size_t getFreeMemory() const;
+            
+        private:
+            void initializePageTails();
+            
+            pointer getTailFor(unsigned int page) const;
+            
+            int findFreeBlockIn(unsigned int page) const;
+            
+            void markBlockAsUsed(unsigned int block, unsigned int page);
+            void markBlockAsFree(unsigned int block, unsigned int page);
         };
     }
 }

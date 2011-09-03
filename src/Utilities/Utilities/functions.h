@@ -9,6 +9,7 @@
 #define	UTILITIES_FUNCTIONS_H
 
 #include <string>
+#include "Utilities/Memory/typedefs.h"
 
 namespace Utilities
 {
@@ -18,6 +19,14 @@ namespace Utilities
      * @return 
      */
     std::string demangle(const char* name);
+    
+    /**
+     * fill the specified memory area with data
+     * @param start - start address of the memory area to fill
+     * @param bytes - amount of bytes to fill
+     * @param c - the character to put in the memory area
+     */
+    void fillMemory(Memory::pointer start, size_t bytes, char c);
 }
 
 #endif	/* UTILITIES_FUNCTIONS_H */

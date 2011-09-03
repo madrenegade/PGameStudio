@@ -24,4 +24,12 @@ namespace Utilities
         return std::string(name);
 #endif
     }
+    
+    void fillMemory(Memory::pointer start, size_t bytes, char c)
+    {
+        for(size_t i = 0; i < bytes; ++i)
+        {
+            start[i] = c;
+        }
+    }
 }

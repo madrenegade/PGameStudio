@@ -16,6 +16,7 @@
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/Pool.h"
 #include "Utilities/Memory/MemoryTracker.h"
+#include "Utilities/functions.h"
 
 namespace Utilities
 {
@@ -75,7 +76,7 @@ namespace Utilities
                 
                 pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
 
-                setMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
+                fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
                 T* ptr = reinterpret_cast<T*> (rawPtr);
 #else
@@ -127,7 +128,6 @@ namespace Utilities
 
 #ifdef DEBUG
             void assertPoolExists(pool_id poolID) const;
-            static void setMemory(pointer ptr, size_t bytes, char c);
 #endif
         };
     }

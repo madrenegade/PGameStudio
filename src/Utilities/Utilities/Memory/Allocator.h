@@ -34,9 +34,8 @@ namespace Utilities
             
             void registerPointer(const_pointer ptr, unsigned int page);
             
-            void fillMemory(pointer start, size_t bytes, char c);
-            
             unsigned int getPageCount() const;
+            unsigned int getBlocksPerPage() const;
             
             virtual size_t getLargestFreeArea() const = 0;
             virtual size_t getFreeMemory() const = 0;

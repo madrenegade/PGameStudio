@@ -17,9 +17,9 @@ namespace Utilities
 
         struct MemoryPoolSettings
         {
-            MemoryPoolSettings(size_t smallObjectPoolSize = 1*MByte,
-                               size_t smallObjectPageSize = 4*KByte,
-                               size_t smallObjectBlockSize = 32*Byte,
+            MemoryPoolSettings(size_t smallObjectPoolSize = 128*Byte,
+                               size_t smallObjectPageSize = 64*Byte,
+                               size_t smallObjectBlockSize = 8*Byte,
                                size_t mediumObjectPoolSize = 1*MByte,
                                size_t mediumObjectPageSize = 4*KByte,
                                size_t mediumObjectBlockSize = 64*Byte,

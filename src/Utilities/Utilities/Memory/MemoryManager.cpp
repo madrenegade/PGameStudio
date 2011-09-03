@@ -75,14 +75,6 @@ namespace Utilities
                 throw std::logic_error("Invalid pool id");
             }
         }
-        
-        void MemoryManager::setMemory(pointer ptr, size_t bytes, char c)
-        {
-            for(size_t i = 0; i < bytes; ++i)
-            {
-                ptr[i] = c;
-            }
-        }
 #endif
     }
 }

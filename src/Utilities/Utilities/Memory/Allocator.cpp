@@ -13,6 +13,7 @@
 
 #ifdef DEBUG
 #include <glog/logging.h>
+#include "Utilities/functions.h"
 #endif
 
 namespace Utilities
@@ -31,6 +32,23 @@ namespace Utilities
                     << "Rest: " << (maxSize % pageSize);
                 
                 throw std::invalid_argument("Pool size must be multiple of the page size");
+            }
+            
+            if(pageSize % blockSize != 0)
+            {
+                VLOG(1) << "Page size: " << pageSize << std::endl
+                    << "Block size: " << blockSize << std::endl
+                    << "Rest: " << (pageSize % blockSize);
+                
+                throw std::invalid_argument("Page size must be multiple of the block size");
+            }
+            
+            if(blockSize % 8 != 0)
+            {
+                VLOG(1) << "Block size: " << blockSize << std::endl
+                    << "Rest: " << (blockSize % 8);
+                
+                throw std::invalid_argument("Block size must be multiple of the 8");
             }
 
             fillMemory(data.get(), maxSize, EMPTY);
@@ -57,17 +75,14 @@ namespace Utilities
             allocations[ptr] = page;
         }
 
-        void Allocator::fillMemory(pointer start, size_t bytes, char c)
-        {
-            for (size_t i = 0; i < bytes; ++i)
-            {
-                start[0] = c;
-            }
-        }
-
         unsigned int Allocator::getPageCount() const
         {
             return maxSize / pageSize;
+        }
+        
+        unsigned int Allocator::getBlocksPerPage() const
+        {
+            return pageSize / blockSize;
         }
     }
 }
