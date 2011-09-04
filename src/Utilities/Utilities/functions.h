@@ -27,6 +27,13 @@ namespace Utilities
      * @param c - the character to put in the memory area
      */
     void fillMemory(Memory::pointer start, size_t bytes, char c);
+    
+    /**
+     * count the number of bits set to zero from the right
+     * @param v the bitset to use
+     * @return the number of bits set to zero from the right
+     */
+    int countZeroBitsFromRight(unsigned long v);
 }
 
 #endif	/* UTILITIES_FUNCTIONS_H */

@@ -42,7 +42,8 @@ namespace Utilities
             virtual size_t getFreeMemory() const = 0;
             
             typedef boost::shared_array<char> Page;
-            unsigned int requestNewPage();
+            
+            pointer requestNewPage();
             
             pointer getPage(unsigned int id) const;
             

@@ -12,8 +12,7 @@
 
 #include <vector>
 #include <list>
-#include <unordered_set>
-
+#include <unordered_map>
 /**
  * The small object allocator uses fixed block sizes. At the end of each page
  * there is one block with a bitmask of allocated and free blocks.
@@ -37,38 +36,37 @@ namespace Utilities
             
         private:
             /**
-             * Set each bit of the last block of each page to one.
+             * Set each bit of the last block the to one.
              * This marks all blocks in the page as free.
              */
-            void initializePage(unsigned int page);
+            void initializePage(pointer page);
             
             /**
-             * get the starting address of a page
+             * get the starting address of a page tail
              * @param page
-             * @return the starting address of the given page
+             * @return the starting address of the given page tail
              */
-            pointer getTailFor(unsigned int page) const;
+            pointer getTailFor(pointer page) const;
             
             /**
              * find a free block using the page tail bitmask
              * @param page - the page to search for free blocks in
              * @return a block number or -1 if no block is free
              */
-            int findFreeBlockIn(unsigned int page) const;
+            int findFreeBlockIn(pointer page) const;
             
-            void markBlockAsUsed(unsigned int block, unsigned int page);
-            void markBlockAsFree(unsigned int block, unsigned int page);
+            void markBlockAsUsed(unsigned int block, pointer startOfPage);
+            void markBlockAsFree(unsigned int block, pointer startOfPage);
             
             unsigned int getUsableBlocksPerPage() const;
             
-            pointer allocateBlockIn(unsigned int page);
+            pointer allocateBlockIn(pointer startOfPage);
             
-            // index is the page and value is the amount of free blocks
-            std::vector<unsigned int> freeBlocks;
+            // page start and amount of free blocks
+            typedef std::unordered_map<pointer, unsigned int> FreeBlockMap;
+            FreeBlockMap freeBlocks;
             
-            // pair<page, freeBlocks>
-            // page, freeBlocks
-            std::map<unsigned int, unsigned int> pagesWithFreeBlocks;
+            std::list<pointer> pagesWithFreeBlocks;
         };
     }
 }

@@ -104,14 +104,12 @@ namespace Utilities
             return PAGE_SIZE / BLOCK_SIZE;
         }
         
-        unsigned int Allocator::requestNewPage()
+        pointer Allocator::requestNewPage()
         {
-            unsigned int id = pages.size();
-            
             Page page(new char[PAGE_SIZE]);
             pages.push_back(page);
             
-            return id;
+            return page.get();
         }
         
         pointer Allocator::getPage(unsigned int id) const

@@ -9,9 +9,9 @@
 
 using namespace Utilities::Memory;
 
-const size_t maxSize = 1 * MByte;
-const size_t pageSize = 1 * KByte;
-const size_t blockSize = 32 * Byte;
+const size_t maxSize = 32 * MByte;
+const size_t pageSize = 16 * KByte;
+const size_t blockSize = 128 * Byte;
 
 class SmallObjectAllocatorTest : public testing::Test
 {
@@ -51,16 +51,16 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
         ptrs[i] = new char[blockSize];
     }
 
-    for (size_t i = 0; i < allocations; ++i)
-    {
-        delete[] ptrs[i];
-    }
+//    for (size_t i = 0; i < allocations; ++i)
+//    {
+//        delete[] ptrs[i];
+//    }
 
     auto end = std::chrono::system_clock::now();
 
     long diff = std::chrono::duration_cast<ms > (end - start).count();
 
-    std::cout << "time: " << diff << " ms" << std::endl;
+    std::cout << "time (default new): " << diff << " ms" << std::endl;
 
 
 
@@ -72,16 +72,16 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
         ptrs[i] = allocator->allocate(blockSize);
     }
 
-    for (size_t i = 0; i < allocations; ++i)
-    {
-        allocator->deallocate(ptrs[i], blockSize, 1);
-    }
+//    for (size_t i = 0; i < allocations; ++i)
+//    {
+//        allocator->deallocate(ptrs[i], blockSize, 1);
+//    }
 
     end = std::chrono::system_clock::now();
 
     diff = std::chrono::duration_cast<ms > (end - start).count();
 
-    std::cout << "time: " << diff << " ms" << std::endl;
+    std::cout << "time (SOA): " << diff << " ms" << std::endl;
 
     ProfilerStop();
 }
