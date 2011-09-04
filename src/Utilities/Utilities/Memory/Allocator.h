@@ -34,8 +34,6 @@ namespace Utilities
         protected:
             Allocator(size_t maxSize, size_t pageSize, size_t blockSize);
             
-//            void registerPointer(const_pointer ptr, unsigned int page);
-            unsigned int getPageIDFor(const_pointer ptr);
             unsigned int getPageIDFor(const_pointer ptr) const;
             
             unsigned int getBlocksPerPage() const;
@@ -50,11 +48,11 @@ namespace Utilities
             
             size_t memoryUsage;
             
-            const size_t maxSize;
-            const size_t pageSize;
-            const size_t blockSize;
+            const size_t MAX_SIZE;
+            const size_t PAGE_SIZE;
+            const size_t BLOCK_SIZE;
             
-            const unsigned int maxPageCount;
+            const unsigned int MAX_PAGE_COUNT;
             
             std::vector<Page> pages;
         };

@@ -23,21 +23,21 @@ namespace Utilities
         SmallObjectAllocator::SmallObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize)
         : Allocator(maxSize, pageSize, blockSize)
         {
-            freeBlocks.reserve(maxPageCount);
+            freeBlocks.reserve(MAX_PAGE_COUNT);
         }
 
         pointer SmallObjectAllocator::allocate(size_t bytes)
         {
-            if(pagesWithFreeBlocks.empty())
+            if (pagesWithFreeBlocks.empty())
             {
                 unsigned int page = requestNewPage();
                 initializePage(page);
-                
+
                 pagesWithFreeBlocks[page] = 0;
             }
-            
+
             unsigned page = pagesWithFreeBlocks.begin()->first;
-            
+
             return allocateBlockIn(page);
         }
 
@@ -53,9 +53,8 @@ namespace Utilities
             {
                 //VLOG(1) << "Using block " << firstFreeBlock << " in page " << page;
 
-                pointer ptr = startOfPage + (blockSize * firstFreeBlock);
+                pointer ptr = startOfPage + (BLOCK_SIZE * firstFreeBlock);
 
-//                registerPointer(ptr, page);
                 markBlockAsUsed(firstFreeBlock, page);
 
                 return ptr;
@@ -72,68 +71,114 @@ namespace Utilities
 
             unsigned long diff = reinterpret_cast<unsigned long> (ptr) - reinterpret_cast<unsigned long> (startOfPage);
 
-            markBlockAsFree(diff / blockSize, page);
+            markBlockAsFree(diff / BLOCK_SIZE, page);
         }
 
         size_t SmallObjectAllocator::getLargestFreeArea() const
         {
-            // TODO
-            // go through all pages
         }
 
         size_t SmallObjectAllocator::getFreeMemory() const
         {
-            // TODO
-            // count all free blocks
+            const size_t unusedPages = MAX_PAGE_COUNT - pages.size();
+
+            size_t freeMemory = unusedPages * BLOCK_SIZE * (getUsableBlocksPerPage());
+
+            for (unsigned int i = 0; i < freeBlocks.size(); ++i)
+            {
+                freeMemory += freeBlocks.at(i) * BLOCK_SIZE;
+            }
+
+            return freeMemory;
         }
 
         void SmallObjectAllocator::initializePage(unsigned int page)
         {
-            freeBlocks[page] = getBlocksPerPage();
-            pagesWithFreeBlocks[page] = 0;
+            freeBlocks[page] = getUsableBlocksPerPage();
+            pagesWithFreeBlocks[page] = getUsableBlocksPerPage();
 
             pointer tail = getTailFor(page);
-            fillMemory(tail, blockSize, 255); // set all bits to 1
+            fillMemory(tail, BLOCK_SIZE, 255); // set all bits to 1
         }
 
         pointer SmallObjectAllocator::getTailFor(unsigned int page) const
         {
             // offset of the last block (the allocation bitmask)
-            const size_t tailBlockOffset = blockSize * (getBlocksPerPage() - 1);
+            const size_t tailBlockOffset = BLOCK_SIZE * (getUsableBlocksPerPage());
 
             return &getPage(page)[tailBlockOffset];
         }
 
+        int countZeroBitsFromRight(unsigned long v)
+        {
+            int c = 0;
+
+            if (v)
+            {
+                v = (v ^ (v - 1)) >> 1; // Set v's trailing 0s to 1s and zero rest
+                for (c = 0; v; c++)
+                {
+                    v >>= 1;
+                }
+            }
+            else
+            {
+                c = -1;
+            }
+            
+            return c;
+        }
+        
+        int countZeroBitsFromRight2(unsigned long v)
+        {
+            unsigned int c = ULONG_BITS;
+            
+            v &= -static_cast<long>(v);
+            if(v) c--;
+            if (v & 0xFFFFFFFF) c -= 32;
+            if (v & 0x0000FFFF) c -= 16;
+            if (v & 0x00FF00FF) c -= 8;
+            if (v & 0x0F0F0F0F) c -= 4;
+            if (v & 0x33333333) c -= 2;
+            if (v & 0x55555555) c -= 1;
+            
+            return c;
+        }
+
         int SmallObjectAllocator::findFreeBlockIn(unsigned int page) const
         {
-            const size_t BLOCKS_PER_PAGE = getBlocksPerPage();
+            const size_t BLOCKS_PER_PAGE = getUsableBlocksPerPage();
 
             pointer tail = getTailFor(page);
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
 
             // split tail block in parts of 8 bytes
-            for (unsigned int i = 0; i < blockSize / sizeof (unsigned long); ++i)
+            for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
+                int c = countZeroBitsFromRight2(tailParts[i]);
+                
+                if(c == -1 || c > BLOCKS_PER_PAGE) continue;
+                else return c;
+                
                 // shift one bit right at a time
-                for (unsigned int j = 0; j < ULONG_BITS; ++j)
-                {
-                    const unsigned long blockNum = (ULONG_BITS * i) + j;
-
-                    if (blockNum > BLOCKS_PER_PAGE - 1)
-                    {
-                        break;
-                    }
-
-                    if ((tailParts[i] >> (blockNum)) & 1)
-                    {
-                        // this bit is set so the block is free
-                        //VLOG(1) << "Block " << (blockNum) << " is free";
-                        return blockNum;
-                    }
-                }
+//                for (unsigned int j = 0; j < ULONG_BITS; ++j)
+//                {
+//                    const unsigned long blockNum = (ULONG_BITS * i) + j;
+//
+//                    if (blockNum > BLOCKS_PER_PAGE)
+//                    {
+//                        break;
+//                    }
+//
+//                    if ((tailParts[i] >> (blockNum)) & 1)
+//                    {
+//                        // this bit is set so the block is free
+//                        return blockNum;
+//                    }
+//                }
             }
-
+            
             return -1;
         }
 
@@ -144,7 +189,6 @@ namespace Utilities
             if (freeBlocks[page] == 0)
             {
                 pagesWithFreeBlocks.erase(page);
-                //pagesWithFreeBlocks.remove(page);
             }
 
             pointer tail = getTailFor(page);
@@ -174,6 +218,11 @@ namespace Utilities
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
 
             *tailPart |= (1 << block);
+        }
+
+        unsigned int SmallObjectAllocator::getUsableBlocksPerPage() const
+        {
+            return getBlocksPerPage() - 1;
         }
     }
 }

@@ -59,13 +59,15 @@ namespace Utilities
             void markBlockAsUsed(unsigned int block, unsigned int page);
             void markBlockAsFree(unsigned int block, unsigned int page);
             
+            unsigned int getUsableBlocksPerPage() const;
+            
             pointer allocateBlockIn(unsigned int page);
             
             // index is the page and value is the amount of free blocks
             std::vector<unsigned int> freeBlocks;
             
             // pair<page, freeBlocks>
-            //std::list<unsigned int> pagesWithFreeBlocks;
+            // page, freeBlocks
             std::map<unsigned int, unsigned int> pagesWithFreeBlocks;
         };
     }

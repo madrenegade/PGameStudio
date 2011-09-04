@@ -22,10 +22,10 @@ namespace Utilities
     {
 
         Allocator::Allocator(size_t maxSize, size_t pageSize, size_t blockSize)
-        : memoryUsage(0), maxSize(maxSize), pageSize(pageSize), blockSize(blockSize),
-            maxPageCount(maxSize / pageSize)
+        : memoryUsage(0), MAX_SIZE(maxSize), PAGE_SIZE(pageSize), BLOCK_SIZE(blockSize),
+            MAX_PAGE_COUNT(maxSize / pageSize)
         {
-            pages.reserve(maxPageCount);
+            pages.reserve(MAX_PAGE_COUNT);
                 
 #ifdef DEBUG
             if (maxSize % pageSize != 0)
@@ -79,29 +79,6 @@ namespace Utilities
         {
             return getLargestFreeArea() / getFreeMemory();
         }
-
-
-        unsigned int Allocator::getPageIDFor(const_pointer ptr)
-        {
-            unsigned long lptr = reinterpret_cast<unsigned long>(ptr);
-            
-            for(unsigned int i = 0; i < pages.size(); ++i)
-            {
-                unsigned long pageStart = reinterpret_cast<unsigned long>(pages[i].get());
-                
-                if(lptr < pageStart) continue;
-                
-                const unsigned long diff = lptr - pageStart;
-                
-                if(diff >= 0 && diff < pageSize)
-                {
-                    return i;
-                }
-
-            }
-            
-            throw std::logic_error("Ptr not found in any page");
-        }
         
         unsigned int Allocator::getPageIDFor(const_pointer ptr) const
         {
@@ -113,7 +90,7 @@ namespace Utilities
                 
                 unsigned long diff = lptr - pageStart;
                 
-                if(diff >= 0 && diff < pageSize)
+                if(diff >= 0 && diff < PAGE_SIZE)
                 {
                     return i;
                 }
@@ -124,14 +101,14 @@ namespace Utilities
         
         unsigned int Allocator::getBlocksPerPage() const
         {
-            return pageSize / blockSize;
+            return PAGE_SIZE / BLOCK_SIZE;
         }
         
         unsigned int Allocator::requestNewPage()
         {
             unsigned int id = pages.size();
             
-            Page page(new char[pageSize]);
+            Page page(new char[PAGE_SIZE]);
             pages.push_back(page);
             
             return id;
