@@ -5,10 +5,11 @@
 #include <chrono>
 #include <boost/scoped_ptr.hpp>
 #include <google/profiler.h>
+#include <stdexcept>
 
 using namespace Utilities::Memory;
 
-const size_t maxSize = 32 * MByte;
+const size_t maxSize = 1 * MByte;
 const size_t pageSize = 1 * KByte;
 const size_t blockSize = 32 * Byte;
 
@@ -29,8 +30,9 @@ protected:
 
 TEST_F(SmallObjectAllocatorTest, assertBlockSizeIsBigEnough)
 {
-    // check that blocksize has enough bits
-    FAIL();
+    EXPECT_THROW({
+        boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(4 * KByte, 4 * KByte, 16*Byte));
+    }, std::logic_error);
 }
 
 typedef std::chrono::duration<long, std::ratio < 1, 1000 >> ms;
@@ -49,10 +51,10 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
         ptrs[i] = new char[blockSize];
     }
 
-    //    for(size_t i = 0; i < allocations; ++i)
-    //    {
-    //        delete[] ptrs[i];
-    //    }
+    for (size_t i = 0; i < allocations; ++i)
+    {
+        delete[] ptrs[i];
+    }
 
     auto end = std::chrono::system_clock::now();
 
@@ -70,10 +72,10 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
         ptrs[i] = allocator->allocate(blockSize);
     }
 
-    //    for(size_t i = 0; i < allocations; ++i)
-    //    {
-    //        allocator->deallocate(ptrs[i], blockSize, 1);
-    //    }
+    for (size_t i = 0; i < allocations; ++i)
+    {
+        allocator->deallocate(ptrs[i], blockSize, 1);
+    }
 
     end = std::chrono::system_clock::now();
 

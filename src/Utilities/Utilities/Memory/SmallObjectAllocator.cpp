@@ -14,6 +14,7 @@
 #include <bitset>
 #include <cmath>
 #include <list>
+#include <stdexcept>
 
 namespace Utilities
 {
@@ -23,6 +24,11 @@ namespace Utilities
         SmallObjectAllocator::SmallObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize)
         : Allocator(maxSize, pageSize, blockSize)
         {
+            if(blockSize < (pageSize / blockSize))
+            {
+                throw std::logic_error("Blocksize too small for this page size");
+            }
+                
             freeBlocks.reserve(MAX_PAGE_COUNT);
         }
 
@@ -108,34 +114,14 @@ namespace Utilities
 
             return &getPage(page)[tailBlockOffset];
         }
-
-        int countZeroBitsFromRight(unsigned long v)
-        {
-            int c = 0;
-
-            if (v)
-            {
-                v = (v ^ (v - 1)) >> 1; // Set v's trailing 0s to 1s and zero rest
-                for (c = 0; v; c++)
-                {
-                    v >>= 1;
-                }
-            }
-            else
-            {
-                c = -1;
-            }
-            
-            return c;
-        }
         
-        int countZeroBitsFromRight2(unsigned long v)
+        int countZeroBitsFromRight(unsigned long v)
         {
             unsigned int c = ULONG_BITS;
             
             v &= -static_cast<long>(v);
             if(v) c--;
-            if (v & 0xFFFFFFFF) c -= 32;
+            if (v & 0xFFFFFFFF) c -= 32; // FIXME: execute only for 64 bits
             if (v & 0x0000FFFF) c -= 16;
             if (v & 0x00FF00FF) c -= 8;
             if (v & 0x0F0F0F0F) c -= 4;
@@ -156,27 +142,10 @@ namespace Utilities
             // split tail block in parts of 8 bytes
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
-                int c = countZeroBitsFromRight2(tailParts[i]);
+                int c = countZeroBitsFromRight(tailParts[i]);
                 
                 if(c == -1 || c > BLOCKS_PER_PAGE) continue;
                 else return c;
-                
-                // shift one bit right at a time
-//                for (unsigned int j = 0; j < ULONG_BITS; ++j)
-//                {
-//                    const unsigned long blockNum = (ULONG_BITS * i) + j;
-//
-//                    if (blockNum > BLOCKS_PER_PAGE)
-//                    {
-//                        break;
-//                    }
-//
-//                    if ((tailParts[i] >> (blockNum)) & 1)
-//                    {
-//                        // this bit is set so the block is free
-//                        return blockNum;
-//                    }
-//                }
             }
             
             return -1;
