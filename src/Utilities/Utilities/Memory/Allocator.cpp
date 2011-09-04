@@ -22,9 +22,11 @@ namespace Utilities
     {
 
         Allocator::Allocator(size_t maxSize, size_t pageSize, size_t blockSize)
-        : memoryUsage(0), data(new char[maxSize]), maxSize(maxSize), pageSize(pageSize), blockSize(blockSize),
-            pageCount(maxSize / pageSize), allocations(3)
+        : memoryUsage(0), maxSize(maxSize), pageSize(pageSize), blockSize(blockSize),
+            maxPageCount(maxSize / pageSize)
         {
+            pages.reserve(maxPageCount);
+                
 #ifdef DEBUG
             if (maxSize % pageSize != 0)
             {
@@ -51,14 +53,21 @@ namespace Utilities
                 
                 throw std::invalid_argument("Block size must be multiple of the 8");
             }
-
-            fillMemory(data.get(), maxSize, EMPTY);
 #endif
         }
 
         bool Allocator::contains(const_pointer ptr) const
         {
-            return allocations.find(ptr) != allocations.end();
+            try
+            {
+                unsigned int page = getPageIDFor(ptr);
+                
+                return true;
+            }
+            catch(const std::logic_error& ex)
+            {
+                return false;
+            }
         }
 
         size_t Allocator::getMemoryUsage() const
@@ -71,14 +80,66 @@ namespace Utilities
             return getLargestFreeArea() / getFreeMemory();
         }
 
-        void Allocator::registerPointer(const_pointer ptr, unsigned int page)
+
+        unsigned int Allocator::getPageIDFor(const_pointer ptr)
         {
-            allocations[ptr] = page;
+            unsigned long lptr = reinterpret_cast<unsigned long>(ptr);
+            
+            for(unsigned int i = 0; i < pages.size(); ++i)
+            {
+                unsigned long pageStart = reinterpret_cast<unsigned long>(pages[i].get());
+                
+                if(lptr < pageStart) continue;
+                
+                const unsigned long diff = lptr - pageStart;
+                
+                if(diff >= 0 && diff < pageSize)
+                {
+                    return i;
+                }
+
+            }
+            
+            throw std::logic_error("Ptr not found in any page");
+        }
+        
+        unsigned int Allocator::getPageIDFor(const_pointer ptr) const
+        {
+            unsigned long lptr = reinterpret_cast<unsigned long>(ptr);
+            
+            for(unsigned int i = 0; i < pages.size(); ++i)
+            {
+                unsigned long pageStart = reinterpret_cast<unsigned long>(pages.at(i).get());
+                
+                unsigned long diff = lptr - pageStart;
+                
+                if(diff >= 0 && diff < pageSize)
+                {
+                    return i;
+                }
+            }
+            
+            throw std::logic_error("Ptr not found in any page");
         }
         
         unsigned int Allocator::getBlocksPerPage() const
         {
             return pageSize / blockSize;
+        }
+        
+        unsigned int Allocator::requestNewPage()
+        {
+            unsigned int id = pages.size();
+            
+            Page page(new char[pageSize]);
+            pages.push_back(page);
+            
+            return id;
+        }
+        
+        pointer Allocator::getPage(unsigned int id) const
+        {
+            return pages.at(id).get();
         }
     }
 }

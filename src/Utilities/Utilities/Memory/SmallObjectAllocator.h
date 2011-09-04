@@ -40,7 +40,7 @@ namespace Utilities
              * Set each bit of the last block of each page to one.
              * This marks all blocks in the page as free.
              */
-            void initializePageTails();
+            void initializePage(unsigned int page);
             
             /**
              * get the starting address of a page

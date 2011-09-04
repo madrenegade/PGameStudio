@@ -11,8 +11,9 @@
 #include "Utilities/Memory/typedefs.h"
 
 #include <map>
-#include <boost/scoped_array.hpp>
+#include <boost/shared_array.hpp>
 #include <unordered_map>
+#include <vector>
 
 namespace Utilities
 {
@@ -33,25 +34,29 @@ namespace Utilities
         protected:
             Allocator(size_t maxSize, size_t pageSize, size_t blockSize);
             
-            void registerPointer(const_pointer ptr, unsigned int page);
+//            void registerPointer(const_pointer ptr, unsigned int page);
+            unsigned int getPageIDFor(const_pointer ptr);
+            unsigned int getPageIDFor(const_pointer ptr) const;
             
             unsigned int getBlocksPerPage() const;
             
             virtual size_t getLargestFreeArea() const = 0;
             virtual size_t getFreeMemory() const = 0;
             
-            size_t memoryUsage;
+            typedef boost::shared_array<char> Page;
+            unsigned int requestNewPage();
             
-            boost::scoped_array<char> data;
+            pointer getPage(unsigned int id) const;
+            
+            size_t memoryUsage;
             
             const size_t maxSize;
             const size_t pageSize;
             const size_t blockSize;
             
-            const unsigned int pageCount;
+            const unsigned int maxPageCount;
             
-            typedef std::unordered_map<const_pointer, unsigned int> PageMap;
-            PageMap allocations;
+            std::vector<Page> pages;
         };
     }
 }

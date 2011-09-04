@@ -23,14 +23,17 @@ namespace Utilities
         SmallObjectAllocator::SmallObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize)
         : Allocator(maxSize, pageSize, blockSize)
         {
-            initializePageTails();
+            freeBlocks.reserve(maxPageCount);
         }
 
         pointer SmallObjectAllocator::allocate(size_t bytes)
         {
             if(pagesWithFreeBlocks.empty())
             {
-                throw OutOfMemoryException();
+                unsigned int page = requestNewPage();
+                initializePage(page);
+                
+                pagesWithFreeBlocks[page] = 0;
             }
             
             unsigned page = pagesWithFreeBlocks.begin()->first;
@@ -40,10 +43,7 @@ namespace Utilities
 
         pointer SmallObjectAllocator::allocateBlockIn(unsigned int page)
         {
-            unsigned long poolStart = reinterpret_cast<unsigned long> (data.get());
-            
-            pointer startOfPage = &data[page * pageSize];
-            unsigned long pageOffset = reinterpret_cast<unsigned long> (startOfPage) - poolStart;
+            pointer startOfPage = getPage(page);
 
             //VLOG(1) << "testing page " << page << " at offset " << pageOffset;
 
@@ -55,7 +55,7 @@ namespace Utilities
 
                 pointer ptr = startOfPage + (blockSize * firstFreeBlock);
 
-                registerPointer(ptr, page);
+//                registerPointer(ptr, page);
                 markBlockAsUsed(firstFreeBlock, page);
 
                 return ptr;
@@ -66,9 +66,9 @@ namespace Utilities
 
         void SmallObjectAllocator::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
-            unsigned int page = allocations[ptr];
+            unsigned int page = getPageIDFor(ptr);
 
-            pointer startOfPage = &data[page * pageSize];
+            pointer startOfPage = getPage(page);
 
             unsigned long diff = reinterpret_cast<unsigned long> (ptr) - reinterpret_cast<unsigned long> (startOfPage);
 
@@ -87,29 +87,21 @@ namespace Utilities
             // count all free blocks
         }
 
-        void SmallObjectAllocator::initializePageTails()
+        void SmallObjectAllocator::initializePage(unsigned int page)
         {
-            freeBlocks.reserve(pageCount);
+            freeBlocks[page] = getBlocksPerPage();
+            pagesWithFreeBlocks[page] = 0;
 
-            for (unsigned int page = 0; page < pageCount; ++page)
-            {
-                freeBlocks[page] = getBlocksPerPage();
-                //pagesWithFreeBlocks.push_front(page);
-                pagesWithFreeBlocks[page] = getBlocksPerPage();
-
-                pointer tail = getTailFor(page);
-                fillMemory(tail, blockSize, 255); // set all bits to 1
-            }
+            pointer tail = getTailFor(page);
+            fillMemory(tail, blockSize, 255); // set all bits to 1
         }
 
         pointer SmallObjectAllocator::getTailFor(unsigned int page) const
         {
-            const size_t pageStart = pageSize * page;
-
             // offset of the last block (the allocation bitmask)
-            const size_t blockOffset = blockSize * (getBlocksPerPage() - 1);
+            const size_t tailBlockOffset = blockSize * (getBlocksPerPage() - 1);
 
-            return &data[pageStart + blockOffset];
+            return &getPage(page)[tailBlockOffset];
         }
 
         int SmallObjectAllocator::findFreeBlockIn(unsigned int page) const
