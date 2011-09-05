@@ -25,6 +25,7 @@
 #include <tbb/concurrent_hash_map.h>
 #include <tbb/atomic.h>
 #include <tbb/spin_mutex.h>
+#include <tbb/spin_rw_mutex.h>
 
 namespace Utilities
 {
@@ -44,6 +45,13 @@ namespace Utilities
              * @return the id the pool is registered to
              */
             pool_id registerMemoryPool(const boost::shared_ptr<Pool>& pool);
+
+            /**
+             * unregisters the memory pool
+             * if the memory manager holds the last reference the pool will be deleted
+             * @param poolID
+             */
+            void unregisterMemoryPool(pool_id poolID);
 
             /**
              * construct the given object in the given memory pool
@@ -72,13 +80,42 @@ namespace Utilities
                                            boost::bind(&MemoryManager::deallocate<T, numObjects>, this, _1));
                 return ptr;
             }
+            
+#ifdef DEBUG
+            /**
+             * do not use directly
+             */
+            template<typename T>
+            boost::shared_ptr<T> construct(const T& obj, pool_id poolID, const std::type_info& type, const char* function)
+            {
+                // TODO: do some memory profiling here
+                RAW_VLOG(1, "Constructing in %s::%s", Utilities::demangle(type.name()).c_str(), __FUNCTION__);
+
+                return construct(obj, poolID);
+            }
+
+            /**
+             * do not use directly
+             */
+            template<typename T, size_t numObjects>
+            boost::shared_array<T> allocate(pool_id poolID, const std::type_info& type, const char* function)
+            {
+                // TODO: do some memory profiling here
+                RAW_VLOG(1, "Allocating in %s::%s", Utilities::demangle(type.name()).c_str(), __FUNCTION__);
+
+                return allocate<T, numObjects > (poolID);
+            }
+#endif
 
         private:
             typedef tbb::spin_mutex MemoryTrackerMutexType;
             MemoryTrackerMutexType memoryTrackerMutex;
             boost::shared_ptr<MemoryTracker> memoryTracker;
 
-            typedef tbb::concurrent_hash_map<pool_id, boost::shared_ptr<Pool >> PoolMap;
+            typedef tbb::spin_rw_mutex PoolMapMutexType;
+            typedef std::map<pool_id, boost::shared_ptr<Pool > > PoolMap;
+
+            PoolMapMutexType poolMapMutex;
             PoolMap pools;
 
             tbb::atomic<pool_id> latestPoolID;
@@ -100,24 +137,25 @@ namespace Utilities
                 RAW_VLOG(1, "Allocating %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
 #endif
 
-                PoolMap::accessor accessor;
-                
+                T* ptr = 0;
+                {
+                    PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
+
 #ifdef DEBUG
-                assertPoolExists(poolID);
+                    if (pools.find(poolID) == pools.end())
+                    {
+                        throw std::logic_error("Invalid pool id");
+                    }
 
-                pools.find(accessor, poolID);
+                    pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
 
-                pointer rawPtr = accessor->second->allocate(BYTES_TO_ALLOCATE);
+                    fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
-                accessor.release();
-
-                fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
-
-                T* ptr = reinterpret_cast<T*> (rawPtr);
+                    ptr = reinterpret_cast<T*> (rawPtr);
 #else
-                pools.find(accessor, poolID);
-                T* ptr = reinterpret_cast<T*> (accessor->second->allocate(BYTES_TO_ALLOCATE));
+                    ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
 #endif
+                }
 
 #ifdef DEBUG
                 RAW_VLOG(1, "Allocated %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
@@ -147,17 +185,16 @@ namespace Utilities
 
                 const_pointer rawPtr = reinterpret_cast<const_pointer> (ptr);
 
-                pool_id id = findPoolContaining(rawPtr);
+                {
+                    PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
+                    pool_id poolID = findPoolContaining(rawPtr);
 
-                PoolMap::accessor accessor;
-                pools.find(accessor, id);
-                
-                accessor->second->deallocate(rawPtr, sizeof (T), n);
-                accessor.release();
+                    pools[poolID]->deallocate(rawPtr, sizeof (T), n);
 
 #ifdef DEBUG
-                RAW_VLOG(1, "Deallocated %i bytes from pool %i", BYTES_TO_DEALLOCATE, id);
+                    RAW_VLOG(1, "Deallocated %i bytes from pool %i", BYTES_TO_DEALLOCATE, poolID);
 #endif
+                }
 
                 {
                     MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
@@ -166,10 +203,17 @@ namespace Utilities
             }
 
 #ifdef DEBUG
-            void assertPoolExists(pool_id poolID) const;
-            void assertPoolIsUnique(const boost::shared_ptr<Pool>& pool) const;
+            void assertPoolIsUnique(const boost::shared_ptr<Pool>& pool);
 #endif
         };
+
+#ifdef DEBUG
+#define CONSTRUCT(mngr, obj, poolID) mngr->construct(obj, poolID, typeid(*this), __FUNCTION__)
+#define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID, typeid(*this), __FUNCTION__)
+#else
+#define CONSTRUCT(mngr, obj, poolID) mngr->construct(object, poolID)
+#define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID)
+#endif
     }
 }
 

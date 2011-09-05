@@ -30,18 +30,23 @@ TEST_F(MemoryManagerTest, construct)
 {
     memory->registerMemoryPool(pool);
     int i = 5;
-    memory->construct(5);
+    
+    boost::shared_ptr<int> ptr = CONSTRUCT(memory, i, 0);
+    
+    EXPECT_EQ(i, *ptr);
 }
 
 TEST_F(MemoryManagerTest, allocateShouldFailIfPoolDoesNotExists)
 {
-    EXPECT_THROW((memory->allocate<short, 2 > ()), std::logic_error);
+    boost::shared_array<short> ptr;
+    
+    EXPECT_THROW((ALLOCATE(memory, short, 2, 0)), std::logic_error);
 }
 
 TEST_F(MemoryManagerTest, allocateShouldSucceedWithMockPool)
 {
     pool_id id = memory->registerMemoryPool(pool);
-    ASSERT_NO_THROW((memory->allocate<short, 2 > ()));
+    ASSERT_NO_THROW((ALLOCATE(memory, short, 2, 0)));
 }
 
 TEST_F(MemoryManagerTest, registerPoolShouldFailIfPoolAlreadyExists)
@@ -70,7 +75,7 @@ TEST_F(MemoryManagerTest, allocateShouldTrackAllocation)
     EXPECT_EQ(0, tracker->getAllocations());
 
     memory->registerMemoryPool(pool);
-    memory->allocate<short, 2 > ();
+    ALLOCATE(memory, short, 2, 0);
 
     EXPECT_EQ(1, tracker->getAllocations());
 }
@@ -82,7 +87,7 @@ TEST_F(MemoryManagerTest, deallocateShouldTrackDeallocation)
     memory->registerMemoryPool(pool);
 
     {
-        boost::shared_array<int> i = memory->allocate<int, 2 > ();
+        boost::shared_array<int> i = ALLOCATE(memory, int, 2, 0);
     }
 
     EXPECT_EQ(1, tracker->getDeallocations());

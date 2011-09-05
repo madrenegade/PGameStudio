@@ -26,14 +26,31 @@ namespace Utilities
 
             pool_id id = latestPoolID.fetch_and_add(1);
 
-            pools.insert(std::make_pair(id, pool));
-
+            {
+                PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
+                
+                pools[id] = pool;
+            }
+            
             return id;
+        }
+        
+        void MemoryManager::unregisterMemoryPool(pool_id poolID)
+        {
+            PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
+            
+#ifdef DEBUG
+            if(pools.find(poolID) == pools.end())
+            {
+                throw std::logic_error("Pool not found");
+            }
+#endif
+            
+            pools.erase(poolID);
         }
 
         pool_id MemoryManager::findPoolContaining(const_pointer ptr) const
         {
-            // TODO: is iterating thread safe?
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
                 if (i->second->contains(ptr))
@@ -47,16 +64,10 @@ namespace Utilities
 
 #ifdef DEBUG
 
-        void MemoryManager::assertPoolExists(pool_id poolID) const
-        {  
-            if (pools.count(poolID) == 0)
-            {
-                throw std::logic_error("Invalid pool id");
-            }
-        }
-
-        void MemoryManager::assertPoolIsUnique(const boost::shared_ptr<Pool>& pool) const
+        void MemoryManager::assertPoolIsUnique(const boost::shared_ptr<Pool>& pool)
         {
+            PoolMapMutexType::scoped_lock lock(poolMapMutex, false);
+            
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
                 if (i->second == pool)
