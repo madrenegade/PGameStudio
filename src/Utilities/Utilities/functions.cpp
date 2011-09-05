@@ -1,6 +1,10 @@
 #include "Utilities/functions.h"
 #include "Utilities/Memory/constants.h"
 
+#include <boost/shared_ptr.hpp>
+#include <glog/logging.h>
+#include <glog/raw_logging.h>
+
 #ifdef GCC
 #include <cxxabi.h>
 #endif
@@ -11,16 +15,19 @@ namespace Utilities
     std::string demangle(const char* name)
     {
 #ifdef GCC
-        char buf[1024];
-        size_t size = sizeof (buf);
         int status;
 
-        char* res = abi::__cxa_demangle(name,
-            buf,
-            &size,
-            &status);
-
-        return std::string(res);
+        boost::shared_ptr<char> res(abi::__cxa_demangle(name,
+            0,
+            0,
+            &status), free);
+        
+        if(status != 0)
+        {
+            RAW_LOG_ERROR("Demangling failed with status: %i", status);
+        }
+        
+        return std::string(res.get());
 #else
         return std::string(name);
 #endif
@@ -48,5 +55,19 @@ namespace Utilities
         if (v & 0x55555555) c -= 1;
 
         return c;
+    }
+
+    unsigned long reverseBits(unsigned long v)
+    {
+        unsigned int r = v; // r will be reversed bits of v; first get LSB of v
+        int s = sizeof (v) * Memory::BITS_PER_BYTE - 1; // extra shift needed at end
+
+        for (v >>= 1; v; v >>= 1)
+        {
+            r <<= 1;
+            r |= v & 1;
+            s--;
+        }
+        r <<= s; // shift when v's highest bits are zero
     }
 }

@@ -17,15 +17,15 @@ namespace Utilities
 
         struct MemoryPoolSettings
         {
-            MemoryPoolSettings(size_t smallObjectPoolSize = 128*Byte,
-                               size_t smallObjectPageSize = 64*Byte,
-                               size_t smallObjectBlockSize = 8*Byte,
-                               size_t mediumObjectPoolSize = 1*MByte,
+            MemoryPoolSettings(size_t smallObjectPoolSize = 16*KByte,
+                               size_t smallObjectPageSize = 4*KByte,
+                               size_t smallObjectBlockSize = 128*Byte,
+                               size_t mediumObjectPoolSize = 4*MByte,
                                size_t mediumObjectPageSize = 4*KByte,
-                               size_t mediumObjectBlockSize = 64*Byte,
-                               size_t largeObjectPoolSize = 1*MByte,
+                               size_t mediumObjectBlockSize = 256*Byte,
+                               size_t largeObjectPoolSize = 16*MByte,
                                size_t largeObjectPageSize = 4*KByte,
-                               size_t largeObjectBlockSize = 128*Byte)
+                               size_t largeObjectBlockSize = 512*Byte)
             : smallObjectPoolSize(smallObjectPoolSize),
             smallObjectPageSize(smallObjectPageSize),
             smallObjectBlockSize(smallObjectBlockSize),

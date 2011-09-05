@@ -1,6 +1,7 @@
 #include "Utilities/Memory/MemoryTracker.h"
 
 #include <glog/logging.h>
+#include <glog/raw_logging.h>
 
 namespace Utilities
 {
@@ -27,16 +28,15 @@ namespace Utilities
             
             if(!dump.empty())
             {
-                LOG(ERROR) << "Memory leaks detected: " << memoryUsage << " bytes in " << dump.size() << " blocks";
+                RAW_LOG_WARNING("Memory leaks detected: %i bytes in %i blocks", memoryUsage, dump.size());
                 
                  for(unsigned int i = 0; i < dump.size(); ++i)
                  {
                    const AllocationInfo& allocationInfo = dump.at(i);
                    
-                     VLOG(1) << "Block information:" << std::endl
-                        << "Address: " << reinterpret_cast<long>(allocationInfo.getPointer()) << std::endl
-                        << "Size: " << allocationInfo.getSize() << std::endl
-                        << "Type: " << allocationInfo.getType();
+                   RAW_VLOG(1, "Block information:\nAddress: %i\nSize: %i\nType: %s", 
+                       reinterpret_cast<long>(allocationInfo.getPointer()), 
+                       allocationInfo.getSize(), allocationInfo.getType().c_str());
                  }
             }
         }

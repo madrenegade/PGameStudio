@@ -18,7 +18,7 @@ namespace Utilities
         class AllocationException : public std::logic_error
         {
         public:
-            AllocationException();
+            explicit AllocationException(const std::string& msg);
         };
     }
 }

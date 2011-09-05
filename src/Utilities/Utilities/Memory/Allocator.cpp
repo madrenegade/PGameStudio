@@ -13,6 +13,7 @@
 
 #ifdef DEBUG
 #include <glog/logging.h>
+#include <glog/raw_logging.h>
 #include "Utilities/functions.h"
 #endif
 
@@ -30,28 +31,23 @@ namespace Utilities
 #ifdef DEBUG
             if (maxSize % pageSize != 0)
             {
-                VLOG(1) << "Pool size: " << maxSize << std::endl
-                    << "Page size: " << pageSize << std::endl
-                    << "Rest: " << (maxSize % pageSize);
+                RAW_VLOG(1, "Pool size: %i\nPage size: %i\nRest: %i", maxSize, pageSize, maxSize % pageSize);
                 
                 throw std::invalid_argument("Pool size must be multiple of the page size");
             }
             
             if(pageSize % blockSize != 0)
             {
-                VLOG(1) << "Page size: " << pageSize << std::endl
-                    << "Block size: " << blockSize << std::endl
-                    << "Rest: " << (pageSize % blockSize);
+                RAW_VLOG(1, "Page size: %i\nBlock size: %i\nRest: %i", pageSize, blockSize, pageSize % blockSize);
                 
                 throw std::invalid_argument("Page size must be multiple of the block size");
             }
             
             if(blockSize % 8 != 0)
             {
-                VLOG(1) << "Block size: " << blockSize << std::endl
-                    << "Rest: " << (blockSize % 8);
+                RAW_VLOG(1, "Block size: %i\nRest: %i", blockSize, blockSize % BITS_PER_BYTE);
                 
-                throw std::invalid_argument("Block size must be multiple of the 8");
+                throw std::invalid_argument("Block size must be multiple of BITS_PER_BYTE");
             }
 #endif
         }
@@ -77,7 +73,7 @@ namespace Utilities
 
         double Allocator::getFragmentation() const
         {
-            return getLargestFreeArea() / getFreeMemory();
+            return 1.0 - getLargestFreeArea() / getFreeMemory();
         }
         
         unsigned int Allocator::getPageIDFor(const_pointer ptr) const
@@ -96,7 +92,7 @@ namespace Utilities
                 }
             }
             
-            throw std::logic_error("Ptr not found in any page");
+            throw std::logic_error("Pointer not found in any page");
         }
         
         unsigned int Allocator::getBlocksPerPage() const
@@ -106,7 +102,7 @@ namespace Utilities
         
         pointer Allocator::requestNewPage()
         {
-            Page page(new char[PAGE_SIZE]);
+            Page page(new byte[PAGE_SIZE]);
             pages.push_back(page);
             
             return page.get();

@@ -35,6 +35,39 @@ TEST_F(SmallObjectAllocatorTest, assertBlockSizeIsBigEnough)
     }, std::logic_error);
 }
 
+TEST_F(SmallObjectAllocatorTest, allocateShouldCheckThatRequestedSizeFitsInOneBlock)
+{
+    EXPECT_THROW(allocator->allocate(blockSize + 1), std::logic_error);
+}
+
+TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
+{
+    boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(1 * KByte, 1 * KByte, 32*Byte));
+    
+    for(unsigned int i = 0; i < (1*KByte / 32*Byte) - 1; ++i)
+    {
+        ptr->allocate(1);
+        
+        EXPECT_EQ((i+1) * 32 * Byte, ptr->getMemoryUsage());
+    }
+}
+
+TEST_F(SmallObjectAllocatorTest, getFreeMemory)
+{
+    boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(1 * KByte, 1 * KByte, 32*Byte));
+    
+    const size_t maxMemory = 1*KByte - 32*Byte;
+    
+    EXPECT_EQ(maxMemory, ptr->getFreeMemory());
+    
+    for(unsigned int i = 1; i < (1*KByte / 32*Byte); ++i)
+    {
+        ptr->allocate(1);
+        
+        EXPECT_EQ(maxMemory - (i * 32*Byte), ptr->getFreeMemory());
+    }
+}
+
 typedef std::chrono::duration<long, std::ratio < 1, 1000 >> ms;
 
 TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)

@@ -9,6 +9,7 @@
 #define	UTILITIES_MEMORY_DEBUGMEMORYTRACKER_H
 
 #include "Utilities/Memory/MemoryTracker.h"
+#include <unordered_map>
 
 namespace Utilities
 {
@@ -22,6 +23,10 @@ namespace Utilities
             virtual void trackDeallocation(const_pointer ptr, size_t bytes, const std::type_info& type);
             
             virtual MemoryDump getMemoryDump() const;
+            
+        private:
+            typedef std::unordered_map<const_pointer, AllocationInfo> AllocationMap;
+            AllocationMap allocations;
         };
     }
 }

@@ -10,8 +10,8 @@ namespace Utilities
 {
     namespace Memory
     {
-        OutOfMemoryException::OutOfMemoryException()
-        : std::runtime_error("Out of memory")
+        OutOfMemoryException::OutOfMemoryException(const std::string& cause)
+        : std::runtime_error(cause)
         {
             
         }

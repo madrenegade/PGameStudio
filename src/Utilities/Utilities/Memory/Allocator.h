@@ -29,6 +29,8 @@ namespace Utilities
             bool contains(const_pointer ptr) const;
 
             size_t getMemoryUsage() const;
+            virtual size_t getFreeMemory() const = 0;
+            
             double getFragmentation() const;
 
         protected:
@@ -39,9 +41,6 @@ namespace Utilities
             unsigned int getBlocksPerPage() const;
             
             virtual size_t getLargestFreeArea() const = 0;
-            virtual size_t getFreeMemory() const = 0;
-            
-            typedef boost::shared_array<char> Page;
             
             pointer requestNewPage();
             
@@ -55,6 +54,7 @@ namespace Utilities
             
             const unsigned int MAX_PAGE_COUNT;
             
+            typedef boost::shared_array<byte> Page;
             std::vector<Page> pages;
         };
     }

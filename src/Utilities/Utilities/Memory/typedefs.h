@@ -12,8 +12,10 @@ namespace Utilities
 {
     namespace Memory
     {
-        typedef char* pointer;
-        typedef const char* const_pointer;
+        typedef char byte;
+        
+        typedef byte* pointer;
+        typedef const byte* const_pointer;
         
         typedef unsigned int pool_id;
     }

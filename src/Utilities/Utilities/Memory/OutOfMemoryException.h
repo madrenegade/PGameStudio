@@ -18,7 +18,7 @@ namespace Utilities
         class OutOfMemoryException : public std::runtime_error
         {
         public:
-            OutOfMemoryException();
+            explicit OutOfMemoryException(const std::string& cause);
         };
     }
 }

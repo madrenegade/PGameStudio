@@ -11,8 +11,8 @@ namespace Utilities
 {
     namespace Memory
     {
-        AllocationException::AllocationException()
-        : std::logic_error("Allocation error")
+        AllocationException::AllocationException(const std::string& msg)
+        : std::logic_error(msg)
         {
 
         }
