@@ -8,7 +8,7 @@
 #ifndef UTILITIES_MEMORY_MEMORYTRACKERMOCK_H
 #define UTILITIES_MEMORY_MEMORYTRACKERMOCK_H
 
-#include "Utilities/Memory/MemoryTracker.h"
+#include "Utilities/Memory/Tracking/MemoryTracker.h"
 
 namespace Utilities
 {

@@ -11,9 +11,10 @@ add_executable(TestRunner ${Project_Sources})
 
 add_dependencies(TestRunner MathTests UtilitiesTests)
 
-target_link_libraries(TestRunner
+target_link_libraries(TestRunner -fprofile-arcs -ftest-coverage --coverage
     ${GTEST_LIBRARIES}
     MathTests
     UtilitiesTests
+    gcov
 )
 

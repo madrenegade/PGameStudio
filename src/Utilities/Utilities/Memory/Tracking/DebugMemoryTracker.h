@@ -8,7 +8,7 @@
 #ifndef UTILITIES_MEMORY_DEBUGMEMORYTRACKER_H
 #define	UTILITIES_MEMORY_DEBUGMEMORYTRACKER_H
 
-#include "Utilities/Memory/MemoryTracker.h"
+#include "Utilities/Memory/Tracking/MemoryTracker.h"
 #include <unordered_map>
 
 namespace Utilities

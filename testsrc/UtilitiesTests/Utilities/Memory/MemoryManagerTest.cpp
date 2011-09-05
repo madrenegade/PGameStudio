@@ -1,6 +1,7 @@
 #include "Utilities/Memory/MemoryManager.h"
-#include "Utilities/Memory/OutOfMemoryException.h"
+#include "Utilities/Memory/Exceptions/OutOfMemoryException.h"
 #include "Utilities/Memory/MemoryTrackerMock.h"
+
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <list>

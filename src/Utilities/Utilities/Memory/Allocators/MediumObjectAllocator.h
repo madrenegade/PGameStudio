@@ -1,24 +1,24 @@
 /* 
- * File:   LargeObjectAllocator.h
+ * File:   MediumObjectAllocator.h
  * Author: madrenegade
  *
- * Created on September 2, 2011, 11:00 PM
+ * Created on September 2, 2011, 10:59 PM
  */
 
-#ifndef UTILITIES_MEMORY_LARGEOBJECTALLOCATOR_H
-#define	UTILITIES_MEMORY_LARGEOBJECTALLOCATOR_H
+#ifndef UTILITIES_MEMORY_MEDIUMOBJECTALLOCATOR_H
+#define	UTILITIES_MEMORY_MEDIUMOBJECTALLOCATOR_H
 
-#include "Utilities/Memory/Allocator.h"
+#include "Utilities/Memory/Allocators/Allocator.h"
 
 namespace Utilities
 {
     namespace Memory
     {
 
-        class LargeObjectAllocator : public Allocator
+        class MediumObjectAllocator : public Allocator
         {
         public:
-            LargeObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize);
+            MediumObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize);
             
             virtual pointer allocate(size_t bytes);
             virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
@@ -30,5 +30,5 @@ namespace Utilities
     }
 }
 
-#endif	/* UTILITIES_MEMORY_LARGEOBJECTALLOCATOR_H */
+#endif	/* UTILITIES_MEMORY_MEDIUMOBJECTALLOCATOR_H */
 

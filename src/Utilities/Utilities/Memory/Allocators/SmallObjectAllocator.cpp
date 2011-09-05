@@ -5,11 +5,10 @@
  * Created on September 2, 2011, 10:55 PM
  */
 
-#include "Utilities/Memory/SmallObjectAllocator.h"
-#include "Utilities/Memory/OutOfMemoryException.h"
+#include "Utilities/Memory/Allocators/SmallObjectAllocator.h"
+#include "Utilities/Memory/Exceptions/OutOfMemoryException.h"
 #include "Utilities/functions.h"
-#include "constants.h"
-#include "LargeObjectAllocator.h"
+#include "Utilities/Memory/constants.h"
 
 #include <glog/logging.h>
 #include <bitset>

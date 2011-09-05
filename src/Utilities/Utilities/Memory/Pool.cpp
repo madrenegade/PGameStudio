@@ -6,8 +6,8 @@
  */
 
 #include "Utilities/Memory/Pool.h"
-#include "MemoryPoolSettings.h"
-#include "MediumObjectAllocator.h"
+#include "Utilities/Memory/MemoryPoolSettings.h"
+#include "Utilities/Memory/Allocators/MediumObjectAllocator.h"
 
 namespace Utilities
 {

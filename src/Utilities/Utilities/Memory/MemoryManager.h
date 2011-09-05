@@ -19,7 +19,7 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/Pool.h"
-#include "Utilities/Memory/MemoryTracker.h"
+#include "Utilities/Memory/Tracking/MemoryTracker.h"
 #include "Utilities/functions.h"
 
 namespace Utilities

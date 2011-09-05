@@ -3,3 +3,13 @@ Build instructions
 ./clean.sh
 cd build
 cmake -G "CodeBlocks - Unix Makefiles" ..
+
+Code coverage
+-------------
+To perform code coverage analysism do the following:
+
+cd bin
+. ../coverage.sh
+
+Note the dot before the script path.
+The script will generate a html report in the coverage directory.

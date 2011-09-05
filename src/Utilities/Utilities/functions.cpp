@@ -7,6 +7,7 @@
 
 #ifdef GCC
 #include <cxxabi.h>
+#include <stdexcept>
 #endif
 
 namespace Utilities
@@ -25,6 +26,8 @@ namespace Utilities
         if(status != 0)
         {
             RAW_LOG_ERROR("Demangling failed with status: %i", status);
+            
+            return std::string(name);
         }
         
         return std::string(res.get());
@@ -35,6 +38,18 @@ namespace Utilities
 
     void fillMemory(Memory::pointer start, size_t bytes, char c)
     {
+#ifdef DEBUG
+        if(start == 0)
+        {
+            throw std::invalid_argument("start pointer");
+        }
+        
+        if(bytes == 0)
+        {
+            throw std::invalid_argument("bytes must not be zero");
+        }
+#endif
+        
         for (size_t i = 0; i < bytes; ++i)
         {
             start[i] = c;

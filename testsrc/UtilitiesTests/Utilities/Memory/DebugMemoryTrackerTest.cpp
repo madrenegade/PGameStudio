@@ -1,5 +1,5 @@
-#include "Utilities/Memory/DebugMemoryTracker.h"
-#include "Utilities/Memory/AllocationException.h"
+#include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
+#include "Utilities/Memory/Exceptions/AllocationException.h"
 
 #include <gtest/gtest.h>
 #include <boost/shared_ptr.hpp>

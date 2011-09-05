@@ -4,7 +4,7 @@
  * 
  * Created on August 31, 2011, 5:06 PM
  */
-#include "Utilities/Memory/OutOfMemoryException.h"
+#include "Utilities/Memory/Exceptions/OutOfMemoryException.h"
 
 namespace Utilities
 {

@@ -5,7 +5,7 @@
  * Created on September 2, 2011, 11:00 PM
  */
 
-#include "Utilities/Memory/LargeObjectAllocator.h"
+#include "Utilities/Memory/Allocators/LargeObjectAllocator.h"
 
 namespace Utilities
 {

@@ -1,4 +1,4 @@
-#include "Utilities/Memory/SmallObjectAllocator.h"
+#include "Utilities/Memory/Allocators/SmallObjectAllocator.h"
 #include "Utilities/Memory/constants.h"
 
 #include <gtest/gtest.h>

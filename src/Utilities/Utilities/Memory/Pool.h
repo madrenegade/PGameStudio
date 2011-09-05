@@ -12,9 +12,9 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/MemoryPoolSettings.h"
-#include "Utilities/Memory/SmallObjectAllocator.h"
-#include "Utilities/Memory/MediumObjectAllocator.h"
-#include "Utilities/Memory/LargeObjectAllocator.h"
+#include "Utilities/Memory/Allocators/SmallObjectAllocator.h"
+#include "Utilities/Memory/Allocators/MediumObjectAllocator.h"
+#include "Utilities/Memory/Allocators/LargeObjectAllocator.h"
 
 namespace Utilities
 {

@@ -8,7 +8,7 @@
 #include <map>
 #include <stdexcept>
 
-#include "Utilities/Memory/Allocator.h"
+#include "Utilities/Memory/Allocators/Allocator.h"
 #include "Utilities/Memory/constants.h"
 
 #ifdef DEBUG

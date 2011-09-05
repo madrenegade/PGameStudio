@@ -5,7 +5,7 @@
  * Created on September 2, 2011, 10:59 PM
  */
 
-#include "Utilities/Memory/MediumObjectAllocator.h"
+#include "Utilities/Memory/Allocators/MediumObjectAllocator.h"
 
 namespace Utilities
 {

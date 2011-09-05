@@ -5,7 +5,10 @@ include("../../common.cmake")
 
 file(GLOB Project_Sources 
 	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
-	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/*")
+	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/*"
+        "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Allocators/*"
+        "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Exceptions/*"
+        "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Tracking/*")
 
 find_package(GLOG REQUIRED)
 

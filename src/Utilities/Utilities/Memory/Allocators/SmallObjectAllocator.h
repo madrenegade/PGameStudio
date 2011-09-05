@@ -8,7 +8,7 @@
 #ifndef UTILITIES_MEMORY_SMALLOBJECTALLOCATOR_H
 #define	UTILITIES_MEMORY_SMALLOBJECTALLOCATOR_H
 
-#include "Utilities/Memory/Allocator.h"
+#include "Utilities/Memory/Allocators/Allocator.h"
 
 #include <vector>
 #include <list>

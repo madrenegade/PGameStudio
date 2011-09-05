@@ -5,8 +5,8 @@
  * Created on September 2, 2011, 1:55 PM
  */
 
-#include "Utilities/Memory/DebugMemoryTracker.h"
-#include "Utilities/Memory/AllocationException.h"
+#include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
+#include "Utilities/Memory/Exceptions/AllocationException.h"
 #include "Utilities/functions.h"
 
 #include <glog/logging.h>

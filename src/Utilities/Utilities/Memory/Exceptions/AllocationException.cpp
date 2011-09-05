@@ -5,7 +5,7 @@
  * Created on August 31, 2011, 3:01 PM
  */
 
-#include "Utilities/Memory/AllocationException.h"
+#include "Utilities/Memory/Exceptions/AllocationException.h"
 
 namespace Utilities
 {
