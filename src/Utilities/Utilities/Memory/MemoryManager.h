@@ -22,6 +22,10 @@
 #include "Utilities/Memory/Tracking/MemoryTracker.h"
 #include "Utilities/functions.h"
 
+#include <tbb/concurrent_hash_map.h>
+#include <tbb/atomic.h>
+#include <tbb/spin_mutex.h>
+
 namespace Utilities
 {
     namespace Memory
@@ -70,17 +74,16 @@ namespace Utilities
             }
 
         private:
+            typedef tbb::spin_mutex MemoryTrackerMutexType;
+            MemoryTrackerMutexType memoryTrackerMutex;
             boost::shared_ptr<MemoryTracker> memoryTracker;
 
-            typedef std::map<pool_id, boost::shared_ptr<Pool> > PoolMap;
+            typedef tbb::concurrent_hash_map<pool_id, boost::shared_ptr<Pool >> PoolMap;
             PoolMap pools;
 
-            pool_id latestPoolID;
+            tbb::atomic<pool_id> latestPoolID;
 
-            Pool* findPoolContaining(const_pointer ptr) const;
-            pool_id findPoolIdFor(Pool* pool) const;
-
-            void assertPoolIsUnique(const boost::shared_ptr<Pool>& pool) const;
+            pool_id findPoolContaining(const_pointer ptr) const;
 
             /**
              * allocate space for a bunch of objects
@@ -97,23 +100,33 @@ namespace Utilities
                 RAW_VLOG(1, "Allocating %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
 #endif
 
+                PoolMap::accessor accessor;
+                
 #ifdef DEBUG
                 assertPoolExists(poolID);
 
-                pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
+                pools.find(accessor, poolID);
+
+                pointer rawPtr = accessor->second->allocate(BYTES_TO_ALLOCATE);
+
+                accessor.release();
 
                 fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
                 T* ptr = reinterpret_cast<T*> (rawPtr);
 #else
-                T* ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
+                pools.find(accessor, poolID);
+                T* ptr = reinterpret_cast<T*> (accessor->second->allocate(BYTES_TO_ALLOCATE));
 #endif
 
 #ifdef DEBUG
                 RAW_VLOG(1, "Allocated %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
 #endif
 
-                memoryTracker->trackAllocation(ptr, BYTES_TO_ALLOCATE);
+                {
+                    MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
+                    memoryTracker->trackAllocation(ptr, BYTES_TO_ALLOCATE);
+                }
 
                 return ptr;
             }
@@ -134,19 +147,27 @@ namespace Utilities
 
                 const_pointer rawPtr = reinterpret_cast<const_pointer> (ptr);
 
-                Pool* pool = findPoolContaining(rawPtr);
+                pool_id id = findPoolContaining(rawPtr);
 
-                pool->deallocate(rawPtr, sizeof (T), n);
+                PoolMap::accessor accessor;
+                pools.find(accessor, id);
+                
+                accessor->second->deallocate(rawPtr, sizeof (T), n);
+                accessor.release();
 
 #ifdef DEBUG
-                RAW_VLOG(1, "Deallocated %i bytes from pool %i", BYTES_TO_DEALLOCATE, findPoolIdFor(pool));
+                RAW_VLOG(1, "Deallocated %i bytes from pool %i", BYTES_TO_DEALLOCATE, id);
 #endif
 
-                memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
+                {
+                    MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
+                    memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
+                }
             }
 
 #ifdef DEBUG
             void assertPoolExists(pool_id poolID) const;
+            void assertPoolIsUnique(const boost::shared_ptr<Pool>& pool) const;
 #endif
         };
     }

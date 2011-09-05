@@ -58,6 +58,9 @@ namespace Utilities
 
     int countZeroBitsFromRight(unsigned long v)
     {
+#ifdef GCC
+        return v == 0 ? Memory::ULONG_BITS : __builtin_ctzl(v);
+#else #error "Does not work"
         unsigned int c = Memory::ULONG_BITS;
 
         v &= -static_cast<long> (v);
@@ -70,19 +73,6 @@ namespace Utilities
         if (v & 0x55555555) c -= 1;
 
         return c;
-    }
-
-    unsigned long reverseBits(unsigned long v)
-    {
-        unsigned int r = v; // r will be reversed bits of v; first get LSB of v
-        int s = sizeof (v) * Memory::BITS_PER_BYTE - 1; // extra shift needed at end
-
-        for (v >>= 1; v; v >>= 1)
-        {
-            r <<= 1;
-            r |= v & 1;
-            s--;
-        }
-        r <<= s; // shift when v's highest bits are zero
+#endif
     }
 }

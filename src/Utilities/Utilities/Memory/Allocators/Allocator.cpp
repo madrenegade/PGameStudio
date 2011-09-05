@@ -10,6 +10,7 @@
 
 #include "Utilities/Memory/Allocators/Allocator.h"
 #include "Utilities/Memory/constants.h"
+#include "Utilities/Memory/Exceptions/OutOfMemoryException.h"
 
 #ifdef DEBUG
 #include <glog/logging.h>
@@ -43,7 +44,7 @@ namespace Utilities
                 throw std::invalid_argument("Page size must be multiple of the block size");
             }
             
-            if(blockSize % 8 != 0)
+            if(blockSize % BITS_PER_BYTE != 0)
             {
                 RAW_VLOG(1, "Block size: %i\nRest: %i", blockSize, blockSize % BITS_PER_BYTE);
                 
@@ -102,6 +103,11 @@ namespace Utilities
         
         pointer Allocator::requestNewPage()
         {
+            if(pages.size() == MAX_PAGE_COUNT)
+            {
+                throw OutOfMemoryException("requestNewPage fail - amount of pages exceeded");
+            }
+            
             Page page(new byte[PAGE_SIZE]);
             pages.push_back(page);
             

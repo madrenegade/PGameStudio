@@ -34,13 +34,6 @@ namespace Utilities
      * @return the number of bits set to zero from the right
      */
     int countZeroBitsFromRight(unsigned long v);
-    
-    /**
-     * reverse the bits
-     * @param v - input bits to be reversed
-     * @return bits of v reversed
-     */
-    unsigned long reverseBits(unsigned long v);
 }
 
 #endif	/* UTILITIES_FUNCTIONS_H */

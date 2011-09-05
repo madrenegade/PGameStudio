@@ -11,6 +11,7 @@ file(GLOB Project_Sources
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Tracking/*")
 
 find_package(GLOG REQUIRED)
+find_package(TBB REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 

@@ -7,7 +7,7 @@ find -name '*.gcda' -exec rm {} \;
 
 lcov --directory ../ --zerocounters
 
-./TestRunner
+GLOG_v=1 ./TestRunner
 
 lcov --directory ../ --capture --output-file ../coverage/app.info
 genhtml --output-directory ../coverage --legend --demangle-cpp ../coverage/app.info

@@ -16,6 +16,7 @@ add_dependencies(${PROJECT_NAME} Utilities)
 
 target_link_libraries(${PROJECT_NAME}
     ${GPROFILER_LIBRARIES}
+    ${TBB_LIBRARIES}
     Utilities
 )
 

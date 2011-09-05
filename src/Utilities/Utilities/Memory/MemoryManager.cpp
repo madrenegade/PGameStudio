@@ -14,65 +14,55 @@ namespace Utilities
     {
 
         MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
-        : memoryTracker(memoryTracker), latestPoolID(0)
+        : memoryTracker(memoryTracker), latestPoolID()
         {
         }
-        
+
         pool_id MemoryManager::registerMemoryPool(const boost::shared_ptr<Pool>& pool)
         {
+#ifdef DEBUG
             assertPoolIsUnique(pool);
-            
-            pool_id id = latestPoolID;
-            
-            pools[id] = pool;
-            ++latestPoolID;
-            
+#endif
+
+            pool_id id = latestPoolID.fetch_and_add(1);
+
+            pools.insert(std::make_pair(id, pool));
+
             return id;
         }
-        
-        Pool* MemoryManager::findPoolContaining(const_pointer ptr) const
+
+        pool_id MemoryManager::findPoolContaining(const_pointer ptr) const
         {
-            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
+            // TODO: is iterating thread safe?
+            for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
-                if(i->second->contains(ptr))
-                {
-                    return i->second.get();
-                }
-            }
-            
-            throw std::logic_error("Pointer not found in registered pools");
-        }
-        
-        pool_id MemoryManager::findPoolIdFor(Pool* pool) const
-        {
-            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
-            {
-                if(i->second.get() == pool)
+                if (i->second->contains(ptr))
                 {
                     return i->first;
                 }
             }
-            
-            throw std::logic_error("Pool id not found for given pool");
+
+            throw std::logic_error("Pointer not found in registered pools");
         }
-        
+
+#ifdef DEBUG
+
+        void MemoryManager::assertPoolExists(pool_id poolID) const
+        {  
+            if (pools.count(poolID) == 0)
+            {
+                throw std::logic_error("Invalid pool id");
+            }
+        }
+
         void MemoryManager::assertPoolIsUnique(const boost::shared_ptr<Pool>& pool) const
         {
-            for(PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
+            for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
-                if(i->second == pool)
+                if (i->second == pool)
                 {
                     throw std::logic_error("This pool is already registered");
                 }
-            }
-        }
-        
-#ifdef DEBUG
-        void MemoryManager::assertPoolExists(pool_id poolID) const
-        {
-            if(pools.find(poolID) == pools.end())
-            {
-                throw std::logic_error("Invalid pool id");
             }
         }
 #endif
