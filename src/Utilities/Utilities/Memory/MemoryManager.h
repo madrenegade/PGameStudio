@@ -52,7 +52,8 @@ namespace Utilities
             template<typename T>
             boost::shared_ptr<T> construct(const T& obj, pool_id poolID = 0)
             {
-                boost::shared_ptr<T> ptr(new (allocate<T > (1, poolID)) T(obj), boost::bind(&MemoryManager::deallocate<T, 1>, this, _1));
+                boost::shared_ptr<T> ptr(new (allocate<T > (1, poolID)) T(obj),
+                                         boost::bind(&MemoryManager::deallocate<T, 1 >, this, _1));
                 return ptr;
             }
 
@@ -62,9 +63,9 @@ namespace Utilities
 #ifdef DEBUG
                 BOOST_STATIC_ASSERT(numObjects > 1);
 #endif
-                
-                // TODO: deleter
-                boost::shared_array<T> ptr(allocate<T>(numObjects, poolID), boost::bind(&MemoryManager::deallocate<T, numObjects>, this, _1));
+
+                boost::shared_array<T> ptr(allocate<T > (numObjects, poolID),
+                                           boost::bind(&MemoryManager::deallocate<T, numObjects>, this, _1));
                 return ptr;
             }
 
@@ -116,8 +117,8 @@ namespace Utilities
 
                 return ptr;
             }
-            
-             /**
+
+            /**
              * deallocate space for a bunch of objects
              * @param ptr - the starting address of the space to deallocate
              * @param n - the amount of objects to determine how much space must be deallocated

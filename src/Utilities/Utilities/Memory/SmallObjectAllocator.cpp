@@ -157,7 +157,8 @@ namespace Utilities
                 freeMemory += i->second * BLOCK_SIZE;
             }
 
-            VLOG_EVERY_N(1, 1) << "SmallObjectAllocator free memory: " << freeMemory << " bytes";
+            // TODO: change n depending on CMAKE_BUILD_TYPE
+//            VLOG_EVERY_N(1, 1) << "SmallObjectAllocator free memory: " << freeMemory << " bytes";
 
             return freeMemory;
         }
