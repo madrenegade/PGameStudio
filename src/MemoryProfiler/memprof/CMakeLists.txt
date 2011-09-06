@@ -15,6 +15,11 @@ file (STRINGS "BuildNumber.txt" BUILD_NUMBER)
 
 add_definitions("-DBUILD_NUMBER=${BUILD_NUMBER}")
 
+MATH(EXPR BUILD_NUMBER "${BUILD_NUMBER} + 1")
+
+MESSAGE("BUILD: ${BUILD_NUMBER}")
+
+file(WRITE "BuildNumber.txt" ${BUILD_NUMBER})
 
 file(GLOB Project_Sources 
 	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*")
