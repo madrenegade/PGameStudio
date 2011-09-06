@@ -12,10 +12,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    serverthread.cpp
 
 HEADERS  += mainwindow.h \
-    aboutdialog.h
+    aboutdialog.h \
+    serverthread.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui
@@ -28,3 +30,7 @@ DEPENDPATH += $$PWD/../memprof
 unix:!macx:!symbian: PRE_TARGETDEPS += $$PWD/../../../bin/Debug/Linux/x86_64/libmemprof.a
 
 unix:!macx:!symbian: LIBS += -lgcov
+
+unix:!macx:!symbian: LIBS += -lglog
+
+unix:!macx:!symbian: LIBS += -lboost_system

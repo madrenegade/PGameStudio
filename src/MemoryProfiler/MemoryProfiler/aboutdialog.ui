@@ -48,7 +48,7 @@
      <x>60</x>
      <y>60</y>
      <width>111</width>
-     <height>21</height>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
@@ -58,10 +58,10 @@
   <widget class="QLabel" name="memprofVersionLabel">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>180</x>
      <y>60</y>
-     <width>56</width>
-     <height>14</height>
+     <width>51</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">

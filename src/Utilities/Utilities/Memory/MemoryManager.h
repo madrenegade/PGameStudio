@@ -27,6 +27,11 @@
 #include <tbb/spin_mutex.h>
 #include <tbb/spin_rw_mutex.h>
 
+#ifdef DEBUG
+#include "../MemoryProfiler/memprof/memprof/client.h"
+#include <boost/scoped_ptr.hpp>
+#endif
+
 namespace Utilities
 {
     namespace Memory
@@ -80,16 +85,19 @@ namespace Utilities
                                            boost::bind(&MemoryManager::deallocate<T, numObjects>, this, _1));
                 return ptr;
             }
-            
+
 #ifdef DEBUG
+
             /**
              * do not use directly
              */
             template<typename T>
             boost::shared_ptr<T> construct(const T& obj, pool_id poolID, const std::type_info& type, const char* function)
             {
-                // TODO: do some memory profiling here
-                RAW_VLOG(1, "Constructing in %s::%s", Utilities::demangle(type.name()).c_str(), __FUNCTION__);
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(type, function, sizeof(T));
+                }
 
                 return construct(obj, poolID);
             }
@@ -100,9 +108,11 @@ namespace Utilities
             template<typename T, size_t numObjects>
             boost::shared_array<T> allocate(pool_id poolID, const std::type_info& type, const char* function)
             {
-                // TODO: do some memory profiling here
-                RAW_VLOG(1, "Allocating in %s::%s", Utilities::demangle(type.name()).c_str(), __FUNCTION__);
-
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(type, function, numObjects * sizeof(T));
+                }
+                
                 return allocate<T, numObjects > (poolID);
             }
 #endif
@@ -119,6 +129,13 @@ namespace Utilities
             PoolMap pools;
 
             tbb::atomic<pool_id> latestPoolID;
+
+#ifdef DEBUG
+
+            typedef tbb::spin_mutex ProfilerClientMutexType;
+            ProfilerClientMutexType profilerClientMutex;
+            boost::scoped_ptr<memprof::client> profilerClient;
+#endif
 
             pool_id findPoolContaining(const_pointer ptr) const;
 

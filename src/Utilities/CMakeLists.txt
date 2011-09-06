@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 2.8)
 project (Utilities)
 
 include("../../common.cmake")
+include_directories(${SRC_DIR}/MemoryProfiler/memprof)
 
 file(GLOB Project_Sources 
 	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
@@ -12,9 +13,14 @@ file(GLOB Project_Sources
 
 find_package(GLOG REQUIRED)
 find_package(TBB REQUIRED)
+find_package(Boost REQUIRED system)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
+add_dependencies(${PROJECT_NAME} memprof)
+
 target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBRARIES}
+    ${Boost_LIBRARIES}
+    memprof
 )

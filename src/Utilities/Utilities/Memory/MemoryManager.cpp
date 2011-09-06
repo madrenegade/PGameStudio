@@ -14,8 +14,9 @@ namespace Utilities
     {
 
         MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
-        : memoryTracker(memoryTracker), latestPoolID()
+        : memoryTracker(memoryTracker), latestPoolID(), profilerClient(new memprof::client("127.0.0.1"))
         {
+            profilerClient->connect();
         }
 
         pool_id MemoryManager::registerMemoryPool(const boost::shared_ptr<Pool>& pool)
