@@ -11,3 +11,5 @@ bin
 /build/testsrc/
 nbproject
 coverage
+src/MemoryProfiler/MemoryProfiler-build-desktop/
+

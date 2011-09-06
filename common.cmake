@@ -32,8 +32,6 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
         endif()
 endif()
 
-message("CPU: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
-
 if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86")
     add_definitions(-DX86)
 elseif(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "i686")

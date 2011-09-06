@@ -207,6 +207,9 @@ namespace Utilities
 #endif
         };
 
+        /**
+         * macros for making memory profiling easier to use
+         */
 #ifdef DEBUG
 #define CONSTRUCT(mngr, obj, poolID) mngr->construct(obj, poolID, typeid(*this), __FUNCTION__)
 #define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID, typeid(*this), __FUNCTION__)

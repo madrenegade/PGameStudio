@@ -19,12 +19,12 @@ namespace Utilities
 
         pointer MediumObjectAllocator::allocate(size_t bytes)
         {
-
+            return new byte[bytes];
         }
 
         void MediumObjectAllocator::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
-
+            delete[] ptr;
         }
 
         size_t MediumObjectAllocator::getLargestFreeArea() const
