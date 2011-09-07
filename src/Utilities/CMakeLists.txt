@@ -10,11 +10,12 @@ file(GLOB Project_Sources
 	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/*"
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Allocators/*"
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Exceptions/*"
-        "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Tracking/*")
+        "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Tracking/*"
+        "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Properties/*")
 
 find_package(GLOG REQUIRED)
 find_package(TBB REQUIRED)
-find_package(Boost REQUIRED system)
+find_package(Boost REQUIRED system program_options)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 

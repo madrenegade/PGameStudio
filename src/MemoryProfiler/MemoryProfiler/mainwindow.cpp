@@ -73,6 +73,8 @@ void MainWindow::update(const memprof::sample& sample)
 
 void MainWindow::rebuildLiveView()
 {
+    if(!dirty) return;
+
     QTreeWidget* liveView = ui->liveView;
 
     QTreeWidgetItem* top;
