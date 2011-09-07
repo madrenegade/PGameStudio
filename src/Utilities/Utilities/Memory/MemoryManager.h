@@ -41,8 +41,10 @@ namespace Utilities
         class MemoryManager
         {
         public:
-            MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker);
-
+            typedef boost::shared_ptr<MemoryManager> Ptr;
+            
+            static Ptr create(const MemoryTracker::Ptr& memoryTracker);
+            
             /**
              * registers a new memory pool and returns an id to access it
              * the first registration always returns 0 as the id
@@ -119,6 +121,8 @@ namespace Utilities
 #endif
 
         private:
+            MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker);
+            
             typedef tbb::spin_mutex MemoryTrackerMutexType;
             MemoryTrackerMutexType memoryTrackerMutex;
             boost::shared_ptr<MemoryTracker> memoryTracker;
@@ -200,13 +204,19 @@ namespace Utilities
 #ifdef DEBUG
                 RAW_VLOG(1, "Deallocating %i bytes", BYTES_TO_DEALLOCATE);
 #endif
+                
+                // call destructors
+                for(size_t i = 0; i < n; ++i)
+                {
+                    ptr[i]->~T();
+                }
 
                 const_pointer rawPtr = reinterpret_cast<const_pointer> (ptr);
 
                 {
                     PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
                     pool_id poolID = findPoolContaining(rawPtr);
-
+                    
                     pools[poolID]->deallocate(rawPtr, sizeof (T), n);
 
 #ifdef DEBUG

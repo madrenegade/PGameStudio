@@ -2,6 +2,7 @@
 #define UTILITIES_MEMORY_MEMORYTRACKER_H
 
 #include <vector>
+#include <boost/shared_ptr.hpp>
 #include "Utilities/Memory/AllocationInfo.h"
 
 namespace Utilities
@@ -11,6 +12,8 @@ namespace Utilities
 		class MemoryTracker
 		{
 		public:
+            typedef boost::shared_ptr<MemoryTracker> Ptr;
+            
             virtual ~MemoryTracker();
             
             template<typename T>

@@ -15,7 +15,7 @@ const pool_id DEFAULT_POOL = 0;
 class MemoryManagerTest : public testing::Test
 {
 protected:
-    boost::scoped_ptr<MemoryManager> memory;
+    boost::shared_ptr<MemoryManager> memory;
     boost::shared_ptr<Pool> pool;
     boost::shared_ptr<MemoryTrackerMock> tracker;
 
@@ -24,7 +24,7 @@ protected:
         pool.reset(new Pool(MemoryPoolSettings()));
         tracker.reset(new MemoryTrackerMock());
 
-        memory.reset(new MemoryManager(tracker));
+        memory = MemoryManager::create(tracker);
     }
 };
 

@@ -5,6 +5,8 @@
 #include <glog/raw_logging.h>
 #include <map>
 
+using namespace Utilities::Memory;
+
 namespace Core
 {
 	namespace Events
@@ -12,7 +14,12 @@ namespace Core
         EventHandler::EventHandler()
         : serial()
         {
-            
+            RAW_LOG_INFO("EventHandler created");
+        }
+        
+        EventHandler::~EventHandler()
+        {
+            RAW_LOG_INFO("EventHandler destroyed");
         }
         
         EventID EventHandler::registerEvent(const char* name)
@@ -23,7 +30,7 @@ namespace Core
             
             events[name] = id;
             
-            signals[id].reset(new EventSignal);
+            signals[id].reset(new EventSignal());
             
             return id;
         }

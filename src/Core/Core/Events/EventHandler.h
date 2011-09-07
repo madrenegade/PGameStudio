@@ -2,6 +2,7 @@
 #define CORE_EVENTS_EVENTHANDLER_H
 
 #include "Core/Events/typedefs.h"
+#include "Utilities/Memory/MemoryManager.h"
 
 #include <tbb/atomic.h>
 #include <tbb/concurrent_queue.h>
@@ -19,6 +20,7 @@ namespace Core
 		{
         public:
             EventHandler();
+            ~EventHandler();
             
             /**
              * Register an event and generate an ID for it.

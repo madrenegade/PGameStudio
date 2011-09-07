@@ -12,6 +12,10 @@ namespace Utilities
 {
     namespace Memory
     {
+        MemoryManager::Ptr MemoryManager::create(const MemoryTracker::Ptr& memoryTracker)
+        {
+            return Ptr(new MemoryManager(memoryTracker));
+        }
 
         MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
         : memoryTracker(memoryTracker), latestPoolID(), profilerClient(new memprof::client("127.0.0.1"))

@@ -24,7 +24,7 @@ namespace Utilities
         class Pool
         {
         public:
-            Pool(const MemoryPoolSettings& settings);
+            Pool(const MemoryPoolSettings& settings = MemoryPoolSettings());
             
             pointer allocate(size_t bytes);
             void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);

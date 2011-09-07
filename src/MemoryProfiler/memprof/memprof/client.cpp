@@ -16,7 +16,6 @@
 
 #include "StackTrace.h"
 
-// include headers that implement a archive in simple text format
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/iostreams/stream.hpp>
 
@@ -59,7 +58,6 @@ namespace memprof
             
             while (error && endpoint_iterator != end)
             {
-                RAW_LOG_INFO("testing endpoint");
                 socket->close();
                 socket->connect(*endpoint_iterator++, error);
             }
@@ -76,6 +74,7 @@ namespace memprof
         catch (const std::exception& ex)
         {
             RAW_LOG(ERROR, ex.what());
+            RAW_LOG(WARNING, "Memory profiling is not available");
         }
     }
 

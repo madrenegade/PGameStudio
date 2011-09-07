@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 project (Core)
 
 include("../../common.cmake")
+include_directories(${SRC_DIR}/StackTrace)
+include_directories(${SRC_DIR}/Utilities)
 
 file(GLOB Project_Sources 
     "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
