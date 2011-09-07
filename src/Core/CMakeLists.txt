@@ -3,6 +3,18 @@ project (Core)
 
 include("../../common.cmake")
 
-file(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*")
+file(GLOB Project_Sources 
+    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
+    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Events/*")
+
+find_package(GLOG REQUIRED)
+find_package(TBB REQUIRED)
+find_package(Boost REQUIRED signals)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
+
+target_link_libraries(${PROJECT_NAME}
+    ${GLOG_LIBRARIES}
+    ${TBB_LIBRARIES}
+    ${Boost_LIBRARIES}
+)

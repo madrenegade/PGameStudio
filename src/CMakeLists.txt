@@ -5,7 +5,7 @@ SUBDIRS(StackTrace)
 SUBDIRS(MemoryProfiler)
 SUBDIRS(Utilities)
 
-#SUBDIRS(Core)
+SUBDIRS(Core)
 
 #SUBDIRS(Platform.Linux)
 
