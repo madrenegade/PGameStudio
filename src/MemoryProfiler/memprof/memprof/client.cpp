@@ -11,6 +11,13 @@
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 #include <exception>
+#include <list>
+
+#include "StackTrace.h"
+
+// include headers that implement a archive in simple text format
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/iostreams/stream.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -18,14 +25,18 @@ namespace memprof
 {
 
     client::client(const char* host)
-    : host(host)
+    : host(host), connected(false)
     {
 
     }
 
     client::~client()
     {
-
+        if(connected) 
+        {
+            socket->shutdown(socket->shutdown_both);
+            socket->close();
+        } 
     }
 
     void client::connect()
@@ -34,7 +45,6 @@ namespace memprof
 
         try
         {
-            boost::asio::io_service io_service;
             tcp::resolver resolver(io_service);
 
             tcp::resolver::query query(host.c_str(), "1234");
@@ -48,14 +58,17 @@ namespace memprof
             
             while (error && endpoint_iterator != end)
             {
+                RAW_LOG_INFO("testing endpoint");
                 socket->close();
                 socket->connect(*endpoint_iterator++, error);
             }
-            
+
             if (error)
             {
                 throw boost::system::system_error(error);
             }
+
+            connected = true;
             
             RAW_LOG(INFO, "Connected to server at %s", host.c_str());
         }
@@ -64,14 +77,18 @@ namespace memprof
             RAW_LOG(ERROR, ex.what());
         }
     }
-    
-    void client::send_allocation_info(const std::type_info& type, const char* function, size_t bytes)
+
+    void client::send_allocation_info(const StackTrace& stacktrace, size_t bytes)
     {
-        std::string message(type.name());
-        message += "::" + std::string(function);
-        
-        boost::asio::write(*socket, boost::asio::buffer(message));
-        
-        RAW_LOG(INFO, "Sent data to server");
+        if(!connected) return;
+           
+        char buffer[4096];
+        boost::iostreams::basic_array_sink<char> sr(buffer);
+        boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > source(sr);
+
+        boost::archive::binary_oarchive oa(source);
+        oa << stacktrace;
+
+        boost::asio::write(*socket, boost::asio::buffer(buffer));
     }
 }

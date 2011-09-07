@@ -34,3 +34,14 @@ unix:!macx:!symbian: LIBS += -lgcov
 unix:!macx:!symbian: LIBS += -lglog
 
 unix:!macx:!symbian: LIBS += -lboost_system
+
+INCLUDEPATH += $$PWD/
+DEPENDPATH += $$PWD/
+
+unix:!macx:!symbian: LIBS += -lboost_serialization
+
+unix:!macx:!symbian: LIBS += -L$$PWD/../../../bin/Debug/Linux/x86_64/ -lStackTrace
+unix:!macx:!symbian: PRE_TARGETDEPS += $$PWD/../../../bin/Debug/Linux/x86_64/libStackTrace.a
+
+unix:!macx:!symbian: LIBS += -lunwind-x86_64
+unix:!macx:!symbian: LIBS += -lunwind

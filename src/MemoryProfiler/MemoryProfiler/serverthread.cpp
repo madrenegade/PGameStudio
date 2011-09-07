@@ -1,19 +1,25 @@
 #include "serverthread.h"
 #include "memprof/server.h"
+#include "mainwindow.h"
 
-ServerThread::ServerThread(QObject *parent) :
-    QThread(parent)
+ServerThread::ServerThread(memprof::server* server, QObject *parent) :
+    QThread(parent), server(server)
 {
-    server = new memprof::server;
 }
 
 ServerThread::~ServerThread()
 {
-    delete server;
 }
 
 
 void ServerThread::run()
 {
-    server->run();
+    server->start_waiting_for_connection();
+
+    while(!server->is_connection_established())
+    {
+        sleep(100);
+    }
+
+    exec();
 }

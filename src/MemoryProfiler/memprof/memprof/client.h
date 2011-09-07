@@ -11,6 +11,8 @@
 #include <string>
 #include <boost/asio.hpp>
 
+class StackTrace;
+
 namespace memprof
 {
     /**
@@ -24,12 +26,15 @@ namespace memprof
         
         void connect();
         
-        void send_allocation_info(const std::type_info& type, const char* function, size_t bytes);
+        void send_allocation_info(const StackTrace& stacktrace, size_t bytes);
         
     private:
         const std::string host;
         
-        boost::scoped_ptr<boost::asio::ip::tcp::socket> socket;
+        boost::asio::io_service io_service;
+        boost::shared_ptr<boost::asio::ip::tcp::socket> socket;
+        
+        bool connected;
     };
 }
 

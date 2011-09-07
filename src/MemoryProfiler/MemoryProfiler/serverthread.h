@@ -5,14 +5,14 @@
 
 namespace memprof
 {
-class server;
+    class server;
 }
 
 class ServerThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ServerThread(QObject *parent = 0);
+    explicit ServerThread(memprof::server* server, QObject *parent = 0);
     virtual ~ServerThread();
 
 protected:

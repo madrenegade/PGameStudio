@@ -30,6 +30,7 @@
 #ifdef DEBUG
 #include "../MemoryProfiler/memprof/memprof/client.h"
 #include <boost/scoped_ptr.hpp>
+#include "StackTrace.h"
 #endif
 
 namespace Utilities
@@ -92,11 +93,11 @@ namespace Utilities
              * do not use directly
              */
             template<typename T>
-            boost::shared_ptr<T> construct(const T& obj, pool_id poolID, const std::type_info& type, const char* function)
+            boost::shared_ptr<T> construct(const T& obj, pool_id poolID, const StackTrace& stacktrace)
             {
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(type, function, sizeof(T));
+                    profilerClient->send_allocation_info(stacktrace, sizeof(T));
                 }
 
                 return construct(obj, poolID);
@@ -106,11 +107,11 @@ namespace Utilities
              * do not use directly
              */
             template<typename T, size_t numObjects>
-            boost::shared_array<T> allocate(pool_id poolID, const std::type_info& type, const char* function)
+            boost::shared_array<T> allocate(pool_id poolID, const StackTrace& stacktrace)
             {
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(type, function, numObjects * sizeof(T));
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof(T));
                 }
                 
                 return allocate<T, numObjects > (poolID);
@@ -228,8 +229,8 @@ namespace Utilities
          * macros for making memory profiling easier to use
          */
 #ifdef DEBUG
-#define CONSTRUCT(mngr, obj, poolID) mngr->construct(obj, poolID, typeid(*this), __FUNCTION__)
-#define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID, typeid(*this), __FUNCTION__)
+#define CONSTRUCT(mngr, obj, poolID) mngr->construct(obj, poolID, StackTrace())
+#define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID, StackTrace())
 #else
 #define CONSTRUCT(mngr, obj, poolID) mngr->construct(object, poolID)
 #define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID)

@@ -6,20 +6,23 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this))
+    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this)), server(new memprof::server)
 {
     ui->setupUi(this);
 
     QObject::connect(ui->actionAbout, SIGNAL(activated()),
                      this, SLOT(openAboutDialog()));
 
-    serverThread = new ServerThread;
+    serverThread = new ServerThread(server);
     serverThread->start();
 }
 
 MainWindow::~MainWindow()
 {
-    serverThread->exit();
+    serverThread->wait(1000);
+    serverThread->exit(1);
+
+    delete server;
 
     delete serverThread;
     delete ui;

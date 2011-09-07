@@ -8,6 +8,8 @@
 #ifndef MEMPROF_SERVER_H
 #define	MEMPROF_SERVER_H
 
+#include "memprof/tcp/connection.h"
+
 namespace memprof
 {
     /**
@@ -19,10 +21,18 @@ namespace memprof
         server(unsigned short port = 1234);
         ~server();
         
-        void run();
+        void start_waiting_for_connection();
+        bool is_connection_established() const;
         
     private:
         const unsigned short port;
+        
+        bool connection_established;
+        
+        boost::asio::io_service io_service;
+        boost::asio::ip::tcp::acceptor acceptor;
+        
+        void handle_accept(tcp::connection::pointer new_connection, const boost::system::error_code& error);
     };
 }
 

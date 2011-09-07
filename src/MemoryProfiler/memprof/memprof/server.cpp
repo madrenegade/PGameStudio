@@ -8,18 +8,19 @@
 #include "memprof/server.h"
 
 #include <boost/asio.hpp>
+#include <boost/bind.hpp>
+
 #include <exception>
 
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 
-using boost::asio::ip::tcp;
-
 namespace memprof
 {
 
     server::server(unsigned short port)
-    : port(port)
+    : port(port), connection_established(false),
+        io_service(), acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
     {
 
     }
@@ -29,29 +30,37 @@ namespace memprof
 
     }
 
-    void server::run()
+    void server::start_waiting_for_connection()
     {
-        try
+        RAW_LOG(INFO, "memprof server waiting for connections...");
+        
+        tcp::connection::pointer new_connection = tcp::connection::create(io_service);
+
+        acceptor.async_accept(new_connection->get_socket(),
+            boost::bind(&server::handle_accept, this, new_connection,
+            boost::asio::placeholders::error));
+        
+        io_service.run();
+    }
+    
+    bool server::is_connection_established() const
+    {
+        return connection_established;
+    }
+
+    void server::handle_accept(tcp::connection::pointer new_connection, const boost::system::error_code& error)
+    {
+        if (!error)
         {
-            boost::asio::io_service io_service;
-
-            tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
+            RAW_LOG(INFO, "Client connected");
             
-            RAW_LOG(INFO, "memprof server waiting for connections...");
-
-            while (true)
-            {
-                tcp::socket socket(io_service);
-                acceptor.accept(socket);
-
-                RAW_LOG(INFO, "Client connected");
-            }
-            
-            RAW_LOG(INFO, "server stopped waiting for connections");
+            connection_established = true;
+            new_connection->start();
+            start_waiting_for_connection();
         }
-        catch (const std::exception& ex)
+        else
         {
-            RAW_LOG(ERROR, ex.what());
+            RAW_LOG(INFO, "Error while accepting client");
         }
     }
 }

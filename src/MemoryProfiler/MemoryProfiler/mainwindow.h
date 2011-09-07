@@ -9,6 +9,10 @@ namespace Ui {
     class MainWindow;
 }
 
+namespace memprof {
+    class server;
+}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -25,6 +29,7 @@ private:
 
     AboutDialog* aboutDialog;
 
+    memprof::server* server;
     ServerThread* serverThread;
 };
 

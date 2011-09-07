@@ -3,6 +3,7 @@ project (UtilitiesTests)
 
 include("../../common.cmake")
 include_directories(${SRC_DIR}/Utilities)
+include_directories(${SRC_DIR}/StackTrace)
 
 file(GLOB Project_Sources 
     "${PROJECT_SOURCE_DIR}/Utilities/*"
@@ -12,11 +13,12 @@ find_package(GPROFILER REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
-add_dependencies(${PROJECT_NAME} Utilities)
+add_dependencies(${PROJECT_NAME} Utilities StackTrace)
 
 target_link_libraries(${PROJECT_NAME}
     ${GPROFILER_LIBRARIES}
     ${TBB_LIBRARIES}
     Utilities
+    StackTrace
 )
 
