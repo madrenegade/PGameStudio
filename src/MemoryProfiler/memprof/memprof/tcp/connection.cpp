@@ -6,6 +6,8 @@
  */
 
 #include "memprof/tcp/connection.h"
+#include "memprof/change_listener.h"
+#include "memprof/sample.h"
 #include "StackTrace.h"
 
 #include <boost/bind.hpp>
@@ -20,13 +22,15 @@ namespace memprof
     namespace tcp
     {
 
-        connection::pointer connection::create(boost::asio::io_service& io_service)
+        connection::pointer connection::create(boost::asio::io_service& io_service,
+                                               const std::list<change_listener*>& listeners)
         {
-            return pointer(new connection(io_service));
+            return pointer(new connection(io_service, listeners));
         }
 
-        connection::connection(boost::asio::io_service& io_service)
-        : socket(io_service)
+        connection::connection(boost::asio::io_service& io_service,
+                               const std::list<change_listener*>& listeners)
+        : socket(io_service), listeners(listeners)
         {
 
         }
@@ -50,26 +54,23 @@ namespace memprof
         {
             if (!error)
             {
-                StackTrace stacktrace(false);
+                sample sample;
 
                 boost::iostreams::basic_array_source<char> device(buffer.c_array(), buffer.size());
                 boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s(device);
 
                 boost::archive::binary_iarchive ia(s);
-                ia >> stacktrace;
-
-                typedef std::list<StackFrame> Frames;
-
-                const Frames& frames = stacktrace.getFrames();
-
-                RAW_LOG_INFO("STACKFRAME_START");
-
-                for (Frames::const_iterator i = frames.begin(); i != frames.end(); ++i)
-                {
-                    RAW_LOG_INFO("Function: %s", i->getFunction().c_str());
-                }
-
-                RAW_LOG_INFO("STACKFRAME_END");
+                ia >> sample;
+                
+                notify_listeners(sample);
+            }
+        }
+        
+        void connection::notify_listeners(const sample& sample)
+        {
+            for(ListenerList::iterator i = listeners.begin(); i != listeners.end(); ++i)
+            {
+                (*i)->on_change(sample);
             }
         }
     }

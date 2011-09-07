@@ -6,6 +6,7 @@
  */
 
 #include "memprof/client.h"
+#include "memprof/sample.h"
 #include <boost/asio.hpp>
 
 #include <glog/logging.h>
@@ -85,9 +86,11 @@ namespace memprof
         char buffer[4096];
         boost::iostreams::basic_array_sink<char> sr(buffer);
         boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > source(sr);
+        
+        const sample sample(stacktrace, bytes);
 
         boost::archive::binary_oarchive oa(source);
-        oa << stacktrace;
+        oa << sample;
 
         boost::asio::write(*socket, boost::asio::buffer(buffer));
     }

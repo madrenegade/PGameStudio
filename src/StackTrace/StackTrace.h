@@ -11,7 +11,8 @@ class StackTrace
 public:
     StackTrace(bool x = true);
     
-    const std::list<StackFrame>& getFrames() const;
+    typedef std::list<StackFrame> Frames;
+    const Frames& getFrames() const;
     
 private:
     friend class boost::serialization::access;

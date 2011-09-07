@@ -13,11 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     aboutdialog.cpp \
-    serverthread.cpp
+    serverthread.cpp \
+    samplenode.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
-    serverthread.h
+    serverthread.h \
+    samplenode.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui
@@ -39,6 +41,9 @@ INCLUDEPATH += $$PWD/
 DEPENDPATH += $$PWD/
 
 unix:!macx:!symbian: LIBS += -lboost_serialization
+
+INCLUDEPATH += $$PWD/../../StackTrace
+DEPENDPATH += $$PWD/../../StackTrace
 
 unix:!macx:!symbian: LIBS += -L$$PWD/../../../bin/Debug/Linux/x86_64/ -lStackTrace
 unix:!macx:!symbian: PRE_TARGETDEPS += $$PWD/../../../bin/Debug/Linux/x86_64/libStackTrace.a

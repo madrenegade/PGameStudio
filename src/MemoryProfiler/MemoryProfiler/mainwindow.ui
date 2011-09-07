@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
-    <height>499</height>
+    <width>1074</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,10 +26,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QTableWidget" name="liveViewTable">
-          <property name="columnCount">
-           <number>5</number>
-          </property>
+         <widget class="QTreeWidget" name="liveView">
           <column>
            <property name="text">
             <string>Name</string>
@@ -37,25 +34,22 @@
           </column>
           <column>
            <property name="text">
-            <string>Total Allocations</string>
-           </property>
-           <property name="toolTip">
-            <string/>
+            <string>NumAllocations</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>Self count</string>
+            <string>NumSelfAllocations</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>Total size</string>
+            <string>TotalSize</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>Self size</string>
+            <string>SelfSize</string>
            </property>
           </column>
          </widget>
@@ -66,6 +60,11 @@
        <attribute name="title">
         <string>Raw data</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QTextBrowser" name="rawDataTextBrowser"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -76,7 +75,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>815</width>
+     <width>1074</width>
      <height>20</height>
     </rect>
    </property>

@@ -60,7 +60,7 @@ StackTrace::StackTrace(bool x)
     }
 }
 
-const std::list<StackFrame>& StackTrace::getFrames() const
+const StackTrace::Frames& StackTrace::getFrames() const
 {
     return frames;
 }

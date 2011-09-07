@@ -29,12 +29,17 @@ namespace memprof
     {
 
     }
+    
+    void server::register_listener(change_listener* listener)
+    {
+        registeredListeners.push_front(listener);
+    }
 
     void server::start_waiting_for_connection()
     {
         RAW_LOG(INFO, "memprof server waiting for connections...");
         
-        tcp::connection::pointer new_connection = tcp::connection::create(io_service);
+        tcp::connection::pointer new_connection = tcp::connection::create(io_service, registeredListeners);
 
         acceptor.async_accept(new_connection->get_socket(),
             boost::bind(&server::handle_accept, this, new_connection,

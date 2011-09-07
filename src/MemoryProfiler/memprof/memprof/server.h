@@ -21,6 +21,8 @@ namespace memprof
         server(unsigned short port = 1234);
         ~server();
         
+        void register_listener(change_listener* listener);
+        
         void start_waiting_for_connection();
         bool is_connection_established() const;
         
@@ -31,6 +33,8 @@ namespace memprof
         
         boost::asio::io_service io_service;
         boost::asio::ip::tcp::acceptor acceptor;
+        
+        std::list<change_listener*> registeredListeners;
         
         void handle_accept(tcp::connection::pointer new_connection, const boost::system::error_code& error);
     };
