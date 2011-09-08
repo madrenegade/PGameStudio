@@ -51,7 +51,7 @@ namespace Utilities
             
             if(expected.getType() != actual.getType())
             {
-                RAW_LOG_INFO("Expected type '%s' but found '%s'", expected.getType().c_str(), actual.getType().c_str());
+                RAW_LOG_ERROR("Expected type '%s' but found '%s'", expected.getType().c_str(), actual.getType().c_str());
                 
                 throw AllocationException("Deallocate failed because types do not match");
             }

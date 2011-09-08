@@ -1,5 +1,6 @@
 #include "Utilities/functions.h"
 #include "Utilities/Memory/constants.h"
+#include "Utilities/Memory/STLAllocator.h"
 
 #include <boost/shared_ptr.hpp>
 #include <glog/logging.h>

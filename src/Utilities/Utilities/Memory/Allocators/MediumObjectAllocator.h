@@ -10,6 +10,9 @@
 
 #include "Utilities/Memory/Allocators/Allocator.h"
 
+#include <unordered_map>
+#include <list>
+
 namespace Utilities
 {
     namespace Memory
@@ -27,6 +30,28 @@ namespace Utilities
             
         protected:
             virtual size_t getLargestFreeArea() const;
+            
+        private:
+            pointer allocateBlocksIn(pointer startOfPage, size_t neededBlocks);
+            int findFreeBlocksIn(pointer page, size_t neededBlocks) const;
+            void markBlocksAsUsed(unsigned int block, pointer startOfPage, size_t numBlocks);
+            void markBlocksAsFree(unsigned int block, pointer startOfPage, size_t numBlocks);
+            
+            /**
+             * Set each bit of the last block to one. This marks all blocks in the page as free.
+             * Set all blocks in the last but one block to zero.
+             */
+            void initializePage(pointer page);
+            
+            unsigned int getUsableBlocksPerPage() const;
+
+            pointer getTailFor(pointer page) const;
+            
+            // page start and amount of free blocks
+            typedef std::unordered_map<pointer, unsigned int> FreeBlockMap;
+            FreeBlockMap freeBlocks;
+            
+            std::list<pointer> pagesWithFreeBlocks;
         };
     }
 }

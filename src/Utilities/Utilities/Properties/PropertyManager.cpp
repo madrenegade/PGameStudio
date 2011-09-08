@@ -11,7 +11,6 @@
 #include <fstream>
 
 #include <glog/logging.h>
-#include <glog/raw_logging.h>
 
 namespace Utilities
 {
@@ -31,6 +30,8 @@ namespace Utilities
 
         void PropertyManager::parse(int argc, char** argv)
         {
+            VLOG(1) << "Parsing command line arguments";
+            
             po::variables_map vm;
             po::store(po::parse_command_line(argc, argv, options), vm);
             po::notify(vm);
@@ -40,9 +41,17 @@ namespace Utilities
 
         void PropertyManager::parse(const char* filename)
         {
+            VLOG(1) << "Parsing config file " << filename;
+            
             po::variables_map vm;
 
             std::ifstream in(filename);
+            
+            if(!in)
+            {
+                LOG(WARNING) << "Could not open config file";
+            }
+            
             po::store(po::parse_config_file(in, options), vm);
             po::notify(vm);
 
@@ -61,8 +70,10 @@ namespace Utilities
 
         void PropertyManager::set(const char* name, const boost::any& value)
         {
-            RAW_CHECK(propertyExists(name), "Property not found");
-            RAW_CHECK(properties[name].type() == value.type(), "Type of new property value does not match");
+            DCHECK(propertyExists(name));
+            DCHECK(properties[name].type() == value.type());
+            
+            VLOG(2) << "Setting property " << name;
 
             properties[name] = value;
 

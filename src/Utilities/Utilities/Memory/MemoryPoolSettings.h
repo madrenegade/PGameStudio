@@ -22,7 +22,7 @@ namespace Utilities
                                size_t smallObjectBlockSize = 128*Byte,
                                size_t mediumObjectPoolSize = 4*MByte,
                                size_t mediumObjectPageSize = 4*KByte,
-                               size_t mediumObjectBlockSize = 256*Byte,
+                               size_t mediumObjectBlockSize = 128*Byte,
                                size_t largeObjectPoolSize = 16*MByte,
                                size_t largeObjectPageSize = 4*KByte,
                                size_t largeObjectBlockSize = 512*Byte)
@@ -30,7 +30,7 @@ namespace Utilities
             smallObjectPageSize(smallObjectPageSize),
             smallObjectBlockSize(smallObjectBlockSize),
             mediumObjectPoolSize(mediumObjectPoolSize),
-            mediumObjectPageSize(mediumObjectPoolSize),
+            mediumObjectPageSize(mediumObjectPageSize),
             mediumObjectBlockSize(mediumObjectBlockSize),
             largeObjectPoolSize(largeObjectPoolSize),
             largeObjectPageSize(largeObjectPageSize),

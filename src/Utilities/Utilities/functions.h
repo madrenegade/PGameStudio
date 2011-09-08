@@ -8,8 +8,8 @@
 #ifndef UTILITIES_FUNCTIONS_H
 #define	UTILITIES_FUNCTIONS_H
 
-#include <string>
 #include "Utilities/Memory/typedefs.h"
+#include <string>
 
 namespace Utilities
 {

@@ -1,3 +1,4 @@
+#include "Utilities/Memory/STLAllocator.h"
 #include "Utilities/Memory/AllocationInfo.h"
 #include "Utilities/functions.h"
 
@@ -26,7 +27,7 @@ namespace Utilities
             return bytes;
         }
 
-        const std::string AllocationInfo::getType() const
+        std::string AllocationInfo::getType() const
         {
             return demangle(type.c_str());
         }

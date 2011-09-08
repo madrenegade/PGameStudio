@@ -18,11 +18,12 @@ namespace Utilities
 
         class DebugMemoryTracker : public MemoryTracker
         {
+        public:
+             virtual MemoryDump getMemoryDump() const;
+             
         protected:
             virtual void trackAllocation(const_pointer ptr, size_t bytes, const std::type_info& type);
             virtual void trackDeallocation(const_pointer ptr, size_t bytes, const std::type_info& type);
-            
-            virtual MemoryDump getMemoryDump() const;
             
         private:
             typedef std::unordered_map<const_pointer, AllocationInfo> AllocationMap;

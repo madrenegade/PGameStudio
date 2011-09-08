@@ -11,6 +11,6 @@ namespace Utilities
 {
     namespace Memory
     {
-        
+        MemoryManager::Ptr STLAllocator<void>::memory;
     }
 }

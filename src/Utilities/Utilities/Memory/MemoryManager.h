@@ -182,9 +182,9 @@ namespace Utilities
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(1, "Allocating %i bytes for %i objects of type %s in pool %i", 
+                RAW_VLOG(4, "Allocating %i bytes for %i objects of type %s in pool %i", 
                          BYTES_TO_ALLOCATE, numObjects, 
-                         demangle(typeid(T).name()).c_str(), poolID);
+                         Utilities::demangle(typeid(T).name()).c_str(), poolID);
 #endif
 
                 T* ptr = 0;
@@ -202,6 +202,8 @@ namespace Utilities
                     fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
                     ptr = reinterpret_cast<T*> (rawPtr);
+                    
+                    RAW_VLOG(4, "Allocated %i bytes at address 0x%lx in pool %i (0x%lx)", BYTES_TO_ALLOCATE, ptr, poolID, pools[poolID].get());
 #else
                     ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
 #endif
@@ -226,7 +228,7 @@ namespace Utilities
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(1, "Deallocating %i bytes", BYTES_TO_DEALLOCATE);
+                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx)", BYTES_TO_DEALLOCATE, ptr);
 #endif
 
                 // call destructors

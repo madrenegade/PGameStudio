@@ -32,21 +32,21 @@ namespace Utilities
 #ifdef DEBUG
             if (maxSize % pageSize != 0)
             {
-                RAW_VLOG(1, "Pool size: %i\nPage size: %i\nRest: %i", maxSize, pageSize, maxSize % pageSize);
+                RAW_LOG_ERROR("Pool size: %i\nPage size: %i\nRest: %i", maxSize, pageSize, maxSize % pageSize);
                 
                 throw std::invalid_argument("Pool size must be multiple of the page size");
             }
             
             if(pageSize % blockSize != 0)
             {
-                RAW_VLOG(1, "Page size: %i\nBlock size: %i\nRest: %i", pageSize, blockSize, pageSize % blockSize);
+                RAW_LOG_ERROR("Page size: %i\nBlock size: %i\nRest: %i", pageSize, blockSize, pageSize % blockSize);
                 
                 throw std::invalid_argument("Page size must be multiple of the block size");
             }
             
             if(blockSize % BITS_PER_BYTE != 0)
             {
-                RAW_VLOG(1, "Block size: %i\nRest: %i", blockSize, blockSize % BITS_PER_BYTE);
+                RAW_LOG_ERROR("Block size: %i\nRest: %i", blockSize, blockSize % BITS_PER_BYTE);
                 
                 throw std::invalid_argument("Block size must be multiple of BITS_PER_BYTE");
             }

@@ -1,4 +1,5 @@
 #include "Utilities/functions.h"
+#include "Utilities/Memory/STLAllocator.h"
 #include "Utilities/Memory/constants.h"
 #include <gtest/gtest.h>
 #include <stdexcept>

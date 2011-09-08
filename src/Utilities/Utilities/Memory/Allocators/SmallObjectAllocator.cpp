@@ -24,9 +24,9 @@ namespace Utilities
         SmallObjectAllocator::SmallObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize)
         : Allocator(maxSize, pageSize, blockSize)
         {
-            if ((blockSize * 8) < (pageSize / blockSize))
+            if ((blockSize * BITS_PER_BYTE) < (pageSize / blockSize))
             {
-                throw std::logic_error("Blocksize too small for this page size");
+                throw std::logic_error("SOA: Blocksize too small for this page size");
             }
 
             freeBlocks.reserve(MAX_PAGE_COUNT);
@@ -58,19 +58,13 @@ namespace Utilities
 
         pointer SmallObjectAllocator::allocateBlockIn(pointer startOfPage)
         {
-            //VLOG(1) << "testing page " << page << " at offset " << pageOffset;
-
             int firstFreeBlock = findFreeBlockIn(startOfPage);
 
             if (firstFreeBlock != -1)
             {
-                //VLOG(1) << "Using block " << firstFreeBlock << " in page " << page;
-
-                pointer ptr = startOfPage + (BLOCK_SIZE * firstFreeBlock);
-
                 markBlockAsUsed(firstFreeBlock, startOfPage);
-
-                return ptr;
+                
+                return startOfPage + (BLOCK_SIZE * firstFreeBlock);
             }
 
             return 0;
@@ -155,9 +149,6 @@ namespace Utilities
             {
                 freeMemory += i->second * BLOCK_SIZE;
             }
-
-            // TODO: change n depending on CMAKE_BUILD_TYPE
-//            VLOG_EVERY_N(1, 1) << "SmallObjectAllocator free memory: " << freeMemory << " bytes";
 
             return freeMemory;
         }

@@ -37,7 +37,7 @@ namespace Utilities
             
         private:
             /**
-             * Set each bit of the last block the to one.
+             * Set each bit of the last block to one.
              * This marks all blocks in the page as free.
              */
             void initializePage(pointer page);

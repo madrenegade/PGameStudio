@@ -6,6 +6,7 @@
  */
 
 #include "Utilities/Memory/Allocators/LargeObjectAllocator.h"
+#include <stdexcept>
 
 namespace Utilities
 {
@@ -19,6 +20,7 @@ namespace Utilities
 
         pointer LargeObjectAllocator::allocate(size_t bytes)
         {
+            throw std::runtime_error("LargeObjectAllocator not implemented");
             return new byte[bytes];
         }
 

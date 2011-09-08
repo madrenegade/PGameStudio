@@ -32,5 +32,7 @@ TEST_F(STLAllocatorTest, construct)
     
     std::vector<MyString, STLAllocator<MyString> > v;
     v.push_back("abcd");
+    
+    ASSERT_EQ("abcd", v.at(0));
 }
  

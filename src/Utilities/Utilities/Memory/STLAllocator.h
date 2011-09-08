@@ -8,19 +8,21 @@
 #ifndef UTILITIES_MEMORY_STLALLOCATOR_H
 #define	UTILITIES_MEMORY_STLALLOCATOR_H
 
-#include "Utilities/Memory/MemoryManager.h"
-
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
+#include <stdexcept>
+
+#include "Utilities/Memory/MemoryManager.h"
 
 namespace Utilities
 {
     namespace Memory
     {
+        class MemoryManager;
+        
         template <class T> class STLAllocator;
 
         // specialize for void:
-
         template <>
         class STLAllocator<void>
         {
@@ -57,12 +59,12 @@ namespace Utilities
                 typedef STLAllocator<U> other;
             };
 
-            STLAllocator<T>() throw ()
+            STLAllocator() throw ()
             {
                 setMemoryManager();
             }
 
-            STLAllocator<T>(const STLAllocator& allocator) throw ()
+            STLAllocator(const STLAllocator& allocator) throw ()
             {
                 setMemoryManager();
             }
@@ -103,7 +105,8 @@ namespace Utilities
 
             size_type max_size() const throw ()
             {
-                return 0;
+                // TODO: return largest block
+                return 32 * Byte;
             }
 
             void construct(pointer p, const_reference val)
@@ -124,7 +127,7 @@ namespace Utilities
             }
         };
 
-        MemoryManager::Ptr STLAllocator<void>::memory;
+        
         template <class T> MemoryManager::Ptr STLAllocator<T>::memory;
 
         template <class T1, class T2>

@@ -13,3 +13,15 @@ cd bin
 
 Note the dot before the script path.
 The script will generate a html report in the coverage directory.
+
+Logging
+-------
+To enable more verbose logging while running an application like the demo use GLOG_v environment variable.
+
+There are 4 levels of verbosity used:
+1 - logs that appear only once
+2 - logs that appear seldom
+3 - logs that may appear every frame
+4 - logs that may appear multiple times per frame
+
+example: GLOG_v=4 ./Demo

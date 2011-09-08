@@ -12,7 +12,7 @@ namespace Utilities
         : memoryUsage(0)
         {
         }
-        
+
         MemoryTracker::~MemoryTracker()
         {
         }
@@ -21,23 +21,39 @@ namespace Utilities
         {
             return memoryUsage;
         }
-        
+
         void MemoryTracker::logMemoryLeaks() const
         {
             const std::vector<AllocationInfo> dump(getMemoryDump());
-            
-            if(!dump.empty())
+
+            if (!dump.empty())
             {
                 RAW_LOG_WARNING("Memory leaks detected: %i bytes in %i blocks", memoryUsage, dump.size());
+
+                for (unsigned int i = 0; i < dump.size(); ++i)
+                {
+                    const AllocationInfo& allocationInfo = dump.at(i);
+
+                    RAW_VLOG(2, "Block information:\nAddress: %i\nSize: %i\nType: %s",
+                        reinterpret_cast<long> (allocationInfo.getPointer()),
+                        allocationInfo.getSize(), allocationInfo.getType().c_str());
+                }
+            }
+        }
+        
+        void MemoryTracker::printMemoryDump() const
+        {
+            RAW_VLOG(1, "Memory dump");
                 
-                 for(unsigned int i = 0; i < dump.size(); ++i)
-                 {
-                   const AllocationInfo& allocationInfo = dump.at(i);
-                   
-                   RAW_VLOG(1, "Block information:\nAddress: %i\nSize: %i\nType: %s", 
-                       reinterpret_cast<long>(allocationInfo.getPointer()), 
-                       allocationInfo.getSize(), allocationInfo.getType().c_str());
-                 }
+            const std::vector<AllocationInfo> dump(getMemoryDump());
+            
+            for (unsigned int i = 0; i < dump.size(); ++i)
+            {
+                const AllocationInfo& allocationInfo = dump.at(i);
+
+                RAW_VLOG(1, "Block information:\nAddress: %i\nSize: %i\nType: %s",
+                    reinterpret_cast<long> (allocationInfo.getPointer()),
+                    allocationInfo.getSize(), allocationInfo.getType().c_str());
             }
         }
     }

@@ -65,7 +65,7 @@ namespace memprof
         }
         else
         {
-            RAW_LOG(INFO, "Error while accepting client");
+            RAW_LOG(ERROR, "Error while accepting client");
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Utilities
 		{
 		public:
             typedef boost::shared_ptr<MemoryTracker> Ptr;
+            typedef std::vector<AllocationInfo> MemoryDump;
             
             virtual ~MemoryTracker();
             
@@ -34,6 +35,9 @@ namespace Utilities
             
             void logMemoryLeaks() const;
             
+            virtual MemoryDump getMemoryDump() const = 0;
+            
+            void printMemoryDump() const;
             
         protected:
             MemoryTracker();
@@ -41,9 +45,6 @@ namespace Utilities
             virtual void trackAllocation(const_pointer ptr, size_t bytes, const std::type_info& type) = 0;
             virtual void trackDeallocation(const_pointer ptr, size_t bytes, const std::type_info& type) = 0;
             
-            typedef std::vector<AllocationInfo> MemoryDump;
-            virtual MemoryDump getMemoryDump() const = 0;
-
         private:
             size_t memoryUsage;
 		};

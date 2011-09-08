@@ -20,7 +20,7 @@ namespace Utilities
             const_pointer getPointer() const;
             size_t getSize() const;
             
-            const std::string getType() const;
+            std::string getType() const;
             
         private:
             const_pointer ptr;

@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 project (TestRunner)
 
 include("../../common.cmake")
+include_directories(${SRC_DIR}/StackTrace)
+include_directories(${SRC_DIR}/Utilities)
 
 file(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/*")
 
@@ -16,5 +18,6 @@ target_link_libraries(TestRunner -fprofile-arcs -ftest-coverage --coverage
     MathTests
     UtilitiesTests
     gcov
+    pthread
 )
 

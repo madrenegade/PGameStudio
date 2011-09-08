@@ -1,4 +1,5 @@
 #include "Utilities/Memory/AllocationInfo.h"
+#include "Utilities/Memory/STLAllocator.h"
 #include "Utilities/functions.h"
 #include <gtest/gtest.h>
 

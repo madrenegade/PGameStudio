@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include "Utilities/Memory/MemoryManager.h"
+#include "STLAllocator.h"
 
 namespace Utilities
 {
@@ -14,7 +15,11 @@ namespace Utilities
     {
         MemoryManager::Ptr MemoryManager::create(const MemoryTracker::Ptr& memoryTracker)
         {
-            return Ptr(new MemoryManager(memoryTracker));
+            Ptr ptr(new MemoryManager(memoryTracker));
+            
+            STLAllocator<void>::memory = ptr;
+            
+            return ptr;
         }
 
         MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
@@ -56,6 +61,8 @@ namespace Utilities
 
         pool_id MemoryManager::findPoolContaining(const_pointer ptr) const
         {
+            DCHECK(!pools.empty());
+            
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
                 if (i->second->contains(ptr))
@@ -63,6 +70,17 @@ namespace Utilities
                     return i->first;
                 }
             }
+            
+            VLOG(1) << "Pointer " << reinterpret_cast<const void*>(ptr) << " not found in any of the registered memory pools";
+            
+            VLOG(1) << "Registered pools: " << pools.size();
+            
+            for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
+            {
+                VLOG(1) << "[id: " << i->first << ", address: " << reinterpret_cast<const void*>(i->second.get()) << "]";
+            }
+            
+            memoryTracker->printMemoryDump();
 
             throw std::logic_error("Pointer not found in registered pools");
         }

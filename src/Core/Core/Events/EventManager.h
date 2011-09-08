@@ -3,6 +3,7 @@
 
 #include "Core/Events/typedefs.h"
 #include "Utilities/Memory/MemoryManager.h"
+#include "Utilities/string.h"
 
 #include <tbb/atomic.h>
 #include <tbb/concurrent_queue.h>
@@ -16,11 +17,11 @@ namespace Core
          * It is meant to be used like this: different threads can push events and 
          * after all sub systems have done their work the event handlers will be called in serial.
          */
-		class EventHandler
+		class EventManager
 		{
         public:
-            EventHandler();
-            ~EventHandler();
+            EventManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
+            ~EventManager();
             
             /**
              * Register an event and generate an ID for it.
@@ -55,6 +56,8 @@ namespace Core
             void handleEvents();
             
         private:
+            boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+            
             typedef std::map<std::string, EventID> EventMap;
             EventMap events;
             

@@ -1,4 +1,5 @@
-#include "Core/Events/EventHandler.h"
+#include "Core/Events/EventManager.h"
+#include "Utilities/Memory/STLAllocator.h"
 
 #include <glog/logging.h>
 #include <glog/logging.h>
@@ -11,19 +12,19 @@ namespace Core
 {
 	namespace Events
 	{
-        EventHandler::EventHandler()
-        : serial()
+        EventManager::EventManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
+        : memory(memoryManager), serial()
         {
-            RAW_LOG_INFO("EventHandler created");
         }
         
-        EventHandler::~EventHandler()
+        EventManager::~EventManager()
         {
-            RAW_LOG_INFO("EventHandler destroyed");
         }
         
-        EventID EventHandler::registerEvent(const char* name)
+        EventID EventManager::registerEvent(const char* name)
         {
+            RAW_VLOG(2, "Registering event %s", name);
+            
             RAW_CHECK(events.find(name) == events.end(), "Event is already registered");
             
             EventID id = serial.fetch_and_add(1);
@@ -35,19 +36,19 @@ namespace Core
             return id;
         }
         
-        void EventHandler::registerEventHandler(const EventID& id, const EventHandlerFunction& fn)
+        void EventManager::registerEventHandler(const EventID& id, const EventHandlerFunction& fn)
         {
             // TODO check that id is valid
             
             signals[id]->connect(fn);
         }
         
-        void EventHandler::pushEvent(const EventID& id, const boost::any& data)
+        void EventManager::pushEvent(const EventID& id, const boost::any& data)
         {
             eventQueue.push(std::make_pair(id, data));
         }
         
-        void EventHandler::handleEvents()
+        void EventManager::handleEvents()
         {
             EventData eventData;
             
