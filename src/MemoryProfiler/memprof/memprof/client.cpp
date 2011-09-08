@@ -18,6 +18,7 @@
 
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/iostreams/stream.hpp>
+#include <boost/bind.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -80,6 +81,8 @@ namespace memprof
     
     void client::begin_new_frame()
     {
+        if(!connected) return;
+        
         const sample sample;
         
         char buffer[128];

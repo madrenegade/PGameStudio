@@ -34,6 +34,11 @@ namespace memprof
         {
 
         }
+        
+        connection::~connection()
+        {
+            RAW_LOG(INFO, "Destroying client connection");
+        }
 
         boost::asio::ip::tcp::socket& connection::get_socket()
         {
@@ -52,8 +57,11 @@ namespace memprof
 
         void connection::handle_read(const boost::system::error_code& error, size_t bytesTransferred)
         {
+            RAW_LOG(INFO, "handle_read");
+            
             if (!error)
             {
+                RAW_LOG(INFO, "no error");
                 sample sample;
 
                 boost::iostreams::basic_array_source<char> device(buffer.c_array(), buffer.size());
@@ -62,7 +70,11 @@ namespace memprof
                 boost::archive::binary_iarchive ia(s);
                 ia >> sample;
 
+                RAW_LOG(INFO, "notifying listeners");
+                
                 notify_listeners(sample);
+                
+                start();
             }
         }
 

@@ -103,7 +103,6 @@ double SampleNode::getSelfSizePerFrame() const
  {
      if(frame > currentFrame)
      {
-         std::cout << "NEW_FRAME" << std::endl;
          currentFrame = frame;
 
          numAllocationsPerFrame += (numAllocationsForCurrentFrame / currentFrame);

@@ -34,6 +34,8 @@ namespace memprof
             boost::asio::ip::tcp::socket& get_socket();
 
             void start();
+            
+            virtual ~connection();
 
         private:
             connection(boost::asio::io_service& io_service,

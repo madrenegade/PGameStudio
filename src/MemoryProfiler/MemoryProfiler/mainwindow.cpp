@@ -36,13 +36,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_new_frame()
 {
+    std::cout << "on_new_frame" << std::endl;
     QMutexLocker locker(&mutex);
-    std::cout << "FRAME_ADDED" << std::endl;
     ++frame;
+    std::cout << "on_new_frame2" << std::endl;
 }
 
 void MainWindow::on_allocation(const memprof::sample& sample)
 {
+    std::cout << "on_allocation" << std::endl;
     QString frameMessages;
 
     const std::list<StackFrame>& frames = sample.getStackTrace().getFrames();
@@ -56,9 +58,10 @@ void MainWindow::on_allocation(const memprof::sample& sample)
     }
 
     QMutexLocker locker(&mutex);
-    ui->rawDataTextBrowser->append(QString("ALLOCATION_BEGIN\nSize: %1 bytes\n%2ALLOCATION_END\n").arg(sample.getAllocatedBytes()).arg(frameMessages));
+    //ui->rawDataTextBrowser->append(QString("ALLOCATION_BEGIN\nSize: %1 bytes\n%2ALLOCATION_END\n").arg(sample.getAllocatedBytes()).arg(frameMessages));
     update(sample);
     dirty = true;
+    std::cout << "on_allocation2" << std::endl;
 }
 
 void MainWindow::openAboutDialog() const
