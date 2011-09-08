@@ -85,7 +85,7 @@ namespace memprof
         
         const sample sample;
         
-        char buffer[128];
+        char buffer[4096];
         boost::iostreams::basic_array_sink<char> sr(buffer);
         boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > source(sr);
         

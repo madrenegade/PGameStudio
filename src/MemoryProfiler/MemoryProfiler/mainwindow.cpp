@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionAbout, SIGNAL(activated()),
                      this, SLOT(openAboutDialog()));
 
+    connect(this, SIGNAL(rawDataArrived(const QString&)), this, SLOT(onRawDataArrived(const QString&)));
+
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(rebuildLiveView()));
     timer->start(100);
@@ -34,17 +36,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::onRawDataArrived(const QString &data)
+{
+    ui->rawDataTextBrowser->append(data);
+}
+
 void MainWindow::on_new_frame()
 {
-    std::cout << "on_new_frame" << std::endl;
     QMutexLocker locker(&mutex);
     ++frame;
-    std::cout << "on_new_frame2" << std::endl;
 }
 
 void MainWindow::on_allocation(const memprof::sample& sample)
 {
-    std::cout << "on_allocation" << std::endl;
     QString frameMessages;
 
     const std::list<StackFrame>& frames = sample.getStackTrace().getFrames();
@@ -58,10 +62,9 @@ void MainWindow::on_allocation(const memprof::sample& sample)
     }
 
     QMutexLocker locker(&mutex);
-    //ui->rawDataTextBrowser->append(QString("ALLOCATION_BEGIN\nSize: %1 bytes\n%2ALLOCATION_END\n").arg(sample.getAllocatedBytes()).arg(frameMessages));
+    rawDataArrived(QString("ALLOCATION_BEGIN\nSize: %1 bytes\n%2ALLOCATION_END\n").arg(sample.getAllocatedBytes()).arg(frameMessages));
     update(sample);
     dirty = true;
-    std::cout << "on_allocation2" << std::endl;
 }
 
 void MainWindow::openAboutDialog() const
@@ -104,25 +107,41 @@ void MainWindow::rebuildLiveView()
 
     liveView->expandAll();
 
-    liveView->resizeColumnToContents(0);
+    for(int i = 0; i < liveView->columnCount(); ++i)
+    {
+        liveView->resizeColumnToContents(i);
+    }
 
     dirty = false;
 }
 
 QTreeWidgetItem* MainWindow::createItem(const SampleNode& node)
 {
+    const double div = 1024.0;
+    QString unit("KByte");
+
+    double totalSize = static_cast<double>(node.getTotalSize()) / div;
+    double selfSize = static_cast<double>(node.getSelfSize()) / div;
+    double totalSizePerFrame = static_cast<double>(node.getTotalSizePerFrame()) / div;
+    double selfSizePerFrame = static_cast<double>(node.getSelfSizePerFrame()) / div;
+
     QStringList columns;
     columns.append(QString::fromStdString(node.getName()));
     columns.append(QString("%1").arg(node.getNumAllocations()));
     columns.append(QString("%1").arg(node.getNumSelfAllocations()));
-    columns.append(QString("%1").arg(node.getTotalSize()));
-    columns.append(QString("%1").arg(node.getSelfSize()));
+    columns.append(QString("%1 %2").arg(totalSize).arg(unit));
+    columns.append(QString("%1 %2").arg(selfSize).arg(unit));
     columns.append(QString("%1").arg(node.getNumAllocationsPerFrame()));
     columns.append(QString("%1").arg(node.getNumSelfAllocationsPerFrame()));
-    columns.append(QString("%1").arg(node.getTotalSizePerFrame()));
-    columns.append(QString("%1").arg(node.getSelfSizePerFrame()));
+    columns.append(QString("%1 %2").arg(totalSizePerFrame).arg(unit));
+    columns.append(QString("%1 %2").arg(selfSizePerFrame).arg(unit));
 
     QTreeWidgetItem* item = new QTreeWidgetItem((QTreeWidget*) 0, columns);
+
+    for(int i = 1; i < item->columnCount(); ++i)
+    {
+        item->setTextAlignment(i, Qt::AlignRight);
+    }
 
     for(SampleNode::Children::const_iterator i = node.getChildren().begin(); i != node.getChildren().end(); ++i)
     {

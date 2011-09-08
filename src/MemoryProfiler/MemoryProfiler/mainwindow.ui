@@ -17,8 +17,11 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="LiveViewTab">
        <attribute name="title">
@@ -30,8 +33,14 @@
           <property name="indentation">
            <number>20</number>
           </property>
+          <property name="sortingEnabled">
+           <bool>false</bool>
+          </property>
           <attribute name="headerCascadingSectionResizes">
            <bool>true</bool>
+          </attribute>
+          <attribute name="headerShowSortIndicator" stdset="0">
+           <bool>false</bool>
           </attribute>
           <attribute name="headerStretchLastSection">
            <bool>true</bool>
@@ -43,42 +52,66 @@
           </column>
           <column>
            <property name="text">
-            <string>NumAllocations</string>
+            <string>Allocations</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>NumSelfAllocations</string>
+            <string>SelfAllocations</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>TotalSize</string>
+            <string>Size</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
            </property>
           </column>
           <column>
            <property name="text">
             <string>SelfSize</string>
            </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>NumAllocationsPerFrame</string>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>NumSelfAllocationsPerFrame</string>
+            <string>AllocationsPerFrame</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>TotalSizePerFrame</string>
+            <string>SelfAllocationsPerFrame</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>SizePerFrame</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
            </property>
           </column>
           <column>
            <property name="text">
             <string>SelfSizePerFrame</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeft|AlignVCenter</set>
            </property>
           </column>
          </widget>
@@ -91,7 +124,11 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QTextBrowser" name="rawDataTextBrowser"/>
+         <widget class="QTextBrowser" name="rawDataTextBrowser">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

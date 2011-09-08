@@ -8,7 +8,7 @@ include_directories(${SRC_DIR}/Core)
 
 FILE(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/*")
 
-find_package(Boost REQUIRED serialization)
+find_package(Boost REQUIRED serialization thread)
 find_package(UNWIND REQUIRED)
 
 add_executable(${PROJECT_NAME} ${Project_Sources})

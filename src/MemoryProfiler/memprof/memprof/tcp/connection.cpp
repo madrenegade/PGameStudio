@@ -37,7 +37,6 @@ namespace memprof
         
         connection::~connection()
         {
-            RAW_LOG(INFO, "Destroying client connection");
         }
 
         boost::asio::ip::tcp::socket& connection::get_socket()
@@ -47,8 +46,6 @@ namespace memprof
 
         void connection::start()
         {
-            RAW_LOG(INFO, "Starting client connection");
-
             boost::asio::async_read(socket, boost::asio::buffer(buffer),
                 boost::bind(&connection::handle_read, shared_from_this(),
                 boost::asio::placeholders::error,
@@ -57,11 +54,8 @@ namespace memprof
 
         void connection::handle_read(const boost::system::error_code& error, size_t bytesTransferred)
         {
-            RAW_LOG(INFO, "handle_read");
-            
             if (!error)
             {
-                RAW_LOG(INFO, "no error");
                 sample sample;
 
                 boost::iostreams::basic_array_source<char> device(buffer.c_array(), buffer.size());
@@ -69,8 +63,6 @@ namespace memprof
 
                 boost::archive::binary_iarchive ia(s);
                 ia >> sample;
-
-                RAW_LOG(INFO, "notifying listeners");
                 
                 notify_listeners(sample);
                 

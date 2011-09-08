@@ -44,13 +44,7 @@ private:
     size_t numAllocations;
     size_t allocationSize;
 
-    double numAllocationsPerFrame; // average for finished frames
-    double allocationSizePerFrame;
-
-    size_t currentFrame;
-    size_t numAllocationsForCurrentFrame;
-    size_t allocationSizeForCurrentFrame;
-
+    static size_t currentFrame;
 };
 
 #endif // SAMPLENODE_H

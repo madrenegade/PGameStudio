@@ -1,16 +1,15 @@
 #include "samplenode.h"
 #include <iostream>
 
+size_t SampleNode::currentFrame = 0;
+
 SampleNode::SampleNode()
 {
 
 }
 
 SampleNode::SampleNode(const std::string& name)
-    : name(name), numAllocations(0), allocationSize(0), numAllocationsPerFrame(0.0),
-      allocationSizePerFrame(0.0),
-      currentFrame(0),
-      numAllocationsForCurrentFrame(0), allocationSizeForCurrentFrame(0)
+    : name(name), numAllocations(0), allocationSize(0)
 {
 }
 
@@ -71,8 +70,7 @@ double SampleNode::getNumAllocationsPerFrame() const
 
 double SampleNode::getNumSelfAllocationsPerFrame() const
 {
-    // finished frames + current frame
-    return numAllocationsPerFrame + (numAllocationsForCurrentFrame / (currentFrame+1));
+    return static_cast<double>(numAllocations) / static_cast<double>(currentFrame);
 }
 
 double SampleNode::getTotalSizePerFrame() const
@@ -88,7 +86,7 @@ double SampleNode::getTotalSizePerFrame() const
 
 double SampleNode::getSelfSizePerFrame() const
 {
-    return allocationSizePerFrame + (allocationSizeForCurrentFrame / (currentFrame+1));
+    return static_cast<double>(allocationSize) / static_cast<double>(currentFrame);
 }
 
  void SampleNode::add(const memprof::sample& sample, size_t frame)
@@ -104,19 +102,12 @@ double SampleNode::getSelfSizePerFrame() const
      if(frame > currentFrame)
      {
          currentFrame = frame;
-
-         numAllocationsPerFrame += (numAllocationsForCurrentFrame / currentFrame);
-         allocationSizePerFrame += (allocationSizeForCurrentFrame / currentFrame);
-         numAllocationsForCurrentFrame = 0;
-         allocationSizeForCurrentFrame = 0;
      }
 
      StackFrame top(stackFrames.front());
 
      if(top.getFunction() == name)
      {
-         std::cout << name << std::endl;
-
          stackFrames.pop_front();
 
          if(stackFrames.empty())
@@ -147,7 +138,5 @@ double SampleNode::getSelfSizePerFrame() const
 void SampleNode::addAllocation(size_t bytes)
 {
     ++numAllocations;
-    ++numAllocationsForCurrentFrame;
     allocationSize += bytes;
-    allocationSizeForCurrentFrame += bytes;
 }

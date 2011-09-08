@@ -30,9 +30,14 @@ public:
     virtual void on_new_frame();
     virtual void on_allocation(const memprof::sample& sample);
 
+signals:
+    void rawDataArrived(const QString& data);
+
 public slots:
     void openAboutDialog() const;
     void rebuildLiveView();
+
+    void onRawDataArrived(const QString& data);
 
 private:
     void update(const memprof::sample& sample);
