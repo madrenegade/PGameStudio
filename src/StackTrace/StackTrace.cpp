@@ -23,7 +23,7 @@ std::string demangle(const char* name)
 
     if (status != 0)
     {
-        RAW_LOG_ERROR("Demangling failed with status: %i", status);
+        RAW_VLOG(2, "Demangling failed with status: %i", status);
 
         return std::string(name);
     }

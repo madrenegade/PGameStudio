@@ -55,6 +55,8 @@ namespace Utilities
                 
                 throw AllocationException("Deallocate failed because types do not match");
             }
+            
+            allocations.erase(allocations.find(ptr));
         }
 
         MemoryTracker::MemoryDump DebugMemoryTracker::getMemoryDump() const
