@@ -61,17 +61,37 @@ namespace memprof
 
                 boost::archive::binary_iarchive ia(s);
                 ia >> sample;
-                
+
                 notify_listeners(sample);
             }
         }
-        
+
         void connection::notify_listeners(const sample& sample)
         {
-            for(ListenerList::iterator i = listeners.begin(); i != listeners.end(); ++i)
+            switch(sample.getType())
             {
-                (*i)->on_change(sample);
+                case sample_type::new_frame:
+                    notify_listeners_about_new_frame();
+                    break;
+                    
+                case sample_type::allocation:
+                    notify_listeners_about_allocation(sample);
+                    break;
             }
+        }
+
+        void connection::notify_listeners_about_new_frame()
+        {
+            std::for_each(listeners.begin(), listeners.end(), [](change_listener* listener) { 
+                listener->on_new_frame(); 
+            });
+        }
+
+        void connection::notify_listeners_about_allocation(const sample& sample)
+        {
+            std::for_each(listeners.begin(), listeners.end(), [&sample](change_listener* listener) { 
+                listener->on_allocation(sample); 
+            });
         }
     }
 }

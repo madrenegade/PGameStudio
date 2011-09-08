@@ -26,6 +26,16 @@ namespace memprof
         
         void connect();
         
+        /**
+         * notify the server that a new frame started
+         */
+        void begin_new_frame();
+        
+        /**
+         * send allocation data to the server
+         * @param stacktrace
+         * @param bytes
+         */
         void send_allocation_info(const StackTrace& stacktrace, size_t bytes);
         
     private:

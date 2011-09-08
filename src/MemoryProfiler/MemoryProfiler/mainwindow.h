@@ -27,7 +27,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    virtual void on_change(const memprof::sample& sample);
+    virtual void on_new_frame();
+    virtual void on_allocation(const memprof::sample& sample);
 
 public slots:
     void openAboutDialog() const;
@@ -47,6 +48,7 @@ private:
     mutable QMutex mutex;
 
     bool dirty;
+    size_t frame;
 
     typedef std::map<std::string, SampleNode> NodeMap;
     NodeMap rootNodes;

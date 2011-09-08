@@ -7,7 +7,10 @@ SampleNode::SampleNode()
 }
 
 SampleNode::SampleNode(const std::string& name)
-    : name(name)
+    : name(name), numAllocations(0), allocationSize(0), numAllocationsPerFrame(0.0),
+      allocationSizePerFrame(0.0),
+      currentFrame(0),
+      numAllocationsForCurrentFrame(0), allocationSizeForCurrentFrame(0)
 {
 }
 
@@ -23,7 +26,7 @@ const SampleNode::Children& SampleNode::getChildren() const
 
 size_t SampleNode::getNumAllocations() const
 {
-    size_t numAllocations = allocations.size();
+    size_t numAllocations = getNumSelfAllocations();
 
     for(Children::const_iterator i = children.begin(); i != children.end(); ++i)
     {
@@ -35,7 +38,7 @@ size_t SampleNode::getNumAllocations() const
 
 size_t SampleNode::getNumSelfAllocations() const
 {
-    return allocations.size();
+    return numAllocations;
 }
 
 size_t SampleNode::getTotalSize() const
@@ -52,27 +55,63 @@ size_t SampleNode::getTotalSize() const
 
 size_t SampleNode::getSelfSize() const
 {
-    size_t total = 0;
+    return allocationSize;
+}
 
-    for(Allocations::const_iterator i = allocations.begin(); i != allocations.end(); ++i)
-    {
-        total += *i;
-    }
+double SampleNode::getNumAllocationsPerFrame() const
+{
+    size_t total = getNumSelfAllocationsPerFrame();
+
+    std::for_each(children.begin(), children.end(), [&total](std::pair<std::string, SampleNode> i) {
+        total += i.second.getNumAllocationsPerFrame();
+    });
 
     return total;
 }
 
- void SampleNode::add(const memprof::sample& sample)
+double SampleNode::getNumSelfAllocationsPerFrame() const
+{
+    // finished frames + current frame
+    return numAllocationsPerFrame + (numAllocationsForCurrentFrame / (currentFrame+1));
+}
+
+double SampleNode::getTotalSizePerFrame() const
+{
+    size_t total = getSelfSizePerFrame();
+
+    std::for_each(children.begin(), children.end(), [&total](std::pair<std::string, SampleNode> i) {
+        total += i.second.getTotalSizePerFrame();
+    });
+
+    return total;
+}
+
+double SampleNode::getSelfSizePerFrame() const
+{
+    return allocationSizePerFrame + (allocationSizeForCurrentFrame / (currentFrame+1));
+}
+
+ void SampleNode::add(const memprof::sample& sample, size_t frame)
  {
      StackTrace stackTrace(sample.getStackTrace());
-
      StackFrames stackFrames(stackTrace.getFrames());
 
-     add(stackFrames, sample.getAllocatedBytes());
+     add(stackFrames, sample.getAllocatedBytes(), frame);
  }
 
- void SampleNode::add(StackFrames& stackFrames, size_t bytes)
+ void SampleNode::add(StackFrames& stackFrames, size_t bytes, size_t frame)
  {
+     if(frame > currentFrame)
+     {
+         std::cout << "NEW_FRAME" << std::endl;
+         currentFrame = frame;
+
+         numAllocationsPerFrame += (numAllocationsForCurrentFrame / currentFrame);
+         allocationSizePerFrame += (allocationSizeForCurrentFrame / currentFrame);
+         numAllocationsForCurrentFrame = 0;
+         allocationSizeForCurrentFrame = 0;
+     }
+
      StackFrame top(stackFrames.front());
 
      if(top.getFunction() == name)
@@ -83,8 +122,7 @@ size_t SampleNode::getSelfSize() const
 
          if(stackFrames.empty())
          {
-             allocations.push_front(bytes);
-             std::cout << "END" << std::endl;
+             addAllocation(bytes);
              return;
          }
 
@@ -92,20 +130,13 @@ size_t SampleNode::getSelfSize() const
 
          std::string function(firstChild.getFunction());
 
-         std::cout << "Child: " << function << std::endl;
-
          if(children.find(function) == children.end())
          {
-             std::cout << "NEW" << std::endl;
              children[function] = SampleNode(function);
-         }
-         else
-         {
-             std::cout << "CONTINUE" << std::endl;
          }
 
          SampleNode& childNode = children[function];
-         childNode.add(stackFrames, bytes);
+         childNode.add(stackFrames, bytes, frame);
      }
      else
      {
@@ -113,3 +144,11 @@ size_t SampleNode::getSelfSize() const
      }
 
  }
+
+void SampleNode::addAllocation(size_t bytes)
+{
+    ++numAllocations;
+    ++numAllocationsForCurrentFrame;
+    allocationSize += bytes;
+    allocationSizeForCurrentFrame += bytes;
+}

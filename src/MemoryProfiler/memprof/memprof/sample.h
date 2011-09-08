@@ -13,6 +13,11 @@
 
 namespace memprof
 {
+    enum class sample_type : unsigned char
+    {
+        new_frame,
+        allocation
+    };
 
     class sample
     {
@@ -20,6 +25,7 @@ namespace memprof
         sample();
         sample(const StackTrace& stacktrace, size_t bytes);
 
+        sample_type getType() const;
         const StackTrace& getStackTrace() const;
         size_t getAllocatedBytes() const;
 
@@ -29,10 +35,12 @@ namespace memprof
         template<class Archive>
         void serialize(Archive & ar, const unsigned int version)
         {
+            ar & type;
             ar & stacktrace;
             ar & allocatedBytes;
         }
         
+        sample_type type;
         StackTrace stacktrace;
         size_t allocatedBytes;
     };

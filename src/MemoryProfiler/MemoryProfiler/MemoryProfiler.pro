@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+QMAKE_CXXFLAGS += -std=c++0x
+
 QT       += core gui
 
 TARGET = MemoryProfiler

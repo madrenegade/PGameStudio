@@ -22,7 +22,8 @@ namespace memprof
         {
         };
 
-        virtual void on_change(const sample& sample) = 0;
+        virtual void on_new_frame() = 0;
+        virtual void on_allocation(const sample& sample) = 0;
 
     protected:
 

@@ -42,6 +42,9 @@ namespace memprof
             void handle_read(const boost::system::error_code& error, size_t bytesTransferred);
             
             void notify_listeners(const sample& sample);
+            
+            void notify_listeners_about_new_frame();
+            void notify_listeners_about_allocation(const sample& sample);
 
             boost::asio::ip::tcp::socket socket;
             boost::array<char, 4096 > buffer;

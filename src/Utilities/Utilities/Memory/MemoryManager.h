@@ -118,6 +118,15 @@ namespace Utilities
                 
                 return allocate<T, numObjects > (poolID);
             }
+            
+            /**
+             * do not use directly
+             */
+            void beginNewFrame()
+            {
+                ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                profilerClient->begin_new_frame();
+            }
 #endif
 
         private:
@@ -208,7 +217,7 @@ namespace Utilities
                 // call destructors
                 for(size_t i = 0; i < n; ++i)
                 {
-                    ptr[i]->~T();
+                    ptr[i].~T();
                 }
 
                 const_pointer rawPtr = reinterpret_cast<const_pointer> (ptr);
@@ -239,9 +248,11 @@ namespace Utilities
          * macros for making memory profiling easier to use
          */
 #ifdef DEBUG
+#define BEGIN_NEW_FRAME(mngr) mngr->beginNewFrame()
 #define CONSTRUCT(mngr, obj, poolID) mngr->construct(obj, poolID, StackTrace())
 #define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID, StackTrace())
 #else
+#define BEGIN_NEW_FRAME(mngr)
 #define CONSTRUCT(mngr, obj, poolID) mngr->construct(object, poolID)
 #define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID)
 #endif

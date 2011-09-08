@@ -77,6 +77,20 @@ namespace memprof
             RAW_LOG(WARNING, "Memory profiling is not available");
         }
     }
+    
+    void client::begin_new_frame()
+    {
+        const sample sample;
+        
+        char buffer[128];
+        boost::iostreams::basic_array_sink<char> sr(buffer);
+        boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > source(sr);
+        
+        boost::archive::binary_oarchive oa(source);
+        oa << sample;
+
+        boost::asio::write(*socket, boost::asio::buffer(buffer));
+    }
 
     void client::send_allocation_info(const StackTrace& stacktrace, size_t bytes)
     {

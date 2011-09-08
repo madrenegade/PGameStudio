@@ -11,15 +11,20 @@ namespace memprof
 {
 
     sample::sample()
-    : stacktrace(false)
+    : type(sample_type::new_frame), stacktrace(false)
     {
 
     }
 
     sample::sample(const StackTrace& stacktrace, size_t bytes)
-    : stacktrace(stacktrace), allocatedBytes(bytes)
+    : type(sample_type::allocation), stacktrace(stacktrace), allocatedBytes(bytes)
     {
 
+    }
+    
+    sample_type sample::getType() const
+    {
+        return type;
     }
 
     const StackTrace& sample::getStackTrace() const

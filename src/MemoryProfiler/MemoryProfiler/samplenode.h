@@ -9,12 +9,11 @@ class SampleNode
 {
 public:
     typedef std::map<std::string, SampleNode> Children;
-    typedef std::list<size_t> Allocations;
 
     SampleNode();
     SampleNode(const std::string& name);
 
-    void add(const memprof::sample& sample);
+    void add(const memprof::sample& sample, size_t frame);
 
     const std::string& getName() const;
 
@@ -25,16 +24,33 @@ public:
     size_t getTotalSize() const;
     size_t getSelfSize() const;
 
+    double getNumAllocationsPerFrame() const;
+    double getNumSelfAllocationsPerFrame() const;
+
+    double getTotalSizePerFrame() const;
+    double getSelfSizePerFrame() const;
+
 private:
     typedef std::list<StackFrame> StackFrames;
 
-    void add(StackFrames& stackFrames, size_t size);
+    void add(StackFrames& stackFrames, size_t size, size_t frame);
+
+    void addAllocation(size_t bytes);
 
     std::string name;
 
     Children children;
 
-    Allocations allocations;
+    size_t numAllocations;
+    size_t allocationSize;
+
+    double numAllocationsPerFrame; // average for finished frames
+    double allocationSizePerFrame;
+
+    size_t currentFrame;
+    size_t numAllocationsForCurrentFrame;
+    size_t allocationSizeForCurrentFrame;
+
 };
 
 #endif // SAMPLENODE_H

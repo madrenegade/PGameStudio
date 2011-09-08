@@ -7,7 +7,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this)), server(new memprof::server), dirty(false)
+    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this)), server(new memprof::server), dirty(false), frame(0)
 {
     ui->setupUi(this);
 
@@ -34,7 +34,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_change(const memprof::sample& sample)
+void MainWindow::on_new_frame()
+{
+    QMutexLocker locker(&mutex);
+    std::cout << "FRAME_ADDED" << std::endl;
+    ++frame;
+}
+
+void MainWindow::on_allocation(const memprof::sample& sample)
 {
     QString frameMessages;
 
@@ -68,7 +75,7 @@ void MainWindow::update(const memprof::sample& sample)
         rootNodes[function] = SampleNode(function);
     }
 
-    rootNodes[function].add(sample);
+    rootNodes[function].add(sample, frame);
 }
 
 void MainWindow::rebuildLiveView()
@@ -94,6 +101,8 @@ void MainWindow::rebuildLiveView()
 
     liveView->expandAll();
 
+    liveView->resizeColumnToContents(0);
+
     dirty = false;
 }
 
@@ -105,6 +114,10 @@ QTreeWidgetItem* MainWindow::createItem(const SampleNode& node)
     columns.append(QString("%1").arg(node.getNumSelfAllocations()));
     columns.append(QString("%1").arg(node.getTotalSize()));
     columns.append(QString("%1").arg(node.getSelfSize()));
+    columns.append(QString("%1").arg(node.getNumAllocationsPerFrame()));
+    columns.append(QString("%1").arg(node.getNumSelfAllocationsPerFrame()));
+    columns.append(QString("%1").arg(node.getTotalSizePerFrame()));
+    columns.append(QString("%1").arg(node.getSelfSizePerFrame()));
 
     QTreeWidgetItem* item = new QTreeWidgetItem((QTreeWidget*) 0, columns);
 

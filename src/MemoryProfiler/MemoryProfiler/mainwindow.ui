@@ -27,6 +27,15 @@
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QTreeWidget" name="liveView">
+          <property name="indentation">
+           <number>20</number>
+          </property>
+          <attribute name="headerCascadingSectionResizes">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="headerStretchLastSection">
+           <bool>true</bool>
+          </attribute>
           <column>
            <property name="text">
             <string>Name</string>
@@ -50,6 +59,26 @@
           <column>
            <property name="text">
             <string>SelfSize</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>NumAllocationsPerFrame</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>NumSelfAllocationsPerFrame</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>TotalSizePerFrame</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>SelfSizePerFrame</string>
            </property>
           </column>
          </widget>
