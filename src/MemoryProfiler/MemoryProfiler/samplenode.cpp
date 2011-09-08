@@ -70,7 +70,7 @@ double SampleNode::getNumAllocationsPerFrame() const
 
 double SampleNode::getNumSelfAllocationsPerFrame() const
 {
-    return static_cast<double>(numAllocations) / static_cast<double>(currentFrame);
+    return static_cast<double>(numAllocations) / static_cast<double>(getCurrentFrame());
 }
 
 double SampleNode::getTotalSizePerFrame() const
@@ -86,7 +86,7 @@ double SampleNode::getTotalSizePerFrame() const
 
 double SampleNode::getSelfSizePerFrame() const
 {
-    return static_cast<double>(allocationSize) / static_cast<double>(currentFrame);
+    return static_cast<double>(allocationSize) / static_cast<double>(getCurrentFrame());
 }
 
  void SampleNode::add(const memprof::sample& sample, size_t frame)
@@ -139,4 +139,9 @@ void SampleNode::addAllocation(size_t bytes)
 {
     ++numAllocations;
     allocationSize += bytes;
+}
+
+size_t SampleNode::getCurrentFrame()
+{
+    return currentFrame == 0 ? 1 : currentFrame;
 }

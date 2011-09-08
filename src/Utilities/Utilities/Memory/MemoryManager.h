@@ -42,9 +42,9 @@ namespace Utilities
         {
         public:
             typedef boost::shared_ptr<MemoryManager> Ptr;
-            
+
             static Ptr create(const MemoryTracker::Ptr& memoryTracker);
-            
+
             /**
              * registers a new memory pool and returns an id to access it
              * the first registration always returns 0 as the id
@@ -70,55 +70,47 @@ namespace Utilities
              * @return a pointer to the object
              */
             template<typename T>
-            boost::shared_ptr<T> construct(const T& obj, pool_id poolID = 0)
+            boost::shared_ptr<T> construct(const T& obj, pool_id poolID = 0
+#ifdef DEBUG
+                , const StackTrace& stacktrace = StackTrace()
+#endif
+                )
             {
+#ifdef DEBUG
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(stacktrace, sizeof (T));
+                }
+#endif
+
                 boost::shared_ptr<T> ptr(new (allocate<T > (1, poolID)) T(obj),
-                                         boost::bind(&MemoryManager::deallocate<T, 1 >, this, _1));
+                                         boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
                 return ptr;
             }
 
             template<typename T, size_t numObjects>
-            boost::shared_array<T> allocate(pool_id poolID = 0)
+            boost::shared_array<T> allocate(pool_id poolID = 0
+#ifdef DEBUG
+                , const StackTrace& stacktrace = StackTrace()
+#endif
+                )
             {
 #ifdef DEBUG
                 BOOST_STATIC_ASSERT(numObjects > 1);
+
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T));
+                }
 #endif
 
                 boost::shared_array<T> ptr(allocate<T > (numObjects, poolID),
-                                           boost::bind(&MemoryManager::deallocate<T, numObjects>, this, _1));
+                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
                 return ptr;
             }
 
 #ifdef DEBUG
 
-            /**
-             * do not use directly
-             */
-            template<typename T>
-            boost::shared_ptr<T> construct(const T& obj, pool_id poolID, const StackTrace& stacktrace)
-            {
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, sizeof(T));
-                }
-
-                return construct(obj, poolID);
-            }
-
-            /**
-             * do not use directly
-             */
-            template<typename T, size_t numObjects>
-            boost::shared_array<T> allocate(pool_id poolID, const StackTrace& stacktrace)
-            {
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof(T));
-                }
-                
-                return allocate<T, numObjects > (poolID);
-            }
-            
             /**
              * do not use directly
              */
@@ -131,7 +123,7 @@ namespace Utilities
 
         private:
             MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker);
-            
+
             typedef tbb::spin_mutex MemoryTrackerMutexType;
             MemoryTrackerMutexType memoryTrackerMutex;
             boost::shared_ptr<MemoryTracker> memoryTracker;
@@ -152,6 +144,31 @@ namespace Utilities
 #endif
 
             pool_id findPoolContaining(const_pointer ptr) const;
+            
+            template<typename> friend class STLAllocator;
+             /**
+             * only for the stl allocator
+             * @param numObjects
+             * @param poolID
+             * @param stacktrace
+             * @return 
+             */
+            template<typename T>
+            T* stl_allocate(size_t numObjects
+#ifdef DEBUG
+                , const StackTrace& stacktrace
+#endif
+                , pool_id poolID = 0)
+            {
+#ifdef DEBUG
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T));
+                }
+#endif
+
+                return allocate<T>(numObjects, poolID);
+            }
 
             /**
              * allocate space for a bunch of objects
@@ -165,7 +182,9 @@ namespace Utilities
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(1, "Allocating %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
+                RAW_VLOG(1, "Allocating %i bytes for %i objects of type %s in pool %i", 
+                         BYTES_TO_ALLOCATE, numObjects, 
+                         demangle(typeid(T).name()).c_str(), poolID);
 #endif
 
                 T* ptr = 0;
@@ -188,10 +207,6 @@ namespace Utilities
 #endif
                 }
 
-#ifdef DEBUG
-                RAW_VLOG(1, "Allocated %i bytes in pool %i", BYTES_TO_ALLOCATE, poolID);
-#endif
-
                 {
                     MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
                     memoryTracker->trackAllocation(ptr, BYTES_TO_ALLOCATE);
@@ -205,17 +220,17 @@ namespace Utilities
              * @param ptr - the starting address of the space to deallocate
              * @param n - the amount of objects to determine how much space must be deallocated
              */
-            template<typename T, size_t n>
-            void deallocate(const T* ptr)
+            template<typename T>
+            void deallocate(const T* ptr, size_t n)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
                 RAW_VLOG(1, "Deallocating %i bytes", BYTES_TO_DEALLOCATE);
 #endif
-                
+
                 // call destructors
-                for(size_t i = 0; i < n; ++i)
+                for (size_t i = 0; i < n; ++i)
                 {
                     ptr[i].~T();
                 }
@@ -225,12 +240,8 @@ namespace Utilities
                 {
                     PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
                     pool_id poolID = findPoolContaining(rawPtr);
-                    
-                    pools[poolID]->deallocate(rawPtr, sizeof (T), n);
 
-#ifdef DEBUG
-                    RAW_VLOG(1, "Deallocated %i bytes from pool %i", BYTES_TO_DEALLOCATE, poolID);
-#endif
+                    pools[poolID]->deallocate(rawPtr, sizeof (T), n);
                 }
 
                 {
@@ -249,12 +260,8 @@ namespace Utilities
          */
 #ifdef DEBUG
 #define BEGIN_NEW_FRAME(mngr) mngr->beginNewFrame()
-#define CONSTRUCT(mngr, obj, poolID) mngr->construct(obj, poolID, StackTrace())
-#define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID, StackTrace())
 #else
 #define BEGIN_NEW_FRAME(mngr)
-#define CONSTRUCT(mngr, obj, poolID) mngr->construct(object, poolID)
-#define ALLOCATE(mngr, T, numObjects, poolID) mngr->allocate<T, numObjects>(poolID)
 #endif
     }
 }

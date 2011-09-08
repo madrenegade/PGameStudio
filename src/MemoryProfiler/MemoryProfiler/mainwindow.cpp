@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     server->register_listener(this);
     serverThread = new ServerThread(server);
     serverThread->start();
+
+    setWindowState(Qt::WindowMaximized);
 }
 
 MainWindow::~MainWindow()
@@ -107,7 +109,9 @@ void MainWindow::rebuildLiveView()
 
     liveView->expandAll();
 
-    for(int i = 0; i < liveView->columnCount(); ++i)
+    liveView->setColumnWidth(0, 700);
+
+    for(int i = 1; i < liveView->columnCount(); ++i)
     {
         liveView->resizeColumnToContents(i);
     }

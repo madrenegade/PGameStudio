@@ -44,6 +44,7 @@ private:
     size_t numAllocations;
     size_t allocationSize;
 
+    static size_t getCurrentFrame();
     static size_t currentFrame;
 };
 

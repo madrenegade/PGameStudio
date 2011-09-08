@@ -12,7 +12,7 @@
 
 namespace Utilities
 {
-
+ 
     std::string demangle(const char* name)
     {
 #ifdef GCC

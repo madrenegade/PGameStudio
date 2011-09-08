@@ -4,7 +4,7 @@ project (UtilitiesTests)
 include("../../common.cmake")
 include_directories(${SRC_DIR}/Utilities)
 include_directories(${SRC_DIR}/StackTrace)
-
+ 
 file(GLOB Project_Sources 
     "${PROJECT_SOURCE_DIR}/Utilities/*"
     "${PROJECT_SOURCE_DIR}/Utilities/Memory/*")

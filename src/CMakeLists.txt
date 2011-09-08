@@ -37,4 +37,4 @@ SUBDIRS(Core)
 #SUBDIRS(Particles)
 
 #SUBDIRS(Game)
-SUBDIRS(Demo)
+#SUBDIRS(Demo)
