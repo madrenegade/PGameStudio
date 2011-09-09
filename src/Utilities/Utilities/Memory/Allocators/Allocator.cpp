@@ -147,6 +147,7 @@ namespace Utilities
         {
             if(pages.size() == MAX_PAGE_COUNT)
             {
+                RAW_LOG_ERROR("Max amount of pages exceeded: %i", MAX_PAGE_COUNT);
                 throw OutOfMemoryException("requestNewPage fail - amount of pages exceeded");
             }
             

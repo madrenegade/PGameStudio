@@ -4,6 +4,7 @@
 #include "StackTrace.h"
 #include "memprof/server.h"
 #include <QTimer>
+#include <QPushButton>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,7 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionAbout, SIGNAL(activated()),
                      this, SLOT(openAboutDialog()));
 
-    connect(this, SIGNAL(rawDataArrived(const QString&)), this, SLOT(onRawDataArrived(const QString&)));
+    const QPushButton* button = ui->buttonBox->button(QDialogButtonBox::Reset);
+
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(onResetData()));
 
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(rebuildLiveView()));
@@ -36,11 +39,6 @@ MainWindow::~MainWindow()
 
     delete serverThread;
     delete ui;
-}
-
-void MainWindow::onRawDataArrived(const QString &data)
-{
-    ui->rawDataTextBrowser->append(data);
 }
 
 void MainWindow::on_new_frame()
@@ -66,6 +64,15 @@ void MainWindow::on_allocation(const memprof::sample& sample)
     QMutexLocker locker(&mutex);
     rawDataArrived(QString("ALLOCATION_BEGIN\nSize: %1 bytes\n%2ALLOCATION_END\n").arg(sample.getAllocatedBytes()).arg(frameMessages));
     update(sample);
+    dirty = true;
+}
+
+void MainWindow::onResetData()
+{
+    std::cout << "RESET" << std::endl;
+    QMutexLocker locker(&mutex);
+    rootNodes.clear();
+    frame = 0;
     dirty = true;
 }
 
