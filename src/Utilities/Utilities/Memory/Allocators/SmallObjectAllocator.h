@@ -49,6 +49,8 @@ namespace Utilities
              */
             pointer getTailFor(pointer page) const;
             
+            pointer getPointerToAmountOfFreeBlocksFor(pointer page) const;
+            
             /**
              * find a free block using the page tail bitmask
              * @param page - the page to search for free blocks in
@@ -64,8 +66,8 @@ namespace Utilities
             pointer allocateBlockIn(pointer startOfPage);
             
             // page start and amount of free blocks
-            typedef std::unordered_map<pointer, unsigned int> FreeBlockMap;
-            FreeBlockMap freeBlocks;
+//            typedef std::unordered_map<pointer, unsigned long> FreeBlockMap;
+//            FreeBlockMap freeBlocks;
             
             std::list<pointer> pagesWithFreeBlocks;
         };

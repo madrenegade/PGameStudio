@@ -11,7 +11,7 @@
 
 using namespace Utilities::Memory;
 
-const size_t maxSize = 32 * MByte;
+const size_t maxSize = 128 * MByte;
 const size_t pageSize = 16 * KByte;
 const size_t blockSize = 128 * Byte;
 
