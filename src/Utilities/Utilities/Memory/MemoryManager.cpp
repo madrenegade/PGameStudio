@@ -13,19 +13,25 @@ namespace Utilities
 {
     namespace Memory
     {
+
         MemoryManager::Ptr MemoryManager::create(const MemoryTracker::Ptr& memoryTracker)
         {
             Ptr ptr(new MemoryManager(memoryTracker));
-            
+
             STLAllocator<void>::memory = ptr;
-            
+
             return ptr;
         }
 
         MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
-        : memoryTracker(memoryTracker), latestPoolID(), profilerClient(new memprof::client("127.0.0.1"))
+        : memoryTracker(memoryTracker), latestPoolID()
+#ifdef DEBUG
+        , profilerClient(new memprof::client("127.0.0.1"))
+#endif
         {
+#ifdef DEBUG
             profilerClient->connect();
+#endif
         }
 
         pool_id MemoryManager::registerMemoryPool(const boost::shared_ptr<Pool>& pool)
@@ -38,31 +44,31 @@ namespace Utilities
 
             {
                 PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
-                
+
                 pools[id] = pool;
             }
-            
+
             return id;
         }
-        
+
         void MemoryManager::unregisterMemoryPool(pool_id poolID)
         {
             PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
-            
+
 #ifdef DEBUG
-            if(pools.find(poolID) == pools.end())
+            if (pools.find(poolID) == pools.end())
             {
                 throw std::logic_error("Pool not found");
             }
 #endif
-            
+
             pools.erase(poolID);
         }
 
         pool_id MemoryManager::findPoolContaining(const_pointer ptr) const
         {
             DCHECK(!pools.empty());
-            
+
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
                 if (i->second->contains(ptr))
@@ -70,16 +76,16 @@ namespace Utilities
                     return i->first;
                 }
             }
-            
-            VLOG(1) << "Pointer " << reinterpret_cast<const void*>(ptr) << " not found in any of the registered memory pools";
-            
+
+            VLOG(1) << "Pointer " << reinterpret_cast<const void*> (ptr) << " not found in any of the registered memory pools";
+
             VLOG(1) << "Registered pools: " << pools.size();
-            
+
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
-                VLOG(1) << "[id: " << i->first << ", address: " << reinterpret_cast<const void*>(i->second.get()) << "]";
+                VLOG(1) << "[id: " << i->first << ", address: " << reinterpret_cast<const void*> (i->second.get()) << "]";
             }
-            
+
             memoryTracker->printMemoryDump();
 
             throw std::logic_error("Pointer not found in registered pools");
@@ -90,7 +96,7 @@ namespace Utilities
         void MemoryManager::assertPoolIsUnique(const boost::shared_ptr<Pool>& pool)
         {
             PoolMapMutexType::scoped_lock lock(poolMapMutex, false);
-            
+
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
                 if (i->second == pool)

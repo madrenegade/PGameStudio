@@ -19,10 +19,11 @@ namespace Utilities
     namespace Memory
     {
         class MemoryManager;
-        
+
         template <class T> class STLAllocator;
 
         // specialize for void:
+
         template <>
         class STLAllocator<void>
         {
@@ -37,7 +38,7 @@ namespace Utilities
                 typedef STLAllocator<U>
                     other;
             };
-            
+
             static MemoryManager::Ptr memory;
         };
 
@@ -92,14 +93,18 @@ namespace Utilities
             pointer allocate(size_type n, STLAllocator<void>::const_pointer hint = 0)
             {
                 DCHECK(memory.get() != 0);
-                
+
+#ifdef DEBUG
                 return memory->stl_allocate<T > (n, StackTrace());
+#else
+                return memory->stl_allocate<T > (n);
+#endif
             }
 
             void deallocate(pointer p, size_type n)
             {
                 DCHECK(memory.get() != 0);
-                
+
                 memory->deallocate<T > (p, n);
             }
 
@@ -120,14 +125,14 @@ namespace Utilities
 
         private:
             static MemoryManager::Ptr memory;
-            
+
             static void setMemoryManager()
             {
                 memory = STLAllocator<void>::memory;
             }
         };
 
-        
+
         template <class T> MemoryManager::Ptr STLAllocator<T>::memory;
 
         template <class T1, class T2>

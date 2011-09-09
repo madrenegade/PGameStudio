@@ -51,10 +51,7 @@ namespace Utilities
         }
 #endif
         
-        for (size_t i = 0; i < bytes; ++i)
-        {
-            start[i] = c;
-        }
+        std::fill_n(start, bytes, c);
     }
 
     int countZeroBitsFromRight(unsigned long v)

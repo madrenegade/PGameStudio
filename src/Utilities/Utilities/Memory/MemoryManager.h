@@ -43,6 +43,11 @@ namespace Utilities
         public:
             typedef boost::shared_ptr<MemoryManager> Ptr;
 
+            /**
+             * Create a memory manager instance. This instance is automatically set to be used by the STLAllocator.
+             * @param memoryTracker - the memory tracker to use
+             * @return the new memory manager instance
+             */
             static Ptr create(const MemoryTracker::Ptr& memoryTracker);
 
             /**

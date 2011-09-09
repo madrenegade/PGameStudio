@@ -1,10 +1,13 @@
 #include "Utilities/functions.h"
+#include "Utilities/Memory/constants.h"
 #include "Utilities/Memory/STLAllocator.h"
 #include "Utilities/Memory/constants.h"
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <bitset>
 #include <bits/stringfwd.h>
+
+#include "Utilities/StopWatch.h"
 
 using namespace Utilities;
 
