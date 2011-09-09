@@ -38,10 +38,12 @@ TEST_F(MemoryManagerTest, construct)
     EXPECT_EQ(i, *ptr);
 }
 
+#ifdef DEBUG
 TEST_F(MemoryManagerTest, allocateShouldFailIfPoolDoesNotExists)
 {
     EXPECT_THROW((memory->allocate<short, 2>(DEFAULT_POOL)), std::logic_error);
 }
+#endif
 
 TEST_F(MemoryManagerTest, allocateShouldSucceedWithMockPool)
 {
@@ -49,11 +51,13 @@ TEST_F(MemoryManagerTest, allocateShouldSucceedWithMockPool)
     ASSERT_NO_THROW((memory->allocate<short, 2>(DEFAULT_POOL)));
 }
 
+#ifdef DEBUG
 TEST_F(MemoryManagerTest, registerPoolShouldFailIfPoolAlreadyExists)
 {
     memory->registerMemoryPool(pool);
     EXPECT_THROW(memory->registerMemoryPool(pool), std::logic_error);
 }
+#endif
 
 TEST_F(MemoryManagerTest, registerPoolShouldCreateUniqueIDs)
 {

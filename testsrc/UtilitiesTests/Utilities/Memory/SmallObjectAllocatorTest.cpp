@@ -37,10 +37,12 @@ TEST_F(SmallObjectAllocatorTest, assertBlockSizeIsBigEnough)
     }, std::logic_error);
 }
 
+#ifdef DEBUG
 TEST_F(SmallObjectAllocatorTest, allocateShouldCheckThatRequestedSizeFitsInOneBlock)
 {
     EXPECT_THROW(allocator->allocate(blockSize + 1), std::logic_error);
 }
+#endif
 
 TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
 {

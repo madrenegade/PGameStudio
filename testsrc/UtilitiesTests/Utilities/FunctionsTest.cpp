@@ -21,6 +21,7 @@ TEST(FunctionsTest, demangleShouldReturnInitialInputOnErrors)
     EXPECT_EQ("non-existing-type", demangle("non-existing-type"));
 }
 
+#ifdef DEBUG
 TEST(FunctionsTest, fillMemoryShouldFailForNullPointer)
 {
     EXPECT_THROW(fillMemory(0, 1, 0), std::invalid_argument);
@@ -32,6 +33,7 @@ TEST(FunctionsTest, fillMemoryShouldFailForZeroSize)
 
     EXPECT_THROW(fillMemory(buffer, 0, 0), std::invalid_argument);
 }
+#endif
 
 TEST(FunctionsTest, fillMemory)
 {

@@ -18,6 +18,7 @@ protected:
     }
 };
 
+#ifdef DEBUG
 TEST_F(AllocatorTest, assertPoolSizeIsMultipleOfPageSize)
 {
     EXPECT_THROW({
@@ -38,6 +39,7 @@ TEST_F(AllocatorTest, assertPageSizeIsMultipleOfBitsPerByte)
         boost::scoped_ptr<Allocator> ptr(new AllocatorMock(1000 * KByte, 10 * Byte, 5 * Byte));
     }, std::invalid_argument);
 }
+#endif
 
 TEST_F(AllocatorTest, containsShouldReturnFalseInitially)
 {
