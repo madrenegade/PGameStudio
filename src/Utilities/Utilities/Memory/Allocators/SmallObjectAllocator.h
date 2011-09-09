@@ -61,7 +61,7 @@ namespace Utilities
             void markBlockAsUsed(unsigned int block, pointer startOfPage);
             void markBlockAsFree(unsigned int block, pointer startOfPage);
             
-            unsigned int getUsableBlocksPerPage() const;
+            unsigned short getUsableBlocksPerPage() const;
             
             pointer allocateBlockIn(pointer startOfPage);
             

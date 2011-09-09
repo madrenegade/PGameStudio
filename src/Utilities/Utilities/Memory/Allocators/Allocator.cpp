@@ -18,6 +18,9 @@
 #include "Utilities/functions.h"
 #endif
 
+#include <glog/logging.h>
+#include <glog/raw_logging.h>
+
 namespace Utilities
 {
     namespace Memory
@@ -25,7 +28,7 @@ namespace Utilities
 
         Allocator::Allocator(size_t maxSize, size_t pageSize, size_t blockSize)
         : memoryUsage(0), MAX_SIZE(maxSize), PAGE_SIZE(pageSize), BLOCK_SIZE(blockSize),
-            MAX_PAGE_COUNT(maxSize / pageSize)
+            MAX_PAGE_COUNT(maxSize / pageSize), pageCount(0)
         {
             pages.reserve(MAX_PAGE_COUNT);
                 
@@ -77,21 +80,60 @@ namespace Utilities
             return 1.0 - getLargestFreeArea() / getFreeMemory();
         }
         
+#ifdef GCC
+//         TODO: probably only valid for 64 bit systems
+        typedef long long di __attribute__ ((vector_size (1 * sizeof(long long))));
+        
+        union ptrVector {
+            di v;
+            unsigned long ptr;
+        };
+        
+        union diffVector {
+            di v;
+            long diff;
+        };
+#endif
+        
         unsigned int Allocator::getPageIDFor(const_pointer ptr) const
         {
-            unsigned long lptr = reinterpret_cast<unsigned long>(ptr);
+#ifdef GCC
+            union ptrVector pageStarts, ptrs;
+            union diffVector results;
+            
+            ptrs.ptr = reinterpret_cast<const unsigned long>(ptr);
+            
+            
+            for(unsigned int i = 0; i < pageCount; ++i)
+            {
+                pageStarts.ptr = reinterpret_cast<const unsigned long>(pages[i].get());
+                
+                results.v = __builtin_ia32_psubq(ptrs.v, pageStarts.v);
+                
+                if(results.diff >= 0 && results.diff < PAGE_SIZE)
+                {
+                    //RAW_LOG_INFO("Page: 0x%lx", pages[i].get());
+//                    RAW_LOG_INFO("Ptr: %i", ptrs.ptr);
+                    //RAW_LOG_INFO("first for bits: %x", ((ptrs.ptr >> 60) << 60));
+                    return i;
+                }
+            }
+#else
+            pointer pageStart = 0;
+            long diff = 0;
             
             for(unsigned int i = 0; i < pages.size(); ++i)
             {
-                unsigned long pageStart = reinterpret_cast<unsigned long>(pages.at(i).get());
+                pageStart = pages[i].get();
                 
-                unsigned long diff = lptr - pageStart;
+                diff = ptr - pageStart;
                 
                 if(diff >= 0 && diff < PAGE_SIZE)
                 {
                     return i;
                 }
             }
+#endif
             
             throw std::logic_error("Pointer not found in any page");
         }
@@ -110,6 +152,10 @@ namespace Utilities
             
             Page page(new byte[PAGE_SIZE]);
             pages.push_back(page);
+            
+            ++pageCount;
+            
+            //RAW_LOG_INFO("Page: %i - 0x%lx", pages.size(), page.get());
             
             return page.get();
         }

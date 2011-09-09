@@ -73,6 +73,8 @@ namespace Utilities
         pointer SmallObjectAllocator::allocateBlockIn(pointer startOfPage)
         {
             int firstFreeBlock = findFreeBlockIn(startOfPage);
+            
+//            RAW_LOG_INFO("First free block: %i", firstFreeBlock);
 
             if (firstFreeBlock != -1)
             {
@@ -99,57 +101,6 @@ namespace Utilities
         {
             unsigned int largestAmountOfFreeConsecutiveBlocks = 0;
 
-//            for (FreeBlockMap::const_iterator i = freeBlocks.begin(); i != freeBlocks.end(); ++i)
-//            {
-//                unsigned int freeConsecutiveBlocks = 0;
-//                unsigned int tempFreeConsecutiveBlocks = 0;
-//
-//                pointer tail = getTailFor(i->first);
-//                unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
-//
-//                bool lastBlockWasFree = false;
-//
-//                // split tail in parts of sizeof(ulong) bytes
-//                for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
-//                {
-//                    unsigned long tailPart = tailParts[i];
-//
-//                    for (unsigned int bit = 0; bit < ULONG_BITS; ++bit)
-//                    {
-//                        const unsigned int blockNum = (ULONG_BITS * i) + bit;
-//
-//                        if (blockNum > getUsableBlocksPerPage())
-//                        {
-//                            break;
-//                        }
-//
-//                        if ((tailPart >> blockNum) & 1)
-//                        {
-//                            ++tempFreeConsecutiveBlocks;
-//                            
-//                            if (tempFreeConsecutiveBlocks > freeConsecutiveBlocks)
-//                            {
-//                                freeConsecutiveBlocks = tempFreeConsecutiveBlocks;
-//                            }
-//                        }
-//                        else
-//                        {
-//                            if (tempFreeConsecutiveBlocks > freeConsecutiveBlocks)
-//                            {
-//                                freeConsecutiveBlocks = tempFreeConsecutiveBlocks;
-//                            }
-//
-//                            tempFreeConsecutiveBlocks = 0;
-//                        }
-//                        
-//                        if (freeConsecutiveBlocks > largestAmountOfFreeConsecutiveBlocks)
-//                        {
-//                            largestAmountOfFreeConsecutiveBlocks = freeConsecutiveBlocks;
-//                        }
-//                    }
-//                }
-//            }
-
             return largestAmountOfFreeConsecutiveBlocks * BLOCK_SIZE;
         }
 
@@ -157,14 +108,14 @@ namespace Utilities
         {
             const size_t unusedPages = MAX_PAGE_COUNT - pages.size();
 
-//            size_t freeMemory = unusedPages * BLOCK_SIZE * (getUsableBlocksPerPage());
-//
-//            for (FreeBlockMap::const_iterator i = freeBlocks.begin(); i != freeBlocks.end(); ++i)
-//            {
-//                freeMemory += i->second * BLOCK_SIZE;
-//            }
+            size_t freeMemory = unusedPages * BLOCK_SIZE * (getUsableBlocksPerPage());
 
-            return 0; //freeMemory;
+            for(unsigned int i = 0; i < pages.size(); ++i)
+            {
+                freeMemory += *reinterpret_cast<unsigned short*>(getPointerToAmountOfFreeBlocksFor(pages.at(i).get())) * BLOCK_SIZE;
+            }
+
+            return freeMemory;
         }
 
         void SmallObjectAllocator::initializePage(pointer page)
@@ -174,7 +125,10 @@ namespace Utilities
             pointer tail = getTailFor(page);
             
             // set all bits to 1
-            fillMemory(tail, BLOCK_SIZE, 0xFF);
+            fillMemory(tail, BLOCK_SIZE - 2, 0xFF);
+            
+            unsigned short* amountOfFreeBlocks = reinterpret_cast<unsigned short*>(getPointerToAmountOfFreeBlocksFor(page));
+            *amountOfFreeBlocks = getUsableBlocksPerPage();
         }
 
         pointer SmallObjectAllocator::getTailFor(pointer page) const
@@ -194,14 +148,24 @@ namespace Utilities
             pointer tail = getTailFor(page);
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
+            
+            int realBlock = 0;
 
             // split tail block in parts of 8 bytes
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
                 int c = countZeroBitsFromRight(tailParts[i]);
-
-                if (c == -1 || c > BLOCKS_PER_PAGE) continue;
-                else return c;
+//                std::bitset<ULONG_BITS> bitset(tailParts[i]);
+//                RAW_LOG_INFO("i: %i", i);
+//                RAW_LOG_INFO("PartBits: %s", bitset.to_string().c_str());
+//                RAW_LOG_INFO("C: %i", c);
+                realBlock = (i * ULONG_BITS) + c;
+                
+                if (realBlock > BLOCKS_PER_PAGE || c == ULONG_BITS) continue;
+                else {
+//                    RAW_LOG_INFO("Part: %i", i);
+                    return realBlock;
+                }
             }
 
             return -1;
@@ -226,10 +190,18 @@ namespace Utilities
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
 
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
+            
+//            RAW_LOG_INFO("Mod part %i", (block / ULONG_BITS));
+//            
+//            std::bitset<ULONG_BITS> bitset(*tailParts);
+//            RAW_LOG_INFO("before: %s", bitset.to_string().c_str());
 
             // 1 << block creates a bitmask where the given block is 1 and the rest zero
             // with ~ this is negated so that all bits are one except the given block
-            *tailPart &= ~(1 << block);
+            *tailPart &= ~(1L << block);
+            
+//            std::bitset<ULONG_BITS> bitset2(*tailParts);
+//            RAW_LOG_INFO("after: %s", bitset2.to_string().c_str());
 
             memoryUsage += BLOCK_SIZE;
         }
@@ -253,12 +225,12 @@ namespace Utilities
 
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
 
-            *tailPart |= (1 << block);
+            *tailPart |= (1L << block);
 
             memoryUsage -= BLOCK_SIZE;
         }
 
-        unsigned int SmallObjectAllocator::getUsableBlocksPerPage() const
+        unsigned short SmallObjectAllocator::getUsableBlocksPerPage() const
         {
             return getBlocksPerPage() - 1;
         }

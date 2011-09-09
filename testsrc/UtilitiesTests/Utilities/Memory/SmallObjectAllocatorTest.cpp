@@ -1,7 +1,11 @@
 #include "Utilities/Memory/Allocators/SmallObjectAllocator.h"
+#include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
+#include "Utilities/Memory/MemoryManager.h"
 #include "Utilities/Memory/constants.h"
 
 #include <gtest/gtest.h>
+#include <glog/logging.h>
+#include <glog/raw_logging.h>
 #include <chrono>
 #include <boost/scoped_ptr.hpp>
 #include <google/profiler.h>
@@ -11,7 +15,7 @@
 
 using namespace Utilities::Memory;
 
-const size_t maxSize = 128 * MByte;
+const size_t maxSize = 64 * MByte;
 const size_t pageSize = 16 * KByte;
 const size_t blockSize = 128 * Byte;
 
@@ -38,6 +42,7 @@ TEST_F(SmallObjectAllocatorTest, assertBlockSizeIsBigEnough)
 }
 
 #ifdef DEBUG
+
 TEST_F(SmallObjectAllocatorTest, allocateShouldCheckThatRequestedSizeFitsInOneBlock)
 {
     EXPECT_THROW(allocator->allocate(blockSize + 1), std::logic_error);
@@ -72,45 +77,88 @@ TEST_F(SmallObjectAllocatorTest, getFreeMemory)
     }
 }
 
-typedef std::chrono::duration<long, std::ratio < 1, 1000 >> ms;
+//TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
+//{
+//    ProfilerStart("SmallObjectAllocator");
+//
+//    std::cout << "Allocating " << allocations << std::endl;
+//
+//    {
+//        Utilities::StopWatch sw("Time (default new)");
+//
+//        pointer ptrs[allocations];
+//
+//        for (size_t i = 0; i < allocations; ++i)
+//        {
+//            ptrs[i] = new char[blockSize];
+//        }
+//
+//        for (size_t i = 0; i < allocations; ++i)
+//        {
+//            delete[] ptrs[i];
+//        }
+//    }
+//
+//    {
+//        Utilities::StopWatch sw("Time (allocate)");
+//
+//        pointer ptrs[allocations];
+//
+//        for (size_t i = 0; i < allocations; ++i)
+//        {
+//            ptrs[i] = allocator->allocate(blockSize);
+//        }
+//
+//        for (size_t i = 0; i < allocations; ++i)
+//        {
+//            allocator->deallocate(ptrs[i], blockSize, 1);
+//        }
+//    }
+//
+//    ProfilerStop();
+//}
 
-TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
+TEST_F(SmallObjectAllocatorTest, testMemoryAllocationPerformance)
 {
-    ProfilerStart("SmallObjectAllocator");
-
+    //ProfilerStart("SmallObjectAllocator");
+    
     std::cout << "Allocating " << allocations << std::endl;
+    
+    boost::shared_ptr<MemoryTracker> tracker(new DebugMemoryTracker());
+    boost::shared_ptr<MemoryManager> memory = MemoryManager::create(tracker);
+    boost::shared_ptr<Pool> pool(new Pool(MemoryPoolSettings(32*MByte, 16*KByte, 128*Byte)));
+    memory->registerMemoryPool(pool);
 
     {
-        Utilities::StopWatch sw("Time (default new)");
+//        Utilities::StopWatch sw("Time (default new)");
 
-        pointer ptrs[allocations];
-
-        for (size_t i = 0; i < allocations; ++i)
-        {
-            ptrs[i] = new char[blockSize];
-        }
-
-        //    for (size_t i = 0; i < allocations; ++i)
-        //    {
-        //        delete[] ptrs[i];
-        //    }
+//        pointer ptrs[allocations];
+//
+//        for (size_t i = 0; i < allocations; ++i)
+//        {
+//            ptrs[i] = new char[blockSize];
+//        }
+//
+//        for (size_t i = 0; i < allocations; ++i)
+//        {
+//            delete[] ptrs[i];
+//        }
     }
 
     {
         Utilities::StopWatch sw("Time (allocate)");
 
-        pointer ptrs[allocations];
+        boost::shared_array<char> ptrs[allocations];
 
         for (size_t i = 0; i < allocations; ++i)
         {
-            ptrs[i] = allocator->allocate(blockSize);
+            ptrs[i] = memory->allocate<char, blockSize>();
         }
 
-        //    for (size_t i = 0; i < allocations; ++i)
-        //    {
-        //        allocator->deallocate(ptrs[i], blockSize, 1);
-        //    }
+//        for (size_t i = 0; i < allocations; ++i)
+//        {
+//            allocator->deallocate(ptrs[i], blockSize, 1);
+//        }
+        //ProfilerStop();
     }
-
-    ProfilerStop();
 }
