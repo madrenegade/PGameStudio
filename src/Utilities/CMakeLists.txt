@@ -11,6 +11,7 @@ file(GLOB Project_Sources
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Allocators/*"
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Exceptions/*"
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Tracking/*"
+        "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Memory/Pages/*"
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Properties/*")
 
 find_package(GLOG REQUIRED)

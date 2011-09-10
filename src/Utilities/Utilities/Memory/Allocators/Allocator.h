@@ -12,6 +12,7 @@
 
 #include <map>
 #include <boost/shared_array.hpp>
+#include <boost/shared_ptr.hpp>
 #include <unordered_map>
 #include <vector>
 
@@ -19,7 +20,8 @@ namespace Utilities
 {
     namespace Memory
     {
-
+        class PageManager;
+        
         class Allocator
         {
         public:
@@ -34,29 +36,27 @@ namespace Utilities
             double getFragmentation() const;
 
         protected:
-            Allocator(size_t maxSize, size_t pageSize, size_t blockSize);
-            
-            unsigned int getPageIDFor(const_pointer ptr) const;
+            Allocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
             
             unsigned int getBlocksPerPage() const;
             
             virtual size_t getLargestFreeArea() const = 0;
             
-            pointer requestNewPage();
+//            pointer requestNewPage();
             
-            pointer getPage(unsigned int id) const;
+//            pointer getPage(unsigned int id) const;
+            
+            boost::shared_ptr<PageManager> pageManager;
             
             size_t memoryUsage;
             
-            const size_t MAX_SIZE;
-            const size_t PAGE_SIZE;
+//            const size_t MAX_SIZE;
+//            const size_t PAGE_SIZE;
             const size_t BLOCK_SIZE;
             
-            const unsigned int MAX_PAGE_COUNT;
+//            const unsigned int MAX_PAGE_COUNT;
             
-            typedef boost::shared_array<byte> Page;
-            std::vector<Page> pages;
-            size_t pageCount;
+            
         };
     }
 }

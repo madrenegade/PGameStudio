@@ -8,17 +8,22 @@
 #include "Utilities/Memory/Pool.h"
 #include "Utilities/Memory/MemoryPoolSettings.h"
 #include "Utilities/Memory/Allocators/MediumObjectAllocator.h"
+#include "Utilities/Memory/Pages/PageManager.h"
 
 namespace Utilities
 {
     namespace Memory
     {
+        Pool::Ptr Pool::create(const MemoryPoolSettings& settings)
+        {
+            return Ptr(new Pool(settings));
+        }
 
         Pool::Pool(const MemoryPoolSettings& settings)
         : settings(settings), 
-            smallObjects(settings.smallObjectPoolSize, settings.smallObjectPageSize, settings.smallObjectBlockSize),
-            mediumObjects(settings.mediumObjectPoolSize, settings.mediumObjectPageSize, settings.mediumObjectBlockSize),
-            largeObjects(settings.largeObjectPoolSize, settings.largeObjectPageSize, settings.largeObjectBlockSize)
+            smallObjects(PageManager::create(settings.smallObjectPoolSize, settings.smallObjectPageSize), settings.smallObjectBlockSize),
+            mediumObjects(PageManager::create(settings.mediumObjectPoolSize, settings.mediumObjectPageSize), settings.mediumObjectBlockSize),
+            largeObjects(PageManager::create(settings.largeObjectPoolSize, settings.largeObjectPageSize), settings.largeObjectBlockSize)
         {
 
         }

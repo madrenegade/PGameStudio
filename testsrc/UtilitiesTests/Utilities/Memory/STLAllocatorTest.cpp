@@ -16,7 +16,7 @@ protected:
 
     virtual void SetUp()
     {
-        pool.reset(new Pool);
+        pool = Pool::create();
         tracker.reset(new DebugMemoryTracker());
 
         memory = MemoryManager::create(tracker);

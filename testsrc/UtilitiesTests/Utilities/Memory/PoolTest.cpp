@@ -6,7 +6,7 @@ using namespace Utilities::Memory;
 
 TEST(PoolTest, getMemoryUsage)
 {
-    boost::scoped_ptr<Pool> pool(new Pool(MemoryPoolSettings()));
+    boost::shared_ptr<Pool> pool = Pool::create();
     EXPECT_EQ(0, pool->getMemoryUsage());
 }
 

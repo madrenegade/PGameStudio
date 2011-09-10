@@ -6,20 +6,21 @@
  */
 
 #include "Utilities/Memory/AllocatorMock.h"
+#include "Utilities/Memory/Pages/PageManager.h"
 
 namespace Utilities
 {
     namespace Memory
     {
         AllocatorMock::AllocatorMock(size_t maxSize, size_t pageSize, size_t blockSize)
-        : Allocator(maxSize, pageSize, blockSize)
+        : Allocator(PageManager::create(maxSize, pageSize), blockSize)
         {
             
         }
 
         pointer AllocatorMock::allocate(size_t bytes)
         {
-            return requestNewPage();
+            return pageManager->requestNewPage();
         }
 
         void AllocatorMock::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)

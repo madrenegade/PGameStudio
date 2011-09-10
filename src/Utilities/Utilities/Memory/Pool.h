@@ -9,6 +9,7 @@
 #define	UTILITIES_MEMORY_POOL_H
 
 #include <boost/scoped_array.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/MemoryPoolSettings.h"
@@ -20,11 +21,12 @@ namespace Utilities
 {
     namespace Memory
     {
-
         class Pool
         {
         public:
-            Pool(const MemoryPoolSettings& settings = MemoryPoolSettings());
+            typedef boost::shared_ptr<Pool> Ptr;
+            
+            static Ptr create(const MemoryPoolSettings& settings = MemoryPoolSettings());
             
             pointer allocate(size_t bytes);
             void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
@@ -34,6 +36,8 @@ namespace Utilities
             bool contains(const_pointer ptr) const;
             
         private:
+            Pool(const MemoryPoolSettings& settings);
+            
             const MemoryPoolSettings settings;
             
             SmallObjectAllocator smallObjects;

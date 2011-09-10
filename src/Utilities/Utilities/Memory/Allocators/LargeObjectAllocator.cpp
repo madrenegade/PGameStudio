@@ -12,8 +12,8 @@ namespace Utilities
 {
     namespace Memory
     {
-        LargeObjectAllocator::LargeObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize)
-        : Allocator(maxSize, pageSize, blockSize)
+        LargeObjectAllocator::LargeObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize)
+        : Allocator(pageManager, blockSize)
         {
             
         }

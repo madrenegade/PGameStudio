@@ -1,6 +1,7 @@
 #include "Utilities/Memory/Allocators/SmallObjectAllocator.h"
 #include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
 #include "Utilities/Memory/MemoryManager.h"
+#include "Utilities/Memory/Pages/PageManager.h"
 #include "Utilities/Memory/constants.h"
 
 #include <gtest/gtest.h>
@@ -30,14 +31,17 @@ protected:
         const size_t usableBlocksPerPage = (pageSize / blockSize) - 1;
         const size_t availablePages = maxSize / pageSize;
         allocations = availablePages * usableBlocksPerPage;
-        allocator.reset(new SmallObjectAllocator(maxSize, pageSize, blockSize));
+        
+        allocator.reset(new SmallObjectAllocator(PageManager::create(maxSize, pageSize), blockSize));
     }
 };
 
 TEST_F(SmallObjectAllocatorTest, assertBlockSizeIsBigEnough)
 {
+    PageManager::Ptr pageManager = PageManager::create(4 * KByte, 4 * KByte);
+    
     EXPECT_THROW({
-        boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(4 * KByte, 4 * KByte, 16 * Byte));
+        boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 16 * Byte));
     }, std::logic_error);
 }
 
@@ -51,7 +55,9 @@ TEST_F(SmallObjectAllocatorTest, allocateShouldCheckThatRequestedSizeFitsInOneBl
 
 TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
 {
-    boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(1 * KByte, 1 * KByte, 32 * Byte));
+    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    
+    boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 32 * Byte));
 
     for (unsigned int i = 0; i < (1 * KByte / 32 * Byte) - 1; ++i)
     {
@@ -63,7 +69,9 @@ TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
 
 TEST_F(SmallObjectAllocatorTest, getFreeMemory)
 {
-    boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(1 * KByte, 1 * KByte, 32 * Byte));
+    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    
+    boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 32 * Byte));
 
     const size_t maxMemory = 1 * KByte - 32 * Byte;
 

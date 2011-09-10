@@ -9,6 +9,7 @@
 #include "Utilities/Memory/Exceptions/OutOfMemoryException.h"
 #include "Utilities/functions.h"
 #include "Utilities/Memory/constants.h"
+#include "Utilities/Memory/Pages/PageManager.h"
 
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
@@ -23,14 +24,14 @@ namespace Utilities
     namespace Memory
     {
 
-        SmallObjectAllocator::SmallObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize)
-        : Allocator(maxSize, pageSize, blockSize)
+        SmallObjectAllocator::SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize)
+        : Allocator(pageManager, blockSize)
         {
             // the tail block can handle this amount of blocks
             const size_t BLOCK_SIZE_IN_BITS = blockSize * BITS_PER_BYTE;
             
             // this amount of bits is needed to handle all blocks in the page except the tail block
-            const size_t NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS = (pageSize / blockSize) - 1;
+            const size_t NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS = (pageManager->getPageSize() / blockSize) - 1;
             const size_t NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS = sizeof(unsigned short) * BITS_PER_BYTE;
             
             const size_t NEEDED_BITS_IN_TAIL = NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS + NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS;
@@ -59,7 +60,7 @@ namespace Utilities
 
             if (pagesWithFreeBlocks.empty())
             {
-                startOfPage = requestNewPage();
+                startOfPage = pageManager->requestNewPage();
                 initializePage(startOfPage);
             }
             else
@@ -88,13 +89,9 @@ namespace Utilities
 
         void SmallObjectAllocator::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
-            const unsigned int page = getPageIDFor(ptr);
+            const pointer startOfPage = pageManager->getPageFor(ptr);
 
-            pointer startOfPage = getPage(page);
-
-            unsigned long diff = reinterpret_cast<unsigned long> (ptr) - reinterpret_cast<unsigned long> (startOfPage);
-
-            markBlockAsFree(diff / BLOCK_SIZE, startOfPage);
+            markBlockAsFree((ptr - startOfPage) / BLOCK_SIZE, startOfPage);
         }
 
         size_t SmallObjectAllocator::getLargestFreeArea() const
@@ -106,13 +103,13 @@ namespace Utilities
 
         size_t SmallObjectAllocator::getFreeMemory() const
         {
-            const size_t unusedPages = MAX_PAGE_COUNT - pages.size();
+            const size_t unusedPages = pageManager->getUnusedPages();
 
             size_t freeMemory = unusedPages * BLOCK_SIZE * (getUsableBlocksPerPage());
 
-            for(unsigned int i = 0; i < pages.size(); ++i)
+            for(unsigned int i = 0; i < pageManager->getPagesInUse(); ++i)
             {
-                freeMemory += *reinterpret_cast<unsigned short*>(getPointerToAmountOfFreeBlocksFor(pages.at(i).get())) * BLOCK_SIZE;
+                freeMemory += *reinterpret_cast<unsigned short*>(getPointerToAmountOfFreeBlocksFor(pageManager->getPage(i))) * BLOCK_SIZE;
             }
 
             return freeMemory;
@@ -133,12 +130,12 @@ namespace Utilities
 
         pointer SmallObjectAllocator::getTailFor(pointer page) const
         {
-            return page + PAGE_SIZE - BLOCK_SIZE;
+            return page + pageManager->getPageSize() - BLOCK_SIZE;
         }
         
         pointer SmallObjectAllocator::getPointerToAmountOfFreeBlocksFor(pointer page) const
         {
-            return page + PAGE_SIZE - 2;
+            return page + pageManager->getPageSize() - 2;
         }
 
         int SmallObjectAllocator::findFreeBlockIn(pointer page) const

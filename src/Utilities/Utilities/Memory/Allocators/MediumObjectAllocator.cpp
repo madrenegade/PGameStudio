@@ -6,6 +6,7 @@
  */
 
 #include "Utilities/Memory/Allocators/MediumObjectAllocator.h"
+#include "Utilities/Memory/Pages/PageManager.h"
 #include "Utilities/Memory/constants.h"
 #include "Utilities/functions.h"
 #include <stdexcept>
@@ -20,15 +21,27 @@ namespace Utilities
     namespace Memory
     {
 
-        MediumObjectAllocator::MediumObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize)
-        : Allocator(maxSize, pageSize, blockSize)
+        MediumObjectAllocator::MediumObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize)
+        : Allocator(pageManager, blockSize)
         {
-            if ((blockSize * BITS_PER_BYTE) < (pageSize / blockSize))
+            // the tail block can handle this amount of blocks
+            const size_t BLOCK_SIZE_IN_BITS = blockSize * BITS_PER_BYTE;
+            
+            // this amount of bits is needed to handle all blocks in the page except the tail block
+            const size_t NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS = (pageManager->getPageSize() / blockSize) - 1;
+            const size_t NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS = sizeof(unsigned short) * BITS_PER_BYTE;
+            
+            const size_t NEEDED_BITS_IN_TAIL = NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS + NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS;
+            
+            if(NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS > std::numeric_limits<unsigned short>::max())
+            {
+                throw std::logic_error("MOA: At most 65535 blocks are allowed (increase blocksize or decrease page size)");
+            }
+            
+            if (BLOCK_SIZE_IN_BITS < NEEDED_BITS_IN_TAIL)
             {
                 throw std::logic_error("MOA: Blocksize too small for this page size");
             }
-
-            freeBlocks.reserve(MAX_PAGE_COUNT);
         }
 
         pointer MediumObjectAllocator::allocate(size_t bytes)
@@ -37,7 +50,7 @@ namespace Utilities
             
             if (pagesWithFreeBlocks.empty())
             {
-                startOfPage = requestNewPage();
+                startOfPage = pageManager->requestNewPage();
                 initializePage(startOfPage);
             }
             else
@@ -52,9 +65,7 @@ namespace Utilities
 
         void MediumObjectAllocator::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
-            const unsigned int page = getPageIDFor(ptr);
-
-            pointer startOfPage = getPage(page);
+            pointer startOfPage = pageManager->getPageFor(ptr);
 
             unsigned long diff = reinterpret_cast<unsigned long> (ptr) - reinterpret_cast<unsigned long> (startOfPage);
             
@@ -100,6 +111,7 @@ namespace Utilities
             
             const size_t possibleLeftShifts = ULONG_BITS - neededBlocks;
 
+            int realBlock = 0;
             // split tail block in parts of 8 bytes
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
@@ -112,7 +124,7 @@ namespace Utilities
                     if((tailPart & bitmap) == bitmap)
                     {
                         // here starts a range of free blocks
-                        return countZeroBitsFromRight(bitmap);
+                        return (i * ULONG_BITS) + countZeroBitsFromRight(bitmap);
                     }
                 }
             }
@@ -120,11 +132,18 @@ namespace Utilities
             return -1;
         }
         
+        pointer MediumObjectAllocator::getPointerToAmountOfFreeBlocksFor(pointer page) const
+        {
+            return page + pageManager->getPageSize() - 2;
+        }
+        
         void MediumObjectAllocator::markBlocksAsUsed(unsigned int block, pointer startOfPage, size_t numBlocks)
         {
-            freeBlocks[startOfPage] -= numBlocks;
-
-            if (freeBlocks[startOfPage] == 0)
+            unsigned short* amountOfFreeBlocks = reinterpret_cast<unsigned short*>(getPointerToAmountOfFreeBlocksFor(startOfPage));
+            
+            *amountOfFreeBlocks -= numBlocks;
+            
+            if(*amountOfFreeBlocks == 0)
             {
                 pagesWithFreeBlocks.remove(startOfPage);
             }
@@ -135,7 +154,7 @@ namespace Utilities
 
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
 
-            unsigned long x = ~(~0 << (block + numBlocks));
+            unsigned long x = ~(~0L << (block + numBlocks));
             x >>= block;
             x <<= block;
 
@@ -146,14 +165,16 @@ namespace Utilities
         
         void MediumObjectAllocator::markBlocksAsFree(unsigned int block, pointer startOfPage, size_t numBlocks)
         {
-            freeBlocks[startOfPage] += numBlocks;
+            unsigned short* amountOfFreeBlocks = reinterpret_cast<unsigned short*>(getPointerToAmountOfFreeBlocksFor(startOfPage));
+            
+            *amountOfFreeBlocks += numBlocks;
 
-            if (freeBlocks[startOfPage] == numBlocks)
+            if(*amountOfFreeBlocks == 1)
             {
                 pagesWithFreeBlocks.push_front(startOfPage);
             }
             
-            unsigned long x = ~(~0 << (block + numBlocks));
+            unsigned long x = ~(~0L << (block + numBlocks));
             x >>= block;
             x <<= block;
 
@@ -167,13 +188,15 @@ namespace Utilities
 
         void MediumObjectAllocator::initializePage(pointer page)
         {
-            RAW_LOG_INFO("initialize page");
-            
-            freeBlocks[page] = getUsableBlocksPerPage();
             pagesWithFreeBlocks.push_front(page);
 
             pointer tail = getTailFor(page);
-            fillMemory(tail, BLOCK_SIZE, 0xFF); // set all bits to 1
+            
+            // set all bits to 1
+            fillMemory(tail, BLOCK_SIZE - 2, 0xFF);
+            
+            unsigned short* amountOfFreeBlocks = reinterpret_cast<unsigned short*>(getPointerToAmountOfFreeBlocksFor(page));
+            *amountOfFreeBlocks = getUsableBlocksPerPage();
         }
 
         unsigned int MediumObjectAllocator::getUsableBlocksPerPage() const

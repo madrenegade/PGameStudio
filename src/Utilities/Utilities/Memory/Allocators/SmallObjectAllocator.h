@@ -25,7 +25,7 @@ namespace Utilities
         class SmallObjectAllocator : public Allocator
         {
         public:
-            SmallObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize);
+            SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
             
             virtual pointer allocate(size_t bytes);
             virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
@@ -64,10 +64,6 @@ namespace Utilities
             unsigned short getUsableBlocksPerPage() const;
             
             pointer allocateBlockIn(pointer startOfPage);
-            
-            // page start and amount of free blocks
-//            typedef std::unordered_map<pointer, unsigned long> FreeBlockMap;
-//            FreeBlockMap freeBlocks;
             
             std::list<pointer> pagesWithFreeBlocks;
         };

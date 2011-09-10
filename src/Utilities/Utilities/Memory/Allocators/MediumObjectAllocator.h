@@ -21,7 +21,7 @@ namespace Utilities
         class MediumObjectAllocator : public Allocator
         {
         public:
-            MediumObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize);
+            MediumObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
             
             virtual pointer allocate(size_t bytes);
             virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
@@ -47,9 +47,7 @@ namespace Utilities
 
             pointer getTailFor(pointer page) const;
             
-            // page start and amount of free blocks
-            typedef std::unordered_map<pointer, unsigned int> FreeBlockMap;
-            FreeBlockMap freeBlocks;
+            pointer getPointerToAmountOfFreeBlocksFor(pointer page) const;
             
             std::list<pointer> pagesWithFreeBlocks;
         };

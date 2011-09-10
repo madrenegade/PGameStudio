@@ -18,7 +18,7 @@ namespace Utilities
         class LargeObjectAllocator : public Allocator
         {
         public:
-            LargeObjectAllocator(size_t maxSize, size_t pageSize, size_t blockSize);
+            LargeObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
             
             virtual pointer allocate(size_t bytes);
             virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
