@@ -33,6 +33,8 @@ namespace Utilities
             typedef boost::shared_array<byte> Page;
             std::vector<Page> pages;
             size_t pageCount;
+            
+            
         };
     }
 }

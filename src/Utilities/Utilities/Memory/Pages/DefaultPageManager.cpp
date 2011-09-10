@@ -9,6 +9,9 @@
 
 #include <stdexcept>
 
+#include <glog/logging.h>
+#include <glog/raw_logging.h>
+
 namespace Utilities
 {
     namespace Memory
@@ -45,27 +48,54 @@ namespace Utilities
         pointer DefaultPageManager::getPageFor(const_pointer ptr) const
         {
 #ifdef GCC
-            union ptrVector pageStarts, ptrs;
-            union diffVector results;
-
-            ptrs.ptr = reinterpret_cast<const unsigned long> (ptr);
-
-
-            for (unsigned int i = 0; i < pageCount; ++i)
+//            if(pages.empty()) {
+//                throw std::logic_error("Pointer not found in any page");
+//            }
+            
+            int first = 0;
+            int last = pageCount - 1;
+            int mid = 0;
+            
+            while(first <= last)
             {
-                pageStarts.ptr = reinterpret_cast<const unsigned long> (pages[i].get());
-
-                results.v = __builtin_ia32_psubq(ptrs.v, pageStarts.v);
-
-                if (results.diff >= 0 && results.diff < PAGE_SIZE)
+                mid = (first + last) / 2;
+                
+                if(ptr > pages[mid].get() + PAGE_SIZE) // pointer is beyond that page
                 {
-                    //RAW_LOG_INFO("Page: 0x%lx", pages[i].get());
-                    //                    RAW_LOG_INFO("Ptr: %i", ptrs.ptr);
-                    //RAW_LOG_INFO("first for bits: %x", ((ptrs.ptr >> 60) << 60));
-                    return getPage(i);
+                    first = mid + 1;
+                }
+                else if(ptr < pages[mid].get()) // pointer is before this page
+                {
+                    last = mid - 1;
+                }
+                else
+                {
+                    return pages[mid].get();
                 }
             }
-#else
+            
+//            union ptrVector pageStarts, ptrs;
+//            union diffVector results;
+//            
+//            ptrs.ptr = reinterpret_cast<const unsigned long> (ptr);
+            
+//            for (unsigned int i = 0; i < pageCount; ++i)
+//            {
+//                pageStarts.ptr = reinterpret_cast<const unsigned long> (pages[i].get());
+//
+//                results.v = __builtin_ia32_psubq(ptrs.v, pageStarts.v);
+//
+//                if (results.diff >= 0 && results.diff < PAGE_SIZE)
+//                {
+//                    //RAW_LOG_INFO("Page: 0x%lx", pages[i].get());
+//                    //                    RAW_LOG_INFO("Ptr: %i", ptrs.ptr);
+//                    //RAW_LOG_INFO("first for bits: %x", ((ptrs.ptr >> 60) << 60));
+//                    RAW_LOG_INFO("Search: %i of %i", i, pageCount);
+//                    
+//                    return pages[i].get();
+//                }
+//            }
+#else        
             pointer pageStart = 0;
             long diff = 0;
 
@@ -94,6 +124,10 @@ namespace Utilities
         {
             Page page(new byte[PAGE_SIZE]);
             pages.push_back(page);
+            
+            std::sort(pages.begin(), pages.end());
+            
+            //RAW_LOG_INFO("Page %i: 0x%lx", pageCount, page.get());
 
             ++pageCount;
 
