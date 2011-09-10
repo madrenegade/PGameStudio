@@ -25,7 +25,7 @@ namespace Utilities
     {
 
         SmallObjectAllocator::SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize)
-        : Allocator(pageManager, blockSize)
+        : Allocator(pageManager, blockSize), USABLE_BLOCKS_PER_PAGE(pageManager->getPageSize() / BLOCK_SIZE - 1)
         {
             // the tail block can handle this amount of blocks
             const size_t BLOCK_SIZE_IN_BITS = blockSize * BITS_PER_BYTE;
@@ -140,7 +140,7 @@ namespace Utilities
 
         int SmallObjectAllocator::findFreeBlockIn(pointer page) const
         {
-            const size_t BLOCKS_PER_PAGE = getUsableBlocksPerPage();
+           // const size_t BLOCKS_PER_PAGE = ; //getUsableBlocksPerPage();
 
             pointer tail = getTailFor(page);
 
@@ -158,7 +158,7 @@ namespace Utilities
 //                RAW_LOG_INFO("C: %i", c);
                 realBlock = (i * ULONG_BITS) + c;
                 
-                if (realBlock > BLOCKS_PER_PAGE || c == ULONG_BITS) continue;
+                if (realBlock > USABLE_BLOCKS_PER_PAGE || c == ULONG_BITS) continue;
                 else {
 //                    RAW_LOG_INFO("Part: %i", i);
                     return realBlock;

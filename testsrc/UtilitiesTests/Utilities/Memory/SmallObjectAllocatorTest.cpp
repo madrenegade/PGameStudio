@@ -17,7 +17,7 @@
 using namespace Utilities::Memory;
 
 const size_t maxSize = 16 * MByte;
-const size_t pageSize = 64 * KByte;
+const size_t pageSize = 32 * KByte;
 const size_t blockSize = 128 * Byte;
 
 class SmallObjectAllocatorTest : public testing::Test
@@ -92,9 +92,9 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
     std::cout << "Allocating " << allocations << std::endl;
 
     {
+        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
+        
         Utilities::StopWatch sw("Time (default new)");
-
-        pointer ptrs[allocations];
 
         for (size_t i = 0; i < allocations; ++i)
         {
@@ -108,9 +108,9 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
     }
 
     {
+        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
+        
         Utilities::StopWatch sw("Time (allocate)");
-
-        pointer ptrs[allocations];
 
         for (size_t i = 0; i < allocations; ++i)
         {

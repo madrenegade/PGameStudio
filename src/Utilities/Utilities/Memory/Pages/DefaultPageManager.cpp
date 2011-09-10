@@ -6,11 +6,9 @@
  */
 
 #include "Utilities/Memory/Pages/DefaultPageManager.h"
+#include "Utilities/Memory/Allocators/LargeObjectAllocator.h"
 
 #include <stdexcept>
-
-#include <glog/logging.h>
-#include <glog/raw_logging.h>
 
 namespace Utilities
 {
@@ -18,7 +16,7 @@ namespace Utilities
     {
 
         DefaultPageManager::DefaultPageManager(size_t maxSize, size_t pageSize)
-        : PageManager(maxSize, pageSize), pageCount(0), dirty(false)
+        : PageManager(maxSize, pageSize), pageCount(0), dirty(false), lastPageSearchResult(0)
         {
             pages.reserve(MAX_PAGE_COUNT);
         }
@@ -47,34 +45,23 @@ namespace Utilities
 
         pointer DefaultPageManager::getPageFor(const_pointer ptr)
         {
-#ifdef GCC
+            // normally only deallocate needes this method
+            // chances are good that the last deallocation was in the same memory page
+            // so we check that and may return immediatly
+            if(lastPageSearchResult != 0 && ptr >= lastPageSearchResult && ptr < lastPageSearchResult + PAGE_SIZE)
+            {
+                return lastPageSearchResult;
+            }
+                
             if(dirty)
             {
                 std::sort(pages.begin(), pages.end());
                 dirty = false;
             }
             
-            int first = 0;
-            int last = pageCount - 1;
-            int mid = 0;
+            lastPageSearchResult = binaryPageSearch(ptr);
             
-            while(first <= last)
-            {
-                mid = (first + last) / 2;
-                
-                if(ptr > pages[mid].get() + PAGE_SIZE) // pointer is beyond that page
-                {
-                    first = mid + 1;
-                }
-                else if(ptr < pages[mid].get()) // pointer is before this page
-                {
-                    last = mid - 1;
-                }
-                else
-                {
-                    return pages[mid].get();
-                }
-            }
+            return lastPageSearchResult;
             
 //            union ptrVector pageStarts, ptrs;
 //            union diffVector results;
@@ -97,23 +84,34 @@ namespace Utilities
 //                    return pages[i].get();
 //                }
 //            }
-#else        
-            pointer pageStart = 0;
-            long diff = 0;
 
-            for (unsigned int i = 0; i < pages.size(); ++i)
+            
+        }
+        
+        pointer DefaultPageManager::binaryPageSearch(const_pointer ptr) const
+        {
+            int first = 0;
+            int last = pageCount - 1;
+            int mid = 0;
+            
+            while(first <= last)
             {
-                pageStart = pages[i].get();
-
-                diff = ptr - pageStart;
-
-                if (diff >= 0 && diff < PAGE_SIZE)
+                mid = (first + last) / 2;
+                
+                if(ptr < pages[mid].get()) // pointer is before this page
                 {
-                    return i;
+                    last = mid - 1;
+                }
+                else if(ptr > pages[mid].get() + PAGE_SIZE) // pointer is beyond that page
+                {
+                    first = mid + 1;
+                }
+                else
+                {
+                    return pages[mid].get();
                 }
             }
-#endif
-
+            
             throw std::logic_error("Pointer not found in any page");
         }
         
@@ -127,7 +125,6 @@ namespace Utilities
             Page page(new byte[PAGE_SIZE]);
             
             pages.push_back(page);
-            
             dirty = true;
             
             //RAW_LOG_INFO("Page %i: 0x%lx", pageCount, page.get());

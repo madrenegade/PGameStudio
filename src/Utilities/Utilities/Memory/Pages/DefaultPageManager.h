@@ -34,7 +34,11 @@ namespace Utilities
             std::vector<Page> pages;
             size_t pageCount;
             
+            pointer binaryPageSearch(const_pointer ptr) const;
+            
             bool dirty;
+            
+            pointer lastPageSearchResult;
         };
     }
 }

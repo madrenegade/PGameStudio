@@ -65,6 +65,7 @@ namespace Utilities
             
             pointer allocateBlockIn(pointer startOfPage);
             
+            const size_t USABLE_BLOCKS_PER_PAGE;
             std::list<pointer> pagesWithFreeBlocks;
         };
     }
