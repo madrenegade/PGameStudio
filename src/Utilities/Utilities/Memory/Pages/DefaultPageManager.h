@@ -22,7 +22,7 @@ namespace Utilities
             
             virtual size_t getPagesInUse() const;
             
-            virtual pointer getPageFor(const_pointer ptr) const;
+            virtual pointer getPageFor(const_pointer ptr);
             
             virtual pointer getPage(size_t i) const;
            
@@ -34,7 +34,7 @@ namespace Utilities
             std::vector<Page> pages;
             size_t pageCount;
             
-            
+            bool dirty;
         };
     }
 }

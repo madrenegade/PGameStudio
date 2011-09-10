@@ -30,7 +30,7 @@ namespace Utilities
             
             pointer requestNewPage();
             
-            virtual pointer getPageFor(const_pointer ptr) const = 0;
+            virtual pointer getPageFor(const_pointer ptr) = 0;
             virtual pointer getPage(size_t i) const = 0;
             
             virtual size_t getPagesInUse() const = 0;

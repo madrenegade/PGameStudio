@@ -18,7 +18,7 @@ namespace Utilities
     {
 
         DefaultPageManager::DefaultPageManager(size_t maxSize, size_t pageSize)
-        : PageManager(maxSize, pageSize), pageCount(0)
+        : PageManager(maxSize, pageSize), pageCount(0), dirty(false)
         {
             pages.reserve(MAX_PAGE_COUNT);
         }
@@ -45,12 +45,14 @@ namespace Utilities
         };
 #endif
 
-        pointer DefaultPageManager::getPageFor(const_pointer ptr) const
+        pointer DefaultPageManager::getPageFor(const_pointer ptr)
         {
 #ifdef GCC
-//            if(pages.empty()) {
-//                throw std::logic_error("Pointer not found in any page");
-//            }
+            if(dirty)
+            {
+                std::sort(pages.begin(), pages.end());
+                dirty = false;
+            }
             
             int first = 0;
             int last = pageCount - 1;
@@ -123,9 +125,10 @@ namespace Utilities
         pointer DefaultPageManager::allocatePage()
         {
             Page page(new byte[PAGE_SIZE]);
+            
             pages.push_back(page);
             
-            std::sort(pages.begin(), pages.end());
+            dirty = true;
             
             //RAW_LOG_INFO("Page %i: 0x%lx", pageCount, page.get());
 
