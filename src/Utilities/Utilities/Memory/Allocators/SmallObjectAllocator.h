@@ -31,9 +31,6 @@ namespace Utilities
             virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
             
             virtual size_t getFreeMemory() const;
-
-        protected:
-            virtual size_t getLargestFreeArea() const;
             
         private:
             /**
@@ -49,7 +46,7 @@ namespace Utilities
              */
             pointer getTailFor(pointer page) const;
             
-            pointer getPointerToAmountOfFreeBlocksFor(pointer page) const;
+            unsigned short* getPointerToAmountOfFreeBlocksFor(pointer page) const;
             
             /**
              * find a free block using the page tail bitmask
@@ -60,8 +57,6 @@ namespace Utilities
             
             void markBlockAsUsed(unsigned int block, pointer startOfPage);
             void markBlockAsFree(unsigned int block, pointer startOfPage);
-            
-            unsigned short getUsableBlocksPerPage() const;
             
             pointer allocateBlockIn(pointer startOfPage);
             

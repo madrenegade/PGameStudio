@@ -16,6 +16,16 @@ namespace Utilities
 
         MemoryManager::Ptr MemoryManager::create(const MemoryTracker::Ptr& memoryTracker)
         {
+            // check platform details about type sizes
+            
+            BOOST_STATIC_ASSERT(sizeof(char) == 1);
+            BOOST_STATIC_ASSERT(sizeof(short) == 2);
+            BOOST_STATIC_ASSERT(sizeof(int) == 4);
+            BOOST_STATIC_ASSERT(sizeof(long) == 8);
+            BOOST_STATIC_ASSERT(sizeof(float) == 4);
+            BOOST_STATIC_ASSERT(sizeof(double) == 8);
+            BOOST_STATIC_ASSERT(sizeof(void*) == 8);
+            
             Ptr ptr(new MemoryManager(memoryTracker));
 
             STLAllocator<void>::memory = ptr;

@@ -28,9 +28,6 @@ namespace Utilities
 
             virtual size_t getFreeMemory() const;
             
-        protected:
-            virtual size_t getLargestFreeArea() const;
-            
         private:
             pointer allocateBlocksIn(pointer startOfPage, size_t neededBlocks);
             int findFreeBlocksIn(pointer page, size_t neededBlocks) const;
@@ -42,12 +39,12 @@ namespace Utilities
              * Set all blocks in the last but one block to zero.
              */
             void initializePage(pointer page);
-            
-            unsigned int getUsableBlocksPerPage() const;
 
             pointer getTailFor(pointer page) const;
             
-            pointer getPointerToAmountOfFreeBlocksFor(pointer page) const;
+            unsigned short* getPointerToAmountOfFreeBlocksFor(pointer page) const;
+            
+            const size_t USABLE_BLOCKS_PER_PAGE;
             
             std::list<pointer> pagesWithFreeBlocks;
         };

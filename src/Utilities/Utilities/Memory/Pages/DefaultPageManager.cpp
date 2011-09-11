@@ -26,23 +26,6 @@ namespace Utilities
             return pages.size();
         }
 
-#ifdef GCC
-        //         TODO: probably only valid for 64 bit systems
-        typedef long long di __attribute__((vector_size(1 * sizeof (long long))));
-
-        union ptrVector
-        {
-            di v;
-            unsigned long ptr;
-        };
-
-        union diffVector
-        {
-            di v;
-            long diff;
-        };
-#endif
-
         pointer DefaultPageManager::getPageFor(const_pointer ptr)
         {
             // normally only deallocate needes this method
@@ -62,30 +45,6 @@ namespace Utilities
             lastPageSearchResult = binaryPageSearch(ptr);
             
             return lastPageSearchResult;
-            
-//            union ptrVector pageStarts, ptrs;
-//            union diffVector results;
-//            
-//            ptrs.ptr = reinterpret_cast<const unsigned long> (ptr);
-            
-//            for (unsigned int i = 0; i < pageCount; ++i)
-//            {
-//                pageStarts.ptr = reinterpret_cast<const unsigned long> (pages[i].get());
-//
-//                results.v = __builtin_ia32_psubq(ptrs.v, pageStarts.v);
-//
-//                if (results.diff >= 0 && results.diff < PAGE_SIZE)
-//                {
-//                    //RAW_LOG_INFO("Page: 0x%lx", pages[i].get());
-//                    //                    RAW_LOG_INFO("Ptr: %i", ptrs.ptr);
-//                    //RAW_LOG_INFO("first for bits: %x", ((ptrs.ptr >> 60) << 60));
-//                    RAW_LOG_INFO("Search: %i of %i", i, pageCount);
-//                    
-//                    return pages[i].get();
-//                }
-//            }
-
-            
         }
         
         pointer DefaultPageManager::binaryPageSearch(const_pointer ptr) const
@@ -98,7 +57,7 @@ namespace Utilities
             {
                 mid = (first + last) / 2;
                 
-                if(ptr < pages[mid].get()) // pointer is before this page
+                if(ptr < pages[mid].get()) // pointer is before that page
                 {
                     last = mid - 1;
                 }
@@ -125,16 +84,13 @@ namespace Utilities
             Page page(new byte[PAGE_SIZE]);
             
             pages.push_back(page);
-            dirty = true;
             
-            //RAW_LOG_INFO("Page %i: 0x%lx", pageCount, page.get());
+            dirty = true;
 
             ++pageCount;
 
             return page.get();
         }
-
-
     }
 }
 

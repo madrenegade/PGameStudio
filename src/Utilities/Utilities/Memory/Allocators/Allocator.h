@@ -32,31 +32,15 @@ namespace Utilities
 
             size_t getMemoryUsage() const;
             virtual size_t getFreeMemory() const = 0;
-            
-            double getFragmentation() const;
 
         protected:
             Allocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
-            
-            unsigned int getBlocksPerPage() const;
-            
-            virtual size_t getLargestFreeArea() const = 0;
-            
-//            pointer requestNewPage();
-            
-//            pointer getPage(unsigned int id) const;
             
             boost::shared_ptr<PageManager> pageManager;
             
             size_t memoryUsage;
             
-//            const size_t MAX_SIZE;
-//            const size_t PAGE_SIZE;
             const size_t BLOCK_SIZE;
-            
-//            const unsigned int MAX_PAGE_COUNT;
-            
-            
         };
     }
 }

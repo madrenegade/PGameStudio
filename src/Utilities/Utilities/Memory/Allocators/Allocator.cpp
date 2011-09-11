@@ -13,14 +13,9 @@
 #include "Utilities/Memory/Exceptions/OutOfMemoryException.h"
 #include "Utilities/Memory/Pages/PageManager.h"
 
-#ifdef DEBUG
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 #include "Utilities/functions.h"
-#endif
-
-#include <glog/logging.h>
-#include <glog/raw_logging.h>
 
 namespace Utilities
 {
@@ -63,39 +58,5 @@ namespace Utilities
         {
             return memoryUsage;
         }
-
-        double Allocator::getFragmentation() const
-        {
-            return 1.0 - getLargestFreeArea() / getFreeMemory();
-        }
-        
-
-        unsigned int Allocator::getBlocksPerPage() const
-        {
-            return pageManager->getPageSize() / BLOCK_SIZE;
-        }
-        
-//        pointer Allocator::requestNewPage()
-//        {
-//            if(pages.size() == MAX_PAGE_COUNT)
-//            {
-//                RAW_LOG_ERROR("Max amount of pages exceeded: %i", MAX_PAGE_COUNT);
-//                throw OutOfMemoryException("requestNewPage fail - amount of pages exceeded");
-//            }
-//            
-//            Page page(new byte[PAGE_SIZE]);
-//            pages.push_back(page);
-//            
-//            ++pageCount;
-//            
-//            //RAW_LOG_INFO("Page: %i - 0x%lx", pages.size(), page.get());
-//            
-//            return page.get();
-//        }
-        
-//        pointer Allocator::getPage(unsigned int id) const
-//        {
-//            return pages.at(id).get();
-//        }
     }
 }
