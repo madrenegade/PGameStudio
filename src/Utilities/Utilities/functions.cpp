@@ -73,4 +73,9 @@ namespace Utilities
         return c;
 #endif
     }
+    
+    int countOneBitsFromRight(unsigned long v)
+    {
+        return countZeroBitsFromRight(~v);
+    }
 }

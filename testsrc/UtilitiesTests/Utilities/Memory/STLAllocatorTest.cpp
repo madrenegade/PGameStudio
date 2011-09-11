@@ -1,8 +1,9 @@
 #include "Utilities/Memory/MemoryManager.h"
 #include "Utilities/Memory/STLAllocator.h"
 #include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
+#include "Utilities/string.h"
 #include <gtest/gtest.h>
-#include <string>
+
 using namespace Utilities::Memory;
 
 const pool_id DEFAULT_POOL = 0;
@@ -28,9 +29,7 @@ protected:
 
 TEST_F(STLAllocatorTest, construct)
 {
-    typedef std::basic_string<char, std::char_traits<char>, STLAllocator<char> > MyString;
-    
-    std::vector<MyString, STLAllocator<MyString> > v;
+    std::vector<String, STLAllocator<String> > v;
     v.push_back("abcd");
     
     ASSERT_EQ("abcd", v.at(0));

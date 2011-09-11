@@ -9,12 +9,15 @@
 #include "Utilities/Memory/Pages/PageManager.h"
 #include "Utilities/Memory/constants.h"
 #include "Utilities/functions.h"
+#include "Utilities/Memory/Exceptions/OutOfMemoryException.h"
 #include <stdexcept>
 
 #include <limits>
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 #include <bitset>
+
+#include <cmath>
 
 namespace Utilities
 {
@@ -30,8 +33,11 @@ namespace Utilities
             // this amount of bits is needed to handle all blocks in the page except the tail block
             const size_t NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS = (pageManager->getPageSize() / blockSize) - 1;
             const size_t NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS = sizeof (unsigned short) * BITS_PER_BYTE;
+            const size_t NEEDED_BITS_IN_TAIL_FOR_LARGEST_FREE_BLOCK_RANGE = sizeof (unsigned short) * BITS_PER_BYTE;
 
-            const size_t NEEDED_BITS_IN_TAIL = NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS + NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS;
+            const size_t NEEDED_BITS_IN_TAIL = NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS +
+                NEEDED_BITS_IN_TAIL_FOR_LARGEST_FREE_BLOCK_RANGE +
+                NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS;
 
             if (NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS > std::numeric_limits<unsigned short>::max())
             {
@@ -46,6 +52,13 @@ namespace Utilities
 
         pointer MediumObjectAllocator::allocate(size_t bytes)
         {
+#ifdef DEBUG
+            if(bytes > USABLE_BLOCKS_PER_PAGE * BLOCK_SIZE)
+            {
+                throw OutOfMemoryException("Cannot allocate more bytes than PAGE_SIZE");
+            }
+#endif
+
             pointer startOfPage = 0;
 
             if (pagesWithFreeBlocks.empty())
@@ -55,15 +68,29 @@ namespace Utilities
             }
             else
             {
-                startOfPage = pagesWithFreeBlocks.front();
-                
-                // TODO: check that page has enough free blocks!!!
-                // TODO: store amount of largest range of free blocks before amount of free blocks at the end
-                // of the page
+                for (PagesWithFreeBlocksList::const_iterator i = pagesWithFreeBlocks.begin(); i != pagesWithFreeBlocks.end(); ++i)
+                {
+                    pointer page = pagesWithFreeBlocks.front();
+                    
+                    size_t largestBlockRange = *getPointerToLargestFreeBlockRangeFor(page) * BLOCK_SIZE;
+                    
+                    if (largestBlockRange >= bytes)
+                    {
+                        startOfPage = page;
+                        break;
+                    }
+                }
+
+                if (startOfPage == 0)
+                {
+                    startOfPage = pageManager->requestNewPage();
+                    initializePage(startOfPage);
+                }
             }
 
             const size_t neededBlocks = std::ceil(static_cast<double> (bytes) / static_cast<double> (BLOCK_SIZE));
 
+            RAW_LOG_INFO("Needing %i blocks for %i bytes with blockSize=%i", neededBlocks, bytes, BLOCK_SIZE);
             return allocateBlocksIn(startOfPage, neededBlocks);
         }
 
@@ -126,7 +153,6 @@ namespace Utilities
 
                     if ((tailPart & bitmap) == bitmap)
                     {
-                        // here starts a range of free blocks
                         return (i * ULONG_BITS) + countZeroBitsFromRight(bitmap);
                     }
                 }
@@ -137,7 +163,12 @@ namespace Utilities
 
         unsigned short* MediumObjectAllocator::getPointerToAmountOfFreeBlocksFor(pointer page) const
         {
-            return reinterpret_cast<unsigned short*>(page + pageManager->getPageSize() - 2);
+            return reinterpret_cast<unsigned short*> (page + pageManager->getPageSize() - 2);
+        }
+
+        unsigned short* MediumObjectAllocator::getPointerToLargestFreeBlockRangeFor(pointer page) const
+        {
+            return reinterpret_cast<unsigned short*> (page + pageManager->getPageSize() - 4);
         }
 
         void MediumObjectAllocator::markBlocksAsUsed(unsigned int block, pointer startOfPage, size_t numBlocks)
@@ -162,6 +193,12 @@ namespace Utilities
             x <<= block;
 
             *tailPart &= ~x;
+            
+            RAW_LOG_INFO("ALLOC_BEFORE: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
+
+            updateLargestBlockRangeFor(startOfPage);
+            
+            RAW_LOG_INFO("ALLOC_AFTER: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
 
             memoryUsage += numBlocks * BLOCK_SIZE;
         }
@@ -185,6 +222,12 @@ namespace Utilities
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
 
             *tailPart |= x;
+            
+            RAW_LOG_INFO("DEALLOC_BEFORE: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
+            
+            updateLargestBlockRangeFor(startOfPage);
+            
+            RAW_LOG_INFO("DEALLOC_AFTER: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
 
             memoryUsage -= BLOCK_SIZE * numBlocks;
         }
@@ -196,15 +239,62 @@ namespace Utilities
             pointer tail = getTailFor(page);
 
             // set all bits to 1
-            fillMemory(tail, BLOCK_SIZE - 2, 0xFF);
+            fillMemory(tail, BLOCK_SIZE - 4, 0xFF);
 
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(page);
             *amountOfFreeBlocks = USABLE_BLOCKS_PER_PAGE;
+
+            unsigned short* freeBlockRange = getPointerToLargestFreeBlockRangeFor(page);
+            *freeBlockRange = USABLE_BLOCKS_PER_PAGE;
         }
 
         pointer MediumObjectAllocator::getTailFor(pointer page) const
         {
             return page + pageManager->getPageSize() - BLOCK_SIZE;
+        }
+        
+        void MediumObjectAllocator::updateLargestBlockRangeFor(pointer page)
+        {
+            unsigned long* tailParts = reinterpret_cast<unsigned long*> (getTailFor(page));
+            
+            unsigned short* largestBlockRange = getPointerToLargestFreeBlockRangeFor(page);
+
+            int totalShifts = 0;
+            
+            unsigned short currentMax = 0;
+            unsigned short temp = 0;
+            
+            for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
+            {
+                unsigned long tailPart = tailParts[i];
+                
+                int j = 0;
+                
+                while(totalShifts < USABLE_BLOCKS_PER_PAGE && j < ULONG_BITS)
+                {
+                    ++j;
+                    
+                    if(tailPart & 1)
+                    {
+                        ++temp;
+                    }
+                    
+                    if(temp > currentMax)
+                    {
+                        currentMax = temp;
+                    }
+                    
+                    if(!(tailPart & 1))
+                    {
+                        temp = 0;
+                    }
+                    
+                    tailPart >>= 1;
+                    ++totalShifts;
+                }
+            }
+            
+            *largestBlockRange = currentMax;
         }
     }
 }

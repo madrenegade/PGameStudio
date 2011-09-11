@@ -43,10 +43,14 @@ namespace Utilities
             pointer getTailFor(pointer page) const;
             
             unsigned short* getPointerToAmountOfFreeBlocksFor(pointer page) const;
+            unsigned short* getPointerToLargestFreeBlockRangeFor(pointer page) const;
+            
+            void updateLargestBlockRangeFor(pointer page);
             
             const size_t USABLE_BLOCKS_PER_PAGE;
             
-            std::list<pointer> pagesWithFreeBlocks;
+            typedef std::list<pointer> PagesWithFreeBlocksList;
+            PagesWithFreeBlocksList pagesWithFreeBlocks;
         };
     }
 }

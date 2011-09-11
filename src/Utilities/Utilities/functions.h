@@ -34,6 +34,8 @@ namespace Utilities
      * @return the number of bits set to zero from the right
      */
     int countZeroBitsFromRight(unsigned long v);
+    
+    int countOneBitsFromRight(unsigned long v);
 }
 
 #endif	/* UTILITIES_FUNCTIONS_H */
