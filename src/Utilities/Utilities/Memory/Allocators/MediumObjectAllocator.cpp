@@ -187,18 +187,29 @@ namespace Utilities
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
 
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
-
-            unsigned long x = ~(~0L << (block + numBlocks));
-            x >>= block;
-            x <<= block;
-
-            *tailPart &= ~x;
             
-            RAW_LOG_INFO("ALLOC_BEFORE: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
+            const unsigned long relativeBlock = block % ULONG_BITS;
 
+            unsigned long x = ~(~0UL << (relativeBlock + numBlocks));
+            
+            if(relativeBlock + numBlocks == ULONG_BITS)
+            {
+                x = ~0UL;
+            }
+            
+            x >>= relativeBlock;
+            
+            x <<= relativeBlock;
+
+            *tailPart ^= x;
+            
+//            unsigned short before = *getPointerToLargestFreeBlockRangeFor(startOfPage);
+//            RAW_LOG_INFO("ALLOC_BEFORE: %i", before);
+            
             updateLargestBlockRangeFor(startOfPage);
             
-            RAW_LOG_INFO("ALLOC_AFTER: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
+//            unsigned short after = *getPointerToLargestFreeBlockRangeFor(startOfPage);
+//            RAW_LOG_INFO("ALLOC_After: %i", after);
 
             memoryUsage += numBlocks * BLOCK_SIZE;
         }
@@ -214,20 +225,30 @@ namespace Utilities
                 pagesWithFreeBlocks.push_front(startOfPage);
             }
 
-            unsigned long x = ~(~0L << (block + numBlocks));
-            x >>= block;
-            x <<= block;
+            const unsigned long relativeBlock = block % ULONG_BITS;
+            
+            unsigned long x = ~(~0UL << (relativeBlock + numBlocks));
+            
+            if(relativeBlock + numBlocks == ULONG_BITS)
+            {
+                x = ~0UL;
+            }
+            
+            x >>= relativeBlock;
+            x <<= relativeBlock;
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (getTailFor(startOfPage));
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
 
             *tailPart |= x;
             
-            RAW_LOG_INFO("DEALLOC_BEFORE: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
+//            unsigned short before = *getPointerToLargestFreeBlockRangeFor(startOfPage);
+//            RAW_LOG_INFO("DEALLOC_BEFORE: %i", before);
             
             updateLargestBlockRangeFor(startOfPage);
             
-            RAW_LOG_INFO("DEALLOC_AFTER: %i", *getPointerToLargestFreeBlockRangeFor(startOfPage));
+//            unsigned short after = *getPointerToLargestFreeBlockRangeFor(startOfPage);
+//            RAW_LOG_INFO("DEALLOC_AFTER: %i", after);
 
             memoryUsage -= BLOCK_SIZE * numBlocks;
         }
@@ -264,17 +285,19 @@ namespace Utilities
             unsigned short currentMax = 0;
             unsigned short temp = 0;
             
-            for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
+            int zeroBits = 0;
+            
+            for (unsigned int i = 0; i  < std::ceil(static_cast<double>(USABLE_BLOCKS_PER_PAGE) / static_cast<double>(ULONG_BITS)); ++i)
             {
                 unsigned long tailPart = tailParts[i];
-                
+
                 int j = 0;
                 
                 while(totalShifts < USABLE_BLOCKS_PER_PAGE && j < ULONG_BITS)
                 {
-                    ++j;
+                    zeroBits = countZeroBitsFromRight(tailPart);
                     
-                    if(tailPart & 1)
+                    if(zeroBits == 0)
                     {
                         ++temp;
                     }
@@ -284,13 +307,19 @@ namespace Utilities
                         currentMax = temp;
                     }
                     
-                    if(!(tailPart & 1))
+                    if(zeroBits > 0)
                     {
                         temp = 0;
+                        tailPart >>= zeroBits;
+                        totalShifts += zeroBits;   
+                        j += zeroBits;
                     }
-                    
-                    tailPart >>= 1;
-                    ++totalShifts;
+                    else
+                    {
+                        tailPart >>= 1;
+                        ++totalShifts;
+                        ++j;
+                    }
                 }
             }
             

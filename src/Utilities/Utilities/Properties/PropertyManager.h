@@ -8,8 +8,11 @@
 #ifndef UTILITIES_PROPERTIES_PROPERTYMANAGER_H
 #define	UTILITIES_PROPERTIES_PROPERTYMANAGER_H
 
+#include "Utilities/functions.h"
 #include <boost/program_options.hpp>
 #include <list>
+
+#include <glog/logging.h>
 
 namespace po = boost::program_options;
 
@@ -22,6 +25,8 @@ namespace Utilities
         class PropertyManager
         {
         public:
+            typedef boost::shared_ptr<PropertyManager> Ptr;
+            
             PropertyManager();
             
             /**
@@ -32,7 +37,10 @@ namespace Utilities
             void addOptions(const po::options_description& options);
             
             /**
-             * parses options from the command line
+             * Parses options from the command line.
+             * After parsing the properties "argv0" and "argc" 
+             * are automatically added. The types of the properties are 
+             * std::string and int.
              * @param argc
              * @param argv
              */
@@ -59,9 +67,27 @@ namespace Utilities
              * @return the property value
              */
             template<typename T>
-            const T& get(const char* name) const
+            T get(const char* name) const
             {
-               return boost::any_cast<T>(properties.at(name));
+#ifdef DEBUG
+                assertPropertyExists(name);
+                
+                try
+                {
+                    return boost::any_cast<T>(properties.at(name));
+                }
+                catch(const boost::bad_any_cast& ex)
+                {
+                    LOG(ERROR) << "Could not cast property " 
+                        << name << " to type " 
+                        << Utilities::demangle(typeid(T).name()) << std::endl
+                        << " (expected " << Utilities::demangle(properties.at(name).type().name()) << ")";
+                    throw;
+                }
+#else
+                return boost::any_cast<T>(properties.at(name));
+#endif
+               
             }
             
             /**
@@ -85,9 +111,10 @@ namespace Utilities
              * @param name
              * @param value
              */
-            void addProperty(const std::string& name, const boost::any& value);
+            void addProperty(const std::string& name, const boost::program_options::variable_value& value);
             
             bool propertyExists(const std::string& name) const;
+            void assertPropertyExists(const std::string& name) const;
             
             void notifyListenersAboutChangeOf(const std::string& name);
             

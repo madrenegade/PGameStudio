@@ -10,8 +10,6 @@
 #include <boost/program_options/parsers.hpp>
 #include <fstream>
 
-#include <glog/logging.h>
-
 namespace Utilities
 {
     namespace Properties
@@ -32,11 +30,18 @@ namespace Utilities
         {
             VLOG(1) << "Parsing command line arguments";
             
+            options.add_options()
+            ("argc", po::value<int>(), "Argument count")
+            ("argv0", po::value<std::string>(), "Argument 0");
+
             po::variables_map vm;
             po::store(po::parse_command_line(argc, argv, options), vm);
             po::notify(vm);
 
             addPropertiesFrom(vm);
+            
+            set("argc", argc);
+            set("argv0", std::string(argv[0]));
         }
 
         void PropertyManager::parse(const char* filename)
@@ -82,26 +87,32 @@ namespace Utilities
 
         void PropertyManager::addPropertiesFrom(const po::variables_map& vm)
         {
-            auto fn = [&] (const std::pair<std::string, boost::any>& i){
+            std::for_each(vm.begin(), vm.end(), [&] (const std::pair<std::string, boost::program_options::variable_value>& i) {
                 addProperty(i.first, i.second);
-            };
-
-            std::for_each(vm.begin(), vm.end(), fn);
+            });
         }
 
-        void PropertyManager::addProperty(const std::string& name, const boost::any& value)
+        void PropertyManager::addProperty(const std::string& name, const boost::program_options::variable_value& value)
         {
-            if (!propertyExists(name))
+            if (propertyExists(name))
             {
-                throw std::logic_error("Property not found");
+                throw std::logic_error("Property already exists");
             }
 
-            properties[name] = value;
+            properties[name] = value.value();
         }
 
         bool PropertyManager::propertyExists(const std::string& name) const
         {
             return properties.find(name) != properties.end();
+        }
+        
+        void PropertyManager::assertPropertyExists(const std::string& name) const
+        {
+            if(!propertyExists(name))
+            {
+                throw std::logic_error("Property does not exists: " + name);
+            }
         }
 
         void PropertyManager::notifyListenersAboutChangeOf(const std::string& name)

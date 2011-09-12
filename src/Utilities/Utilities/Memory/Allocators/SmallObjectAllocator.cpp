@@ -170,7 +170,7 @@ namespace Utilities
             
             // 1 << block creates a bitmask where the given block is 1 and the rest zero
             // with ~ this is negated so that all bits are one except the given block
-            *tailPart &= ~(1L << block);
+            *tailPart ^= (1L << (block % ULONG_BITS));
 
             memoryUsage += BLOCK_SIZE;
         }
@@ -192,7 +192,7 @@ namespace Utilities
 
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
 
-            *tailPart |= (1L << block);
+            *tailPart |= (1L << (block % ULONG_BITS));
 
             memoryUsage -= BLOCK_SIZE;
         }

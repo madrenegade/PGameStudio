@@ -112,44 +112,44 @@ TEST_F(MediumObjectAllocatorTest, testAllocateUsesPageWithEnoughConsecutiveFreeB
     EXPECT_NE((pointer)0, ptr->allocate(1 * 128*Byte));
 }
 
-//TEST_F(MediumObjectAllocatorTest, testAllocationPerformance)
-//{
-//    ProfilerStart("MediumObjectAllocator");
-//
-//    std::cout << "Allocating " << allocations << std::endl;
-//
-//    {
-//        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
-//        
-//        Utilities::StopWatch sw("Time (default new)");
-//
-//        for (size_t i = 0; i < allocations; ++i)
-//        {
-//            ptrs[i] = new char[blockSize];
-//        }
-//
-//        for (size_t i = 0; i < allocations; ++i)
-//        {
-//            delete[] ptrs[i];
-//        }
-//    }
-//
-//    {
-//        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
-//        
-//        Utilities::StopWatch sw("Time (allocate)");
-//
-//        for (size_t i = 0; i < allocations; ++i)
-//        {
-//            ptrs[i] = allocator->allocate(blockSize);
-//        }
-//
-//        for (size_t i = 0; i < allocations; ++i)
-//        {
-//            allocator->deallocate(ptrs[i], blockSize, 1);
-//        }
-//    }
-//
-//    ProfilerStop();
-//}
+TEST_F(MediumObjectAllocatorTest, testAllocationPerformance)
+{
+    ProfilerStart("MediumObjectAllocator");
+
+    std::cout << "Allocating " << allocations << std::endl;
+
+    {
+        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
+        
+        Utilities::StopWatch sw("Time (default new)");
+
+        for (size_t i = 0; i < allocations; ++i)
+        {
+            ptrs[i] = new char[blockSize];
+        }
+
+        for (size_t i = 0; i < allocations; ++i)
+        {
+            delete[] ptrs[i];
+        }
+    }
+
+    {
+        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
+        
+        Utilities::StopWatch sw("Time (allocate)");
+
+        for (size_t i = 0; i < allocations; ++i)
+        {
+            ptrs[i] = allocator->allocate(blockSize);
+        }
+
+        for (size_t i = 0; i < allocations; ++i)
+        {
+            allocator->deallocate(ptrs[i], blockSize, 1);
+        }
+    }
+
+    ProfilerStop();
+}
 

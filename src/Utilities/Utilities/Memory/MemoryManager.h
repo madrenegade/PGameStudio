@@ -88,7 +88,7 @@ namespace Utilities
                 }
 #endif
 
-                boost::shared_ptr<T> ptr(new (allocate<T > (1, poolID)) T(obj),
+                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID)) T(obj),
                                          boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
                 return ptr;
             }
@@ -109,7 +109,28 @@ namespace Utilities
                 }
 #endif
 
-                boost::shared_array<T> ptr(allocate<T > (numObjects, poolID),
+                boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
+                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
+                return ptr;
+            }
+            
+            template<typename T>
+            boost::shared_array<T> allocate(size_t numObjects, pool_id poolID = 0
+#ifdef DEBUG
+                , const StackTrace& stacktrace = StackTrace()
+#endif
+                )
+            {
+#ifdef DEBUG
+                assert(numObjects > 1);
+                
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T));
+                }
+#endif
+                
+                boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
                                            boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
                 return ptr;
             }
@@ -172,7 +193,7 @@ namespace Utilities
                 }
 #endif
 
-                return allocate<T>(numObjects, poolID);
+                return internalAllocate<T>(numObjects, poolID);
             }
 
             /**
@@ -182,7 +203,7 @@ namespace Utilities
              * @return a pointer to the beginning of the allocated space
              */
             template<typename T>
-            T* allocate(size_t numObjects, pool_id poolID = 0)
+            T* internalAllocate(size_t numObjects, pool_id poolID = 0)
             {
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
