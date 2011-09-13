@@ -173,5 +173,10 @@ namespace Platform
         {
             return m_pGraphicsContext.get();
         }
+        
+        Display* XWindow::getDisplay() const
+        {
+            return display;
+        }
     }
 }

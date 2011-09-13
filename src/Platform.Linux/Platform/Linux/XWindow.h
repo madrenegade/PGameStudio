@@ -33,6 +33,8 @@ namespace Platform
             virtual ~XWindow();
             
             virtual Graphics::GraphicsContext* getGraphicsContext() const;
+            
+            Display* getDisplay() const;
 
         private:
             boost::shared_ptr<Graphics::GraphicsContext> m_pGraphicsContext;

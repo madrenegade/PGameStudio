@@ -13,8 +13,11 @@
 
 #include "Utilities/Properties/PropertyManager.h"
 
+#include "Core/Events/EventManager.h"
+
 using namespace Utilities::Memory;
 using namespace Utilities::Properties;
+using namespace Core::Events;
 
 typedef boost::shared_ptr<Platform::PlatformImpl> (*CreateFn)(const MemoryManager::Ptr&);
 
@@ -22,8 +25,9 @@ namespace Platform
 {
 
     PlatformManager::PlatformManager(const MemoryManager::Ptr& memory,
+                                     const boost::shared_ptr<EventManager>& eventManager,
                                      const PropertyManager::Ptr& properties)
-    : memoryManager(memory), properties(properties)
+    : memoryManager(memory), eventManager(eventManager), properties(properties)
     {
         libraryManager = memory->construct(LibraryManager());
 
@@ -37,6 +41,11 @@ namespace Platform
     PlatformManager::~PlatformManager()
     {
     }
+    
+    void PlatformManager::handleOSEvents()
+    {
+        impl->handleOSEvents();
+    }
 
     boost::shared_ptr<Graphics::Window> PlatformManager::createWindow()
     {
@@ -49,7 +58,7 @@ namespace Platform
             throw std::runtime_error("Null-Renderer not yet implemented");
         }
         
-        return impl->createWindow(memoryManager, properties);
+        return impl->createWindow(memoryManager, eventManager, properties);
     }
 }
 

@@ -9,6 +9,7 @@
 #define	GAME_APPLICATION_H
 
 #include "Core/Application.h"
+#include "Core/Events/typedefs.h"
 #include <boost/shared_ptr.hpp>
 
 namespace Utilities
@@ -56,6 +57,8 @@ namespace Game
         Application(int argc, char** argv);
         virtual ~Application();
         
+        void onQuit(const Core::Events::EventID& event, const boost::any& data);
+        
     protected:
         virtual void onInitialize();
         virtual void onInitialized();
@@ -71,6 +74,8 @@ namespace Game
         boost::shared_ptr<Core::Events::EventManager> eventManager;
         boost::shared_ptr<Platform::PlatformManager> platformManager;
         boost::shared_ptr<Graphics::Window> window;
+        
+        bool running;
         
         void initializeOptions();
         void initializeDefaultMemoryPool();

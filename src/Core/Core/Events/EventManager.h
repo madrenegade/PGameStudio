@@ -32,6 +32,12 @@ namespace Core
             EventID registerEvent(const char* name);
             
             /**
+             * Get the id of a registered event.
+             * @param name - the name of the event
+             */
+            EventID getEventID(const char* name) const;
+            
+            /**
              * Register an event handler so that it is autmatically called.
              * NOT THREAD SAFE
              * @param id - the event to register the handler for

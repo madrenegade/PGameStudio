@@ -30,7 +30,7 @@ namespace Game
 {
 
     Application::Application(int argc, char** argv)
-    : properties(new PropertyManager)
+    : properties(new PropertyManager), running(true)
     {
         properties->parse(argc, argv);
 
@@ -46,6 +46,11 @@ namespace Game
     Application::~Application()
     {
 
+    }
+    
+    void Application::onQuit(const EventID& event, const boost::any& data)
+    {
+        running = false;
     }
 
     void Application::onInitialize()
@@ -78,8 +83,11 @@ namespace Game
         window->getGraphicsContext()->MakeCurrent();
         window->getGraphicsContext()->SwapBuffers();
         window->getGraphicsContext()->Release();
+        
+        platformManager->handleOSEvents();
+        eventManager->handleEvents();
 
-        return true;
+        return running;
     }
 
     void Application::onShutdown()
@@ -155,13 +163,16 @@ namespace Game
         VLOG(1) << "Initializing event management";
         
         eventManager = memoryManager->construct(EventManager(memoryManager));
+        
+        EventID quitEvent = eventManager->registerEvent("QUIT");
+        eventManager->registerEventHandler(quitEvent, boost::bind(&Application::onQuit, this, _1, _2));
     }
     
     void Application::initializePlatformManager()
     {
         VLOG(1) << "Initializing platform manager";
         
-        platformManager = memoryManager->construct(PlatformManager(memoryManager, properties));
+        platformManager = memoryManager->construct(PlatformManager(memoryManager, eventManager, properties));
     }
     
     void Application::initializeWindow()

@@ -17,10 +17,18 @@ namespace Utilities
     {
         class MemoryManager;
     }
-    
+
     namespace Properties
     {
         class PropertyManager;
+    }
+}
+
+namespace Core
+{
+    namespace Events
+    {
+        class EventManager;
     }
 }
 
@@ -33,21 +41,25 @@ namespace Platform
 {
 
     class PlatformImpl;
-    
+
     class PlatformManager
     {
     public:
-        PlatformManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory, 
+        PlatformManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
+                        const boost::shared_ptr<Core::Events::EventManager>& eventManager,
                         const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~PlatformManager();
-        
+
+        void handleOSEvents();
+
         boost::shared_ptr<Graphics::Window> createWindow();
-        
+
     private:
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        boost::shared_ptr<Core::Events::EventManager> eventManager;
         boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
         boost::shared_ptr<LibraryManager> libraryManager;
-        
+
         boost::shared_ptr<PlatformImpl> impl;
     };
 }

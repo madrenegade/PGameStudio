@@ -15,6 +15,14 @@ namespace Graphics
     class Window;
 }
 
+namespace Core
+{
+    namespace Events
+    {
+        class EventManager;
+    }
+}
+
 namespace Utilities
 {
     namespace Memory
@@ -36,7 +44,10 @@ namespace Platform
     public:
         virtual ~PlatformImpl();
 
+        virtual void handleOSEvents() = 0;
+
         virtual boost::shared_ptr<Graphics::Window> createWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                                                                 const boost::shared_ptr<Core::Events::EventManager>& eventManager,
                                                                  const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) = 0;
 
     protected:

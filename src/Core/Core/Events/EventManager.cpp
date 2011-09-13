@@ -36,6 +36,13 @@ namespace Core
             return id;
         }
         
+        EventID EventManager::getEventID(const char* name) const
+        {
+            RAW_CHECK(events.find(name) != events.end(), "Event is not registered");
+            
+            return events.at(name);
+        }
+        
         void EventManager::registerEventHandler(const EventID& id, const EventHandlerFunction& fn)
         {
             // TODO check that id is valid
