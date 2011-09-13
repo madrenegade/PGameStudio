@@ -18,7 +18,7 @@ namespace Utilities
 
         }
 
-        Memory::pointer File::getData() const
+        Memory::byte_pointer File::getData() const
         {
             return data.get();
         }

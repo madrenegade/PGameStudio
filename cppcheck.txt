@@ -1,0 +1,18 @@
+[CMakeFiles/CompilerIdC/CMakeCCompilerId.c]: (information) Interrupted checking because of too many #ifdef configurations.
+[CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp]: (information) Interrupted checking because of too many #ifdef configurations.
+[src/MemoryProfiler/MemoryProfiler/samplenode.cpp:6]: (warning) Member variable 'SampleNode::numAllocations' is not initialized in the constructor.
+[src/MemoryProfiler/MemoryProfiler/samplenode.cpp:6]: (warning) Member variable 'SampleNode::allocationSize' is not initialized in the constructor.
+[src/MemoryProfiler/memprof/memprof/sample.cpp:13]: (warning) Member variable 'sample::allocatedBytes' is not initialized in the constructor.
+[src/Math/Math/Quaternion.cpp:1]: (style) The function 'Angle' is never used
+[src/Math/Math/helpers.cpp:1]: (style) The function 'DegreesToRadians' is never used
+[src/Math/Math/Quaternion.cpp:1]: (style) The function 'GetAxis' is never used
+[src/Math/Math/helpers.cpp:1]: (style) The function 'RadiansToDegrees' is never used
+[testsrc/UtilitiesTests/Utilities/Memory/AllocatorTest.cpp:1]: (style) The function 'SetUp' is never used
+[src/Math/Math/Quaternion.cpp:1]: (style) The function 'ToDirection' is never used
+[src/Utilities/Utilities/IO/FileSystem.cpp:1]: (style) The function 'assertPathExists' is never used
+[src/Utilities/Utilities/Properties/PropertyManager.cpp:1]: (style) The function 'assertPropertyExists' is never used
+[src/Utilities/Utilities/Memory/MemoryManager.cpp:1]: (style) The function 'findPoolContaining' is never used
+[src/Utilities/Utilities/Memory/Allocators/LargeObjectAllocator.cpp:1]: (style) The function 'getLargestFreeArea' is never used
+[src/Math/Math/Vector3.cpp:1]: (style) The function 'operator+' is never used
+[src/Math/Math/Vector3.cpp:1]: (style) The function 'operator-' is never used
+[src/Math/Math/Matrix4.cpp:1]: (style) The function 'operatorconstdouble*' is never used

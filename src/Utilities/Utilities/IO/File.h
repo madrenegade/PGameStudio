@@ -21,7 +21,7 @@ namespace Utilities
         public:
             File(const boost::shared_array<Memory::byte>& data, size_t size);
             
-            Memory::pointer getData() const;
+            Memory::byte_pointer getData() const;
             size_t getSize() const;
             
         private:

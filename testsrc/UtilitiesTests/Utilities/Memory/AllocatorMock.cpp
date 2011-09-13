@@ -18,12 +18,12 @@ namespace Utilities
             
         }
 
-        pointer AllocatorMock::allocate(size_t bytes)
+        byte_pointer AllocatorMock::allocate(size_t bytes)
         {
             return pageManager->requestNewPage();
         }
 
-        void AllocatorMock::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
+        void AllocatorMock::deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
 
         }

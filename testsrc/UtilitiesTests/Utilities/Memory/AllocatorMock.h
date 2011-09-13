@@ -20,8 +20,8 @@ namespace Utilities
         public:
             AllocatorMock(size_t maxSize, size_t pageSize, size_t blockSize);
             
-            virtual pointer allocate(size_t bytes);
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
+            virtual byte_pointer allocate(size_t bytes);
+            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
             
             virtual size_t getFreeMemory() const;
             

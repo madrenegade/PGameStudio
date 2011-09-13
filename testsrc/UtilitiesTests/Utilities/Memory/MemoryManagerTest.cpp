@@ -47,7 +47,7 @@ TEST_F(MemoryManagerTest, allocateShouldFailIfPoolDoesNotExists)
 
 TEST_F(MemoryManagerTest, allocateShouldSucceedWithMockPool)
 {
-    pool_id id = memory->registerMemoryPool(pool);
+    memory->registerMemoryPool(pool);
     ASSERT_NO_THROW((memory->allocate<short, 2>(DEFAULT_POOL)));
 }
 

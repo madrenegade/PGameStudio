@@ -11,7 +11,7 @@ file(GLOB Project_Sources
 
 find_package(GLOG REQUIRED)
 find_package(TBB REQUIRED)
-find_package(Boost REQUIRED signals)
+find_package(Boost REQUIRED signals system)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 

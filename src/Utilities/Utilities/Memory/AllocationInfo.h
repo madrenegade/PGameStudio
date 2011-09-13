@@ -15,15 +15,15 @@ namespace Utilities
         public:
             AllocationInfo();
             
-            AllocationInfo(const_pointer ptr, size_t bytes, const std::type_info& type);
+            AllocationInfo(const_byte_pointer ptr, size_t bytes, const std::type_info& type);
             
-            const_pointer getPointer() const;
+            const_byte_pointer getPointer() const;
             size_t getSize() const;
             
             std::string getType() const;
             
         private:
-            const_pointer ptr;
+            const_byte_pointer ptr;
             
             size_t bytes;
 

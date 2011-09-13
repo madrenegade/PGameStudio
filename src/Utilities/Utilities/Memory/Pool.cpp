@@ -28,13 +28,13 @@ namespace Utilities
 
         }
 
-        pointer Pool::allocate(size_t bytes)
+        byte_pointer Pool::allocate(size_t bytes)
         {
             Allocator* allocator = getAllocatorFor(bytes);
             return allocator->allocate(bytes);
         }
         
-        void Pool::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
+        void Pool::deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
             Allocator* allocator = getAllocatorFor(sizeOfOneObject * numObjects);
             allocator->deallocate(ptr, sizeOfOneObject, numObjects);
@@ -47,7 +47,7 @@ namespace Utilities
                 largeObjects.getMemoryUsage();
         }
         
-        bool Pool::contains(const_pointer ptr) const
+        bool Pool::contains(const_byte_pointer ptr) const
         {
             return smallObjects.contains(ptr) || mediumObjects.contains(ptr) || largeObjects.contains(ptr);
         }

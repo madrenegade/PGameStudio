@@ -40,7 +40,7 @@ namespace Utilities
             }
         }
 
-        bool Allocator::contains(const_pointer ptr) const
+        bool Allocator::contains(const_byte_pointer ptr) const
         {
             try
             {

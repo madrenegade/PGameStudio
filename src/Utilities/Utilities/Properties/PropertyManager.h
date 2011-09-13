@@ -114,7 +114,10 @@ namespace Utilities
             void addProperty(const std::string& name, const boost::program_options::variable_value& value);
             
             bool propertyExists(const std::string& name) const;
+            
+#ifdef DEBUG
             void assertPropertyExists(const std::string& name) const;
+#endif
             
             void notifyListenersAboutChangeOf(const std::string& name);
             

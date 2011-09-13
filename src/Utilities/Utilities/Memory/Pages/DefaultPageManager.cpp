@@ -26,7 +26,7 @@ namespace Utilities
             return pages.size();
         }
 
-        pointer DefaultPageManager::getPageFor(const_pointer ptr)
+        byte_pointer DefaultPageManager::getPageFor(const_byte_pointer ptr)
         {
             // normally only deallocate needes this method
             // chances are good that the last deallocation was in the same memory page
@@ -47,7 +47,7 @@ namespace Utilities
             return lastPageSearchResult;
         }
         
-        pointer DefaultPageManager::binaryPageSearch(const_pointer ptr) const
+        byte_pointer DefaultPageManager::binaryPageSearch(const_byte_pointer ptr) const
         {
             int first = 0;
             int last = pageCount - 1;
@@ -74,12 +74,12 @@ namespace Utilities
             throw std::logic_error("Pointer not found in any page");
         }
         
-        pointer DefaultPageManager::getPage(size_t i) const
+        byte_pointer DefaultPageManager::getPage(size_t i) const
         {
             return pages[i].get();
         }
 
-        pointer DefaultPageManager::allocatePage()
+        byte_pointer DefaultPageManager::allocatePage()
         {
             Page page(new byte[PAGE_SIZE]);
             

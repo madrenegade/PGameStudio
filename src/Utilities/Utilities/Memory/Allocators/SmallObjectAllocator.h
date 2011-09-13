@@ -27,8 +27,8 @@ namespace Utilities
         public:
             SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
             
-            virtual pointer allocate(size_t bytes);
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
+            virtual byte_pointer allocate(size_t bytes);
+            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
             
             virtual size_t getFreeMemory() const;
             
@@ -37,31 +37,31 @@ namespace Utilities
              * Set each bit of the last block to one.
              * This marks all blocks in the page as free.
              */
-            void initializePage(pointer page);
+            void initializePage(byte_pointer page);
             
             /**
              * get the starting address of a page tail
              * @param page
              * @return the starting address of the given page tail
              */
-            pointer getTailFor(pointer page) const;
+            byte_pointer getTailFor(byte_pointer page) const;
             
-            unsigned short* getPointerToAmountOfFreeBlocksFor(pointer page) const;
+            unsigned short* getPointerToAmountOfFreeBlocksFor(byte_pointer page) const;
             
             /**
              * find a free block using the page tail bitmask
              * @param page - the page to search for free blocks in
              * @return a block number or -1 if no block is free
              */
-            int findFreeBlockIn(pointer page) const;
+            int findFreeBlockIn(byte_pointer page) const;
             
-            void markBlockAsUsed(unsigned int block, pointer startOfPage);
-            void markBlockAsFree(unsigned int block, pointer startOfPage);
+            void markBlockAsUsed(unsigned int block, byte_pointer startOfPage);
+            void markBlockAsFree(unsigned int block, byte_pointer startOfPage);
             
-            pointer allocateBlockIn(pointer startOfPage);
+            byte_pointer allocateBlockIn(byte_pointer startOfPage);
             
             const size_t USABLE_BLOCKS_PER_PAGE;
-            std::list<pointer> pagesWithFreeBlocks;
+            std::list<byte_pointer> pagesWithFreeBlocks;
         };
     }
 }

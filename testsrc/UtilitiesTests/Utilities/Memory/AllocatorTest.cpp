@@ -48,7 +48,7 @@ TEST_F(AllocatorTest, containsShouldReturnFalseInitially)
 
 TEST_F(AllocatorTest, containsShouldReturnTrueAfterAllocate)
 {
-    pointer ptr = allocator->allocate(10);
+    byte_pointer ptr = allocator->allocate(10);
 
     EXPECT_TRUE(allocator->contains(ptr));
 }

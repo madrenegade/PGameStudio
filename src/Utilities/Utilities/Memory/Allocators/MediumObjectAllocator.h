@@ -23,33 +23,33 @@ namespace Utilities
         public:
             MediumObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
             
-            virtual pointer allocate(size_t bytes);
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
+            virtual byte_pointer allocate(size_t bytes);
+            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
 
             virtual size_t getFreeMemory() const;
             
         private:
-            pointer allocateBlocksIn(pointer startOfPage, size_t neededBlocks);
-            int findFreeBlocksIn(pointer page, size_t neededBlocks) const;
-            void markBlocksAsUsed(unsigned int block, pointer startOfPage, size_t numBlocks);
-            void markBlocksAsFree(unsigned int block, pointer startOfPage, size_t numBlocks);
+            byte_pointer allocateBlocksIn(byte_pointer startOfPage, size_t neededBlocks);
+            int findFreeBlocksIn(byte_pointer page, size_t neededBlocks) const;
+            void markBlocksAsUsed(unsigned int block, byte_pointer startOfPage, size_t numBlocks);
+            void markBlocksAsFree(unsigned int block, byte_pointer startOfPage, size_t numBlocks);
             
             /**
              * Set each bit of the last block to one. This marks all blocks in the page as free.
              * Set all blocks in the last but one block to zero.
              */
-            void initializePage(pointer page);
+            void initializePage(byte_pointer page);
 
-            pointer getTailFor(pointer page) const;
+            byte_pointer getTailFor(byte_pointer page) const;
             
-            unsigned short* getPointerToAmountOfFreeBlocksFor(pointer page) const;
-            unsigned short* getPointerToLargestFreeBlockRangeFor(pointer page) const;
+            unsigned short* getPointerToAmountOfFreeBlocksFor(byte_pointer page) const;
+            unsigned short* getPointerToLargestFreeBlockRangeFor(byte_pointer page) const;
             
-            void updateLargestBlockRangeFor(pointer page);
+            void updateLargestBlockRangeFor(byte_pointer page);
             
             const size_t USABLE_BLOCKS_PER_PAGE;
             
-            typedef std::list<pointer> PagesWithFreeBlocksList;
+            typedef std::list<byte_pointer> PagesWithFreeBlocksList;
             PagesWithFreeBlocksList pagesWithFreeBlocks;
         };
     }

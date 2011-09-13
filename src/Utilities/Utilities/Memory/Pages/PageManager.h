@@ -28,10 +28,10 @@ namespace Utilities
             size_t getPageSize() const;
             size_t getUnusedPages() const;
             
-            pointer requestNewPage();
+            byte_pointer requestNewPage();
             
-            virtual pointer getPageFor(const_pointer ptr) = 0;
-            virtual pointer getPage(size_t i) const = 0;
+            virtual byte_pointer getPageFor(const_byte_pointer ptr) = 0;
+            virtual byte_pointer getPage(size_t i) const = 0;
             
             virtual size_t getPagesInUse() const = 0;
             
@@ -40,7 +40,7 @@ namespace Utilities
         protected:
             PageManager(size_t maxSize, size_t pageSize);
             
-            virtual pointer allocatePage() = 0;
+            virtual byte_pointer allocatePage() = 0;
             
             const size_t MAX_SIZE;
             const size_t PAGE_SIZE;

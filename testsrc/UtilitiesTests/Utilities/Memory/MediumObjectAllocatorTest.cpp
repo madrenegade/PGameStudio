@@ -103,13 +103,13 @@ TEST_F(MediumObjectAllocatorTest, testAllocateUsesPageWithEnoughConsecutiveFreeB
     boost::scoped_ptr<MediumObjectAllocator> ptr(new MediumObjectAllocator(pageManager, 128 * Byte));
     
     ptr->allocate(3 * 128*Byte);
-    pointer p = ptr->allocate(1 * 128*Byte);
+    byte_pointer p = ptr->allocate(1 * 128*Byte);
     ptr->allocate(3 * 128*Byte);
     
     ptr->deallocate(p, 128, 1);
     
     // allocate 2 additional blocks
-    EXPECT_NE((pointer)0, ptr->allocate(1 * 128*Byte));
+    EXPECT_NE((byte_pointer)0, ptr->allocate(1 * 128*Byte));
 }
 
 TEST_F(MediumObjectAllocatorTest, testAllocationPerformance)
@@ -119,7 +119,7 @@ TEST_F(MediumObjectAllocatorTest, testAllocationPerformance)
     std::cout << "Allocating " << allocations << std::endl;
 
     {
-        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
+        boost::scoped_array<byte_pointer> ptrs(new byte_pointer[allocations]);
         
         Utilities::StopWatch sw("Time (default new)");
 
@@ -135,7 +135,7 @@ TEST_F(MediumObjectAllocatorTest, testAllocationPerformance)
     }
 
     {
-        boost::scoped_array<pointer> ptrs(new pointer[allocations]);
+        boost::scoped_array<byte_pointer> ptrs(new byte_pointer[allocations]);
         
         Utilities::StopWatch sw("Time (allocate)");
 

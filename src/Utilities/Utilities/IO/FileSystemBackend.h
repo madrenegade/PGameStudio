@@ -14,7 +14,6 @@ namespace Utilities
     {
         enum class FileSystemBackend : unsigned char
         {
-            Real,
             PhysFS
         };
     }

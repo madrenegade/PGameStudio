@@ -107,6 +107,7 @@ namespace Utilities
             return properties.find(name) != properties.end();
         }
         
+#ifdef DEBUG
         void PropertyManager::assertPropertyExists(const std::string& name) const
         {
             if(!propertyExists(name))
@@ -114,6 +115,7 @@ namespace Utilities
                 throw std::logic_error("Property does not exists: " + name);
             }
         }
+#endif
 
         void PropertyManager::notifyListenersAboutChangeOf(const std::string& name)
         {

@@ -26,7 +26,7 @@ namespace Utilities
      * @param bytes - amount of bytes to fill
      * @param c - the character to put in the memory area
      */
-    void fillMemory(Memory::pointer start, size_t bytes, char c);
+    void fillMemory(Memory::byte_pointer start, size_t bytes, char c);
     
     /**
      * count the number of bits set to zero from the right

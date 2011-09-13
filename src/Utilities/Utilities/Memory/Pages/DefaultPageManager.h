@@ -22,23 +22,23 @@ namespace Utilities
             
             virtual size_t getPagesInUse() const;
             
-            virtual pointer getPageFor(const_pointer ptr);
+            virtual byte_pointer getPageFor(const_byte_pointer ptr);
             
-            virtual pointer getPage(size_t i) const;
+            virtual byte_pointer getPage(size_t i) const;
            
         protected:
-            virtual pointer allocatePage();
+            virtual byte_pointer allocatePage();
             
         private:
             typedef boost::shared_array<byte> Page;
             std::vector<Page> pages;
             size_t pageCount;
             
-            pointer binaryPageSearch(const_pointer ptr) const;
+            byte_pointer binaryPageSearch(const_byte_pointer ptr) const;
             
             bool dirty;
             
-            pointer lastPageSearchResult;
+            byte_pointer lastPageSearchResult;
         };
     }
 }

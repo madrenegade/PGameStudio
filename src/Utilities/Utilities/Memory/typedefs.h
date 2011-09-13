@@ -14,8 +14,8 @@ namespace Utilities
     {
         typedef char byte;
         
-        typedef byte* pointer;
-        typedef const byte* const_pointer;
+        typedef byte* byte_pointer;
+        typedef const byte* const_byte_pointer;
         
         typedef unsigned int pool_id;
     }

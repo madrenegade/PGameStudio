@@ -75,7 +75,7 @@ namespace Utilities
             pools.erase(poolID);
         }
 
-        pool_id MemoryManager::findPoolContaining(const_pointer ptr) const
+        pool_id MemoryManager::findPoolContaining(const_byte_pointer ptr) const
         {
             DCHECK(!pools.empty());
 

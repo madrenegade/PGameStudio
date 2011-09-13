@@ -169,7 +169,7 @@ namespace Utilities
             boost::scoped_ptr<memprof::client> profilerClient;
 #endif
 
-            pool_id findPoolContaining(const_pointer ptr) const;
+            pool_id findPoolContaining(const_byte_pointer ptr) const;
             
             template<typename> friend class STLAllocator;
              /**
@@ -223,7 +223,7 @@ namespace Utilities
                         throw std::logic_error("Invalid pool id");
                     }
 
-                    pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
+                    byte_pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
 
                     fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
@@ -263,7 +263,7 @@ namespace Utilities
                     ptr[i].~T();
                 }
 
-                const_pointer rawPtr = reinterpret_cast<const_pointer> (ptr);
+                const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
 
                 {
                     PoolMapMutexType::scoped_lock lock(poolMapMutex, true);

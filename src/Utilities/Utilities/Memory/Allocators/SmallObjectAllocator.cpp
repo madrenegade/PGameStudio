@@ -47,7 +47,7 @@ namespace Utilities
             }
         }
 
-        pointer SmallObjectAllocator::allocate(size_t bytes)
+        byte_pointer SmallObjectAllocator::allocate(size_t bytes)
         {
 #ifdef DEBUG
             if (bytes > BLOCK_SIZE)
@@ -56,7 +56,7 @@ namespace Utilities
             }
 #endif
 
-            pointer startOfPage;
+            byte_pointer startOfPage;
 
             if (pagesWithFreeBlocks.empty())
             {
@@ -71,7 +71,7 @@ namespace Utilities
             return allocateBlockIn(startOfPage);
         }
 
-        pointer SmallObjectAllocator::allocateBlockIn(pointer startOfPage)
+        byte_pointer SmallObjectAllocator::allocateBlockIn(byte_pointer startOfPage)
         {
             int firstFreeBlock = findFreeBlockIn(startOfPage);
 
@@ -85,9 +85,9 @@ namespace Utilities
             return 0;
         }
 
-        void SmallObjectAllocator::deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
+        void SmallObjectAllocator::deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
         {
-            const pointer startOfPage = pageManager->getPageFor(ptr);
+            const byte_pointer startOfPage = pageManager->getPageFor(ptr);
 
             markBlockAsFree((ptr - startOfPage) / BLOCK_SIZE, startOfPage);
         }
@@ -106,11 +106,11 @@ namespace Utilities
             return freeMemory;
         }
 
-        void SmallObjectAllocator::initializePage(pointer page)
+        void SmallObjectAllocator::initializePage(byte_pointer page)
         {
             pagesWithFreeBlocks.push_front(page);
 
-            pointer tail = getTailFor(page);
+            byte_pointer tail = getTailFor(page);
             
             fillMemory(tail, BLOCK_SIZE - 2, 0xFF);
             
@@ -118,19 +118,19 @@ namespace Utilities
             *amountOfFreeBlocks = USABLE_BLOCKS_PER_PAGE;
         }
 
-        pointer SmallObjectAllocator::getTailFor(pointer page) const
+        byte_pointer SmallObjectAllocator::getTailFor(byte_pointer page) const
         {
             return page + pageManager->getPageSize() - BLOCK_SIZE;
         }
         
-        unsigned short* SmallObjectAllocator::getPointerToAmountOfFreeBlocksFor(pointer page) const
+        unsigned short* SmallObjectAllocator::getPointerToAmountOfFreeBlocksFor(byte_pointer page) const
         {
             return reinterpret_cast<unsigned short*>(page + pageManager->getPageSize() - 2);
         }
 
-        int SmallObjectAllocator::findFreeBlockIn(pointer page) const
+        int SmallObjectAllocator::findFreeBlockIn(byte_pointer page) const
         {
-            pointer tail = getTailFor(page);
+            byte_pointer tail = getTailFor(page);
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
             
@@ -150,7 +150,7 @@ namespace Utilities
             return -1;
         }
 
-        void SmallObjectAllocator::markBlockAsUsed(unsigned int block, pointer startOfPage)
+        void SmallObjectAllocator::markBlockAsUsed(unsigned int block, byte_pointer startOfPage)
         {
             // fetch amount of free blocks
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(startOfPage);
@@ -162,7 +162,7 @@ namespace Utilities
                 pagesWithFreeBlocks.remove(startOfPage);
             }
 
-            pointer tail = getTailFor(startOfPage);
+            byte_pointer tail = getTailFor(startOfPage);
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
 
@@ -175,7 +175,7 @@ namespace Utilities
             memoryUsage += BLOCK_SIZE;
         }
 
-        void SmallObjectAllocator::markBlockAsFree(unsigned int block, pointer startOfPage)
+        void SmallObjectAllocator::markBlockAsFree(unsigned int block, byte_pointer startOfPage)
         {
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(startOfPage);
             
@@ -186,7 +186,7 @@ namespace Utilities
                 pagesWithFreeBlocks.push_front(startOfPage);
             }
 
-            pointer tail = getTailFor(startOfPage);
+            byte_pointer tail = getTailFor(startOfPage);
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
 

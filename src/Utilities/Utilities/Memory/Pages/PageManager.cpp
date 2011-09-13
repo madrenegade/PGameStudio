@@ -49,7 +49,7 @@ namespace Utilities
             return MAX_PAGE_COUNT - getPagesInUse();
         }
 
-        pointer PageManager::requestNewPage()
+        byte_pointer PageManager::requestNewPage()
         {
             if (getPagesInUse() == MAX_PAGE_COUNT)
             {

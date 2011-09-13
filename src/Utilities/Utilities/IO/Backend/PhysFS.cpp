@@ -50,9 +50,9 @@ namespace Utilities
                 mount(".", 0);
 
                 FileSystem::initialize();
-//                
-//                RAW_LOG_INFO("User dir: %s", PHYSFS_getUserDir());
-//                RAW_LOG_INFO("Write dir: %s", PHYSFS_getWriteDir());
+                
+                RAW_VLOG(1, "User dir: %s", PHYSFS_getUserDir());
+                RAW_VLOG(1, "Write dir: %s", PHYSFS_getWriteDir());
             }
 
             void PhysFS::mount(const char* path, const char* mountPoint)
@@ -121,7 +121,7 @@ namespace Utilities
                 }
             }
 
-            size_t PhysFS::read(void* handle, Memory::pointer buffer, size_t size)
+            size_t PhysFS::read(void* handle, Memory::byte_pointer buffer, size_t size)
             {
 #ifdef DEBUG
                 size_t bytesRead = PHYSFS_read(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
@@ -137,7 +137,7 @@ namespace Utilities
 #endif
             }
             
-            size_t PhysFS::write(void* handle, Memory::const_pointer buffer, size_t size)
+            size_t PhysFS::write(void* handle, Memory::const_byte_pointer buffer, size_t size)
             {
 #ifdef DEBUG
                 size_t bytesWritten = PHYSFS_write(static_cast<PHYSFS_File*>(handle), buffer, 1, size);

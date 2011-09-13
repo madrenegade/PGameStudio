@@ -28,12 +28,12 @@ namespace Utilities
             
             static Ptr create(const MemoryPoolSettings& settings = MemoryPoolSettings());
             
-            pointer allocate(size_t bytes);
-            void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
+            byte_pointer allocate(size_t bytes);
+            void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
             
             size_t getMemoryUsage() const;
             
-            bool contains(const_pointer ptr) const;
+            bool contains(const_byte_pointer ptr) const;
             
         private:
             Pool(const MemoryPoolSettings& settings);

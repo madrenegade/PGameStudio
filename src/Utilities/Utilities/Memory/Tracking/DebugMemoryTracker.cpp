@@ -17,7 +17,7 @@ namespace Utilities
     namespace Memory
     {
 
-        void DebugMemoryTracker::trackAllocation(const_pointer ptr, size_t bytes, const std::type_info& type)
+        void DebugMemoryTracker::trackAllocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
         {
             if(allocations.find(ptr) != allocations.end())
             {
@@ -33,7 +33,7 @@ namespace Utilities
             allocations[ptr] = allocationInfo;
         }
 
-        void DebugMemoryTracker::trackDeallocation(const_pointer ptr, size_t bytes, const std::type_info& type)
+        void DebugMemoryTracker::trackDeallocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
         {
             if(allocations.find(ptr) == allocations.end())
             {

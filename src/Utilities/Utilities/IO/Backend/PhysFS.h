@@ -37,8 +37,8 @@ namespace Utilities
                 
                 virtual void close(void* handle);
                 
-                virtual size_t read(void* handle, Memory::pointer buffer, size_t size);
-                virtual size_t write(void* handle, Memory::const_pointer buffer, size_t size);
+                virtual size_t read(void* handle, Memory::byte_pointer buffer, size_t size);
+                virtual size_t write(void* handle, Memory::const_byte_pointer buffer, size_t size);
                 
                 virtual void setWriteDirectory(const char* organization, const char* appName);
 

@@ -7,17 +7,18 @@ namespace Utilities
     namespace Memory
     {
         AllocationInfo::AllocationInfo()
+        : ptr(0), bytes(0), type("unknown")
         {
             
         }
         
-        AllocationInfo::AllocationInfo(const_pointer ptr, size_t bytes, const std::type_info& type)
+        AllocationInfo::AllocationInfo(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
         : ptr(ptr), bytes(bytes), type(type.name())
         {
             
         }
         
-        const_pointer AllocationInfo::getPointer() const
+        const_byte_pointer AllocationInfo::getPointer() const
         {
             return ptr;
         }

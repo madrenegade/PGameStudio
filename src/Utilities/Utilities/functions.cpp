@@ -37,7 +37,7 @@ namespace Utilities
 #endif
     }
 
-    void fillMemory(Memory::pointer start, size_t bytes, char c)
+    void fillMemory(Memory::byte_pointer start, size_t bytes, char c)
     {
 #ifdef DEBUG
         if(start == 0)

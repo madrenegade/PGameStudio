@@ -25,10 +25,10 @@ namespace Utilities
         class Allocator
         {
         public:
-            virtual pointer allocate(size_t bytes) = 0;
-            virtual void deallocate(const_pointer ptr, size_t sizeOfOneObject, size_t numObjects) = 0;
+            virtual byte_pointer allocate(size_t bytes) = 0;
+            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects) = 0;
             
-            bool contains(const_pointer ptr) const;
+            bool contains(const_byte_pointer ptr) const;
 
             size_t getMemoryUsage() const;
             virtual size_t getFreeMemory() const = 0;
