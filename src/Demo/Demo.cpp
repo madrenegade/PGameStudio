@@ -1,20 +1,35 @@
-#include "Utilities/Memory/MemoryManager.h"
-#include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
+#include "Game/Application.h"
 
-#include "Core/Events/EventHandler.h"
-
-using namespace Utilities::Memory;
-using namespace Core::Events;
+using namespace Game;
 
 int main(int argc, char** argv)
 {
-    MemoryTracker::Ptr memoryTracker(new DebugMemoryTracker());
-    MemoryManager::Ptr memoryManager = MemoryManager::create(memoryTracker);
+    Application app;
+    app.initialize();
+    app.run();
     
-    boost::shared_ptr<Pool> pool(new Pool);
-    pool_id poolID = memoryManager->registerMemoryPool(pool);
-    
-    boost::shared_ptr<EventHandler> eventHandler = CONSTRUCT(memoryManager, EventHandler(), poolID);
-    
+//    MemoryTracker::Ptr memoryTracker(new DebugMemoryTracker());
+//    MemoryManager::Ptr memoryManager = MemoryManager::create(memoryTracker);
+//
+//    boost::shared_ptr<Pool> pool = Pool::create();
+//    pool_id poolID = memoryManager->registerMemoryPool(pool);
+//
+//    BEGIN_NEW_FRAME(memoryManager);
+//    
+//    boost::shared_ptr<PropertyManager> properties(new PropertyManager);
+//
+//    properties->parse(argc, argv);
+//    
+//    boost::shared_ptr<FileSystem> fs = FileSystemFactory::create(memoryManager, properties, FileSystemBackend::PhysFS);
+//    
+//    properties->parse("settings.ini");
+//    
+//    fs->initialize();
+//    
+//    File f(fs->read("settings.ini"));
+//    
+//    boost::shared_ptr<EventManager> em = memoryManager->construct(EventManager(memoryManager), 0);
+// 
+
     return 0;
 }
