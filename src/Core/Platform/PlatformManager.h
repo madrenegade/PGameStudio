@@ -24,6 +24,11 @@ namespace Utilities
     }
 }
 
+namespace Graphics
+{
+    class Window;
+}
+
 namespace Platform
 {
 
@@ -36,7 +41,11 @@ namespace Platform
                         const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~PlatformManager();
         
+        boost::shared_ptr<Graphics::Window> createWindow();
+        
     private:
+        boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
         boost::shared_ptr<LibraryManager> libraryManager;
         
         boost::shared_ptr<PlatformImpl> impl;

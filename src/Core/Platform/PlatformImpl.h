@@ -8,6 +8,26 @@
 #ifndef PLATFORM_PLATFORMIMPL_H
 #define	PLATFORM_PLATFORMIMPL_H
 
+#include <boost/shared_ptr.hpp>
+
+namespace Graphics
+{
+    class Window;
+}
+
+namespace Utilities
+{
+    namespace Memory
+    {
+        class MemoryManager;
+    }
+
+    namespace Properties
+    {
+        class PropertyManager;
+    }
+}
+
 namespace Platform
 {
 
@@ -15,7 +35,10 @@ namespace Platform
     {
     public:
         virtual ~PlatformImpl();
-        
+
+        virtual boost::shared_ptr<Graphics::Window> createWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                                                                 const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) = 0;
+
     protected:
         PlatformImpl();
     };

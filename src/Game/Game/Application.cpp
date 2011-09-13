@@ -15,6 +15,9 @@
 
 #include "Platform/PlatformManager.h"
 
+#include "Graphics/Window.h"
+#include "Graphics/GraphicsContext.h"
+
 #include <glog/logging.h>
 
 using namespace Utilities::Memory;
@@ -55,6 +58,7 @@ namespace Game
         initializeFileSystem();
         initializeEventManager();
         initializePlatformManager();
+        initializeWindow();
     }
 
     void Application::onInitialized()
@@ -70,8 +74,12 @@ namespace Game
     bool Application::onUpdate()
     {
         BEGIN_NEW_FRAME(memoryManager);
+        
+        window->getGraphicsContext()->MakeCurrent();
+        window->getGraphicsContext()->SwapBuffers();
+        window->getGraphicsContext()->Release();
 
-        return false;
+        return true;
     }
 
     void Application::onShutdown()
@@ -104,6 +112,7 @@ namespace Game
         properties->addOptions(options);
 
         FileSystem::addOptionsTo(properties);
+        Graphics::Window::addOptionsTo(properties);
 
         properties->parse("settings.ini");
     }
@@ -153,5 +162,12 @@ namespace Game
         VLOG(1) << "Initializing platform manager";
         
         platformManager = memoryManager->construct(PlatformManager(memoryManager, properties));
+    }
+    
+    void Application::initializeWindow()
+    {
+        VLOG(1) << "Creating window";
+        
+        window = platformManager->createWindow();
     }
 }

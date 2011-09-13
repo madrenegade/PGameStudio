@@ -42,6 +42,11 @@ namespace Platform
     class PlatformManager;
 }
 
+namespace Graphics
+{
+    class Window;
+}
+
 namespace Game
 {
 
@@ -65,12 +70,14 @@ namespace Game
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
         boost::shared_ptr<Core::Events::EventManager> eventManager;
         boost::shared_ptr<Platform::PlatformManager> platformManager;
+        boost::shared_ptr<Graphics::Window> window;
         
         void initializeOptions();
         void initializeDefaultMemoryPool();
         void initializeFileSystem();
         void initializeEventManager();
         void initializePlatformManager();
+        void initializeWindow();
     };
 }
 

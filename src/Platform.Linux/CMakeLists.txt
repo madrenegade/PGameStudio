@@ -10,6 +10,9 @@ file(GLOB Project_Sources
 	"${PROJECT_SOURCE_DIR}/Platform/*"
 	"${PROJECT_SOURCE_DIR}/Platform/Linux/*")
 
+find_package(X11 REQUIRED)
+find_package(OpenGL REQUIRED)
+
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
 add_dependencies(${PROJECT_NAME} Core Utilities)
@@ -17,4 +20,7 @@ add_dependencies(${PROJECT_NAME} Core Utilities)
 target_link_libraries(${PROJECT_NAME}
     Core
     Utilities
+    ${X11_LIBRARIES}
+    GL
+    ${OpenGL_LIBRARIES}
 )

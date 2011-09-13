@@ -20,6 +20,9 @@ namespace Platform
         public:
             Platform();
             virtual ~Platform();
+
+            virtual boost::shared_ptr<Graphics::Window> createWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                                                                     const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         };
     }
 }
