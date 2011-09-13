@@ -8,7 +8,6 @@
 #ifndef UTILITIES_IO_FILESYSTEMFACTORY_H
 #define	UTILITIES_IO_FILESYSTEMFACTORY_H
 
-#include "Utilities/IO/FileSystemBackend.h"
 #include "Utilities/Memory/MemoryManager.h"
 
 #include <boost/shared_ptr.hpp>
@@ -28,12 +27,13 @@ namespace Utilities
         {
         public:
             static boost::shared_ptr<FileSystem> create(const Memory::MemoryManager::Ptr& memory, 
-                                                        const boost::shared_ptr<Properties::PropertyManager>& properties,
-                                                        FileSystemBackend backend);
+                                                        const boost::shared_ptr<Properties::PropertyManager>& properties);
             
         private:
             FileSystemFactory();
             ~FileSystemFactory();
+            
+            static boost::shared_ptr<Memory::Pool> createMemoryPool(const boost::shared_ptr<Properties::PropertyManager>& properties);
         };
     }
 }

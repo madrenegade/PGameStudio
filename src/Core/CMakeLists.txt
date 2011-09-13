@@ -7,7 +7,9 @@ include_directories(${SRC_DIR}/Utilities)
 
 file(GLOB Project_Sources 
     "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
-    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Events/*")
+    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Events/*"
+    "${PROJECT_SOURCE_DIR}/Platform/*"
+    "${PROJECT_SOURCE_DIR}/Platform/Linux/*")
 
 find_package(GLOG REQUIRED)
 find_package(TBB REQUIRED)

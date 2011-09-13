@@ -36,6 +36,19 @@ namespace Utilities
     int countZeroBitsFromRight(unsigned long v);
     
     int countOneBitsFromRight(unsigned long v);
+    
+    template<typename EnumType, typename InputType>
+    EnumType valueOf(InputType i)
+    {
+        return static_cast<EnumType>(i);
+    }
+    
+    // TODO: implement this so that it can map strings to enum values
+//    template<typename EnumType>
+//    EnumType valueOf(const char* s)
+//    {
+//        
+//    }
 }
 
 #endif	/* UTILITIES_FUNCTIONS_H */

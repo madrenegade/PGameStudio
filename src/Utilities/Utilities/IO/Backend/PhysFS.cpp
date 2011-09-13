@@ -6,6 +6,7 @@
  */
 
 #include "Utilities/IO/Backend/PhysFS.h"
+#include "Utilities/string.h"
 #include <physfs.h>
 
 namespace Utilities
@@ -33,7 +34,7 @@ namespace Utilities
                 }
             }
 
-            void PhysFS::initialize()
+            void PhysFS::initialize(Memory::pool_id id)
             {
                 PHYSFS_Version linked;
                 PHYSFS_getLinkedVersion(&linked);
@@ -49,7 +50,7 @@ namespace Utilities
 
                 mount(".", 0);
 
-                FileSystem::initialize();
+                FileSystem::initialize(id);
                 
                 RAW_VLOG(1, "User dir: %s", PHYSFS_getUserDir());
                 RAW_VLOG(1, "Write dir: %s", PHYSFS_getWriteDir());

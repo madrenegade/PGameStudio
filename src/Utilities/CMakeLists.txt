@@ -24,11 +24,12 @@ find_package(PhysFS REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
-add_dependencies(${PROJECT_NAME} memprof)
+add_dependencies(${PROJECT_NAME} memprof StackTrace)
 
 target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBRARIES}
     ${Boost_LIBRARIES}
     physfs
     memprof
+    StackTrace
 )

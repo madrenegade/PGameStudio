@@ -28,11 +28,11 @@ namespace Utilities
 
         void PropertyManager::parse(int argc, char** argv)
         {
-            VLOG(1) << "Parsing command line arguments";
-            
             options.add_options()
             ("argc", po::value<int>(), "Argument count")
-            ("argv0", po::value<std::string>(), "Argument 0");
+            ("argv0", po::value<std::string>(), "Argument 0")
+            ("v", po::value<int>(), "Verbosity level for glog")
+            ("minloglevel", po::value<int>(), "Minimum log level for glog");
 
             po::variables_map vm;
             po::store(po::parse_command_line(argc, argv, options), vm);
@@ -77,8 +77,6 @@ namespace Utilities
         {
             DCHECK(propertyExists(name));
             DCHECK(properties[name].type() == value.type());
-            
-            VLOG(2) << "Setting property " << name;
 
             properties[name] = value;
 

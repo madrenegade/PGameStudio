@@ -7,7 +7,7 @@ SUBDIRS(Utilities)
 
 SUBDIRS(Core)
 
-#SUBDIRS(Platform.Linux)
+SUBDIRS(Platform.Linux)
 
 #SUBDIRS(Input)
 

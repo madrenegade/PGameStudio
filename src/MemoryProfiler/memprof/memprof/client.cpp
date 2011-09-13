@@ -42,7 +42,7 @@ namespace memprof
 
     void client::connect()
     {
-        RAW_LOG(INFO, "Connecting to server at %s", host.c_str());
+        RAW_LOG(INFO, "Connecting to memprof server at %s", host.c_str());
 
         try
         {
@@ -70,11 +70,11 @@ namespace memprof
 
             connected = true;
             
-            RAW_LOG(INFO, "Connected to server at %s", host.c_str());
+            RAW_LOG(INFO, "Connected to memprof server at %s", host.c_str());
         }
         catch (const std::exception& ex)
         {
-            RAW_LOG(ERROR, ex.what());
+            RAW_LOG(ERROR, "Error while connecting to memprof server: %s", ex.what());
             RAW_LOG(WARNING, "Memory profiling is not available");
         }
     }

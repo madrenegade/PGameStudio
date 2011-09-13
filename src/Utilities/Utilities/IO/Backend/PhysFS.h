@@ -23,9 +23,9 @@ namespace Utilities
                 PhysFS(const Memory::MemoryManager::Ptr& memory, const boost::shared_ptr<Properties::PropertyManager>& properties);
                 virtual ~PhysFS();
 
-                virtual void initialize();
-
             protected:
+                virtual void initialize(Memory::pool_id id);
+                
                 virtual void mount(const char* path, const char* mountPoint);
 
                 virtual bool exists(const char* path) const;

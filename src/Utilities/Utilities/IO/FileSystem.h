@@ -21,9 +21,9 @@ namespace Utilities
         class FileSystem
         {
         public:
-            virtual ~FileSystem();
+            static void addOptionsTo(const Properties::PropertyManager::Ptr& properties);
             
-            virtual void initialize();
+            virtual ~FileSystem();
             
             File read(const char* path);
             
@@ -32,7 +32,11 @@ namespace Utilities
         protected:
             FileSystem(const Memory::MemoryManager::Ptr& memory, const Properties::PropertyManager::Ptr& properties);
             
+            Memory::pool_id getMemoryPool() const;
+            
             friend class FileSystemFactory;
+            
+            virtual void initialize(Memory::pool_id fsPool);
             
             virtual void mount(const char* path, const char* mountPoint) = 0;
             
@@ -59,6 +63,8 @@ namespace Utilities
             
         protected:
             Properties::PropertyManager::Ptr properties;
+            
+            Memory::pool_id memoryPool;
         };
     }
 }
