@@ -60,6 +60,11 @@ namespace Platform
         
         return impl->createWindow(memoryManager, eventManager, properties);
     }
+    
+    LibraryManager* PlatformManager::libraries() const
+    {
+        return libraryManager.get();
+    }
 }
 
 

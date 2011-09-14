@@ -18,8 +18,8 @@ SUBDIRS(Platform.Linux)
 #SUBDIRS(RenderContextLinuxOpenGL3)
 #SUBDIRS(Renderer.OpenGL3)
 
-#SUBDIRS(Scripting)
-#SUBDIRS(Scripting.Lua)
+SUBDIRS(Scripting)
+SUBDIRS(Scripting.Lua)
 #SUBDIRS(Scripting.Angelscript)
 
 #SUBDIRS(Sound)

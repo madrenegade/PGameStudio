@@ -8,13 +8,15 @@ file(GLOB Project_Sources
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
-add_dependencies(${PROJECT_NAME} Core Utilities StackTrace)
+add_dependencies(${PROJECT_NAME} Core Utilities StackTrace Scripting)
 include_directories(${SRC_DIR}/Core)
 include_directories(${SRC_DIR}/Utilities)
 include_directories(${SRC_DIR}/StackTrace)
+include_directories(${SRC_DIR}/Scripting)
 
 target_link_libraries(${PROJECT_NAME}
     Core
     Utilities
     StackTrace
+    Scripting
 )

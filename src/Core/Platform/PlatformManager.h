@@ -53,6 +53,8 @@ namespace Platform
         void handleOSEvents();
 
         boost::shared_ptr<Graphics::Window> createWindow();
+        
+        LibraryManager* libraries() const;
 
     private:
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;

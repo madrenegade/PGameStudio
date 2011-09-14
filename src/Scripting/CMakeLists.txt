@@ -3,6 +3,21 @@ project (Scripting)
 
 include("../../common.cmake")
 
-file(GLOB Project_Sources "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*")
+file(GLOB Project_Sources 
+    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
+    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Scripting/*")
+
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_PATH})
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
+
+add_dependencies(${PROJECT_NAME} Utilities Core)
+include_directories("${SRC_DIR}/Utilities")
+include_directories("${SRC_DIR}/StackTrace")
+include_directories("${SRC_DIR}/Core")
+
+target_link_libraries(${PROJECT_NAME}
+    Utilities
+    Core
+)

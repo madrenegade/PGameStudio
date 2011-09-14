@@ -50,6 +50,11 @@ namespace Graphics
     class Window;
 }
 
+namespace Scripting
+{
+    class ScriptManager;
+}
+
 namespace tbb
 {
     class task_list;
@@ -84,6 +89,8 @@ namespace Game
         
         boost::shared_ptr<Core::TaskScheduler> taskScheduler;
         
+        boost::shared_ptr<Scripting::ScriptManager> scriptManager;
+        
         bool running;
         
         void initializeOptions();
@@ -93,6 +100,7 @@ namespace Game
         void initializePlatformManager();
         void initializeWindow();
         void initializeTaskScheduler();
+        void initializeScriptManager();
         
         unsigned int collectTasks(tbb::task_list& tasks);
     };

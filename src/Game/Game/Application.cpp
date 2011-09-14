@@ -19,6 +19,8 @@
 #include "Graphics/Window.h"
 #include "Graphics/GraphicsContext.h"
 
+#include "Scripting/ScriptManager.h"
+
 #include <glog/logging.h>
 #include <tbb/task.h>
 #include <chrono>
@@ -68,10 +70,15 @@ namespace Game
         initializePlatformManager();
         initializeWindow();
         initializeTaskScheduler();
+        initializeScriptManager();
     }
 
     void Application::onInitialized()
     {
+        LOG(INFO) << "Loading startup script";
+        
+//        loadStartupScript();
+        
         LOG(INFO) << "Game initialized";
     }
 
@@ -138,6 +145,7 @@ namespace Game
         FileSystem::addOptionsTo(properties);
         Graphics::Window::addOptionsTo(properties);
         Core::TaskScheduler::addOptionsTo(properties);
+        Scripting::ScriptManager::addOptionsTo(properties);
 
         properties->parse("settings.ini");
     }
@@ -204,6 +212,13 @@ namespace Game
         VLOG(1) << "Initializing task scheduler";
 
         taskScheduler.reset(new Core::TaskScheduler(properties));
+    }
+    
+    void Application::initializeScriptManager()
+    {
+        VLOG(1) << "Initializing script manager";
+        
+        scriptManager = memoryManager->construct(Scripting::ScriptManager(memoryManager, platformManager, properties));
     }
 
     unsigned int Application::collectTasks(tbb::task_list& tasks)
