@@ -36,6 +36,8 @@ namespace Core
     {
         class EventManager;
     }
+    
+    class TaskScheduler;
 }
 
 namespace Platform
@@ -46,6 +48,11 @@ namespace Platform
 namespace Graphics
 {
     class Window;
+}
+
+namespace tbb
+{
+    class task_list;
 }
 
 namespace Game
@@ -75,6 +82,8 @@ namespace Game
         boost::shared_ptr<Platform::PlatformManager> platformManager;
         boost::shared_ptr<Graphics::Window> window;
         
+        boost::shared_ptr<Core::TaskScheduler> taskScheduler;
+        
         bool running;
         
         void initializeOptions();
@@ -83,6 +92,9 @@ namespace Game
         void initializeEventManager();
         void initializePlatformManager();
         void initializeWindow();
+        void initializeTaskScheduler();
+        
+        unsigned int collectTasks(tbb::task_list& tasks);
     };
 }
 

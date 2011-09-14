@@ -7,13 +7,14 @@ file(GLOB Project_Sources
 	"${PROJECT_SOURCE_DIR}/*")
 
 find_package(GLOG REQUIRED)
-find_package(UNWIND REQUIRED)
+include_directories(${GLOG_INCLUDE_DIR})
+
 find_package(Boost REQUIRED serialization)
+include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME} STATIC ${Project_Sources})
 
 target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBRARIES}
-    ${UNWIND_LIBRARIES}
     ${Boost_LIBRARIES}
 )

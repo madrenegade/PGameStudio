@@ -24,15 +24,15 @@ file(GLOB Project_Sources
 	"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/*"
         "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/tcp/*")
 
-include_directories(${SRC_DIR}/StackTrace)
-
 find_package(GLOG REQUIRED)
+include_directories(${GLOG_INCLUDE_PATH})
 
 add_library(${PROJECT_NAME} STATIC ${Project_Sources})
 
 add_dependencies(${PROJECT_NAME} StackTrace)
+include_directories(${SRC_DIR}/StackTrace)
 
 target_link_libraries(${PROJECT_NAME}
-    gcov
+    StackTrace
     ${GLOG_LIBRARIES}
 )

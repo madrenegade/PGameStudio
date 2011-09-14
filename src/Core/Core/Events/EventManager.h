@@ -39,6 +39,9 @@ namespace Core
             
             /**
              * Register an event handler so that it is autmatically called.
+             * The event handling is done at the end of a frame in serial. So if your
+             * event handler function takes some time to execute you should consider
+             * pushing the event onto a local event queue and handle it during the next frame.
              * NOT THREAD SAFE
              * @param id - the event to register the handler for
              * @param fn - the event handler function to register

@@ -12,6 +12,7 @@
 #include "Utilities/IO/FileSystemFactory.h"
 
 #include "Core/Events/EventManager.h"
+#include "Core/TaskScheduler.h"
 
 #include "Platform/PlatformManager.h"
 
@@ -19,6 +20,8 @@
 #include "Graphics/GraphicsContext.h"
 
 #include <glog/logging.h>
+#include <tbb/task.h>
+#include <chrono>
 
 using namespace Utilities::Memory;
 using namespace Utilities::Properties;
@@ -47,7 +50,7 @@ namespace Game
     {
 
     }
-    
+
     void Application::onQuit(const EventID& event, const boost::any& data)
     {
         running = false;
@@ -64,6 +67,7 @@ namespace Game
         initializeEventManager();
         initializePlatformManager();
         initializeWindow();
+        initializeTaskScheduler();
     }
 
     void Application::onInitialized()
@@ -76,16 +80,28 @@ namespace Game
         LOG(INFO) << "Starting game...";
     }
 
+    typedef std::chrono::duration<double, std::ratio < 1, 1 >> sec;
+
     bool Application::onUpdate()
     {
+        auto start = std::chrono::system_clock::now();
+
         BEGIN_NEW_FRAME(memoryManager);
-        
-        window->getGraphicsContext()->MakeCurrent();
-        window->getGraphicsContext()->SwapBuffers();
-        window->getGraphicsContext()->Release();
-        
+
+        //        window->getGraphicsContext()->MakeCurrent();
+        //        window->getGraphicsContext()->SwapBuffers();
+        //        window->getGraphicsContext()->Release();
+        tbb::task_list tasks;
+        unsigned int numTasks = collectTasks(tasks);
+        taskScheduler->executeTasks(tasks, numTasks);
+
         platformManager->handleOSEvents();
         eventManager->handleEvents();
+
+        auto end = std::chrono::system_clock::now();
+
+        // maybe use EventManager for this
+        properties->set("Frametime", std::chrono::duration_cast<sec > (end - start).count());
 
         return running;
     }
@@ -100,7 +116,7 @@ namespace Game
     void Application::initializeOptions()
     {
         VLOG(1) << "Initializing program settings";
-        
+
         // options for the default memory pool
         po::options_description options("Default memory pool options");
 
@@ -121,6 +137,7 @@ namespace Game
 
         FileSystem::addOptionsTo(properties);
         Graphics::Window::addOptionsTo(properties);
+        Core::TaskScheduler::addOptionsTo(properties);
 
         properties->parse("settings.ini");
     }
@@ -128,7 +145,7 @@ namespace Game
     void Application::initializeDefaultMemoryPool()
     {
         VLOG(1) << "Initializing default memory pool";
-        
+
         size_t soMax = properties->get<size_t > ("Default.memory.smallObjects.maxSize");
         size_t soPage = properties->get<size_t > ("Default.memory.smallObjects.pageSize");
         size_t soBlock = properties->get<size_t > ("Default.memory.smallObjects.blockSize");
@@ -153,32 +170,44 @@ namespace Game
     void Application::initializeFileSystem()
     {
         VLOG(1) << "Initializing filesystem";
-        
+
         fileSystem = FileSystemFactory::create(memoryManager, properties);
         File f(fileSystem->read("settings.ini"));
     }
-    
+
     void Application::initializeEventManager()
     {
         VLOG(1) << "Initializing event management";
-        
+
         eventManager = memoryManager->construct(EventManager(memoryManager));
-        
+
         EventID quitEvent = eventManager->registerEvent("QUIT");
         eventManager->registerEventHandler(quitEvent, boost::bind(&Application::onQuit, this, _1, _2));
     }
-    
+
     void Application::initializePlatformManager()
     {
         VLOG(1) << "Initializing platform manager";
-        
+
         platformManager = memoryManager->construct(PlatformManager(memoryManager, eventManager, properties));
     }
-    
+
     void Application::initializeWindow()
     {
         VLOG(1) << "Creating window";
-        
+
         window = platformManager->createWindow();
+    }
+
+    void Application::initializeTaskScheduler()
+    {
+        VLOG(1) << "Initializing task scheduler";
+
+        taskScheduler.reset(new Core::TaskScheduler(properties));
+    }
+
+    unsigned int Application::collectTasks(tbb::task_list& tasks)
+    {
+        return 0;
     }
 }

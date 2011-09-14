@@ -10,7 +10,9 @@
 
 #ifdef LINUX
 #include "Platform/Linux/Library.h"
-#else 
+#elif WINDOWS
+#include "Platform/Windows/Library.h"
+#else
 #error "Only linux shared objects are supported at the moment"
 #endif
 

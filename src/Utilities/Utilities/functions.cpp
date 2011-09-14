@@ -58,8 +58,10 @@ namespace Utilities
     {
 #ifdef GCC
         return v == 0 ? Memory::ULONG_BITS : __builtin_ctzl(v);
-#else 
-#error "Not implemented"
+#elif MSVC
+        unsigned long c = 0;
+		_BitScanForward64(&c, v);
+		return c;
 #endif
     }
     
