@@ -101,6 +101,7 @@ namespace Game
         void initializeWindow();
         void initializeTaskScheduler();
         void initializeScriptManager();
+        void registerFunctionsForScripting();
         
         unsigned int collectTasks(tbb::task_list& tasks);
     };

@@ -11,7 +11,20 @@
 #include "Scripting/ScriptEngine.h"
 #include "Scripting/typedefs.h"
 #include "Scripting/Lua/Wrapper.h"
+
+#include "Utilities/Memory/typedefs.h"
+#include "Utilities/Memory/STLAllocator.h"
+
 #include <string>
+#include <boost/shared_ptr.hpp>
+
+namespace Utilities
+{
+    namespace Memory
+    {
+        class MemoryManager;
+    }
+}
 
 namespace Scripting
 {
@@ -21,7 +34,9 @@ namespace Scripting
         class Engine : public ScriptEngine
         {
         public:
-            Engine();
+            Engine(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory, 
+                   Utilities::Memory::pool_id poolID);
+            
             virtual ~Engine();
 
             virtual const char* getExtension() const;
@@ -41,12 +56,16 @@ namespace Scripting
 
         private:
             static const std::string EXTENSION;
-
+            
+            boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+            Utilities::Memory::pool_id pool;
+            
             lua_State* state;
 
             void logErrors(int status);
 
-            std::vector<boost::shared_ptr<Wrapper> > wrappers;
+            typedef boost::shared_ptr<Wrapper> WrapperPtr;
+            std::vector<WrapperPtr, Utilities::Memory::STLAllocator<WrapperPtr> > wrappers;
         };
     }
 }

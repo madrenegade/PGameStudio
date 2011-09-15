@@ -21,7 +21,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="LiveViewTab">
        <attribute name="title">
@@ -112,6 +112,47 @@
            </property>
            <property name="textAlignment">
             <set>AlignLeft|AlignVCenter</set>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Pool Statistics</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTableWidget" name="poolStatisticsWidget">
+          <column>
+           <property name="text">
+            <string>Pool</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Allocations</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Total Size</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Min Size</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Max Size</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Avg Size</string>
            </property>
           </column>
          </widget>

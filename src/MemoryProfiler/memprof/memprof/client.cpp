@@ -95,7 +95,7 @@ namespace memprof
         boost::asio::write(*socket, boost::asio::buffer(buffer));
     }
 
-    void client::send_allocation_info(const StackTrace& stacktrace, size_t bytes)
+    void client::send_allocation_info(const StackTrace& stacktrace, size_t bytes, size_t poolID)
     {
         if(!connected) return;
            
@@ -103,7 +103,7 @@ namespace memprof
         boost::iostreams::basic_array_sink<char> sr(buffer);
         boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > source(sr);
         
-        const sample sample(stacktrace, bytes);
+        const sample sample(stacktrace, bytes, poolID);
 
         boost::archive::binary_oarchive oa(source);
         oa << sample;

@@ -23,11 +23,14 @@ namespace memprof
     {
     public:
         sample();
-        sample(const StackTrace& stacktrace, size_t bytes);
+        sample(const StackTrace& stacktrace, size_t bytes, size_t poolID);
 
         sample_type getType() const;
+        
         const StackTrace& getStackTrace() const;
+        
         size_t getAllocatedBytes() const;
+        size_t getPoolID() const;
 
     private:
         friend class boost::serialization::access;
@@ -38,11 +41,14 @@ namespace memprof
             ar & type;
             ar & stacktrace;
             ar & allocatedBytes;
+            ar & poolID;
         }
         
         sample_type type;
+        
         StackTrace stacktrace;
         size_t allocatedBytes;
+        size_t poolID;
     };
 }
 

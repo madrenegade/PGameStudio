@@ -10,6 +10,8 @@
 #include "serverthread.h"
 #include "memprof/change_listener.h"
 
+#include <boost/shared_array.hpp>
+
 namespace Ui {
     class MainWindow;
 }
@@ -30,17 +32,19 @@ public:
     virtual void on_new_frame();
     virtual void on_allocation(const memprof::sample& sample);
 
-signals:
-    void rawDataArrived(const QString& data);
-
 public slots:
     void openAboutDialog() const;
-    void rebuildLiveView();
+
+    void rebuildViews();
 
     void onResetData();
 
 private:
     void update(const memprof::sample& sample);
+    void updatePoolStatistics(const memprof::sample& sample);
+
+    void rebuildLiveView();
+    void rebuildPoolStatisticsView();
 
     QTreeWidgetItem* createItem(const SampleNode& node);
 
@@ -57,6 +61,16 @@ private:
 
     typedef std::map<std::string, SampleNode> NodeMap;
     NodeMap rootNodes;
+
+    // values[0] - numAllocations
+    // values[1] - totalAllocSize
+    // values[2] - minAllocSize
+    // values[3] - maxAllocSize
+    // values[4] - avgAllocSize
+    const size_t poolAllocationValues;
+
+    typedef std::map<size_t, boost::shared_array<size_t> > PoolMap;
+    PoolMap poolAllocations;
 };
 
 #endif // MAINWINDOW_H

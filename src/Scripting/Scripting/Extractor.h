@@ -31,6 +31,7 @@ namespace Scripting
         virtual void extract(const long& i) = 0;
         virtual void extract(const double& d) = 0;
         
+        virtual void extract(const char* s) = 0;
         virtual void extract(const std::string& s) = 0;
         
     protected:

@@ -20,6 +20,5 @@ include_directories(${SRC_DIR}/StackTrace)
 target_link_libraries(${PROJECT_NAME}
     Scripting
     Utilities
-luabind
     ${LUA_LIBRARIES}
 )

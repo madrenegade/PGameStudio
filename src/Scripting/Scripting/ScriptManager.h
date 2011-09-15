@@ -14,6 +14,11 @@
 #include "Scripting/typedefs.h"
 #include "Scripting/Command.h"
 
+#include "Utilities/Memory/typedefs.h"
+#include "Utilities/Memory/STLAllocator.h"
+
+#include <vector>
+
 namespace Utilities
 {
     namespace Memory
@@ -37,13 +42,6 @@ namespace Platform
     class PlatformManager;
 }
 
-#include <iostream>
-#include <boost/mpl/for_each.hpp>
-#include <boost/function_types/parameter_types.hpp>
-#include <boost/any.hpp>
-#include <boost/bind.hpp>
-#include <vector>
-
 namespace Scripting
 {
     class ScriptEngine;
@@ -53,10 +51,6 @@ namespace Scripting
     public:
         static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
-        ScriptManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                      const boost::shared_ptr<Platform::PlatformManager>& platformManager,
-                      const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                      const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~ScriptManager();
 
         void runStartupScript();
@@ -66,14 +60,21 @@ namespace Scripting
         template<typename T>
         void registerFunction(const char* name, const boost::function<T>& fn)
         {
-            boost::shared_ptr<CommandT<T>> command(new CommandT<T>(name, fn));
-            
+            boost::shared_ptr < CommandT < T >> command(new CommandT<T > (name, fn));
+
             engine->registerFunction(name, command.get(), &CommandT<T>::callback);
-            
+
             commands.push_back(command);
         }
 
     private:
+        friend class ScriptManagerFactory;
+        ScriptManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                      Utilities::Memory::pool_id pool,
+                      const boost::shared_ptr<Platform::PlatformManager>& platformManager,
+                      const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
+                      const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+
         static const std::string SCRIPT_BASE_PATH;
 
         std::string startupScriptName;
@@ -82,8 +83,9 @@ namespace Scripting
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
 
         boost::shared_ptr<ScriptEngine> engine;
-        
-        std::vector<boost::shared_ptr<Command>> commands;
+
+        typedef boost::shared_ptr<Command> CommandPtr;
+        std::vector<CommandPtr, Utilities::Memory::STLAllocator<CommandPtr>> commands;
     };
 }
 

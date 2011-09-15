@@ -16,8 +16,9 @@ namespace memprof
 
     }
 
-    sample::sample(const StackTrace& stacktrace, size_t bytes)
-    : type(sample_type::allocation), stacktrace(stacktrace), allocatedBytes(bytes)
+    sample::sample(const StackTrace& stacktrace, size_t bytes, size_t poolID)
+    : type(sample_type::allocation), stacktrace(stacktrace), allocatedBytes(bytes),
+        poolID(poolID)
     {
 
     }
@@ -35,6 +36,11 @@ namespace memprof
     size_t sample::getAllocatedBytes() const
     {
         return allocatedBytes;
+    }
+    
+    size_t sample::getPoolID() const
+    {
+        return poolID;
     }
 }
 

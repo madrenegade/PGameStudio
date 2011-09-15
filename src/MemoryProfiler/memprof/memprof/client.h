@@ -36,7 +36,7 @@ namespace memprof
          * @param stacktrace
          * @param bytes
          */
-        void send_allocation_info(const StackTrace& stacktrace, size_t bytes);
+        void send_allocation_info(const StackTrace& stacktrace, size_t bytes, size_t poolID);
         
     private:
         const std::string host;

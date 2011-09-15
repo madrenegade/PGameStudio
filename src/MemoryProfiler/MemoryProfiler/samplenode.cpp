@@ -59,7 +59,7 @@ size_t SampleNode::getSelfSize() const
 
 double SampleNode::getNumAllocationsPerFrame() const
 {
-    size_t total = getNumSelfAllocationsPerFrame();
+    double total = getNumSelfAllocationsPerFrame();
 
     std::for_each(children.begin(), children.end(), [&total](std::pair<std::string, SampleNode> i) {
         total += i.second.getNumAllocationsPerFrame();

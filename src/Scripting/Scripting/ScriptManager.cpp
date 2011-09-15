@@ -31,19 +31,32 @@ namespace Scripting
 
         options.add_options()
             ("Scripting.engine", po::value<std::string > (), "The scripting engine to use")
-            ("Scripting.startup", po::value<std::string > (), "The script to run at startup");
+            ("Scripting.startup", po::value<std::string > (), "The script to run at startup")
+
+            ("Scripting.memory.smallObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the small object area in the Scripting memory pool")
+            ("Scripting.memory.smallObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the small object area in the Scripting memory pool")
+            ("Scripting.memory.smallObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the small object area in the Scripting memory pool")
+
+            ("Scripting.memory.mediumObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the medium object area in the Scripting memory pool")
+            ("Scripting.memory.mediumObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the medium object area in the Scripting memory pool")
+            ("Scripting.memory.mediumObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the medium object area in the Scripting memory pool")
+
+            ("Scripting.memory.largeObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the large object area in the Scripting memory pool")
+            ("Scripting.memory.largeObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the large object area in the Scripting memory pool")
+            ("Scripting.memory.largeObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the large object area in the Scripting memory pool");
 
         properties->addOptions(options);
     }
 
-    typedef boost::shared_ptr<ScriptEngine> (*CreateFn)(const MemoryManager::Ptr&);
+    typedef boost::shared_ptr<ScriptEngine> (*CreateFn)(const MemoryManager::Ptr&, pool_id pool);
 
     ScriptManager::ScriptManager(const MemoryManager::Ptr& memoryManager,
+                                 Utilities::Memory::pool_id pool,
                                  const boost::shared_ptr<PlatformManager>& platformManager,
                                  const boost::shared_ptr<FileSystem>& fileSystem,
                                  const PropertyManager::Ptr& properties)
-    : startupScriptName(properties->get<std::string>("Scripting.startup")), 
-        memory(memoryManager), fileSystem(fileSystem)
+    : startupScriptName(properties->get<std::string>("Scripting.startup")),
+    memory(memoryManager), fileSystem(fileSystem)
     {
         // TODO: dedicated scripting memory pool
 
@@ -54,24 +67,24 @@ namespace Scripting
 
         CreateFn create = reinterpret_cast<CreateFn> (engineLibrary->getFunction("create"));
 
-        engine = create(memoryManager);
+        engine = create(memoryManager, pool);
     }
 
     ScriptManager::~ScriptManager()
     {
     }
-    
+
     void ScriptManager::runStartupScript()
     {
         runScript(startupScriptName.c_str());
     }
-    
+
     void ScriptManager::runScript(const char* name)
     {
         std::string filename(SCRIPT_BASE_PATH + "/" + name + engine->getExtension());
-        
+
         File scriptFile = fileSystem->read(filename.c_str());
-        
+
         engine->runScript(scriptFile, filename.c_str());
     }
 }

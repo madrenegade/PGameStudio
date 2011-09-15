@@ -8,7 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this)), server(new memprof::server), dirty(false), frame(0)
+    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this)), server(new memprof::server), dirty(false), frame(0), poolAllocationValues(5)
 {
     ui->setupUi(this);
 
@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(button, SIGNAL(clicked(bool)), this, SLOT(onResetData()));
 
     QTimer* timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(rebuildLiveView()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(rebuildViews()));
     timer->start(100);
 
     server->register_listener(this);
@@ -49,27 +49,14 @@ void MainWindow::on_new_frame()
 
 void MainWindow::on_allocation(const memprof::sample& sample)
 {
-    QString frameMessages;
-
-    const std::list<StackFrame>& frames = sample.getStackTrace().getFrames();
-
-    unsigned int currentFrame = 1;
-
-    for(std::list<StackFrame>::const_iterator i = frames.begin(); i != frames.end(); ++i)
-    {
-        frameMessages.append(QString("%1: %2\n").arg(currentFrame).arg(QString::fromStdString(i->getFunction())));
-        ++currentFrame;
-    }
-
     QMutexLocker locker(&mutex);
-    rawDataArrived(QString("ALLOCATION_BEGIN\nSize: %1 bytes\n%2ALLOCATION_END\n").arg(sample.getAllocatedBytes()).arg(frameMessages));
     update(sample);
+    updatePoolStatistics(sample);
     dirty = true;
 }
 
 void MainWindow::onResetData()
 {
-    std::cout << "RESET" << std::endl;
     QMutexLocker locker(&mutex);
     rootNodes.clear();
     frame = 0;
@@ -93,10 +80,45 @@ void MainWindow::update(const memprof::sample& sample)
     rootNodes[function].add(sample, frame);
 }
 
-void MainWindow::rebuildLiveView()
+void MainWindow::updatePoolStatistics(const memprof::sample& sample)
+{
+    const size_t id = sample.getPoolID();
+    const size_t size = sample.getAllocatedBytes();
+
+    if(poolAllocations.find(id) == poolAllocations.end())
+    {
+        boost::shared_array<size_t> values(new size_t[poolAllocationValues]);
+        for(int i = 0; i < poolAllocationValues; ++i)
+        {
+            values[i] = 0;
+        }
+
+        values[2] = size;
+
+        poolAllocations[id] = values;
+    }
+
+    ++poolAllocations[id][0];
+
+    poolAllocations[id][1] += size;
+
+    poolAllocations[id][2] = std::min(poolAllocations[id][2], size);
+    poolAllocations[id][3] = std::max(poolAllocations[id][3], size);
+    poolAllocations[id][4] = static_cast<double>(poolAllocations[id][1]) / static_cast<double>(poolAllocations[id][0]);
+}
+
+void MainWindow::rebuildViews()
 {
     if(!dirty) return;
 
+    rebuildLiveView();
+    rebuildPoolStatisticsView();
+
+    dirty = false;
+}
+
+void MainWindow::rebuildLiveView()
+{
     QTreeWidget* liveView = ui->liveView;
 
     QTreeWidgetItem* top;
@@ -107,7 +129,7 @@ void MainWindow::rebuildLiveView()
 
     QList<QTreeWidgetItem*> items;
 
-    for(NodeMap::const_iterator i = rootNodes.begin(); i != rootNodes.end(); ++i)
+    for(auto i = rootNodes.begin(); i != rootNodes.end(); ++i)
     {
         items.append(createItem(i->second));
     }
@@ -122,8 +144,35 @@ void MainWindow::rebuildLiveView()
     {
         liveView->resizeColumnToContents(i);
     }
+}
 
-    dirty = false;
+void MainWindow::rebuildPoolStatisticsView()
+{
+    QTableWidget* table = ui->poolStatisticsWidget;
+
+    QMutexLocker locker(&mutex);
+
+    int rowCount = table->rowCount();
+
+    while(rowCount > 0)
+    {
+        table->removeRow(0);
+        rowCount = table->rowCount();
+    }
+
+    int row = 0;
+    for(auto i = poolAllocations.begin(); i != poolAllocations.end(); ++i)
+    {
+        table->insertRow(row);
+        table->setItem(row, 0, new QTableWidgetItem(QString("Pool %1").arg(i->first)));
+
+        for(int j = 0; j < poolAllocationValues; ++j)
+        {
+            table->setItem(row, j + 1, new QTableWidgetItem(QString("%1").arg(i->second[j])));
+        }
+
+        ++row;
+    }
 }
 
 QTreeWidgetItem* MainWindow::createItem(const SampleNode& node)

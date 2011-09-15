@@ -19,6 +19,7 @@
 #include "Graphics/Window.h"
 #include "Graphics/GraphicsContext.h"
 
+#include "Scripting/ScriptManagerFactory.h"
 #include "Scripting/ScriptManager.h"
 
 #include <glog/logging.h>
@@ -218,8 +219,20 @@ namespace Game
     {
         VLOG(1) << "Initializing script manager";
 
-        scriptManager = memoryManager->construct(Scripting::ScriptManager(memoryManager,
-            platformManager, fileSystem, properties));
+        scriptManager = Scripting::ScriptManagerFactory::create(memoryManager,
+            platformManager, fileSystem, properties);
+        
+        registerFunctionsForScripting();
+    }
+    
+    void Application::registerFunctionsForScripting()
+    {
+        boost::function<long (const char*)> getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
+        
+        boost::function<void (long)> pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, 0);
+        
+        scriptManager->registerFunction("getEventID", getEventID);
+        scriptManager->registerFunction("pushEvent", pushEvent);
     }
 
     unsigned int Application::collectTasks(tbb::task_list& tasks)

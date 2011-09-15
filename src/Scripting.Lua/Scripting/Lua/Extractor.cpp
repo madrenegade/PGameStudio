@@ -53,6 +53,17 @@ namespace Scripting
             params.push_back(lua_tonumber(state, stackIndex));
             ++stackIndex;
         }
+        
+        void Extractor::extract(const char* s)
+        {
+            if (!lua_isstring(state, stackIndex))
+            {
+                LOG(FATAL) << "Expected parameter of type string as parameter " << stackIndex;
+            }
+            
+            params.push_back(lua_tostring(state, stackIndex));
+            ++stackIndex;
+        }
 
         void Extractor::extract(const std::string& s)
         {

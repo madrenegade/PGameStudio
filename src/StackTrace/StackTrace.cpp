@@ -17,7 +17,7 @@ std::string demangle(const char* symbol)
 #ifdef GCC
     size_t size;
     int status;
-    char temp[128];
+    char temp[256];
     char* demangled;
     
     //first, try to demangle a c++ name
@@ -51,8 +51,8 @@ StackTrace::StackTrace(bool x)
         // this happens with libunwind and also with backtrace
 #ifdef GCC
         // use backtrace because it is much faster
-        void* data[10];
-        size_t size = backtrace(data, 10);
+        void* data[25];
+        size_t size = backtrace(data, sizeof(data));
 
         char** symbols = backtrace_symbols(data, size);
 

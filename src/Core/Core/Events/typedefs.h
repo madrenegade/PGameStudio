@@ -15,7 +15,7 @@ namespace Core
 {
     namespace Events
     {
-        typedef unsigned short EventID;
+        typedef long EventID;
         
         typedef boost::function<void (const EventID& event, const boost::any& data)> EventHandlerFunction;
         typedef boost::signal<void (const EventID& event, const boost::any& data)> EventSignal;

@@ -84,7 +84,7 @@ namespace Utilities
 #ifdef DEBUG
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, sizeof (T));
+                    profilerClient->send_allocation_info(stacktrace, sizeof (T), poolID);
                 }
 #endif
 
@@ -105,7 +105,7 @@ namespace Utilities
 
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T));
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
                 }
 #endif
 
@@ -126,7 +126,7 @@ namespace Utilities
                 
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T));
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
                 }
 #endif
                 
@@ -189,7 +189,7 @@ namespace Utilities
 #ifdef DEBUG
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T));
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
                 }
 #endif
 

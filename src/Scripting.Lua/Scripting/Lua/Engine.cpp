@@ -8,13 +8,10 @@
 #include "Scripting/Lua/Engine.h"
 #include "Scripting/Lua/Extractor.h"
 #include "Utilities/IO/File.h"
+#include "Utilities/Memory/MemoryManager.h"
 
-extern "C"
-{
-#include <lualib.h>
-}
+#include <lua.hpp>
 
-#include <luabind/luabind.hpp>
 #include <glog/logging.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
@@ -27,8 +24,9 @@ namespace Scripting
 
         const std::string Engine::EXTENSION(".lua");
 
-        Engine::Engine()
-        : state(0)
+        Engine::Engine(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
+                       Utilities::Memory::pool_id poolID)
+        : memory(memory), pool(poolID), state(0)
         {
             state = lua_open();
 
@@ -65,45 +63,45 @@ namespace Scripting
 
         boost::shared_ptr<Scripting::Extractor> Engine::createExtractor(AnyVector& params) const
         {
-            boost::shared_ptr<Scripting::Extractor> extractor(new Lua::Extractor(params, state));
+            boost::shared_ptr<Scripting::Extractor> extractor = memory->construct(Lua::Extractor(params, state), pool);
             return extractor;
         }
-        
+
         Command* Engine::getCommand() const
         {
-            return reinterpret_cast<Command*>(lua_tointeger(state, lua_upvalueindex(1)));
+            return reinterpret_cast<Command*> (lua_tointeger(state, lua_upvalueindex(1)));
         }
-        
+
         static int wrapperFunction(lua_State* state)
         {
-            Wrapper* wrapper = reinterpret_cast<Wrapper*>(lua_tointeger(state, lua_upvalueindex(2)));
-            
+            Wrapper* wrapper = reinterpret_cast<Wrapper*> (lua_tointeger(state, lua_upvalueindex(2)));
+
             return (*wrapper)();
         }
-        
+
         void Engine::registerFunction(const char* name, Command* cmd, int (*fn)(ScriptEngine*))
         {
-            boost::shared_ptr<Wrapper> wrapper(new Wrapper(fn, this));
+            boost::shared_ptr<Wrapper> wrapper = memory->construct(Wrapper(fn, this), pool);
             wrappers.push_back(wrapper);
-            
-            lua_pushinteger(state, reinterpret_cast<long>(cmd));
-            lua_pushinteger(state, reinterpret_cast<long>(wrapper.get()));
-            
+
+            lua_pushinteger(state, reinterpret_cast<long> (cmd));
+            lua_pushinteger(state, reinterpret_cast<long> (wrapper.get()));
+
             lua_pushcclosure(state, wrapperFunction, 2);
-            
+
             lua_setglobal(state, name);
         }
-        
+
         void Engine::setReturnValue(const bool& b)
         {
             lua_pushboolean(state, b ? 1 : 0);
         }
-        
+
         void Engine::setReturnValue(const long& i)
         {
             lua_pushinteger(state, i);
         }
-        
+
         void Engine::setReturnValue(const double& d)
         {
             lua_pushnumber(state, d);

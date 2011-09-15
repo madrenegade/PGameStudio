@@ -11,8 +11,6 @@
 #include "Scripting/Extractor.h"
 #include "Scripting/typedefs.h"
 
-#include <glog/logging.h>
-
 extern "C"
 {
 #include <lua.h>
@@ -33,6 +31,7 @@ namespace Scripting
             virtual void extract(const long& i);
             virtual void extract(const double& d);
             
+            virtual void extract(const char* s);
             virtual void extract(const std::string& s);
 
         private:
