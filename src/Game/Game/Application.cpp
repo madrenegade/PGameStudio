@@ -76,9 +76,9 @@ namespace Game
     void Application::onInitialized()
     {
         LOG(INFO) << "Loading startup script";
-        
-//        loadStartupScript();
-        
+
+        scriptManager->runStartupScript();
+
         LOG(INFO) << "Game initialized";
     }
 
@@ -213,12 +213,13 @@ namespace Game
 
         taskScheduler.reset(new Core::TaskScheduler(properties));
     }
-    
+
     void Application::initializeScriptManager()
     {
         VLOG(1) << "Initializing script manager";
-        
-        scriptManager = memoryManager->construct(Scripting::ScriptManager(memoryManager, platformManager, properties));
+
+        scriptManager = memoryManager->construct(Scripting::ScriptManager(memoryManager,
+            platformManager, fileSystem, properties));
     }
 
     unsigned int Application::collectTasks(tbb::task_list& tasks)

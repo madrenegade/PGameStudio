@@ -8,6 +8,14 @@
 #ifndef SCRIPTING_SCRIPTENGINE_H
 #define	SCRIPTING_SCRIPTENGINE_H
 
+namespace Utilities
+{
+    namespace IO
+    {
+        class File;
+    }
+}
+
 namespace Scripting
 {
 
@@ -15,6 +23,10 @@ namespace Scripting
     {
     public:
         virtual ~ScriptEngine();
+        
+        virtual const char* getExtension() const = 0;
+        
+        virtual void runScript(const Utilities::IO::File& file) = 0;
 
     protected:
         ScriptEngine();

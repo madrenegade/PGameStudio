@@ -9,6 +9,7 @@
 #define	SCRIPTING_LUA_ENGINE_H
 
 #include "Scripting/ScriptEngine.h"
+#include <string>
 
 extern "C"
 {
@@ -25,10 +26,16 @@ namespace Scripting
         public:
             Engine();
             virtual ~Engine();
+
+            virtual const char* getExtension() const;
             
+            virtual void runScript(const Utilities::IO::File& file);
+
         private:
+            static const std::string EXTENSION;
+
             lua_State* state;
-            
+
             void logErrors(int status);
         };
     }

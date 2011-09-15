@@ -21,6 +21,11 @@ namespace Utilities
     {
         class PropertyManager;
     }
+    
+    namespace IO
+    {
+        class FileSystem;
+    }
 }
 
 namespace Platform
@@ -36,13 +41,25 @@ namespace Scripting
     {
     public:
         static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
-
+        
         ScriptManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                       const boost::shared_ptr<Platform::PlatformManager>& platformManager,
+                      const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
                       const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~ScriptManager();
         
+        void runStartupScript();
+        
+        void runScript(const char* name);
+        
     private:
+        static const std::string SCRIPT_BASE_PATH;
+        
+        std::string startupScriptName;
+        
+        boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
+        
         boost::shared_ptr<ScriptEngine> engine;
     };
 }

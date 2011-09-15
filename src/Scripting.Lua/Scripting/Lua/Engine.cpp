@@ -6,6 +6,7 @@
  */
 
 #include "Scripting/Lua/Engine.h"
+#include "Utilities/IO/File.h"
 
 extern "C"
 {
@@ -20,6 +21,8 @@ namespace Scripting
     namespace Lua
     {
 
+        const std::string Engine::EXTENSION(".lua");
+        
         Engine::Engine()
         : state(0)
         {
@@ -31,30 +34,37 @@ namespace Scripting
             }
 
             luaL_openlibs(state);
-//            int s = luaL_loadfile(state, "scripts/helloworld.lua");
-//
-//            if (s == 0)
-//            {
-//                // execute Lua program
-//                s = lua_pcall(state, 0, LUA_MULTRET, 0);
-//            }
-//
-//            report_errors(state, s);
         }
 
         Engine::~Engine()
         {
             // NOTE: close always crashes event for the simplest use case
             // lua_close(state);
-            // state = 0;
+        }
+        
+        const char* Engine::getExtension() const
+        {
+            return EXTENSION.c_str();
+        }
+        
+        void Engine::runScript(const Utilities::IO::File& file)
+        {
+            int status = luaL_loadbuffer(state, file.getData(), file.getSize(), "LUA_SCRIPT");
+            
+            if(status == 0)
+            {
+                status = lua_pcall(state, 0, LUA_MULTRET, 0);
+            }
+            
+            logErrors(status);
         }
         
         void Engine::logErrors(int status)
         {
             if (status != 0)
             {
-                LOG(FATAL) << "-- " << lua_tostring(L, -1) << std::endl;
-                lua_pop(L, 1); // remove error message
+                LOG(FATAL) << "-- " << lua_tostring(state, -1) << std::endl;
+                lua_pop(state, 1); // remove error message
             }
         }
     }

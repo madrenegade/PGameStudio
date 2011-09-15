@@ -9,7 +9,6 @@
 
 namespace Scripting
 {
-
     ScriptEngine::ScriptEngine()
     {
     }
