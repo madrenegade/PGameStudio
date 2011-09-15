@@ -155,6 +155,16 @@
             <string>Avg Size</string>
            </property>
           </column>
+          <column>
+           <property name="text">
+            <string>Allocations Per Frame</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Allocation Size Per Frame</string>
+           </property>
+          </column>
          </widget>
         </item>
        </layout>

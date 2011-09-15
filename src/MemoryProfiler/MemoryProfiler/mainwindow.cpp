@@ -8,9 +8,10 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this)), server(new memprof::server), dirty(false), frame(0), poolAllocationValues(5)
+    ui(new Ui::MainWindow), aboutDialog(new AboutDialog(this)), server(new memprof::server), dirty(false), frame(0), poolAllocationValues(7)
 {
     ui->setupUi(this);
+    ui->poolStatisticsWidget->resizeColumnsToContents();
 
     connect(ui->actionAbout, SIGNAL(activated()),
                      this, SLOT(openAboutDialog()));
@@ -59,6 +60,7 @@ void MainWindow::onResetData()
 {
     QMutexLocker locker(&mutex);
     rootNodes.clear();
+    poolAllocations.clear();
     frame = 0;
     dirty = true;
 }
@@ -105,6 +107,8 @@ void MainWindow::updatePoolStatistics(const memprof::sample& sample)
     poolAllocations[id][2] = std::min(poolAllocations[id][2], size);
     poolAllocations[id][3] = std::max(poolAllocations[id][3], size);
     poolAllocations[id][4] = static_cast<double>(poolAllocations[id][1]) / static_cast<double>(poolAllocations[id][0]);
+    poolAllocations[id][5] = static_cast<double>(poolAllocations[id][0]) / static_cast<double>(frame);
+    poolAllocations[id][6] = static_cast<double>(poolAllocations[id][1]) / static_cast<double>(frame);
 }
 
 void MainWindow::rebuildViews()
@@ -173,6 +177,8 @@ void MainWindow::rebuildPoolStatisticsView()
 
         ++row;
     }
+
+    table->resizeColumnsToContents();
 }
 
 QTreeWidgetItem* MainWindow::createItem(const SampleNode& node)

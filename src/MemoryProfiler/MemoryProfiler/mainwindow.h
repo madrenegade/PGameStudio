@@ -67,6 +67,8 @@ private:
     // values[2] - minAllocSize
     // values[3] - maxAllocSize
     // values[4] - avgAllocSize
+    // values[5] - numAllocsPerFrame
+    // values[6] - allocSizePerFrame
     const size_t poolAllocationValues;
 
     typedef std::map<size_t, boost::shared_array<size_t> > PoolMap;
