@@ -15,7 +15,6 @@ SUBDIRS(Platform.Linux)
 #SUBDIRS(Graphics)
 #SUBDIRS(GUI)
 
-#SUBDIRS(RenderContextLinuxOpenGL3)
 #SUBDIRS(Renderer.OpenGL3)
 
 SUBDIRS(Scripting)
