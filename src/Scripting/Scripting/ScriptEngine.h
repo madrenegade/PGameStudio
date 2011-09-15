@@ -8,6 +8,8 @@
 #ifndef SCRIPTING_SCRIPTENGINE_H
 #define	SCRIPTING_SCRIPTENGINE_H
 
+#include "Scripting/typedefs.h"
+
 namespace Utilities
 {
     namespace IO
@@ -18,7 +20,9 @@ namespace Utilities
 
 namespace Scripting
 {
-
+    class Extractor;
+    class Command;
+    
     class ScriptEngine
     {
     public:
@@ -26,7 +30,43 @@ namespace Scripting
         
         virtual const char* getExtension() const = 0;
         
-        virtual void runScript(const Utilities::IO::File& file) = 0;
+        /**
+         * Execute a script.
+         * @param file - the data of the script
+         * @param name - the name of the script
+         */
+        virtual void runScript(const Utilities::IO::File& file, const char* name) = 0;
+        
+        /**
+         * Create an extractor.
+         * @param params - the vector to push extracted params to
+         * @return 
+         */
+        virtual boost::shared_ptr<Extractor> createExtractor(AnyVector& params) const = 0;
+        
+        /**
+         * Get the command for the function which is about to execute.
+         * @return 
+         */
+        virtual Command* getCommand() const = 0;
+        
+        /**
+         * Register a function and make it accessible to scripts.
+         * @param name - the name used to call the function from scripts
+         * @param cmd - the command which belongs to the function
+         * @param fn - the callback function
+         */
+        virtual void registerFunction(const char* name, Command* cmd, int (*fn)(ScriptEngine*)) = 0;
+        
+        /**
+         * Set the return value for the currently executed function.
+         * @param b
+         */
+        virtual void setReturnValue(const bool& b) = 0;
+        virtual void setReturnValue(const long& i) = 0;
+        virtual void setReturnValue(const double& d) = 0;
+        
+        virtual void setReturnValue(const std::string& s) = 0;
 
     protected:
         ScriptEngine();

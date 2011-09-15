@@ -9,12 +9,9 @@
 #define	SCRIPTING_LUA_ENGINE_H
 
 #include "Scripting/ScriptEngine.h"
+#include "Scripting/typedefs.h"
+#include "Scripting/Lua/Wrapper.h"
 #include <string>
-
-extern "C"
-{
-#include <lua.h>
-}
 
 namespace Scripting
 {
@@ -28,8 +25,19 @@ namespace Scripting
             virtual ~Engine();
 
             virtual const char* getExtension() const;
-            
-            virtual void runScript(const Utilities::IO::File& file);
+
+            virtual void runScript(const Utilities::IO::File& file, const char* name);
+
+            virtual boost::shared_ptr<Extractor> createExtractor(AnyVector& params) const;
+
+            virtual Command* getCommand() const;
+            virtual void registerFunction(const char* name, Command* cmd, int (*fn)(ScriptEngine*));
+
+            virtual void setReturnValue(const bool& b);
+            virtual void setReturnValue(const long& i);
+            virtual void setReturnValue(const double& d);
+
+            virtual void setReturnValue(const std::string& s);
 
         private:
             static const std::string EXTENSION;
@@ -37,6 +45,8 @@ namespace Scripting
             lua_State* state;
 
             void logErrors(int status);
+
+            std::vector<boost::shared_ptr<Wrapper> > wrappers;
         };
     }
 }

@@ -1,0 +1,47 @@
+/* 
+ * File:   Extractor.h
+ * Author: madrenegade
+ *
+ * Created on September 15, 2011, 12:36 PM
+ */
+
+#ifndef SCRIPTING_LUA_EXTRACTOR_H
+#define	SCRIPTING_LUA_EXTRACTOR_H
+
+#include "Scripting/Extractor.h"
+#include "Scripting/typedefs.h"
+
+#include <glog/logging.h>
+
+extern "C"
+{
+#include <lua.h>
+}
+
+namespace Scripting
+{
+    namespace Lua
+    {
+
+        class Extractor : public Scripting::Extractor
+        {
+        public:
+            Extractor(AnyVector& params, lua_State* state);
+            virtual ~Extractor();
+
+            virtual void extract(const bool& b);
+            virtual void extract(const long& i);
+            virtual void extract(const double& d);
+            
+            virtual void extract(const std::string& s);
+
+        private:
+            lua_State* state;
+            int stackIndex;
+        };
+    }
+}
+
+
+#endif	/* SCRIPTING_LUA_EXTRACTOR_H */
+

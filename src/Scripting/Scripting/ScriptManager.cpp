@@ -72,6 +72,6 @@ namespace Scripting
         
         File scriptFile = fileSystem->read(filename.c_str());
         
-        engine->runScript(scriptFile);
+        engine->runScript(scriptFile, filename.c_str());
     }
 }
