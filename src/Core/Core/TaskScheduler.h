@@ -21,7 +21,8 @@ namespace Utilities
 
 namespace Core
 {
-
+    class Scene;
+    
     class TaskScheduler
     {
     public:
@@ -43,11 +44,9 @@ namespace Core
         }
         
         /**
-         * Execute the all tasks given in the task list.
-         * @param tasks
-         * @param numTasks - the number of elements in the task list
+         * Execute the all tasks from the system scenes.
          */
-        void executeTasks(tbb::task_list& tasks, unsigned int numTasks);
+        void executeTasks(Scene* scene);
         
     private:
         void startBackgroundTask();

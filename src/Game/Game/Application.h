@@ -38,6 +38,7 @@ namespace Core
     }
     
     class TaskScheduler;
+    class SceneManager;
 }
 
 namespace Platform
@@ -91,6 +92,8 @@ namespace Game
         
         boost::shared_ptr<Scripting::ScriptManager> scriptManager;
         
+        boost::shared_ptr<Core::SceneManager> sceneManager;
+        
         bool running;
         
         void initializeOptions();
@@ -100,10 +103,10 @@ namespace Game
         void initializePlatformManager();
         void initializeWindow();
         void initializeTaskScheduler();
+        void initializeSceneManager();
         void initializeScriptManager();
-        void registerFunctionsForScripting();
         
-        unsigned int collectTasks(tbb::task_list& tasks);
+        void registerFunctionsForScripting();
     };
 }
 

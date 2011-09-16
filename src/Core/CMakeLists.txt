@@ -9,7 +9,8 @@ file(GLOB Project_Sources
     "${PROJECT_SOURCE_DIR}/Graphics/*"
     "${PROJECT_SOURCE_DIR}/Platform/*"
     "${PROJECT_SOURCE_DIR}/Platform/Linux/*"
-    "${PROJECT_SOURCE_DIR}/Platform/Windows/*")
+    "${PROJECT_SOURCE_DIR}/Platform/Windows/*"
+    "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/Scene/*")
 
 find_package(GLOG REQUIRED)
 include_directories(${GLOG_INCLUDE_DIR})

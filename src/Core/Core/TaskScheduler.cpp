@@ -6,6 +6,8 @@
  */
 
 #include "Core/TaskScheduler.h"
+#include "Core/Scene/Scene.h"
+#include "Core/Scene/SystemScene.h"
 #include "Utilities/Properties/PropertyManager.h"
 
 #include <tbb/task.h>
@@ -53,11 +55,21 @@ namespace Core
         waitForBackgroundTask();
     }
 
-    void TaskScheduler::executeTasks(tbb::task_list& tasks, unsigned int numTasks)
+    void TaskScheduler::executeTasks(Scene* scene)
     {
         rootTask = new(tbb::task::allocate_root(taskContext)) tbb::empty_task;
+        
+        auto& systemScenes = scene->getSystemScenes();
+        
+        tbb::task_list tasks;
+        
+        for(auto i = systemScenes.begin(); i != systemScenes.end(); ++i)
+        {
+            tbb::task* pTask = (*i)->getTask(rootTask);
+            tasks.push_back(*pTask);
+        }
 
-        rootTask->set_ref_count(numTasks + 1);
+        rootTask->set_ref_count(systemScenes.size() + 1);
         rootTask->spawn_and_wait_for_all(tasks);
         rootTask->destroy(*rootTask);
     }

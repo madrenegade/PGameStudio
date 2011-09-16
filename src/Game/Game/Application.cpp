@@ -13,6 +13,7 @@
 
 #include "Core/Events/EventManager.h"
 #include "Core/TaskScheduler.h"
+#include "Core/Scene/SceneManager.h"
 
 #include "Platform/PlatformManager.h"
 
@@ -71,6 +72,7 @@ namespace Game
         initializePlatformManager();
         initializeWindow();
         initializeTaskScheduler();
+        initializeSceneManager();
         initializeScriptManager();
     }
 
@@ -99,9 +101,13 @@ namespace Game
         //        window->getGraphicsContext()->MakeCurrent();
         //        window->getGraphicsContext()->SwapBuffers();
         //        window->getGraphicsContext()->Release();
-        tbb::task_list tasks;
-        unsigned int numTasks = collectTasks(tasks);
-        taskScheduler->executeTasks(tasks, numTasks);
+        
+        auto scene = sceneManager->getCurrentScene();
+        
+        if(scene != 0)
+        {
+            taskScheduler->executeTasks(scene);
+        }
 
         platformManager->handleOSEvents();
         eventManager->handleEvents();
@@ -215,28 +221,36 @@ namespace Game
         taskScheduler.reset(new Core::TaskScheduler(properties));
     }
 
+    void Application::initializeSceneManager()
+    {
+        VLOG(1) << "Initializing scene manager";
+
+        sceneManager = memoryManager->construct(Core::SceneManager(memoryManager,
+            fileSystem, platformManager, eventManager, properties));
+    }
+
     void Application::initializeScriptManager()
     {
         VLOG(1) << "Initializing script manager";
 
         scriptManager = Scripting::ScriptManagerFactory::create(memoryManager,
             platformManager, fileSystem, properties);
-        
+
         registerFunctionsForScripting();
     }
-    
+
     void Application::registerFunctionsForScripting()
     {
-        boost::function<long (const char*)> getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
-        
-        boost::function<void (long)> pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, 0);
-        
+        boost::function<long (const char*) > getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
+        boost::function<void (long) > pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, 0);
+
         scriptManager->registerFunction("getEventID", getEventID);
         scriptManager->registerFunction("pushEvent", pushEvent);
-    }
 
-    unsigned int Application::collectTasks(tbb::task_list& tasks)
-    {
-        return 0;
+        boost::function<void (const char*) > loadScene = boost::bind(&Core::SceneManager::loadScene, sceneManager.get(), _1);
+        boost::function<void (const char*) > switchScene = boost::bind(&Core::SceneManager::switchScene, sceneManager.get(), _1);
+
+        scriptManager->registerFunction("loadScene", loadScene);
+        scriptManager->registerFunction("switchScene", switchScene);
     }
 }
