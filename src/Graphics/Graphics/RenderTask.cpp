@@ -1,5 +1,7 @@
 #include "Graphics/RenderTask.h"
 
+#include <glog/logging.h>
+
 namespace Graphics
 {
 

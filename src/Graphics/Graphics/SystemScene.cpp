@@ -21,6 +21,6 @@ namespace Graphics
 
     tbb::task* SystemScene::getTask(tbb::task* parent)
     {
-        return new(parent->allocate_child()) tbb::empty_task;
+        return new(parent->allocate_child()) RenderTask();
     }
 }
