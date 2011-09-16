@@ -23,6 +23,9 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QCheckBox" name="checkBoxAI">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>AI</string>
       </property>
@@ -30,6 +33,9 @@
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxAtmosphere">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Atmosphere</string>
       </property>
@@ -37,6 +43,9 @@
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxGeometry">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Geometry</string>
       </property>
@@ -47,10 +56,19 @@
       <property name="text">
        <string>Graphics</string>
       </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxGUI">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>GUI</string>
       </property>
@@ -58,6 +76,9 @@
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxInput">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Input</string>
       </property>
@@ -65,6 +86,9 @@
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxParticles">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Particles</string>
       </property>
@@ -72,6 +96,9 @@
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxPhysics">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Physics</string>
       </property>
@@ -79,6 +106,9 @@
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxSound">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Sound</string>
       </property>
@@ -86,6 +116,9 @@
     </item>
     <item>
      <widget class="QCheckBox" name="checkBoxTerrain">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>Terrain</string>
       </property>

@@ -6,21 +6,24 @@
 
 #include <boost/scoped_ptr.hpp>
 
-class Controller : public QObject
+class Controller : public QWidget
 {
     Q_OBJECT
 public:
     explicit Controller(MainWindow* mainWindow);
 
 signals:
+    void sceneDirectorySelected(const QString& dir);
 
 public slots:
     void onNewScene();
+    void onNewSceneConfigured();
+    void onSaveNewScene(const QString& dir);
 
 private:
     MainWindow* mainWindow;
 
-    boost::scoped_ptr<NewSceneWizard> newSceneWizard;
+    NewSceneWizard* newSceneWizard;
 };
 
 #endif // CONTROLLER_H

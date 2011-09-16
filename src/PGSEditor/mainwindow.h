@@ -18,9 +18,9 @@ public:
     ~MainWindow();
 
 private:
-    Controller* controller;
-
     Ui::MainWindow *ui;
+
+    Controller* controller;
 };
 
 #endif // MAINWINDOW_H

@@ -3,8 +3,7 @@
 #include "controller.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), controller(new Controller(this)),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow), controller(new Controller(this))
 {
     ui->setupUi(this);
 

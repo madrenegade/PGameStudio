@@ -15,6 +15,8 @@ public:
     explicit NewSceneWizard(QWidget *parent = 0);
     ~NewSceneWizard();
 
+    QStringList selectedSystems() const;
+
 private:
     Ui::Wizard *ui;
 };
