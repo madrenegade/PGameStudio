@@ -11,8 +11,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    newscenewizard.cpp \
+    controller.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    newscenewizard.h \
+    controller.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    newscenewizard.ui

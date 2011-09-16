@@ -7,6 +7,8 @@ namespace Ui {
     class MainWindow;
 }
 
+class Controller;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -16,6 +18,8 @@ public:
     ~MainWindow();
 
 private:
+    Controller* controller;
+
     Ui::MainWindow *ui;
 };
 
