@@ -12,6 +12,8 @@ class Controller : public QWidget
 public:
     explicit Controller(MainWindow* mainWindow);
 
+    QStringList availableSystems() const;
+
 signals:
     void sceneDirectorySelected(const QString& dir);
 

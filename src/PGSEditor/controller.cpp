@@ -12,6 +12,23 @@ Controller::Controller(MainWindow* mainWindow)
     connect(this, SIGNAL(sceneDirectorySelected(const QString&)), this, SLOT(onSaveNewScene(const QString&)));
 }
 
+QStringList Controller::availableSystems() const
+{
+    QStringList availableSystems;
+    availableSystems.push_back("AI");
+    availableSystems.push_back("Atmosphere");
+    availableSystems.push_back("Geometry");
+    availableSystems.push_back("Graphics");
+    availableSystems.push_back("GUI");
+    availableSystems.push_back("Input");
+    availableSystems.push_back("Particles");
+    availableSystems.push_back("Physics");
+    availableSystems.push_back("Sound");
+    availableSystems.push_back("Terrain");
+
+    return availableSystems;
+}
+
 void Controller::onNewScene()
 {
     newSceneWizard->restart();
@@ -29,6 +46,6 @@ void Controller::onSaveNewScene(const QString& dir)
 {
     QStringList selectedSystems(newSceneWizard->selectedSystems());
 
-    SceneExporert exporter;
+    SceneExporter exporter;
     exporter.createEmptyScene(dir, selectedSystems);
 }

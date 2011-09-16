@@ -9,17 +9,24 @@ QT       += core gui
 TARGET = PGSEditor
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c++0x
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     newscenewizard.cpp \
     controller.cpp \
-    sceneexporter.cpp
+    sceneexporter.cpp \
+    renderingdockwidget.cpp \
+    systemsdockwidget.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \
     controller.h \
-    sceneexporter.h
+    sceneexporter.h \
+    renderingdockwidget.h \
+    systemsdockwidget.h
 
 FORMS    += mainwindow.ui \
-    newscenewizard.ui
+    newscenewizard.ui \
+    renderingdockwidget.ui \
+    systemsdockwidget.ui

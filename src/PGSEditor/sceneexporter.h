@@ -1,6 +1,8 @@
 #ifndef SCENEEXPORTER_H
 #define SCENEEXPORTER_H
 
+#include <QString>
+
 class SceneExporter
 {
 public:

@@ -6,20 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1036</width>
-    <height>593</height>
+    <width>1003</width>
+    <height>599</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1036</width>
+     <width>1003</width>
      <height>20</height>
     </rect>
    </property>
@@ -36,6 +42,7 @@
     <property name="title">
      <string>Assets</string>
     </property>
+    <addaction name="actionImport"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAssets"/>
@@ -62,6 +69,11 @@
   <action name="actionNew_Scene">
    <property name="text">
     <string>New Scene</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import</string>
    </property>
   </action>
  </widget>
