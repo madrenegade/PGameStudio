@@ -6,6 +6,7 @@
  */
 
 #include "Graphics/SystemScene.h"
+#include "Graphics/RenderTask.h"
 
 namespace Graphics
 {
