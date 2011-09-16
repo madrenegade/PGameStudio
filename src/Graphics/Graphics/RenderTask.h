@@ -6,16 +6,18 @@
     namespace Graphics
     {
         class GraphicsContext;
+        class Renderer;
         
         class RenderTask : public tbb::task
         {
         public:
-            RenderTask(GraphicsContext* context);
+            RenderTask(Renderer* renderer, GraphicsContext* context);
             virtual ~RenderTask();
 
             virtual tbb::task* execute();
             
         private:
+            Renderer* renderer;
             GraphicsContext* context;
         };
     }

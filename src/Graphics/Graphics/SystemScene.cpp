@@ -69,6 +69,6 @@ namespace Graphics
 
     tbb::task* SystemScene::getTask(tbb::task* parent)
     {
-        return new(parent->allocate_child()) RenderTask(platformManager->getWindow()->getGraphicsContext());
+        return new(parent->allocate_child()) RenderTask(renderer.get(), platformManager->getWindow()->getGraphicsContext());
     }
 }

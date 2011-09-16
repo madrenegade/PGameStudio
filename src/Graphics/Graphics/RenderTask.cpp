@@ -1,13 +1,14 @@
 #include "Graphics/RenderTask.h"
 #include "Graphics/GraphicsContext.h"
+#include "Graphics/Renderer.h"
 
 #include <glog/logging.h>
 
 namespace Graphics
 {
 
-    RenderTask::RenderTask(GraphicsContext* context)
-    : context(context)
+    RenderTask::RenderTask(Renderer* renderer, GraphicsContext* context)
+    : renderer(renderer), context(context)
     {
     }
 
@@ -18,6 +19,7 @@ namespace Graphics
     tbb::task* RenderTask::execute()
     {
         context->MakeCurrent();
+        renderer->beginScene();
         
         context->SwapBuffers();
         context->Release();

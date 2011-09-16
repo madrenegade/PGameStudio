@@ -22,6 +22,8 @@ namespace Graphics
         
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data, unsigned int numVertices, const VertexFormat& fmt) = 0;
         
+        virtual void beginScene() = 0;
+        
     protected:
         Renderer();
     };

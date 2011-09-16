@@ -6,6 +6,7 @@
  */
 
 #include "Renderer/OpenGLRenderer.h"
+#include <GL/gl.h>
 
 namespace Renderer
 {
@@ -25,5 +26,17 @@ namespace Renderer
         unsigned long id = vbID.fetch_and_add(1);
         
         return id;
+    }
+    
+    void OpenGLRenderer::beginScene()
+    {
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glBegin(GL_TRIANGLES);
+        glVertex3d(0, 0, 0);
+        glVertex3d(1, 0, 0);
+        glVertex3d(0, 1, 0);
+        glEnd();
     }
 }

@@ -16,4 +16,5 @@ add_dependencies(${PROJECT_NAME} Core Utilities)
 target_link_libraries(${PROJECT_NAME}
     Core
     Utilities
+    GL
 )
