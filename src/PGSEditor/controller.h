@@ -29,6 +29,8 @@ public slots:
     void onImportAsset();
     void onImportConfigured();
 
+    void onRun();
+
 private:
     MainWindow* mainWindow;
 

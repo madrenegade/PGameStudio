@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QMessageBox>
 
 Controller::Controller(MainWindow* mainWindow)
     : QWidget(mainWindow), mainWindow(mainWindow),
@@ -67,4 +68,9 @@ void Controller::onImportAsset()
 void Controller::onImportConfigured()
 {
     assetImported();
+}
+
+void Controller::onRun()
+{
+    QMessageBox::information(this, "Not implemented", "This feature is not yet implemented", QMessageBox::Close);
 }

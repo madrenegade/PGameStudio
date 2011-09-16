@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addDockWidget(Qt::LeftDockWidgetArea, new SystemsDockWidget(controller, this));
     addDockWidget(Qt::LeftDockWidgetArea, new RenderingDockWidget(controller, this));
 
+    ui->mainToolBar->addAction(QIcon::fromTheme("run"), "Run", controller, SLOT(onRun()));
+
     connect(ui->actionNew_Scene, SIGNAL(triggered()), controller, SLOT(onNewScene()));
     connect(ui->actionImport, SIGNAL(triggered()), controller, SLOT(onImportAsset()));
 }
