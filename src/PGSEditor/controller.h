@@ -3,6 +3,7 @@
 
 #include "mainwindow.h"
 #include "newscenewizard.h"
+#include "assetimportwizard.h"
 
 #include <boost/scoped_ptr.hpp>
 
@@ -16,16 +17,23 @@ public:
 
 signals:
     void sceneDirectorySelected(const QString& dir);
+    void sceneChanged();
+
+    void assetImported();
 
 public slots:
     void onNewScene();
     void onNewSceneConfigured();
     void onSaveNewScene(const QString& dir);
 
+    void onImportAsset();
+    void onImportConfigured();
+
 private:
     MainWindow* mainWindow;
 
     NewSceneWizard* newSceneWizard;
+    AssetImportWizard* assetImportWizard;
 };
 
 #endif // CONTROLLER_H

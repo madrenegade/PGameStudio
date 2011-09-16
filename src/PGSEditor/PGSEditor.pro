@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     systemsdockwidget.cpp \
     singleviewwidget.cpp \
     renderingviewwidget.cpp \
-    scene.cpp
+    scene.cpp \
+    assetimportwizard.cpp \
+    multiviewwidget.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \
@@ -30,11 +32,15 @@ HEADERS  += mainwindow.h \
     systemsdockwidget.h \
     singleviewwidget.h \
     renderingviewwidget.h \
-    scene.h
+    scene.h \
+    assetimportwizard.h \
+    multiviewwidget.h
 
 FORMS    += mainwindow.ui \
     newscenewizard.ui \
     renderingdockwidget.ui \
     systemsdockwidget.ui \
     singleviewwidget.ui \
-    renderingviewwidget.ui
+    renderingviewwidget.ui \
+    assetimportwizard.ui \
+    multiviewwidget.ui

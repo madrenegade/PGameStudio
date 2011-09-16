@@ -6,10 +6,16 @@
 
 Controller::Controller(MainWindow* mainWindow)
     : QWidget(mainWindow), mainWindow(mainWindow),
-      newSceneWizard(new NewSceneWizard(this))
+      newSceneWizard(new NewSceneWizard(this)),
+      assetImportWizard(new AssetImportWizard(this))
 {
     connect(newSceneWizard, SIGNAL(accepted()), this, SLOT(onNewSceneConfigured()));
+    connect(assetImportWizard, SIGNAL(accepted()), this, SLOT(onImportConfigured()));
+
     connect(this, SIGNAL(sceneDirectorySelected(const QString&)), this, SLOT(onSaveNewScene(const QString&)));
+    connect(this, SIGNAL(sceneChanged()), mainWindow, SLOT(onSceneChanged()));
+
+    connect(this, SIGNAL(assetImported()), mainWindow, SLOT(onAssetImported()));
 }
 
 QStringList Controller::availableSystems() const
@@ -48,4 +54,17 @@ void Controller::onSaveNewScene(const QString& dir)
 
     SceneExporter exporter;
     exporter.createEmptyScene(dir, selectedSystems);
+
+    sceneChanged();
+}
+
+void Controller::onImportAsset()
+{
+    assetImportWizard->restart();
+    assetImportWizard->show();
+}
+
+void Controller::onImportConfigured()
+{
+    assetImported();
 }

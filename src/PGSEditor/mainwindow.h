@@ -17,10 +17,19 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void onSceneChanged();
+    void onAssetImported();
+
+    void onSetSingleView();
+    void onSetMultiView();
+
 private:
     Ui::MainWindow *ui;
 
     Controller* controller;
+
+    QWidget* viewWidget;
 };
 
 #endif // MAINWINDOW_H

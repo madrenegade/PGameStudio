@@ -25,5 +25,5 @@ SystemsDockWidget::~SystemsDockWidget()
 
 QWidget* SystemsDockWidget::createSystemTab(const QString& system)
 {
-    return new QLabel("Example setting", this);
+    return new QLabel("Example setting for " + system, this);
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AssetImportWizard</class>
+ <widget class="QWizard" name="AssetImportWizard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>797</width>
+    <height>470</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Wizard</string>
+  </property>
+  <widget class="QWizardPage" name="wizardPageGeneral">
+   <property name="title">
+    <string>Import Asset</string>
+   </property>
+   <property name="subTitle">
+    <string>General</string>
+   </property>
+  </widget>
+  <widget class="QWizardPage" name="wizardPageOptimizations">
+   <property name="title">
+    <string>Import Asset</string>
+   </property>
+   <property name="subTitle">
+    <string>Optimizations</string>
+   </property>
+  </widget>
+  <widget class="QWizardPage" name="wizardPageConfirm">
+   <property name="title">
+    <string>Import Asset</string>
+   </property>
+   <property name="subTitle">
+    <string>Overview</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

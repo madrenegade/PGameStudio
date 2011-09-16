@@ -13,6 +13,26 @@
   <property name="windowTitle">
    <string>Wizard</string>
   </property>
+  <widget class="QWizardPage" name="wizardPageGeneral">
+   <property name="title">
+    <string>Create New Scene</string>
+   </property>
+   <property name="subTitle">
+    <string>General</string>
+   </property>
+   <layout class="QFormLayout" name="formLayout_2">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Name:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="lineEditSceneName"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QWizardPage" name="wizardPageSystems">
    <property name="title">
     <string>Create New Scene</string>
@@ -26,9 +46,12 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wizardPage2">
+  <widget class="QWizardPage" name="wizardPageConfirm">
    <property name="title">
     <string>Create New Scene</string>
+   </property>
+   <property name="subTitle">
+    <string>Finish</string>
    </property>
   </widget>
  </widget>

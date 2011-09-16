@@ -44,8 +44,16 @@
     </property>
     <addaction name="actionImport"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionSingle_View"/>
+    <addaction name="actionMulti_View"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAssets"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -76,11 +84,56 @@
     <string>Import</string>
    </property>
   </action>
+  <action name="actionSingle_View">
+   <property name="text">
+    <string>Single View</string>
+   </property>
+  </action>
+  <action name="actionMulti_View">
+   <property name="text">
+    <string>Multi View</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionSingle_View</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSetSingleView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>501</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionMulti_View</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onSetMultiView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>501</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>onNewScene()</slot>
+  <slot>onSetSingleView()</slot>
+  <slot>onSetMultiView()</slot>
  </slots>
 </ui>
