@@ -31,5 +31,13 @@ QStringList NewSceneWizard::selectedSystems() const
 {
     QStringList selectedSystems;
 
+    for(auto i = systemCheckboxes.begin(); i != systemCheckboxes.end(); ++i)
+    {
+        if((*i)->isChecked())
+        {
+            selectedSystems.push_back((*i)->text());
+        }
+    }
+
     return selectedSystems;
 }

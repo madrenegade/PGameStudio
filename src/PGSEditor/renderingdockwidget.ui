@@ -53,20 +53,9 @@
         <string>Debug Drawing</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout_2">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="checkBoxDebugAI">
-          <property name="text">
-           <string>AI</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="checkBoxDebugPhysics">
-          <property name="text">
-           <string>Physics</string>
-          </property>
-         </widget>
-        </item>
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
        </layout>
       </widget>
      </widget>
