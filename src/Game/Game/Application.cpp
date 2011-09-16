@@ -97,6 +97,8 @@ namespace Game
         auto start = std::chrono::system_clock::now();
 
         BEGIN_NEW_FRAME(memoryManager);
+        
+        platformManager->handleOSEvents();
 
         auto scene = sceneManager->getCurrentScene();
         
@@ -104,8 +106,7 @@ namespace Game
         {
             taskScheduler->executeTasks(scene);
         }
-
-        platformManager->handleOSEvents();
+        
         eventManager->handleEvents();
 
         auto end = std::chrono::system_clock::now();

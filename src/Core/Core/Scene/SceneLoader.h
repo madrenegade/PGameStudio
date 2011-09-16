@@ -32,20 +32,31 @@ namespace Platform
 namespace Core
 {
     class Scene;
+    class SystemScene;
+    
+    namespace Events
+    {
+        class EventManager;
+    }
+    
+    class TaskScheduler;
     
     class SceneLoader
     {
     public:
         SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
                     const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                    const boost::shared_ptr<Platform::PlatformManager>& platform);
+                    const boost::shared_ptr<Platform::PlatformManager>& platform,
+                    const boost::shared_ptr<Events::EventManager>& eventManager);
         ~SceneLoader();
         
         /**
          * Load the scene with the given name
          * @param name
          */
-        boost::shared_ptr<Scene> loadScene(const char* name);
+        boost::shared_ptr<Scene> loadScene(const char* filename);
+        
+        void loadSystemScene(SystemScene* systemScene, const char* filename);
         
     private:
         SceneLoader();
@@ -57,6 +68,7 @@ namespace Core
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         boost::shared_ptr<Platform::PlatformManager> platform;
+        boost::shared_ptr<Events::EventManager> eventManager;
     };
 }
 

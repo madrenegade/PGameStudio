@@ -19,6 +19,11 @@ namespace Core
     {
     }
     
+    void SystemScene::initialize()
+    {
+        
+    }
+    
     void SystemScene::setMemoryManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
     {
         this->memoryManager = memoryManager;
@@ -27,5 +32,10 @@ namespace Core
     void SystemScene::setPlatformManager(const boost::shared_ptr<Platform::PlatformManager>& platformManager)
     {
         this->platformManager = platformManager;
+    }
+    
+    void SystemScene::setEventManager(const boost::shared_ptr<Events::EventManager>& eventManager)
+    {
+        this->eventManager = eventManager;
     }
 }

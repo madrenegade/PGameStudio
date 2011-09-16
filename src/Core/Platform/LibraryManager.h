@@ -30,7 +30,8 @@ namespace Platform
         
         typedef boost::shared_ptr<Library> LibPtr;
         
-        typedef std::list<LibPtr, Utilities::Memory::STLAllocator<LibPtr> > LibraryList;
+        // FIXME: crashes with STLAllocator
+        typedef std::list<LibPtr /*, Utilities::Memory::STLAllocator<LibPtr>*/ > LibraryList;
         LibraryList loadedLibraries;
     };
 }

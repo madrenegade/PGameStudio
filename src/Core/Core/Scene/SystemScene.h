@@ -17,6 +17,11 @@ namespace Utilities
     {
         class MemoryManager;
     }
+    
+    namespace IO
+    {
+        class File;
+    }
 }
 
 namespace Platform
@@ -26,11 +31,21 @@ namespace Platform
 
 namespace Core
 {
-
+    namespace Events
+    {
+        class EventManager;
+    }
+    
     class SystemScene
     {
     public:
         virtual ~SystemScene();
+        
+        virtual const char* getSceneFileExtension() const = 0;
+        
+        virtual void load(const Utilities::IO::File& file) = 0;
+        
+        virtual void initialize();
 
         /**
          * Set the memory manager which should be used by this system scene.
@@ -43,6 +58,8 @@ namespace Core
          * @param platformManager
          */
         void setPlatformManager(const boost::shared_ptr<Platform::PlatformManager>& platformManager);
+        
+        void setEventManager(const boost::shared_ptr<Events::EventManager>& eventManager);
 
         virtual tbb::task* getTask(tbb::task* parent) = 0;
 
@@ -51,6 +68,7 @@ namespace Core
 
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         boost::shared_ptr<Platform::PlatformManager> platformManager;
+        boost::shared_ptr<Events::EventManager> eventManager;
     };
 }
 

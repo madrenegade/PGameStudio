@@ -3,7 +3,6 @@ project (Platform.Linux)
 
 include("../../common.cmake")
 include_directories(${SRC_DIR}/Core)
-include_directories(${SRC_DIR}/Renderer.OpenGL)
 include_directories(${SRC_DIR}/Utilities)
 include_directories(${SRC_DIR}/StackTrace)
 
@@ -16,12 +15,11 @@ find_package(OpenGL REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
-add_dependencies(${PROJECT_NAME} Core Utilities Renderer.OpenGL)
+add_dependencies(${PROJECT_NAME} Core Utilities)
 
 target_link_libraries(${PROJECT_NAME}
     Core
     Utilities
-    Renderer.OpenGL
     ${X11_LIBRARIES}
     GL
     ${OpenGL_LIBRARIES}

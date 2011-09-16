@@ -7,6 +7,8 @@
 
 #include "Core/Scene/SceneManager.h"
 #include "Core/Scene/SceneLoader.h"
+#include "SystemScene.h"
+#include "Scene.h"
 
 namespace Core
 {
@@ -30,9 +32,17 @@ namespace Core
     {
         std::string sceneFile(SCENE_PATH + "/" + name + ".scene");
 
-        SceneLoader loader(fileSystem, memoryManager, platform);
+        SceneLoader loader(fileSystem, memoryManager, platform, eventManager);
 
         ScenePtr scene = loader.loadScene(sceneFile.c_str());
+        
+        auto& systemScenes = scene->getSystemScenes();
+        
+        std::for_each(systemScenes.begin(), systemScenes.end(), [name, &loader](const boost::shared_ptr<SystemScene>& systemScene) {
+            std::string systemSceneFile(SCENE_PATH + "/" + name + "." + systemScene->getSceneFileExtension());
+            loader.loadSystemScene(systemScene.get(), systemSceneFile.c_str());
+        });
+        
         loadedScenes[name] = scene;
     }
 

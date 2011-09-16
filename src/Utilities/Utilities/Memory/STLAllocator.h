@@ -111,7 +111,7 @@ namespace Utilities
             size_type max_size() const throw ()
             {
                 // TODO: return largest block
-                return 32 * Byte;
+                return 128 * Byte;
             }
 
             void construct(pointer p, const_reference val)
