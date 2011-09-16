@@ -50,10 +50,22 @@ namespace Platform
                         const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~PlatformManager();
 
+        /**
+         * Handle all operating system events.
+         */
         void handleOSEvents();
 
+        /**
+         * Creates a window, an renderer and a corresponding graphics context.
+         * @return the created window
+         */
         boost::shared_ptr<Graphics::Window> createWindow();
+        Graphics::Window* getWindow();
         
+        /**
+         * Get the manager object for dynamic libraries.
+         * @return the manager object
+         */
         LibraryManager* libraries() const;
 
     private:
@@ -63,6 +75,8 @@ namespace Platform
         boost::shared_ptr<LibraryManager> libraryManager;
 
         boost::shared_ptr<PlatformImpl> impl;
+        
+        Graphics::Window* window;
     };
 }
 

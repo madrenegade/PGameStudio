@@ -63,6 +63,9 @@ namespace Core
             
             // TODO: seperate pools for each system
             boost::shared_ptr<SystemScene> systemScene = create(memoryManager, 0);
+            systemScene->setMemoryManager(memoryManager);
+            systemScene->setPlatformManager(platform);
+            
             scene->addSystemScene(systemScene);
         }
     }

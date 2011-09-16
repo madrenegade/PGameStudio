@@ -12,7 +12,7 @@ find_package(UNWIND REQUIRED)
 
 add_executable(${PROJECT_NAME} ${Project_Sources})
 
-add_dependencies(${PROJECT_NAME} Game Platform.Linux Scripting.Lua Graphics)
+add_dependencies(${PROJECT_NAME} Game Platform.Linux Scripting.Lua Graphics Renderer.OpenGL)
 
 target_link_libraries(${PROJECT_NAME}
     Game

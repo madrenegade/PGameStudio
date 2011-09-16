@@ -52,13 +52,21 @@ namespace Platform
         if(properties->get<std::string>("Graphics.renderer") == "NULL")
         {
             // null-renderer is meant for server usage
-            // so all window and drawinf functions result in doing nothing
+            // so all window and drawing functions result in doing nothing
             // input handling is done via command line
             
             throw std::runtime_error("Null-Renderer not yet implemented");
         }
         
-        return impl->createWindow(memoryManager, eventManager, properties);
+        boost::shared_ptr<Graphics::Window> window = impl->createWindow(memoryManager, eventManager, properties);
+        this->window = window.get();
+        
+        return window;
+    }
+    
+    Graphics::Window* PlatformManager::getWindow()
+    {
+        return window;
     }
     
     LibraryManager* PlatformManager::libraries() const

@@ -8,6 +8,8 @@
 #include "Graphics/SystemScene.h"
 #include "Graphics/RenderTask.h"
 
+#include "Platform/PlatformManager.h"
+#include "Graphics/Window.h"
 namespace Graphics
 {
 
@@ -21,6 +23,6 @@ namespace Graphics
 
     tbb::task* SystemScene::getTask(tbb::task* parent)
     {
-        return new(parent->allocate_child()) RenderTask();
+        return new(parent->allocate_child()) RenderTask(platformManager->getWindow()->getGraphicsContext());
     }
 }

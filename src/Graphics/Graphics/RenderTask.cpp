@@ -1,11 +1,13 @@
 #include "Graphics/RenderTask.h"
+#include "Graphics/GraphicsContext.h"
 
 #include <glog/logging.h>
 
 namespace Graphics
 {
 
-    RenderTask::RenderTask()
+    RenderTask::RenderTask(GraphicsContext* context)
+    : context(context)
     {
     }
 
@@ -15,6 +17,16 @@ namespace Graphics
 
     tbb::task* RenderTask::execute()
     {
+        context->MakeCurrent();
+        
+        context->SwapBuffers();
+        context->Release();
+        // do frustum culling
+        // create draw calls
+        // begin scene
+        // process draw calls
+        // end scene
+        
 //        this->m_pRenderer->BeginScene();
 //
 //        // TODO (madrenegade#1#): Use parallel_for to prepare children of root node

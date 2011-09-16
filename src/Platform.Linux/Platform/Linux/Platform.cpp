@@ -7,10 +7,12 @@
 
 #include "Platform/Linux/Platform.h"
 #include "Platform/Linux/XWindow.h"
+#include "Platform/Linux/X11EventHandler.h"
+
 #include "Utilities/Properties/PropertyManager.h"
 #include "Utilities/Memory/MemoryManager.h"
+
 #include "Core/Events/EventManager.h"
-#include "X11EventHandler.h"
 
 #include <glog/logging.h>
 #include <stdexcept>
@@ -54,7 +56,7 @@ namespace Platform
             // as we are under linux only OpenGL is supported
             if (renderer != "OpenGL")
             {
-                throw std::logic_error("Under Linux only OpenGL ist supported");
+                throw std::logic_error("Under Linux only OpenGL is supported");
             }
             
             XWindow* x11Window = new XWindow(memoryManager, width, height, bpp, fullscreen);

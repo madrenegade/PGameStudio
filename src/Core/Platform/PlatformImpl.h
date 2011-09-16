@@ -13,6 +13,7 @@
 namespace Graphics
 {
     class Window;
+    class Renderer;
 }
 
 namespace Core

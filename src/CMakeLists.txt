@@ -9,13 +9,12 @@ SUBDIRS(Core)
 
 SUBDIRS(Platform.Linux)
 
+SUBDIRS(Renderer.OpenGL)
 #SUBDIRS(Input)
 
 #SUBDIRS(Geometry)
 SUBDIRS(Graphics)
 #SUBDIRS(GUI)
-
-#SUBDIRS(Renderer.OpenGL3)
 
 SUBDIRS(Scripting)
 SUBDIRS(Scripting.Lua)

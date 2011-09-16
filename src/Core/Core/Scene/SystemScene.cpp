@@ -6,6 +6,7 @@
  */
 
 #include "Core/Scene/SystemScene.h"
+#include "Utilities/Memory/typedefs.h"
 
 namespace Core
 {
@@ -16,5 +17,15 @@ namespace Core
 
     SystemScene::~SystemScene()
     {
+    }
+    
+    void SystemScene::setMemoryManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
+    {
+        this->memoryManager = memoryManager;
+    }
+    
+    void SystemScene::setPlatformManager(const boost::shared_ptr<Platform::PlatformManager>& platformManager)
+    {
+        this->platformManager = platformManager;
     }
 }

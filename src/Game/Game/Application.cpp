@@ -98,10 +98,6 @@ namespace Game
 
         BEGIN_NEW_FRAME(memoryManager);
 
-        //        window->getGraphicsContext()->MakeCurrent();
-        //        window->getGraphicsContext()->SwapBuffers();
-        //        window->getGraphicsContext()->Release();
-        
         auto scene = sceneManager->getCurrentScene();
         
         if(scene != 0)
