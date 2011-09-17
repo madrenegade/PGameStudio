@@ -55,12 +55,14 @@ namespace Renderer
         }
 
         modelViewProjection = cgGetEffectParameterBySemantic(effect, "ModelViewProjection");
+        modelView = cgGetEffectParameterBySemantic(effect, "ModelView");
 
-        Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
-        Math::Matrix4 view = Math::Matrix4::LookAt(Math::Vector3(0, 0, 1), Math::Vector3(0, 0, -1), Math::Vector3(0, 1, 0));
+        const Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
+        const Math::Matrix4 view = Math::Matrix4::LookAt(Math::Vector3(0, 0, 0), Math::Vector3(0, 0, -1), Math::Vector3(0, 1, 0));
 
-        Math::Matrix4 mvp = view * projection;
+        const Math::Matrix4 mvp = view * projection;
         cgSetMatrixParameterdc(modelViewProjection, mvp);
+        cgSetMatrixParameterdc(modelView, view);
     }
 
     void Effect::CgErrorHandler(CGcontext context, CGerror error, void* pData)
@@ -91,8 +93,25 @@ namespace Renderer
         cgSetPassState(currentPass);
     }
 
-    void Effect::deactivate()
+    bool Effect::hasNextPass()
+    {
+        return currentPass != 0;
+    }
+
+    void Effect::gotoNextPass()
     {
         cgResetPassState(currentPass);
+        
+        currentPass = cgGetNextPass(currentPass);
+
+        if (currentPass != 0)
+        {
+            cgSetPassState(currentPass);
+        }
+    }
+
+    void Effect::deactivate()
+    {
+//        cgResetPassState(currentPass);
     }
 }

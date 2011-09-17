@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME}
     Core
     Utilities
     GL
+    GLU
     GLEW
     Cg
     CgGL

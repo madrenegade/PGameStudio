@@ -79,8 +79,6 @@ namespace Graphics
         unsigned long effectID = renderer->requestEffect(effectFile);
 
         scene.reset(new MeshSceneNode(vbID, effectID));
-        //        unsigned int vbID = renderer->requestVertexBuffer(data);
-        //        unsigned int ibID = renderer->requestIndexBuffer(data);
     }
 
     tbb::task* SystemScene::getTask(tbb::task* parent)

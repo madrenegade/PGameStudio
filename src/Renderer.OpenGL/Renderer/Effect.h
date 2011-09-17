@@ -22,6 +22,10 @@ namespace Renderer
         void load(const char* code);
         
         void activate();
+        
+        bool hasNextPass();
+        void gotoNextPass();
+        
         void deactivate();
         
     private:
@@ -32,6 +36,7 @@ namespace Renderer
         CGpass currentPass;
         
         CGparameter modelViewProjection;
+        CGparameter modelView;
         
         static void CgErrorHandler(CGcontext context, CGerror error, void* pData);
     };

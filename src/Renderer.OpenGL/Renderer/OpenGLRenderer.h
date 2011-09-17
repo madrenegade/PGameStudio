@@ -61,10 +61,14 @@ namespace Renderer
         boost::shared_ptr<EffectManager> effects;
         
         unsigned int frameBuffer;
-        
         unsigned int depthBuffer;
         
         unsigned int colorTexture;
+        unsigned int aux0Texture;
+        unsigned int aux1Texture;
+        unsigned int depthTexture;
+        
+        static void check();
     };
 }
 
