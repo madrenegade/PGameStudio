@@ -112,7 +112,11 @@ namespace Game
         auto end = std::chrono::system_clock::now();
 
         // maybe use EventManager for this
-        properties->set("Frametime", std::chrono::duration_cast<sec > (end - start).count());
+        double framerate = std::chrono::duration_cast<sec > (end - start).count();
+        
+        properties->set("Frametime", framerate);
+        
+        VLOG_EVERY_N(3, 1000) << "Framerate: " << (1.0 / framerate);
 
         return running;
     }

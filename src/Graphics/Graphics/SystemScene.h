@@ -13,6 +13,7 @@
 namespace Graphics
 {
     class Renderer;
+    class SceneNode;
     
     class SystemScene : public Core::SystemScene
     {
@@ -32,6 +33,8 @@ namespace Graphics
         static const std::string SCENE_FILE_EXTENSION;
         
         boost::shared_ptr<Renderer> renderer;
+        
+        boost::shared_ptr<SceneNode> scene;
     };
 }
 

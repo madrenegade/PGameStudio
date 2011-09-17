@@ -16,6 +16,8 @@ namespace Graphics
     public:
         VertexFormat();
         ~VertexFormat();
+        
+        const unsigned int vertexSize() const;
     };
 }
 

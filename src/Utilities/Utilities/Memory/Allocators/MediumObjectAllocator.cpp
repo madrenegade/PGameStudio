@@ -90,7 +90,7 @@ namespace Utilities
 
             const size_t neededBlocks = std::ceil(static_cast<double> (bytes) / static_cast<double> (BLOCK_SIZE));
 
-            RAW_LOG_INFO("Needing %i blocks for %i bytes with blockSize=%i", neededBlocks, bytes, BLOCK_SIZE);
+            RAW_VLOG(4, "Needing %i blocks for %i bytes with blockSize=%i", neededBlocks, bytes, BLOCK_SIZE);
             return allocateBlocksIn(startOfPage, neededBlocks);
         }
 

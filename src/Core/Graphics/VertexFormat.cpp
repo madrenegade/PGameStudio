@@ -17,4 +17,9 @@ namespace Graphics
     VertexFormat::~VertexFormat()
     {
     }
+    
+    const unsigned int VertexFormat::vertexSize() const
+    {
+        return 3 * sizeof(double);
+    }
 }

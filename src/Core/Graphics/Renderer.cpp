@@ -6,6 +6,7 @@
  */
 
 #include "Graphics/Renderer.h"
+#include "Graphics/DrawCall.h"
 
 namespace Graphics
 {
@@ -16,5 +17,16 @@ namespace Graphics
 
     Renderer::~Renderer()
     {
+    }
+    
+    void Renderer::processRequests()
+    {
+        processVertexBufferRequests();
+        processEffectRequests();
+    }
+    
+    void Renderer::pushDrawCall(const DrawCall& drawCall)
+    {
+        drawCalls.push(drawCall);
     }
 }

@@ -21,6 +21,7 @@ namespace Utilities
     namespace IO
     {
         class File;
+        class FileSystem;
     }
 }
 
@@ -60,6 +61,8 @@ namespace Core
         void setPlatformManager(const boost::shared_ptr<Platform::PlatformManager>& platformManager);
         
         void setEventManager(const boost::shared_ptr<Events::EventManager>& eventManager);
+        
+        void setFileSystem(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem);
 
         virtual tbb::task* getTask(tbb::task* parent) = 0;
 
@@ -69,6 +72,7 @@ namespace Core
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         boost::shared_ptr<Platform::PlatformManager> platformManager;
         boost::shared_ptr<Events::EventManager> eventManager;
+        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
     };
 }
 

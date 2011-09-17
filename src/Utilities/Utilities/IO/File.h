@@ -19,6 +19,7 @@ namespace Utilities
         class File
         {
         public:
+            File();
             File(const boost::shared_array<Memory::byte>& data, size_t size);
             
             Memory::byte_pointer getData() const;

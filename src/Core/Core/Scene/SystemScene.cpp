@@ -7,6 +7,7 @@
 
 #include "Core/Scene/SystemScene.h"
 #include "Utilities/Memory/typedefs.h"
+#include "Utilities/IO/FileSystem.h"
 
 namespace Core
 {
@@ -37,5 +38,10 @@ namespace Core
     void SystemScene::setEventManager(const boost::shared_ptr<Events::EventManager>& eventManager)
     {
         this->eventManager = eventManager;
+    }
+    
+    void SystemScene::setFileSystem(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem)
+    {
+        this->fileSystem = fileSystem;
     }
 }

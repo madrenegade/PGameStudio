@@ -77,6 +77,7 @@ namespace Core
             systemScene->setMemoryManager(memoryManager);
             systemScene->setPlatformManager(platform);
             systemScene->setEventManager(eventManager);
+            systemScene->setFileSystem(fileSystem);
             
             systemScene->initialize();
 
