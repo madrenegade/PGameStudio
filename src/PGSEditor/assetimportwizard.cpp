@@ -26,6 +26,11 @@ AssetImportWizard::~AssetImportWizard()
     delete ui;
 }
 
+QString AssetImportWizard::getFilename() const
+{
+    return ui->lineEditFilename->text();
+}
+
 void AssetImportWizard::onChooseFile()
 {
     QString filename = QFileDialog::getOpenFileName(this);

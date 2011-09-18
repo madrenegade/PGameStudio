@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     renderingviewwidget.cpp \
     scene.cpp \
     assetimportwizard.cpp \
-    multiviewwidget.cpp
+    multiviewwidget.cpp \
+    assetimporter.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     renderingviewwidget.h \
     scene.h \
     assetimportwizard.h \
-    multiviewwidget.h
+    multiviewwidget.h \
+    assetimporter.h
 
 FORMS    += mainwindow.ui \
     newscenewizard.ui \
@@ -44,3 +46,8 @@ FORMS    += mainwindow.ui \
     renderingviewwidget.ui \
     assetimportwizard.ui \
     multiviewwidget.ui
+
+unix:!macx:!symbian: LIBS += -L$$PWD/../../../../../../../usr/lib64/ -lassimp_d
+
+INCLUDEPATH += $$PWD/../../../../../../../usr/lib64
+DEPENDPATH += $$PWD/../../../../../../../usr/lib64

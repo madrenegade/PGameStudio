@@ -1,5 +1,6 @@
 #include "controller.h"
 #include "sceneexporter.h"
+#include "assetimporter.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -91,7 +92,18 @@ void Controller::onImportAsset()
 
 void Controller::onImportConfigured()
 {
-    assetImported();
+    QString file(assetImportWizard->getFilename());
+
+    AssetImporter importer;
+
+    if(!importer.run(file))
+    {
+        QMessageBox::critical(this, "Import error", QString("Importing the asset failed:\n%1").arg(importer.getError()), QMessageBox::Close);
+    }
+    else
+    {
+        assetImported();
+    }
 }
 
 void Controller::onRun()

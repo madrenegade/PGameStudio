@@ -17,6 +17,8 @@ public:
     explicit AssetImportWizard(Controller* controller, QWidget *parent = 0);
     ~AssetImportWizard();
 
+    QString getFilename() const;
+
 public slots:
     void onChooseFile();
 
