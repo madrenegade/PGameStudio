@@ -166,10 +166,15 @@ namespace Graphics
         unsigned long ibID = renderer->requestIndexBuffer(indexes, numFaces * 3);
         
         Utilities::IO::File effectFile(fileSystem->read("fx/default.cgfx"));
+        Utilities::IO::File colorTexture(fileSystem->read("textures/color_map.jpg"));
+        Utilities::IO::File normalTexture(fileSystem->read("textures/normal_map.jpg"));
         
-        unsigned long effectID = renderer->requestEffect(effectFile);
+        auto mat = memoryManager->construct(Material());
+        mat->effect = renderer->requestEffect(effectFile);
+        mat->textures.push_back(renderer->requestTexture(colorTexture));
+        mat->textures.push_back(renderer->requestTexture(normalTexture));
 
-        scene.reset(new MeshSceneNode(vbID, ibID, effectID));
+        scene.reset(new MeshSceneNode(vbID, ibID, mat));
     }
 
     tbb::task* SystemScene::getTask(tbb::task* parent)

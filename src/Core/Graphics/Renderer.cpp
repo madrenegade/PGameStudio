@@ -24,6 +24,7 @@ namespace Graphics
         processVertexBufferRequests();
         processIndexBufferRequests();
         processEffectRequests();
+        processTextureRequests();
     }
     
     void Renderer::pushDrawCall(const DrawCall& drawCall)

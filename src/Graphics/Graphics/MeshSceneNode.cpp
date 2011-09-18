@@ -12,28 +12,41 @@
 namespace Graphics
 {
 
-    MeshSceneNode::MeshSceneNode(unsigned long vbID, unsigned long ibID, unsigned long effect)
-    : vb(vbID), ib(ibID)
+    MeshSceneNode::MeshSceneNode(unsigned long vbID, unsigned long ibID, const boost::shared_ptr<Material>& mat)
+    : vb(vbID), ib(ibID), mat(mat)
     {
-        mat.effect = effect;
     }
 
     MeshSceneNode::~MeshSceneNode()
     {
     }
-    
+
     void MeshSceneNode::prepare(Renderer* renderer)
     {
-        if(renderer->isVertexBufferLoaded(vb) && renderer->isIndexBufferLoaded(ib) && renderer->isEffectLoaded(mat.effect))
+        if (renderer->isVertexBufferLoaded(vb) && renderer->isIndexBufferLoaded(ib) && renderer->isEffectLoaded(mat->effect))
         {
-            DrawCall drawCall;
-            drawCall.vertexBuffer = vb;
-            drawCall.indexBuffer = ib;
-            drawCall.material = &mat;
-            
-            renderer->pushDrawCall(drawCall);
+            bool allTexturesLoaded = true;
+
+            for (auto i = mat->textures.begin(); i != mat->textures.end(); ++i)
+            {
+                if (!renderer->isTextureLoaded(*i))
+                {
+                    allTexturesLoaded = false;
+                    break;
+                }
+            }
+
+            if (allTexturesLoaded)
+            {
+                DrawCall drawCall;
+                drawCall.vertexBuffer = vb;
+                drawCall.indexBuffer = ib;
+                drawCall.material = mat.get();
+
+                renderer->pushDrawCall(drawCall);
+            }
         }
-        
+
         SceneNode::prepare(renderer);
     }
 }

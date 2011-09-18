@@ -8,22 +8,22 @@
 #ifndef UTILITIES_MEMORY_LARGEOBJECTALLOCATOR_H
 #define	UTILITIES_MEMORY_LARGEOBJECTALLOCATOR_H
 
-#include "Utilities/Memory/Allocators/Allocator.h"
+#include "Utilities/Memory/Allocators/MediumObjectAllocator.h"
 
 namespace Utilities
 {
     namespace Memory
     {
 
-        class LargeObjectAllocator : public Allocator
+        class LargeObjectAllocator : public MediumObjectAllocator
         {
         public:
             LargeObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
             
-            virtual byte_pointer allocate(size_t bytes);
-            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
-
-            virtual size_t getFreeMemory() const;
+//            virtual byte_pointer allocate(size_t bytes);
+//            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
+//
+//            virtual size_t getFreeMemory() const;
         };
     }
 }

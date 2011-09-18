@@ -25,7 +25,7 @@ namespace Renderer
                                    const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
                                    const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
                                    const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager)
-    : vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager)
+    : vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
     {
     }
 
@@ -208,7 +208,26 @@ namespace Renderer
             {
                 vertexBuffer = vertexBuffers->get(i->vertexBuffer);
                 indexBuffer = indexBuffers->get(i->indexBuffer);
+                
+                unsigned char texLevel = 0;
+                for(auto t = i->material->textures.begin(); t != i->material->textures.end(); ++t)
+                {
+                    char textureName[] = {'T', 'E', 'X', static_cast<unsigned char>(texLevel + 48), '\0'};
+                    Texture* texture = textures->get(*t);
+                    texture->bind(texLevel);
+                    effect->setTexture(textureName, texture->getID());
+                    ++texLevel;
+                }
+                
                 vertexBuffer->render(indexBuffer);
+                
+                texLevel = 0;
+                for(auto t = i->material->textures.begin(); t != i->material->textures.end(); ++t)
+                {
+                    Texture* texture = textures->get(*t);
+                    texture->unbind(texLevel);
+                    ++texLevel;
+                }
             }
 
             effect->gotoNextPass();
@@ -219,6 +238,7 @@ namespace Renderer
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // render quad with texture on it
+        glActiveTexture(GL_TEXTURE0);
         glEnable(GL_TEXTURE_2D);
 
         glBindTexture(GL_TEXTURE_2D, colorTexture);

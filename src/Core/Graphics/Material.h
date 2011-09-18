@@ -8,12 +8,16 @@
 #ifndef GRAPHICS_MATERIAL_H
 #define	GRAPHICS_MATERIAL_H
 
+#include <vector>
+
 namespace Graphics
 {
 
     struct Material
     {
         unsigned long effect;
+        
+        std::vector<unsigned long> textures;
     };
 }
 

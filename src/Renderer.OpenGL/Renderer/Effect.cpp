@@ -64,6 +64,12 @@ namespace Renderer
         cgSetMatrixParameterdc(modelViewProjection, mvp);
         cgSetMatrixParameterdc(modelView, view);
     }
+    
+    void Effect::setTexture(const char* semantic, unsigned int id)
+    {
+        CGparameter texture = cgGetEffectParameterBySemantic(effect, semantic);
+        cgGLSetTextureParameter(texture, id);
+    }
 
     void Effect::CgErrorHandler(CGcontext context, CGerror error, void* pData)
     {

@@ -21,6 +21,8 @@ namespace Renderer
         
         void load(const char* code);
         
+        void setTexture(const char* semantic, unsigned int id);
+        
         void activate();
         
         bool hasNextPass();

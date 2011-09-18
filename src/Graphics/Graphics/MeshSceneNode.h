@@ -11,13 +11,15 @@
 #include "Graphics/SceneNode.h"
 #include "Graphics/Material.h"
 
+#include <boost/shared_ptr.hpp>
+
 namespace Graphics
 {
     
     class MeshSceneNode : public SceneNode
     {
     public:
-        MeshSceneNode(unsigned long vb, unsigned long ib, unsigned long effect);
+        MeshSceneNode(unsigned long vb, unsigned long ib, const boost::shared_ptr<Material>& mat);
         virtual ~MeshSceneNode();
         
         virtual void prepare(Renderer* renderer);
@@ -26,7 +28,7 @@ namespace Graphics
         unsigned long vb;
         unsigned long ib;
         
-        Material mat;
+        boost::shared_ptr<Material> mat;
     };
 }
 

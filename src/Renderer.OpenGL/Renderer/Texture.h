@@ -8,6 +8,8 @@
 #ifndef RENDERER_TEXTURE_H
 #define	RENDERER_TEXTURE_H
 
+#include <boost/shared_array.hpp>
+
 namespace Renderer
 {
 
@@ -16,6 +18,16 @@ namespace Renderer
     public:
         Texture();
         ~Texture();
+        
+        void setData(const boost::shared_array<unsigned char>& data, unsigned int w, unsigned int h);
+        
+        void bind(unsigned int level);
+        void unbind(unsigned int level);
+        
+        unsigned int getID() const;
+        
+    private:
+        unsigned int id;
     };
 }
 
