@@ -36,6 +36,30 @@ QStringList Controller::availableSystems() const
     return availableSystems;
 }
 
+QStringList Controller::getAssetImportPostProcessingSteps() const
+{
+    QStringList postProcessingSteps;
+
+    postProcessingSteps.push_back("CalcTangentSpace");
+    postProcessingSteps.push_back("JoinIdenticalVertices");
+    postProcessingSteps.push_back("MakeLeftHanded");
+    postProcessingSteps.push_back("Triangulate");
+    postProcessingSteps.push_back("GenNormals");
+    postProcessingSteps.push_back("GenSmoothNormals");
+    postProcessingSteps.push_back("PreTransformVertices");
+    postProcessingSteps.push_back("ValidateDataStructure");
+    postProcessingSteps.push_back("ImproveCacheLocality");
+    postProcessingSteps.push_back("RemoveRedundantMaterials");
+    postProcessingSteps.push_back("FixInfacingNormals");
+    postProcessingSteps.push_back("FindInvalidData");
+    postProcessingSteps.push_back("GenUVCoords");
+    postProcessingSteps.push_back("FindInstances");
+    postProcessingSteps.push_back("OptimizeMeshes");
+    postProcessingSteps.push_back("CalcTangentSpace");
+
+    return postProcessingSteps;
+}
+
 void Controller::onNewScene()
 {
     newSceneWizard->restart();

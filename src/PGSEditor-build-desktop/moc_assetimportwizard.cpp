@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'assetimportwizard.h'
 **
-** Created: Fri Sep 16 12:13:24 2011
+** Created: Sun Sep 18 11:31:04 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,18 +23,21 @@ static const uint qt_meta_data_AssetImportWizard[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       1,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: signature, parameters, type, tag, flags
+      19,   18,   18,   18, 0x0a,
+
        0        // eod
 };
 
 static const char qt_meta_stringdata_AssetImportWizard[] = {
-    "AssetImportWizard\0"
+    "AssetImportWizard\0\0onChooseFile()\0"
 };
 
 const QMetaObject AssetImportWizard::staticMetaObject = {
@@ -64,6 +67,13 @@ int AssetImportWizard::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QWizard::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: onChooseFile(); break;
+        default: ;
+        }
+        _id -= 1;
+    }
     return _id;
 }
 QT_END_MOC_NAMESPACE

@@ -14,6 +14,7 @@ public:
     explicit Controller(MainWindow* mainWindow);
 
     QStringList availableSystems() const;
+    QStringList getAssetImportPostProcessingSteps() const;
 
 signals:
     void sceneDirectorySelected(const QString& dir);

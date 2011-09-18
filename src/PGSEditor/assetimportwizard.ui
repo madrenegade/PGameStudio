@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>797</width>
-    <height>470</height>
+    <width>572</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,32 @@
    <property name="subTitle">
     <string>General</string>
    </property>
+   <layout class="QFormLayout" name="formLayout">
+    <property name="fieldGrowthPolicy">
+     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+    </property>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>File:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="lineEditFilename"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonChooseFile">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QWizardPage" name="wizardPageOptimizations">
    <property name="title">
@@ -28,6 +54,11 @@
    <property name="subTitle">
     <string>Optimizations</string>
    </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QWizardPage" name="wizardPageConfirm">
    <property name="title">
@@ -39,5 +70,25 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButtonChooseFile</sender>
+   <signal>clicked()</signal>
+   <receiver>AssetImportWizard</receiver>
+   <slot>onChooseFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>506</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>285</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onChooseFile()</slot>
+ </slots>
 </ui>
