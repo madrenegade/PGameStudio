@@ -15,6 +15,8 @@
 
 namespace Renderer
 {
+    class IndexBuffer;
+    
     class VertexBuffer
     {
     public:
@@ -23,7 +25,7 @@ namespace Renderer
         
         void setData(const Utilities::Memory::byte_pointer data, unsigned int numVertices, const Graphics::VertexFormat& fmt);
         
-        void render();
+        void render(IndexBuffer* ib = 0);
         
     private:
         void detectPositionType();

@@ -17,13 +17,14 @@ namespace Graphics
     class MeshSceneNode : public SceneNode
     {
     public:
-        MeshSceneNode(unsigned long vb, unsigned long effect);
+        MeshSceneNode(unsigned long vb, unsigned long ib, unsigned long effect);
         virtual ~MeshSceneNode();
         
         virtual void prepare(Renderer* renderer);
         
     private:
         unsigned long vb;
+        unsigned long ib;
         
         Material mat;
     };

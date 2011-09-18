@@ -20,8 +20,11 @@
 
 #include "Utilities/IO/FileSystem.h"
 #include "Utilities/IO/File.h"
+#include "Utilities/string.h"
 
 #include "Math/Vector2.h"
+
+#include <sstream>
 
 using namespace Utilities::Memory;
 
@@ -60,28 +63,113 @@ namespace Graphics
 
     void SystemScene::load(const Utilities::IO::File& file)
     {
-        boost::shared_array<char> data = memoryManager->allocate<char, 3 * sizeof(TexturedVertexWithNormal)>();
+        std::string s(file.getData(), file.getSize());
+        std::string temp;
         
-        TexturedVertexWithNormal* vertices = reinterpret_cast<TexturedVertexWithNormal*>(data.get());
-        vertices[0].position = Math::Vector3(0, -1, -1);
-        vertices[0].texcoords = Math::Vector2(0, 0);
-        vertices[0].normal = Math::Vector3(0, 1, 0);
+        std::istringstream stream(s);
         
-        vertices[1].position = Math::Vector3(0, 1, -5);
-        vertices[1].texcoords = Math::Vector2(0, 1);
-        vertices[1].normal = Math::Vector3(0, 1, 0);
+        stream >> temp; // Meshes:
+        unsigned int numMeshes = 0;
+        stream >> numMeshes;
         
-        vertices[2].position = Math::Vector3(1, 0, -2);
-        vertices[2].texcoords = Math::Vector2(1, 0.5);
-        vertices[2].normal = Math::Vector3(0, 1, 0);
+        stream >> temp; // Materials:
+        unsigned int numMaterials = 0;
+        stream >> numMaterials;
         
-        unsigned long vbID = renderer->requestVertexBuffer(data, 3, VertexFormat::forTexturedVertexWithNormal<TexturedVertexWithNormal>());
+        stream >> temp; // Mesh:
+        stream >> temp; // mesh id
+        
+        stream >> temp; // Vertices:
+        unsigned int numVertices = 0;
+        stream >> numVertices;
+        
+        stream >> temp;
+        stream >> temp; // Positions: 1
+        
+        stream >> temp;
+        stream >> temp; // Normals: 1
+        
+        stream >> temp;
+        stream >> temp; // TexCoords: 1
+        
+        stream >> temp;
+        stream >> temp; // Tangents: 1
+        
+        stream >> temp;
+        stream >> temp; // Bitangents: 1
+        
+        boost::shared_array<char> vertexData = memoryManager->allocate<char>(numVertices * sizeof(VertexTNBT));
+        VertexTNBT* vertex = reinterpret_cast<VertexTNBT*>(vertexData.get());
+        
+        Math::Vector3 vector;
+        
+        for(unsigned int v = 0; v < numVertices; ++v)
+        {
+            stream >> temp;
+            stream >> temp; // Vertex <id>
+            
+            stream >> temp; // Position
+            stream >> vector.X;
+            stream >> vector.Y;
+            stream >> vector.Z;
+            
+            vertex[v].position = vector;
+            
+            stream >> temp; // Normal
+            stream >> vector.X;
+            stream >> vector.Y;
+            stream >> vector.Z;
+            
+            vertex[v].normal = vector;
+            
+            stream >> temp; // TexCoord
+            stream >> vector.X;
+            stream >> vector.Y;
+            
+            vertex[v].texcoords = Math::Vector2(vector.X, vector.Y);
+            
+            stream >> temp; // Tangent
+            stream >> vector.X;
+            stream >> vector.Y;
+            stream >> vector.Z;
+            
+            vertex[v].tangent = vector;
+            
+            stream >> temp; // Biangent
+            stream >> vector.X;
+            stream >> vector.Y;
+            stream >> vector.Z;
+            
+            vertex[v].bitangent = vector;
+        }
+        
+        stream >> temp; // Faces:
+        unsigned int numFaces = 0;
+        stream >> numFaces;
+        
+        boost::shared_array<unsigned short> indexes = memoryManager->allocate<unsigned short>(numFaces * 3);
+        
+        for(unsigned int face = 0; face < numFaces; ++face)
+        {
+            stream >> temp;
+            stream >> temp; // Face <id>
+            
+            stream >> temp;
+            stream >> temp; // Indexes: 3
+            
+            stream >> indexes[face * 3];
+            stream >> indexes[face * 3 + 1];
+            stream >> indexes[face * 3 + 2];
+        }
+        
+        unsigned long vbID = renderer->requestVertexBuffer(vertexData, numVertices, VertexFormat::forTNBT<VertexTNBT>());
+        unsigned long ibID = renderer->requestIndexBuffer(indexes, numFaces * 3);
         
         Utilities::IO::File effectFile(fileSystem->read("fx/default.cgfx"));
         
         unsigned long effectID = renderer->requestEffect(effectFile);
 
-        scene.reset(new MeshSceneNode(vbID, effectID));
+        scene.reset(new MeshSceneNode(vbID, ibID, effectID));
     }
 
     tbb::task* SystemScene::getTask(tbb::task* parent)

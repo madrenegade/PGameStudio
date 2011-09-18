@@ -22,6 +22,7 @@ namespace Graphics
     void Renderer::processRequests()
     {
         processVertexBufferRequests();
+        processIndexBufferRequests();
         processEffectRequests();
     }
     

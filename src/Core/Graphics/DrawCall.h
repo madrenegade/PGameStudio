@@ -15,6 +15,7 @@ namespace Graphics
     struct DrawCall
     {
         unsigned long vertexBuffer;
+        unsigned long indexBuffer;
         Material* material;
     };
 }

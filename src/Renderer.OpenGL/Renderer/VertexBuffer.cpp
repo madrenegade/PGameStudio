@@ -6,6 +6,7 @@
  */
 
 #include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 
 #include <glog/logging.h>
 
@@ -36,7 +37,7 @@ namespace Renderer
         detectNormalType();
     }
 
-    void VertexBuffer::render()
+    void VertexBuffer::render(IndexBuffer* ib)
     {
         glBindBuffer(GL_ARRAY_BUFFER, id);
         glEnableClientState(GL_VERTEX_ARRAY);
@@ -44,6 +45,8 @@ namespace Renderer
 
         if (format.hasTexCoords())
         {
+            glClientActiveTexture(GL_TEXTURE0);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             glTexCoordPointer(2, texCoordType, format.getVertexSize(), (const GLvoid*) format.getTexCoordOffset());
         }
@@ -53,18 +56,44 @@ namespace Renderer
             glEnableClientState(GL_NORMAL_ARRAY);
             glNormalPointer(normalType, format.getVertexSize(), (const GLvoid*) format.getNormalOffset());
         }
-
-        //        if(this->m_pIndexBuffer)
-        //        {
-        //            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pIndexBuffer->GetBufferID());
-        //            glDrawElements(this->m_primitiveType, m_pIndexBuffer->GetIndexCount(), GL_UNSIGNED_SHORT, 0);
-        //            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        //        }
-        //        else
-        //        {
-        glDrawArrays(GL_TRIANGLES, 0, numVertices);
-        //        }
         
+        if(format.hasTangent())
+        {
+            glClientActiveTexture(GL_TEXTURE1);
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glTexCoordPointer(3, normalType, format.getVertexSize(), (GLvoid*) format.getTangentOffset());
+        }
+        
+        if(format.hasBitangent())
+        {
+            glClientActiveTexture(GL_TEXTURE2);
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glTexCoordPointer(3, normalType, format.getVertexSize(), (GLvoid*) format.getBitangentOffset());
+        }
+
+        if (ib)
+        {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->getID());
+            glDrawElements(GL_TRIANGLES, ib->getNumIndexes(), GL_UNSIGNED_SHORT, 0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        }
+        else
+        {
+            glDrawArrays(GL_TRIANGLES, 0, numVertices);
+        }
+        
+        if(format.hasBitangent())
+        {
+            glClientActiveTexture(GL_TEXTURE2);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        }
+        
+        if(format.hasTangent())
+        {
+            glClientActiveTexture(GL_TEXTURE1);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        }
+
         if (format.hasNormal())
         {
             glDisableClientState(GL_NORMAL_ARRAY);
@@ -72,6 +101,7 @@ namespace Renderer
 
         if (format.hasTexCoords())
         {
+            glClientActiveTexture(GL_TEXTURE0);
             glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
 

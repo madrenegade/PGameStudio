@@ -6,23 +6,24 @@
  */
 
 #include "Renderer/OpenGLRenderer.h"
-#include "Renderer/VertexBufferManager.h"
 #include "Renderer/VertexBuffer.h"
-#include "Renderer/EffectManager.h"
+#include "Renderer/IndexBuffer.h"
 #include "Renderer/Effect.h"
+
+#include "Renderer/ErrorHandler.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <glog/logging.h>
 #include <list>
 
 namespace Renderer
 {
 
-    OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<VertexBufferManager>& vbManager,
-                                   const boost::shared_ptr<EffectManager>& effectManager)
-    : vbID(), effectID(), vertexBuffers(vbManager), effects(effectManager)
+    OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
+                                   const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
+                                   const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager)
+    : vbID(), ibID(), effectID(), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager)
     {
     }
 
@@ -38,7 +39,7 @@ namespace Renderer
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_DEPTH_TEST);
 
-        check();
+        ErrorHandler::checkForErrors();
 
         VLOG(2) << "creating framebuffer";
 
@@ -49,14 +50,14 @@ namespace Renderer
         glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxbuffers);
 
         VLOG(2) << "Max render targets: " << maxbuffers;
-        check();
+        ErrorHandler::checkForErrors();
 
         VLOG(2) << "Create color texture";
         glGenTextures(1, &colorTexture);
         glBindTexture(GL_TEXTURE_2D, colorTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        check();
+        ErrorHandler::checkForErrors();
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
 
@@ -65,8 +66,8 @@ namespace Renderer
         glBindTexture(GL_TEXTURE_2D, aux0Texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        check();
-        
+        ErrorHandler::checkForErrors();
+
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, aux0Texture, 0);
 
         VLOG(2) << "create aux1 texture";
@@ -74,43 +75,42 @@ namespace Renderer
         glBindTexture(GL_TEXTURE_2D, aux1Texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        check();
+        ErrorHandler::checkForErrors();
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, aux1Texture, 0);
 
         VLOG(2) << "creating depth buffer";
         glGenTextures(1, &depthTexture);
         glBindTexture(GL_TEXTURE_2D, depthTexture);
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexParameteri (GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, 800, 600, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        check();
-        
+        ErrorHandler::checkForErrors();
+
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-        
-//        glGenRenderbuffers(1, &depthBuffer);
-//        glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-//        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, 800, 600);
-//        check();
-//
-//        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-//        check();
+
+        //        glGenRenderbuffers(1, &depthBuffer);
+        //        glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+        //        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, 800, 600);
+        //        check();
+        //
+        //        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+        //        check();
 
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         {
             LOG(FATAL) << "Frame buffer status incomplete";
         }
-        
+
         glDrawBuffer(GL_NONE);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        
-       
-        check();
+
+        ErrorHandler::checkForErrors();
     }
 
     unsigned long OpenGLRenderer::requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
@@ -129,11 +129,28 @@ namespace Renderer
         return id;
     }
 
+    unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned short>& data, unsigned int numIndexes)
+    {
+        unsigned long id = ibID.fetch_and_add(1);
+
+        IndexBufferRequest request;
+        request.id = id;
+        request.data = data;
+        request.numIndexes = numIndexes;
+        ibRequests.push(request);
+
+        return id;
+    }
+
     unsigned long OpenGLRenderer::requestEffect(const Utilities::IO::File& file)
     {
         unsigned long id = effectID.fetch_and_add(1);
+        
+        EffectRequest request;
+        request.id = id;
+        request.file = file;
 
-        effectRequests.push(std::make_pair(id, file));
+        effectRequests.push(request);
 
         return id;
     }
@@ -141,6 +158,11 @@ namespace Renderer
     bool OpenGLRenderer::isVertexBufferLoaded(unsigned long vbID) const
     {
         return vertexBuffers->isLoaded(vbID);
+    }
+
+    bool OpenGLRenderer::isIndexBufferLoaded(unsigned long ibID) const
+    {
+        return indexBuffers->isLoaded(ibID);
     }
 
     bool OpenGLRenderer::isEffectLoaded(unsigned long effectID) const
@@ -167,37 +189,37 @@ namespace Renderer
             }
         }
 
-        VertexBuffer* vertexBuffer;
+        VertexBuffer* vertexBuffer = 0;
+        IndexBuffer* indexBuffer = 0;
         Effect* effect = effects->get(0);
 
         glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+
+        GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
         glDrawBuffers(3, buffers);
-//        glDrawBuffer(GL_NONE);
-//        glReadBuffer(GL_NONE);
 
         effect->activate();
-        
+
         while (effect->hasNextPass())
         {
             for (auto i = drawCallList.begin(); i != drawCallList.end(); ++i)
             {
                 vertexBuffer = vertexBuffers->get(i->vertexBuffer);
-                vertexBuffer->render();
+                indexBuffer = indexBuffers->get(i->indexBuffer);
+                vertexBuffer->render(indexBuffer);
             }
-            
+
             effect->gotoNextPass();
         }
-        
+
         effect->deactivate();
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // render quad with texture on it
         glEnable(GL_TEXTURE_2D);
-        
+
         glBindTexture(GL_TEXTURE_2D, colorTexture);
         glBegin(GL_QUADS);
         glTexCoord2d(0, 0);
@@ -212,7 +234,7 @@ namespace Renderer
         glTexCoord2d(0, 1);
         glVertex2d(-1, 1);
         glEnd();
-        
+
         glBindTexture(GL_TEXTURE_2D, aux0Texture);
         glBegin(GL_QUADS);
         glTexCoord2d(0, 0);
@@ -227,7 +249,7 @@ namespace Renderer
         glTexCoord2d(0, 1);
         glVertex2d(0, 1);
         glEnd();
-        
+
         glBindTexture(GL_TEXTURE_2D, aux1Texture);
         glBegin(GL_QUADS);
         glTexCoord2d(0, 0);
@@ -242,7 +264,7 @@ namespace Renderer
         glTexCoord2d(0, 1);
         glVertex2d(0, 0);
         glEnd();
-        
+
         glBindTexture(GL_TEXTURE_2D, depthTexture);
         glBegin(GL_QUADS);
         glTexCoord2d(0, 0);
@@ -257,8 +279,8 @@ namespace Renderer
         glTexCoord2d(0, 1);
         glVertex2d(-1, 0);
         glEnd();
-        
-        check();
+
+        ErrorHandler::checkForErrors();
     }
 
     void OpenGLRenderer::processVertexBufferRequests()
@@ -276,28 +298,33 @@ namespace Renderer
         }
     }
 
+    void OpenGLRenderer::processIndexBufferRequests()
+    {
+        IndexBufferRequest request;
+
+        while (!ibRequests.empty())
+        {
+            if (ibRequests.try_pop(request))
+            {
+                VLOG(2) << "Handling index buffer request with id " << request.id;
+
+                indexBuffers->createFrom(request);
+            }
+        }
+    }
+
     void OpenGLRenderer::processEffectRequests()
     {
-        std::pair<unsigned long, Utilities::IO::File> request;
+        EffectRequest request;
 
         while (!effectRequests.empty())
         {
             if (effectRequests.try_pop(request))
             {
-                VLOG(2) << "Handling effect request with id " << request.first;
+                VLOG(2) << "Handling effect request with id " << request.id;
 
                 effects->createFrom(request);
             }
-        }
-    }
-
-    void OpenGLRenderer::check()
-    {
-        auto error = glGetError();
-
-        if (error != 0)
-        {
-            LOG(FATAL) << "OpenGL error: " << error << std::endl << gluErrorString(error);
         }
     }
 }

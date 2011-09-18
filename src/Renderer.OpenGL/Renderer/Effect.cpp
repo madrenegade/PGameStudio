@@ -58,7 +58,7 @@ namespace Renderer
         modelView = cgGetEffectParameterBySemantic(effect, "ModelView");
 
         const Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
-        const Math::Matrix4 view = Math::Matrix4::LookAt(Math::Vector3(0, 0, 0), Math::Vector3(0, 0, -1), Math::Vector3(0, 1, 0));
+        const Math::Matrix4 view = Math::Matrix4::LookAt(Math::Vector3(4, 4, 4), Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
 
         const Math::Matrix4 mvp = view * projection;
         cgSetMatrixParameterdc(modelViewProjection, mvp);

@@ -12,8 +12,8 @@
 namespace Graphics
 {
 
-    MeshSceneNode::MeshSceneNode(unsigned long vbID, unsigned long effect)
-    : vb(vbID)
+    MeshSceneNode::MeshSceneNode(unsigned long vbID, unsigned long ibID, unsigned long effect)
+    : vb(vbID), ib(ibID)
     {
         mat.effect = effect;
     }
@@ -24,10 +24,11 @@ namespace Graphics
     
     void MeshSceneNode::prepare(Renderer* renderer)
     {
-        if(renderer->isVertexBufferLoaded(vb) && renderer->isEffectLoaded(mat.effect))
+        if(renderer->isVertexBufferLoaded(vb) && renderer->isIndexBufferLoaded(ib) && renderer->isEffectLoaded(mat.effect))
         {
             DrawCall drawCall;
             drawCall.vertexBuffer = vb;
+            drawCall.indexBuffer = ib;
             drawCall.material = &mat;
             
             renderer->pushDrawCall(drawCall);

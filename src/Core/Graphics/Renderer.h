@@ -24,34 +24,41 @@ namespace Graphics
 {
     class VertexFormat;
     class DrawCall;
-    
+
     class Renderer
     {
     public:
         virtual ~Renderer();
-        
+
         virtual void initialize() = 0;
-        
+
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data, unsigned int numVertices, const VertexFormat& fmt) = 0;
+
+        //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned char>& data, unsigned int numIndexes) = 0;
+        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned short>& data, unsigned int numIndexes) = 0;
+        //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
+
         virtual unsigned long requestEffect(const Utilities::IO::File& file) = 0;
-        
+
         virtual bool isVertexBufferLoaded(unsigned long vbID) const = 0;
+        virtual bool isIndexBufferLoaded(unsigned long ibID) const = 0;
         virtual bool isEffectLoaded(unsigned long effectID) const = 0;
-        
+
         virtual void beginScene() = 0;
-        
+
         void processRequests();
-        
+
         void pushDrawCall(const DrawCall& drawCall);
-        
+
         virtual void processDrawCalls() = 0;
-        
+
     protected:
         Renderer();
-        
+
         virtual void processVertexBufferRequests() = 0;
+        virtual void processIndexBufferRequests() = 0;
         virtual void processEffectRequests() = 0;
-        
+
         tbb::concurrent_queue<DrawCall> drawCalls;
     };
 }

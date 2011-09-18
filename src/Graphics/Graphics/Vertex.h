@@ -25,6 +25,15 @@ namespace Graphics
         Math::Vector2 texcoords;
         Math::Vector3 normal;
     };
+    
+    struct VertexTNBT
+    {
+        Math::Vector3 position;
+        Math::Vector2 texcoords;
+        Math::Vector3 normal;
+        Math::Vector3 bitangent;
+        Math::Vector3 tangent;
+    };
 }
 
 #endif	/* GRAPHICS_VERTEX_H */
