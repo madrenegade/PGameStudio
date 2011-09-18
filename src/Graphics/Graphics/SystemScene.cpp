@@ -12,13 +12,16 @@
 #include "Graphics/Window.h"
 
 #include "Graphics/MeshSceneNode.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/Vertex.h"
 
 #include "Platform/PlatformManager.h"
 #include "Platform/Library.h"
 
 #include "Utilities/IO/FileSystem.h"
 #include "Utilities/IO/File.h"
-#include "Graphics/GraphicsContext.h"
+
+#include "Math/Vector2.h"
 
 using namespace Utilities::Memory;
 
@@ -57,22 +60,22 @@ namespace Graphics
 
     void SystemScene::load(const Utilities::IO::File& file)
     {
-        double* rawData = new double[9];
-        rawData[0] = 0.0;
-        rawData[1] = -1.0;
-        rawData[2] = -1.0;
-
-        rawData[3] = 0.0;
-        rawData[4] = 1.0;
-        rawData[5] = -5.0;
-
-        rawData[6] = 1.0;
-        rawData[7] = 0.0;
-        rawData[8] = -2.0;
-
-        boost::shared_array<char> data(reinterpret_cast<char*> (rawData));
-
-        unsigned long vbID = renderer->requestVertexBuffer(data, 3, VertexFormat());
+        boost::shared_array<char> data = memoryManager->allocate<char, 3 * sizeof(TexturedVertexWithNormal)>();
+        
+        TexturedVertexWithNormal* vertices = reinterpret_cast<TexturedVertexWithNormal*>(data.get());
+        vertices[0].position = Math::Vector3(0, -1, -1);
+        vertices[0].texcoords = Math::Vector2(0, 0);
+        vertices[0].normal = Math::Vector3(0, 1, 0);
+        
+        vertices[1].position = Math::Vector3(0, 1, -5);
+        vertices[1].texcoords = Math::Vector2(0, 1);
+        vertices[1].normal = Math::Vector3(0, 1, 0);
+        
+        vertices[2].position = Math::Vector3(1, 0, -2);
+        vertices[2].texcoords = Math::Vector2(1, 0.5);
+        vertices[2].normal = Math::Vector3(0, 1, 0);
+        
+        unsigned long vbID = renderer->requestVertexBuffer(data, 3, VertexFormat::forTexturedVertexWithNormal<TexturedVertexWithNormal>());
         
         Utilities::IO::File effectFile(fileSystem->read("fx/default.cgfx"));
         
