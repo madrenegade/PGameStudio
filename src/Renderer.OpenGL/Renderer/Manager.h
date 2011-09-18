@@ -11,6 +11,9 @@
 #include <map>
 #include <boost/shared_ptr.hpp>
 
+#include <tbb/atomic.h>
+#include <tbb/concurrent_queue.h>
+
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/MemoryManager.h"
 
@@ -21,36 +24,61 @@ namespace Renderer
     class Manager
     {
     public:
+
         Manager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                 Utilities::Memory::pool_id pool)
-        : memory(memoryManager), pool(pool)
-        {  
-        }
-        
-        void createFrom(const RequestType& request)
+        : currentID(), memory(memoryManager), pool(pool)
         {
-            boost::shared_ptr<T> object = memory->construct(T(), pool);
-            ObjectInitializerType::initialize(object, request);
-            
-            data[request.id] = object;
         }
-        
+
+        unsigned long queueRequest(RequestType& request)
+        {
+            unsigned long id = currentID.fetch_and_add(1);
+
+            request.id = id;
+            requests.push(request);
+
+            return id;
+        }
+
+        void processRequests()
+        {
+            RequestType request;
+
+            while (!requests.empty())
+            {
+                if (requests.try_pop(request))
+                {
+                    VLOG(2) << "Handling request with id " << request.id;
+
+                    boost::shared_ptr<T> object = memory->construct(T(), pool);
+                    ObjectInitializerType::initialize(object, request);
+
+                    data[request.id] = object;
+                }
+            }
+        }
+
         bool isLoaded(unsigned long id) const
         {
             return data.find(id) != data.end();
         }
-        
+
         T* get(unsigned long id) const
         {
             return data.at(id).get();
         }
 
     private:
+        tbb::atomic<unsigned long> currentID;
+
         boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
         Utilities::Memory::pool_id pool;
 
         typedef std::map<unsigned long, boost::shared_ptr<T> > DataMap;
         DataMap data;
+
+        tbb::concurrent_queue<RequestType> requests;
     };
 }
 

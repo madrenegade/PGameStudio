@@ -19,26 +19,22 @@
 #include "Renderer/IndexBufferInitializer.h"
 #include "Renderer/EffectRequest.h"
 #include "Renderer/EffectInitializer.h"
+#include "Renderer/TextureRequest.h"
+#include "Renderer/TextureInitializer.h"
 
 #include "Utilities/IO/File.h"
 
-#include <tbb/atomic.h>
-#include <tbb/concurrent_queue.h>
 #include <boost/shared_ptr.hpp>
 
 namespace Renderer
 {
-    class VertexBuffer;
-    class VertexBufferManager;
-    class IndexBufferManager;
-    class EffectManager;
-
     class OpenGLRenderer : public Graphics::Renderer
     {
     public:
         OpenGLRenderer(const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer> >& vbManager,
                        const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer> >& ibManager,
-                       const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager);
+                       const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
+                       const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager);
         virtual ~OpenGLRenderer();
 
         virtual void initialize();
@@ -49,10 +45,12 @@ namespace Renderer
         virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned short>& data, unsigned int numIndexes);
 
         virtual unsigned long requestEffect(const Utilities::IO::File& file);
+        virtual unsigned long requestTexture(const Utilities::IO::File& file);
 
         virtual bool isVertexBufferLoaded(unsigned long vbID) const;
         virtual bool isIndexBufferLoaded(unsigned long ibID) const;
         virtual bool isEffectLoaded(unsigned long effectID) const;
+        virtual bool isTextureLoaded(unsigned long textureID) const;
 
         virtual void beginScene();
 
@@ -62,19 +60,13 @@ namespace Renderer
         virtual void processVertexBufferRequests();
         virtual void processIndexBufferRequests();
         virtual void processEffectRequests();
+        virtual void processTextureRequests();
 
     private:
-        tbb::atomic<unsigned long> vbID;
-        tbb::atomic<unsigned long> ibID;
-        tbb::atomic<unsigned long> effectID;
-
-        tbb::concurrent_queue<VertexBufferRequest> vbRequests;
-        tbb::concurrent_queue<IndexBufferRequest> ibRequests;
-        tbb::concurrent_queue<EffectRequest> effectRequests;
-
-        boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer >> vertexBuffers;
-        boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer >> indexBuffers;
+        boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
+        boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
         boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;
+        boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> > textures;
 
         unsigned int frameBuffer;
         unsigned int depthBuffer;

@@ -39,11 +39,13 @@ namespace Graphics
         //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
 
         virtual unsigned long requestEffect(const Utilities::IO::File& file) = 0;
+        virtual unsigned long requestTexture(const Utilities::IO::File& file) = 0;
 
         virtual bool isVertexBufferLoaded(unsigned long vbID) const = 0;
         virtual bool isIndexBufferLoaded(unsigned long ibID) const = 0;
         virtual bool isEffectLoaded(unsigned long effectID) const = 0;
-
+        virtual bool isTextureLoaded(unsigned long textureID) const = 0;
+        
         virtual void beginScene() = 0;
 
         void processRequests();
@@ -58,6 +60,7 @@ namespace Graphics
         virtual void processVertexBufferRequests() = 0;
         virtual void processIndexBufferRequests() = 0;
         virtual void processEffectRequests() = 0;
+        virtual void processTextureRequests() = 0;
 
         tbb::concurrent_queue<DrawCall> drawCalls;
     };

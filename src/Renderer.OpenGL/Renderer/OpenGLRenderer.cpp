@@ -9,6 +9,7 @@
 #include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/Effect.h"
+#include "Renderer/Texture.h"
 
 #include "Renderer/ErrorHandler.h"
 
@@ -22,8 +23,9 @@ namespace Renderer
 
     OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
                                    const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
-                                   const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager)
-    : vbID(), ibID(), effectID(), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager)
+                                   const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
+                                   const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager)
+    : vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager)
     {
     }
 
@@ -116,43 +118,37 @@ namespace Renderer
     unsigned long OpenGLRenderer::requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
                                                       unsigned int numVertices, const Graphics::VertexFormat& fmt)
     {
-        unsigned long id = vbID.fetch_and_add(1);
-
         VertexBufferRequest request;
-        request.id = id;
         request.data = data;
         request.numVertices = numVertices;
         request.format = fmt;
-
-        vbRequests.push(request);
-
-        return id;
+        
+        return vertexBuffers->queueRequest(request);
     }
 
     unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned short>& data, unsigned int numIndexes)
     {
-        unsigned long id = ibID.fetch_and_add(1);
-
         IndexBufferRequest request;
-        request.id = id;
         request.data = data;
         request.numIndexes = numIndexes;
-        ibRequests.push(request);
-
-        return id;
+        
+        return indexBuffers->queueRequest(request);
     }
 
     unsigned long OpenGLRenderer::requestEffect(const Utilities::IO::File& file)
     {
-        unsigned long id = effectID.fetch_and_add(1);
-        
         EffectRequest request;
-        request.id = id;
         request.file = file;
-
-        effectRequests.push(request);
-
-        return id;
+        
+        return effects->queueRequest(request);
+    }
+    
+    unsigned long OpenGLRenderer::requestTexture(const Utilities::IO::File& file)
+    {
+        TextureRequest request;
+        request.file = file;
+        
+        return textures->queueRequest(request);
     }
 
     bool OpenGLRenderer::isVertexBufferLoaded(unsigned long vbID) const
@@ -168,6 +164,11 @@ namespace Renderer
     bool OpenGLRenderer::isEffectLoaded(unsigned long effectID) const
     {
         return effects->isLoaded(effectID);
+    }
+    
+    bool OpenGLRenderer::isTextureLoaded(unsigned long textureID) const
+    {
+        return textures->isLoaded(textureID);
     }
 
     void OpenGLRenderer::beginScene()
@@ -285,46 +286,21 @@ namespace Renderer
 
     void OpenGLRenderer::processVertexBufferRequests()
     {
-        VertexBufferRequest request;
-
-        while (!vbRequests.empty())
-        {
-            if (vbRequests.try_pop(request))
-            {
-                VLOG(2) << "Handling vertex buffer request with id " << request.id;
-
-                vertexBuffers->createFrom(request);
-            }
-        }
+        vertexBuffers->processRequests();
     }
 
     void OpenGLRenderer::processIndexBufferRequests()
     {
-        IndexBufferRequest request;
-
-        while (!ibRequests.empty())
-        {
-            if (ibRequests.try_pop(request))
-            {
-                VLOG(2) << "Handling index buffer request with id " << request.id;
-
-                indexBuffers->createFrom(request);
-            }
-        }
+        indexBuffers->processRequests();
     }
 
     void OpenGLRenderer::processEffectRequests()
     {
-        EffectRequest request;
-
-        while (!effectRequests.empty())
-        {
-            if (effectRequests.try_pop(request))
-            {
-                VLOG(2) << "Handling effect request with id " << request.id;
-
-                effects->createFrom(request);
-            }
-        }
+        effects->processRequests();
+    }
+    
+    void OpenGLRenderer::processTextureRequests()
+    {
+        textures->processRequests();
     }
 }
