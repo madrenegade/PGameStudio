@@ -1,4 +1,5 @@
 #include "Math/Vector4.h"
+#include "Matrix4.h"
 #include <cmath>
 
 namespace Math
@@ -22,6 +23,38 @@ namespace Math
         this->Z /= value;
         this->W /= value;
 
+        return *this;
+    }
+    
+    Vector4& Vector4::operator+=(const Vector4& rhs)
+    {
+        this->X += rhs.X;
+        this->Y += rhs.Y;
+        this->Z += rhs.Z;
+        this->W += rhs.W;
+
+        return *this;
+    }
+
+    Vector4& Vector4::operator-=(const Vector4& rhs)
+    {
+        this->X -= rhs.X;
+        this->Y -= rhs.Y;
+        this->Z -= rhs.Z;
+        this->W -= rhs.W;
+
+        return *this;
+    }
+    
+    Vector4& Vector4::operator*=(const Matrix4& rhs)
+    {
+        Vector4 temp(*this);
+        
+        this->X = rhs.M11() * temp.X + rhs.M12() * temp.Y + rhs.M13() * temp.Z + rhs.M14() * temp.W;
+        this->Y = rhs.M21() * temp.X + rhs.M22() * temp.Y + rhs.M23() * temp.Z + rhs.M24() * temp.W;
+        this->Z = rhs.M31() * temp.X + rhs.M32() * temp.Y + rhs.M33() * temp.Z + rhs.M34() * temp.W;
+        this->W = rhs.M41() * temp.X + rhs.M42() * temp.Y + rhs.M43() * temp.Z + rhs.M44() * temp.W;
+        
         return *this;
     }
 

@@ -5,7 +5,8 @@
 
 namespace Math
 {
-
+    class Matrix4;
+    
     class MATH_EXPORT Vector4
     {
     public:
@@ -13,6 +14,10 @@ namespace Math
         ~Vector4();
 
         Vector4& operator/=(double value);
+        Vector4& operator+=(const Vector4& rhs);
+        Vector4& operator-=(const Vector4& rhs);
+        
+        Vector4& operator*=(const Matrix4& rhs);
 
         double Length() const;
         Vector4& Normalize();

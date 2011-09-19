@@ -6,7 +6,6 @@
 
 namespace Math
 {
-
     class MATH_EXPORT Vector3
     {
     public:

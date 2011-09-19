@@ -12,6 +12,9 @@
 #include "Renderer/Texture.h"
 
 #include "Renderer/ErrorHandler.h"
+#include "Math/Matrix4.h"
+#include "Math/Vector4.h"
+#include "Math/Vector3.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -258,17 +261,58 @@ namespace Renderer
         
         effect->activate();
         
+        int sx = 800;
+        int sy = 600;
+        
+        int pixels[4][2] = 
+        {
+            {0, 0},
+            {0, sy},
+            {sx, sy},
+            {sx, 0}
+        };
+        
+        int viewport[4] = {0, 0, sx, sy};
+        
+        const Math::Vector3 camera(4, 4, 4);
+        const Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
+        const Math::Matrix4 view = Math::Matrix4::LookAt(camera, Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
+        
+        Math::Matrix4 view_rotation = view;
+        view_rotation.M41(0);
+        view_rotation.M42(0);
+        view_rotation.M43(0);
+        
+        Math::Vector3 v[4];
+        double d[3];
+        
+        for(int i = 0; i < 4; ++i)
+        {
+            gluUnProject(pixels[i][0], pixels[i][1], 1,
+                view, projection, viewport,
+                &d[0], &d[1], &d[2]);
+            
+            v[i] = Math::Vector3(d[0], d[1], d[2]);
+            v[i] -= camera;
+            v[i].Normalize();
+            //v[i] *= view;
+        }
+        
         glBegin(GL_QUADS);
-        glTexCoord2d(0, 0);
+        glMultiTexCoord2d(GL_TEXTURE0, 0, 0);
+        glMultiTexCoord3d(GL_TEXTURE1, v[0].X, v[0].Y, v[0].Z);
         glVertex2d(-1, -1);
 
-        glTexCoord2d(1, 0);
+        glMultiTexCoord2d(GL_TEXTURE0, 1, 0);
+        glMultiTexCoord3d(GL_TEXTURE1, v[1].X, v[1].Y, v[1].Z);
         glVertex2d(1, -1);
 
-        glTexCoord2d(1, 1);
+        glMultiTexCoord2d(GL_TEXTURE0, 1, 1);
+        glMultiTexCoord3d(GL_TEXTURE1, v[2].X, v[2].Y, v[2].Z);
         glVertex2d(1, 1);
 
-        glTexCoord2d(0, 1);
+        glMultiTexCoord2d(GL_TEXTURE0, 0, 1);
+        glMultiTexCoord3d(GL_TEXTURE1, v[3].X, v[3].Y, v[3].Z);
         glVertex2d(-1, 1);
         glEnd();
         

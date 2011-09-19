@@ -37,47 +37,13 @@ namespace Renderer
 
     void Texture::bind(unsigned int level)
     {
-        GLenum stage = GL_TEXTURE0;
-
-        switch (level)
-        {
-            case 0:
-                stage = GL_TEXTURE0;
-                break;
-
-            case 1:
-                stage = GL_TEXTURE1;
-                break;
-
-            default:
-                LOG(FATAL) << "Only 2 textures allowed";
-                break;
-        }
-
-        glActiveTexture(stage);
+        glActiveTexture(GL_TEXTURE0 + level);
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
     void Texture::unbind(unsigned int level)
     {
-        GLenum stage = GL_TEXTURE0;
-
-        switch (level)
-        {
-            case 0:
-                stage = GL_TEXTURE0;
-                break;
-
-            case 1:
-                stage = GL_TEXTURE1;
-                break;
-
-            default:
-                LOG(FATAL) << "Only 2 textures allowed";
-                break;
-        }
-
-        glActiveTexture(stage);
+        glActiveTexture(GL_TEXTURE0 + level);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
     
