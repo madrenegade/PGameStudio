@@ -173,6 +173,9 @@ namespace Graphics
         mat->effect = renderer->requestEffect(effectFile);
         mat->textures.push_back(renderer->requestTexture(colorTexture));
         mat->textures.push_back(renderer->requestTexture(normalTexture));
+        
+        Utilities::IO::File finalEffectFile(fileSystem->read("fx/final.cgfx"));
+        renderer->requestEffect(finalEffectFile);
 
         scene.reset(new MeshSceneNode(vbID, ibID, mat));
     }

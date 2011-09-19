@@ -30,7 +30,7 @@ namespace Renderer
         cgSetErrorHandler(CgErrorHandler, 0);
 
         cgGLRegisterStates(context);
-        //        cgGLSetManageTextureParameters(context, true);
+        cgGLSetManageTextureParameters(context, true);
     }
 
     void Effect::load(const char* code)

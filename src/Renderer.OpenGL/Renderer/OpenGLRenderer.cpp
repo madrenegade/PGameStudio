@@ -89,6 +89,7 @@ namespace Renderer
         glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE );
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, 800, 600, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
         ErrorHandler::checkForErrors();
 
@@ -236,70 +237,42 @@ namespace Renderer
         effect->deactivate();
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        // render quad with texture on it
+        
+        effect = effects->get(1);
+        
         glActiveTexture(GL_TEXTURE0);
-        glEnable(GL_TEXTURE_2D);
-
         glBindTexture(GL_TEXTURE_2D, colorTexture);
-        glBegin(GL_QUADS);
-        glTexCoord2d(0, 0);
-        glVertex2d(-1, 0);
-
-        glTexCoord2d(1, 0);
-        glVertex2d(0, 0);
-
-        glTexCoord2d(1, 1);
-        glVertex2d(0, 1);
-
-        glTexCoord2d(0, 1);
-        glVertex2d(-1, 1);
-        glEnd();
-
+        effect->setTexture("TEX0", colorTexture);
+        
+        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, aux0Texture);
-        glBegin(GL_QUADS);
-        glTexCoord2d(0, 0);
-        glVertex2d(0, 0);
-
-        glTexCoord2d(1, 0);
-        glVertex2d(1, 0);
-
-        glTexCoord2d(1, 1);
-        glVertex2d(1, 1);
-
-        glTexCoord2d(0, 1);
-        glVertex2d(0, 1);
-        glEnd();
-
+        effect->setTexture("TEX1", aux0Texture);
+        
+        glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, aux1Texture);
-        glBegin(GL_QUADS);
-        glTexCoord2d(0, 0);
-        glVertex2d(0, -1);
-
-        glTexCoord2d(1, 0);
-        glVertex2d(1, -1);
-
-        glTexCoord2d(1, 1);
-        glVertex2d(1, 0);
-
-        glTexCoord2d(0, 1);
-        glVertex2d(0, 0);
-        glEnd();
-
+        effect->setTexture("TEX2", aux1Texture);
+        
+        glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, depthTexture);
+        effect->setTexture("TEX3", depthTexture);
+        
+        effect->activate();
+        
         glBegin(GL_QUADS);
         glTexCoord2d(0, 0);
         glVertex2d(-1, -1);
 
         glTexCoord2d(1, 0);
-        glVertex2d(0, -1);
+        glVertex2d(1, -1);
 
         glTexCoord2d(1, 1);
-        glVertex2d(0, 0);
+        glVertex2d(1, 1);
 
         glTexCoord2d(0, 1);
-        glVertex2d(-1, 0);
+        glVertex2d(-1, 1);
         glEnd();
+        
+        effect->deactivate();
 
         ErrorHandler::checkForErrors();
     }
