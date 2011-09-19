@@ -28,6 +28,8 @@
 
 namespace Renderer
 {
+    class FrameBuffer;
+    
     class OpenGLRenderer : public Graphics::Renderer
     {
     public:
@@ -68,13 +70,13 @@ namespace Renderer
         boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;
         boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> > textures;
 
-        unsigned int frameBuffer;
-        unsigned int depthBuffer;
-
-        unsigned int colorTexture;
-        unsigned int aux0Texture;
-        unsigned int aux1Texture;
-        unsigned int depthTexture;
+        boost::shared_ptr<FrameBuffer> frameBuffer;
+//        unsigned int frameBuffer;
+//
+//        unsigned int colorTexture;
+//        unsigned int aux0Texture;
+//        unsigned int aux1Texture;
+//        unsigned int depthTexture;
     };
 }
 

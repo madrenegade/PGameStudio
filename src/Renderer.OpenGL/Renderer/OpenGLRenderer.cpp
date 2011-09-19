@@ -11,6 +11,8 @@
 #include "Renderer/Effect.h"
 #include "Renderer/Texture.h"
 
+#include "Renderer/FrameBuffer.h"
+
 #include "Renderer/ErrorHandler.h"
 #include "Math/Matrix4.h"
 #include "Math/Vector4.h"
@@ -38,84 +40,14 @@ namespace Renderer
 
     void OpenGLRenderer::initialize()
     {
+        unsigned int width = 800;
+        unsigned int height = 600;
+        
         glewInit();
-        glViewport(0, 0, 800, 600);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_DEPTH_TEST);
-
-        ErrorHandler::checkForErrors();
-
-        VLOG(2) << "creating framebuffer";
-
-        glGenFramebuffers(1, &frameBuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-        GLint maxbuffers;
-        glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxbuffers);
-
-        VLOG(2) << "Max render targets: " << maxbuffers;
-        ErrorHandler::checkForErrors();
-
-        VLOG(2) << "Create color texture";
-        glGenTextures(1, &colorTexture);
-        glBindTexture(GL_TEXTURE_2D, colorTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        ErrorHandler::checkForErrors();
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
-
-        VLOG(2) << "create aux0 texture";
-        glGenTextures(1, &aux0Texture);
-        glBindTexture(GL_TEXTURE_2D, aux0Texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        ErrorHandler::checkForErrors();
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, aux0Texture, 0);
-
-        VLOG(2) << "create aux1 texture";
-        glGenTextures(1, &aux1Texture);
-        glBindTexture(GL_TEXTURE_2D, aux1Texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 800, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        ErrorHandler::checkForErrors();
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, aux1Texture, 0);
-
-        VLOG(2) << "creating depth buffer";
-        glGenTextures(1, &depthTexture);
-        glBindTexture(GL_TEXTURE_2D, depthTexture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE );
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, 800, 600, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        ErrorHandler::checkForErrors();
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-
-        //        glGenRenderbuffers(1, &depthBuffer);
-        //        glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-        //        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, 800, 600);
-        //        check();
-        //
-        //        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-        //        check();
-
-
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        {
-            LOG(FATAL) << "Frame buffer status incomplete";
-        }
-
-        glDrawBuffer(GL_NONE);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+        glViewport(0, 0, width, height);
+        
+        frameBuffer.reset(new FrameBuffer(width, height));
+        
         ErrorHandler::checkForErrors();
     }
 
@@ -198,7 +130,7 @@ namespace Renderer
         IndexBuffer* indexBuffer = 0;
         Effect* effect = effects->get(0);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+        frameBuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
@@ -239,9 +171,14 @@ namespace Renderer
 
         effect->deactivate();
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        frameBuffer->unbind();
         
         effect = effects->get(1);
+        
+        unsigned int colorTexture = frameBuffer->getColorTexture();
+        unsigned int aux0Texture = frameBuffer->getAux0Texture();
+        unsigned int aux1Texture = frameBuffer->getAux1Texture();
+        unsigned int depthTexture = frameBuffer->getDepthTexture();
         
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, colorTexture);
@@ -279,11 +216,11 @@ namespace Renderer
         const Math::Matrix4 view = Math::Matrix4::LookAt(camera, Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
         
         Math::Matrix4 view_rotation = view;
-        view_rotation.M41(0);
-        view_rotation.M42(0);
-        view_rotation.M43(0);
+//        view_rotation.M41(0);
+//        view_rotation.M42(0);
+//        view_rotation.M43(0);
         
-        Math::Vector3 v[4];
+        Math::Vector4 v[4];
         double d[3];
         
         for(int i = 0; i < 4; ++i)
@@ -292,10 +229,10 @@ namespace Renderer
                 view, projection, viewport,
                 &d[0], &d[1], &d[2]);
             
-            v[i] = Math::Vector3(d[0], d[1], d[2]);
-            v[i] -= camera;
+            v[i] = Math::Vector4(d[0], d[1], d[2], 0);
+            v[i] -= Math::Vector4(camera.X, camera.Y, camera.Z, 0);
             v[i].Normalize();
-            //v[i] *= view;
+            v[i] *= view_rotation;
         }
         
         glBegin(GL_QUADS);
