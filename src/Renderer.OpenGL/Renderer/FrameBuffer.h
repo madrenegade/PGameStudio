@@ -8,45 +8,46 @@
 #ifndef RENDERER_FRAMEBUFFER_H
 #define	RENDERER_FRAMEBUFFER_H
 
+#include <vector>
+#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
+
+#include "Renderer/Texture.h"
+
 namespace Renderer
 {
-
+    
     class FrameBuffer
     {
     public:
-        FrameBuffer(unsigned int width, unsigned int height);
+        FrameBuffer(unsigned int numColorAttachments, unsigned int width, unsigned int height);
         ~FrameBuffer();
         
         void bind();
         void unbind();
         
-        unsigned int getColorTexture() const
+        const Texture* getColorAttachment(unsigned int index) const
         {
-            return colorTexture;
+            return colorAttachments.at(index).get();
         }
         
-        unsigned int getAux0Texture() const
+        const Texture* getDepthAttachment() const
         {
-            return aux0Texture;
-        }
-        
-        unsigned int getAux1Texture() const
-        {
-            return aux1Texture;
-        }
-        
-        unsigned int getDepthTexture() const
-        {
-            return depthTexture;
+            return depthTexture.get();
         }
         
     private:
+        void createColorAttachment();
+        void createDepthAttachment();
+        
+        unsigned int width;
+        unsigned int height;
+        
         unsigned int id;
         
-        unsigned int colorTexture;
-        unsigned int aux0Texture;
-        unsigned int aux1Texture;
-        unsigned int depthTexture;
+        std::vector<boost::shared_ptr<Texture> > colorAttachments;
+        
+        boost::scoped_ptr<Texture> depthTexture;
     };
 }
 

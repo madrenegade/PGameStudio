@@ -46,7 +46,7 @@ namespace Renderer
         glewInit();
         glViewport(0, 0, width, height);
         
-        frameBuffer.reset(new FrameBuffer(width, height));
+        frameBuffer.reset(new FrameBuffer(3, width, height));
         
         ErrorHandler::checkForErrors();
     }
@@ -175,26 +175,26 @@ namespace Renderer
         
         effect = effects->get(1);
         
-        unsigned int colorTexture = frameBuffer->getColorTexture();
-        unsigned int aux0Texture = frameBuffer->getAux0Texture();
-        unsigned int aux1Texture = frameBuffer->getAux1Texture();
-        unsigned int depthTexture = frameBuffer->getDepthTexture();
+        const Texture* colorTexture = frameBuffer->getColorAttachment(0);
+        const Texture* aux0Texture = frameBuffer->getColorAttachment(1);
+        const Texture* aux1Texture = frameBuffer->getColorAttachment(2);
+        const Texture* depthTexture = frameBuffer->getDepthAttachment();
         
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, colorTexture);
-        effect->setTexture("TEX0", colorTexture);
+        glBindTexture(GL_TEXTURE_2D, colorTexture->getID());
+        effect->setTexture("TEX0", colorTexture->getID());
         
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, aux0Texture);
-        effect->setTexture("TEX1", aux0Texture);
+        glBindTexture(GL_TEXTURE_2D, aux0Texture->getID());
+        effect->setTexture("TEX1", aux0Texture->getID());
         
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, aux1Texture);
-        effect->setTexture("TEX2", aux1Texture);
+        glBindTexture(GL_TEXTURE_2D, aux1Texture->getID());
+        effect->setTexture("TEX2", aux1Texture->getID());
         
         glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, depthTexture);
-        effect->setTexture("TEX3", depthTexture);
+        glBindTexture(GL_TEXTURE_2D, depthTexture->getID());
+        effect->setTexture("TEX3", depthTexture->getID());
         
         effect->activate();
         

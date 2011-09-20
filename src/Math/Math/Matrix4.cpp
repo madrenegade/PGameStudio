@@ -203,10 +203,7 @@ namespace Math
 #endif
         );
 
-
-        Matrix4 trans(Matrix4::CreateTranslation(-position));
-
-        return trans.Transpose() * rot;
+        return Matrix4::CreateTranslation(-position).Transpose() * rot;
     }
 
     Matrix4 Matrix4::CreateTranslation(const Vector3& translation)
