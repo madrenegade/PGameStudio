@@ -9,13 +9,14 @@
 #define	GRAPHICS_MATERIAL_H
 
 #include <vector>
+#include "Math/Vector4.h"
 
 namespace Graphics
 {
 
     struct Material
     {
-        unsigned long effect;
+        Math::Vector4 diffuse;
         
         std::vector<unsigned long> textures;
     };

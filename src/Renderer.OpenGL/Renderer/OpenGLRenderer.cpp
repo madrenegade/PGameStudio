@@ -270,6 +270,7 @@ namespace Renderer
                 effect->set(t, texture);
             }
 
+            effect->set("Diffuse", i->material->diffuse);
             vertexBuffers->get(i->vertexBuffer)->render(indexBuffers->get(i->indexBuffer));
 
             for (auto t = 0; t != i->material->textures.size(); ++t)

@@ -23,7 +23,7 @@ namespace Graphics
 
     void MeshSceneNode::prepare(Renderer* renderer)
     {
-        if (renderer->isVertexBufferLoaded(vb) && renderer->isIndexBufferLoaded(ib) && renderer->isEffectLoaded(mat->effect))
+        if (renderer->isVertexBufferLoaded(vb) && renderer->isIndexBufferLoaded(ib))
         {
             bool allTexturesLoaded = true;
 

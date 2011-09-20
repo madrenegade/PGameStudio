@@ -165,16 +165,18 @@ namespace Graphics
         unsigned long vbID = renderer->requestVertexBuffer(vertexData, numVertices, VertexFormat::forTNBT<VertexTNBT>());
         unsigned long ibID = renderer->requestIndexBuffer(indexes, numFaces * 3);
         
-        Utilities::IO::File effectFile(fileSystem->read("fx/default.cgfx"));
+        
         Utilities::IO::File colorTexture(fileSystem->read("textures/color_map.jpg"));
         Utilities::IO::File normalTexture(fileSystem->read("textures/normal_map.jpg"));
         
         auto mat = memoryManager->construct(Material());
-        mat->effect = renderer->requestEffect(effectFile);
+        mat->diffuse = Math::Vector4(1, 1, 1, 0);
         mat->textures.push_back(renderer->requestTexture(colorTexture));
         mat->textures.push_back(renderer->requestTexture(normalTexture));
         
+        Utilities::IO::File effectFile(fileSystem->read("fx/default.cgfx"));
         Utilities::IO::File finalEffectFile(fileSystem->read("fx/final.cgfx"));
+        renderer->requestEffect(effectFile);
         renderer->requestEffect(finalEffectFile);
 
         scene.reset(new MeshSceneNode(vbID, ibID, mat));

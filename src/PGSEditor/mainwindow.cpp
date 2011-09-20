@@ -38,7 +38,7 @@ void MainWindow::onSceneChanged()
 
 void MainWindow::onAssetImported()
 {
-    QMessageBox::information(this, "Not implemented", "This feature is not yet implemented", QMessageBox::Close);
+    //QMessageBox::information(this, "Not implemented", "This feature is not yet implemented", QMessageBox::Close);
 }
 
 void MainWindow::onSetSingleView()

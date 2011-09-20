@@ -8,3 +8,8 @@ void SceneExporter::createEmptyScene(const QString& dir, const QStringList& syst
 {
 
 }
+
+void SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QString &dir)
+{
+
+}

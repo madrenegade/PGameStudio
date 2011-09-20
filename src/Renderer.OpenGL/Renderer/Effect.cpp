@@ -25,6 +25,11 @@ namespace Renderer
 
     }
     
+    Effect::Effect(const Effect& other)
+    {
+//        effect = cgCopyEffect(other.effect);
+    }
+    
     Effect::~Effect()
     {
 //        cgDestroyEffect(effect);

@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     scene.cpp \
     assetimportwizard.cpp \
     multiviewwidget.cpp \
-    assetimporter.cpp
+    assetimporter.cpp \
+    scenedata.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \
@@ -36,7 +37,8 @@ HEADERS  += mainwindow.h \
     scene.h \
     assetimportwizard.h \
     multiviewwidget.h \
-    assetimporter.h
+    assetimporter.h \
+    scenedata.h
 
 FORMS    += mainwindow.ui \
     newscenewizard.ui \

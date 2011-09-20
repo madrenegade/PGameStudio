@@ -26,6 +26,7 @@ namespace Renderer
     {
     public:
         Effect();
+        Effect(const Effect& other);
         ~Effect();
         
         static void initialize();

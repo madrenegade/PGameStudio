@@ -6,6 +6,9 @@
 #include "assetimportwizard.h"
 
 #include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
+
+class SceneData;
 
 class Controller : public QWidget
 {
@@ -37,6 +40,8 @@ private:
 
     NewSceneWizard* newSceneWizard;
     AssetImportWizard* assetImportWizard;
+
+    boost::shared_ptr<SceneData> currentScene;
 };
 
 #endif // CONTROLLER_H

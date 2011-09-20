@@ -10,6 +10,7 @@ class Importer;
 }
 
 class aiScene;
+class SceneData;
 
 class AssetImporter
 {
@@ -18,12 +19,15 @@ public:
 
     bool run(const QString& file);
 
+    boost::shared_ptr<SceneData> getImportedData() const;
+
     QString getError() const;
 
 private:
-    boost::shared_ptr<Assimp::Importer> importer;
-
     void processScene(const aiScene* scene);
+
+    boost::shared_ptr<Assimp::Importer> importer;
+    boost::shared_ptr<SceneData> importedData;
 };
 
 #endif // ASSETIMPORTER_H

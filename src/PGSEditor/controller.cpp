@@ -1,6 +1,7 @@
 #include "controller.h"
 #include "sceneexporter.h"
 #include "assetimporter.h"
+#include "scenedata.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -80,12 +81,19 @@ void Controller::onSaveNewScene(const QString& dir)
 
     SceneExporter exporter;
     exporter.createEmptyScene(dir, selectedSystems);
+    currentScene.reset(new SceneData());
 
     sceneChanged();
 }
 
 void Controller::onImportAsset()
 {
+    if(!currentScene)
+    {
+        QMessageBox::warning(this, "Import not possible", "Please create a new scene before importing assets", QMessageBox::Close);
+        return;
+    }
+
     assetImportWizard->restart();
     assetImportWizard->show();
 }
@@ -102,6 +110,8 @@ void Controller::onImportConfigured()
     }
     else
     {
+        currentScene->mergeWith(importer.getImportedData());
+
         assetImported();
     }
 }
