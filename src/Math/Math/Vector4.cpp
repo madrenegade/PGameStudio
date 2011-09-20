@@ -5,8 +5,14 @@
 namespace Math
 {
 
+    Vector4::Vector4(const Vector3& v, double w)
+        : X(v.X), Y(v.Y), Z(v.Z), W(w)
+    {
+
+    }
+
     Vector4::Vector4(double x, double y, double z, double w)
-        : X(x), Y(y), Z(z), W(w)
+    : X(x), Y(y), Z(z), W(w)
     {
         //ctor
     }
@@ -16,7 +22,7 @@ namespace Math
         //dtor
     }
 
-    Vector4& Vector4::operator /= (double value)
+    Vector4& Vector4::operator /=(double value)
     {
         this->X /= value;
         this->Y /= value;
@@ -25,7 +31,7 @@ namespace Math
 
         return *this;
     }
-    
+
     Vector4& Vector4::operator+=(const Vector4& rhs)
     {
         this->X += rhs.X;
@@ -45,22 +51,22 @@ namespace Math
 
         return *this;
     }
-    
+
     Vector4& Vector4::operator*=(const Matrix4& rhs)
     {
         Vector4 temp(*this);
-        
+
         this->X = rhs.M11() * temp.X + rhs.M12() * temp.Y + rhs.M13() * temp.Z + rhs.M14() * temp.W;
         this->Y = rhs.M21() * temp.X + rhs.M22() * temp.Y + rhs.M23() * temp.Z + rhs.M24() * temp.W;
         this->Z = rhs.M31() * temp.X + rhs.M32() * temp.Y + rhs.M33() * temp.Z + rhs.M34() * temp.W;
         this->W = rhs.M41() * temp.X + rhs.M42() * temp.Y + rhs.M43() * temp.Z + rhs.M44() * temp.W;
-        
+
         return *this;
     }
 
     double Vector4::Length() const
     {
-        return std::sqrt(this->X *this->X + this->Y * this->Y + this->Z * this->Z + this->W * this->W);
+        return std::sqrt(this->X * this->X + this->Y * this->Y + this->Z * this->Z + this->W * this->W);
     }
 
     Vector4& Vector4::Normalize()

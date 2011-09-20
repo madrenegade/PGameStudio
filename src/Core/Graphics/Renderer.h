@@ -24,6 +24,7 @@ namespace Graphics
 {
     class VertexFormat;
     class DrawCall;
+    class Camera;
 
     class Renderer
     {
@@ -52,7 +53,7 @@ namespace Graphics
 
         void pushDrawCall(const DrawCall& drawCall);
 
-        virtual void processDrawCalls() = 0;
+        virtual void processDrawCalls(const std::vector<Camera>& cameras) = 0;
 
     protected:
         Renderer();

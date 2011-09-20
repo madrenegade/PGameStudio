@@ -12,9 +12,10 @@ find_package(GPROFILER REQUIRED)
 
 add_executable(${PROJECT_NAME} ${Project_Sources})
 
-add_dependencies(${PROJECT_NAME} Game Platform.Linux Scripting.Lua Graphics Renderer.OpenGL)
+add_dependencies(${PROJECT_NAME} Math Game Platform.Linux Scripting.Lua Graphics Renderer.OpenGL)
 
 target_link_libraries(${PROJECT_NAME}
+    Math
     Game
     pthread
     ${GPROFILER_LIBRARIES}

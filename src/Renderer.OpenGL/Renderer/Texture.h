@@ -21,8 +21,8 @@ namespace Renderer
         
         void setData(const boost::shared_array<unsigned char>& data, unsigned int w, unsigned int h);
         
-        void bind(unsigned int level = 0);
-        void unbind(unsigned int level = 0);
+        void bind(unsigned int level = 0) const;
+        void unbind(unsigned int level = 0) const;
         
         unsigned int getID() const;
         

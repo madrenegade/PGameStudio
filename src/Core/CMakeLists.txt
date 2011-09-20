@@ -23,7 +23,8 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
-add_dependencies(${PROJECT_NAME} Utilities StackTrace)
+add_dependencies(${PROJECT_NAME} Math Utilities StackTrace)
+include_directories(${SRC_DIR}/Math)
 include_directories(${SRC_DIR}/StackTrace)
 include_directories(${SRC_DIR}/Utilities)
 
@@ -31,6 +32,7 @@ target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBRARIES}
     ${TBB_LIBRARIES}
     ${Boost_LIBRARIES}
+    Math
     StackTrace
     Utilities
 )

@@ -55,9 +55,9 @@ namespace Renderer
         boost::shared_ptr<Texture> colorAttachmentTexture(new Texture());
         colorAttachmentTexture->bind();
         
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachments.size(), GL_TEXTURE_2D, colorAttachmentTexture->getID(), 0);
         
         colorAttachments.push_back(colorAttachmentTexture);

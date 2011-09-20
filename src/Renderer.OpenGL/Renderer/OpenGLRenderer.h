@@ -26,10 +26,16 @@
 
 #include <boost/shared_ptr.hpp>
 
+namespace Math
+{
+    class Vector4;
+    class Matrix4;
+}
+
 namespace Renderer
 {
     class FrameBuffer;
-    
+
     class OpenGLRenderer : public Graphics::Renderer
     {
     public:
@@ -56,7 +62,7 @@ namespace Renderer
 
         virtual void beginScene();
 
-        virtual void processDrawCalls();
+        virtual void processDrawCalls(const std::vector<Graphics::Camera>& cameras);
 
     protected:
         virtual void processVertexBufferRequests();
@@ -65,18 +71,36 @@ namespace Renderer
         virtual void processTextureRequests();
 
     private:
+        void popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList);
+
+        void renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
+                                 const Graphics::Camera& camera);
+        void renderToScreen(const Graphics::Camera& camera);
+
+        void renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect);
+
+        void getViewVectors(Math::Vector4* v, const Graphics::Camera& camera);
+
         boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
         boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
         boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;
         boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> > textures;
 
+        unsigned int width;
+        unsigned int height;
+        double fieldOfView;
+        double zNear;
+        double zFar;
+        
+        boost::shared_ptr<Math::Matrix4> projection;
+
         boost::shared_ptr<FrameBuffer> frameBuffer;
-//        unsigned int frameBuffer;
-//
-//        unsigned int colorTexture;
-//        unsigned int aux0Texture;
-//        unsigned int aux1Texture;
-//        unsigned int depthTexture;
+        //        unsigned int frameBuffer;
+        //
+        //        unsigned int colorTexture;
+        //        unsigned int aux0Texture;
+        //        unsigned int aux1Texture;
+        //        unsigned int depthTexture;
     };
 }
 

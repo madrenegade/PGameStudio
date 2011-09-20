@@ -10,10 +10,11 @@
 #include "Renderer/IndexBuffer.h"
 #include "Renderer/Effect.h"
 #include "Renderer/Texture.h"
-
 #include "Renderer/FrameBuffer.h"
-
 #include "Renderer/ErrorHandler.h"
+
+#include "Graphics/Camera.h"
+
 #include "Math/Matrix4.h"
 #include "Math/Vector4.h"
 #include "Math/Vector3.h"
@@ -40,14 +41,19 @@ namespace Renderer
 
     void OpenGLRenderer::initialize()
     {
-        unsigned int width = 800;
-        unsigned int height = 600;
+        width = 800;
+        height = 600;
+        fieldOfView = 60.0;
+        zNear = 0.1;
+        zFar = 100.0;
         
         glewInit();
         glViewport(0, 0, width, height);
         
+        projection.reset(new Math::Matrix4(Math::Matrix4::CreatePerspectiveFieldOfView(Math::PI * fieldOfView / 180.0, static_cast<double>(width) / static_cast<double>(height), zNear, zFar)));
+
         frameBuffer.reset(new FrameBuffer(3, width, height));
-        
+
         ErrorHandler::checkForErrors();
     }
 
@@ -58,7 +64,7 @@ namespace Renderer
         request.data = data;
         request.numVertices = numVertices;
         request.format = fmt;
-        
+
         return vertexBuffers->queueRequest(request);
     }
 
@@ -67,7 +73,7 @@ namespace Renderer
         IndexBufferRequest request;
         request.data = data;
         request.numIndexes = numIndexes;
-        
+
         return indexBuffers->queueRequest(request);
     }
 
@@ -75,15 +81,15 @@ namespace Renderer
     {
         EffectRequest request;
         request.file = file;
-        
+
         return effects->queueRequest(request);
     }
-    
+
     unsigned long OpenGLRenderer::requestTexture(const Utilities::IO::File& file)
     {
         TextureRequest request;
         request.file = file;
-        
+
         return textures->queueRequest(request);
     }
 
@@ -101,7 +107,7 @@ namespace Renderer
     {
         return effects->isLoaded(effectID);
     }
-    
+
     bool OpenGLRenderer::isTextureLoaded(unsigned long textureID) const
     {
         return textures->isLoaded(textureID);
@@ -113,147 +119,16 @@ namespace Renderer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void OpenGLRenderer::processDrawCalls()
+    void OpenGLRenderer::processDrawCalls(const std::vector<Graphics::Camera>& cameras)
     {
         std::list<Graphics::DrawCall> drawCallList;
+        popDrawCallsTo(drawCallList);
 
-        Graphics::DrawCall drawCall;
-        while (!drawCalls.empty())
+        for (unsigned int i = 0; i < cameras.size(); ++i)
         {
-            if (drawCalls.try_pop(drawCall))
-            {
-                drawCallList.push_back(drawCall);
-            }
+            renderToFrameBuffer(drawCallList, cameras.at(i));
+            renderToScreen(cameras.at(i));
         }
-
-        VertexBuffer* vertexBuffer = 0;
-        IndexBuffer* indexBuffer = 0;
-        Effect* effect = effects->get(0);
-
-        frameBuffer->bind();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
-        glDrawBuffers(3, buffers);
-
-        effect->activate();
-
-        while (effect->hasNextPass())
-        {
-            for (auto i = drawCallList.begin(); i != drawCallList.end(); ++i)
-            {
-                vertexBuffer = vertexBuffers->get(i->vertexBuffer);
-                indexBuffer = indexBuffers->get(i->indexBuffer);
-                
-                unsigned char texLevel = 0;
-                for(auto t = i->material->textures.begin(); t != i->material->textures.end(); ++t)
-                {
-                    char textureName[] = {'T', 'E', 'X', static_cast<unsigned char>(texLevel + 48), '\0'};
-                    Texture* texture = textures->get(*t);
-                    texture->bind(texLevel);
-                    effect->setTexture(textureName, texture->getID());
-                    ++texLevel;
-                }
-                
-                vertexBuffer->render(indexBuffer);
-                
-                texLevel = 0;
-                for(auto t = i->material->textures.begin(); t != i->material->textures.end(); ++t)
-                {
-                    Texture* texture = textures->get(*t);
-                    texture->unbind(texLevel);
-                    ++texLevel;
-                }
-            }
-
-            effect->gotoNextPass();
-        }
-
-        effect->deactivate();
-
-        frameBuffer->unbind();
-        
-        effect = effects->get(1);
-        
-        const Texture* colorTexture = frameBuffer->getColorAttachment(0);
-        const Texture* aux0Texture = frameBuffer->getColorAttachment(1);
-        const Texture* aux1Texture = frameBuffer->getColorAttachment(2);
-        const Texture* depthTexture = frameBuffer->getDepthAttachment();
-        
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, colorTexture->getID());
-        effect->setTexture("TEX0", colorTexture->getID());
-        
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, aux0Texture->getID());
-        effect->setTexture("TEX1", aux0Texture->getID());
-        
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, aux1Texture->getID());
-        effect->setTexture("TEX2", aux1Texture->getID());
-        
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, depthTexture->getID());
-        effect->setTexture("TEX3", depthTexture->getID());
-        
-        effect->activate();
-        
-        int sx = 800;
-        int sy = 600;
-        
-        int pixels[4][2] = 
-        {
-            {0, 0},
-            {0, sy},
-            {sx, sy},
-            {sx, 0}
-        };
-        
-        int viewport[4] = {0, 0, sx, sy};
-        
-        const Math::Vector3 camera(4, 4, 4);
-        const Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
-        const Math::Matrix4 view = Math::Matrix4::LookAt(camera, Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
-        
-        Math::Matrix4 view_rotation = view;
-        view_rotation.M14(0);
-        view_rotation.M24(0);
-        view_rotation.M34(0);
-        
-        Math::Vector4 v[4];
-        double d[3];
-        
-        for(int i = 0; i < 4; ++i)
-        {
-            gluUnProject(pixels[i][0], pixels[i][1], 1,
-                view, projection, viewport,
-                &d[0], &d[1], &d[2]);
-            
-            v[i] = Math::Vector4(d[0], d[1], d[2], 0);
-            v[i] -= Math::Vector4(camera.X, camera.Y, camera.Z, 0);
-            v[i].Normalize();
-            v[i] *= view_rotation;
-        }
-        
-        glBegin(GL_QUADS);
-        glMultiTexCoord2d(GL_TEXTURE0, 0, 0);
-        glMultiTexCoord3d(GL_TEXTURE1, v[0].X, v[0].Y, v[0].Z);
-        glVertex2d(-1, -1);
-
-        glMultiTexCoord2d(GL_TEXTURE0, 1, 0);
-        glMultiTexCoord3d(GL_TEXTURE1, v[1].X, v[1].Y, v[1].Z);
-        glVertex2d(1, -1);
-
-        glMultiTexCoord2d(GL_TEXTURE0, 1, 1);
-        glMultiTexCoord3d(GL_TEXTURE1, v[2].X, v[2].Y, v[2].Z);
-        glVertex2d(1, 1);
-
-        glMultiTexCoord2d(GL_TEXTURE0, 0, 1);
-        glMultiTexCoord3d(GL_TEXTURE1, v[3].X, v[3].Y, v[3].Z);
-        glVertex2d(-1, 1);
-        glEnd();
-        
-        effect->deactivate();
 
         ErrorHandler::checkForErrors();
     }
@@ -272,9 +147,151 @@ namespace Renderer
     {
         effects->processRequests();
     }
-    
+
     void OpenGLRenderer::processTextureRequests()
     {
         textures->processRequests();
+    }
+
+    void OpenGLRenderer::popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList)
+    {
+        Graphics::DrawCall drawCall;
+        while (!drawCalls.empty())
+        {
+            if (drawCalls.try_pop(drawCall))
+            {
+                drawCallList.push_back(drawCall);
+            }
+        }
+    }
+
+    void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
+                                             const Graphics::Camera& camera)
+    {
+        frameBuffer->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+        glDrawBuffers(3, buffers);
+        
+        const Math::Matrix4 view(camera.getViewMatrix());
+
+        Effect* effect = effects->get(0);
+        effect->setMatrix("ModelView", view);
+        effect->setMatrix("ModelViewProjection", view * (*projection));
+        effect->activate();
+
+        while (effect->hasNextPass())
+        {
+            renderGeometry(drawCallList, effect);
+            effect->gotoNextPass();
+        }
+
+        effect->deactivate();
+
+        frameBuffer->unbind();
+    }
+
+    void OpenGLRenderer::renderToScreen(const Graphics::Camera& camera)
+    {
+        Effect* effect = effects->get(1);
+
+        const Texture* colorTexture = frameBuffer->getColorAttachment(0);
+        const Texture* aux0Texture = frameBuffer->getColorAttachment(1);
+        const Texture* aux1Texture = frameBuffer->getColorAttachment(2);
+        const Texture* depthTexture = frameBuffer->getDepthAttachment();
+
+        colorTexture->bind(0);
+        effect->setTexture(0, colorTexture->getID());
+
+        aux0Texture->bind(1);
+        effect->setTexture(1, aux0Texture->getID());
+
+        aux1Texture->bind(2);
+        effect->setTexture(2, aux1Texture->getID());
+
+        depthTexture->bind(3);
+        effect->setTexture(3, depthTexture->getID());
+
+        effect->activate();
+
+        Math::Vector4 v[4];
+        getViewVectors(v, camera);
+
+        glBegin(GL_QUADS);
+        glMultiTexCoord2d(GL_TEXTURE0, 0, 0);
+        glMultiTexCoord3d(GL_TEXTURE1, v[0].X, v[0].Y, v[0].Z);
+        glVertex2d(-1, -1);
+
+        glMultiTexCoord2d(GL_TEXTURE0, 1, 0);
+        glMultiTexCoord3d(GL_TEXTURE1, v[1].X, v[1].Y, v[1].Z);
+        glVertex2d(1, -1);
+
+        glMultiTexCoord2d(GL_TEXTURE0, 1, 1);
+        glMultiTexCoord3d(GL_TEXTURE1, v[2].X, v[2].Y, v[2].Z);
+        glVertex2d(1, 1);
+
+        glMultiTexCoord2d(GL_TEXTURE0, 0, 1);
+        glMultiTexCoord3d(GL_TEXTURE1, v[3].X, v[3].Y, v[3].Z);
+        glVertex2d(-1, 1);
+        glEnd();
+
+        effect->deactivate();
+    }
+
+    void OpenGLRenderer::renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect)
+    {
+        Texture* texture = 0;
+
+        for (auto i = drawCallList.begin(); i != drawCallList.end(); ++i)
+        {
+            for (auto t = 0; t != i->material->textures.size(); ++t)
+            {
+                texture = textures->get(i->material->textures[t]);
+                texture->bind(t);
+
+                effect->setTexture(t, texture->getID());
+            }
+
+            vertexBuffers->get(i->vertexBuffer)->render(indexBuffers->get(i->indexBuffer));
+
+            for (auto t = 0; t != i->material->textures.size(); ++t)
+            {
+                textures->get(i->material->textures[t])->unbind(t);
+            }
+        }
+    }
+
+    void OpenGLRenderer::getViewVectors(Math::Vector4* v, const Graphics::Camera& camera)
+    {
+        static const int pixels[4][2] = {
+            {0, 0},
+            {0, height},
+            {width, height},
+            {width, 0}
+        };
+
+        static const int viewport[4] = {0, 0, width, height};
+
+        const Math::Matrix4 view(camera.getViewMatrix());
+
+        Math::Matrix4 view_rotation(view);
+        view_rotation.M14(0);
+        view_rotation.M24(0);
+        view_rotation.M34(0);
+
+        double d[3];
+
+        for (int i = 0; i < 4; ++i)
+        {
+            gluUnProject(pixels[i][0], pixels[i][1], 1,
+                view, *projection, viewport,
+                &d[0], &d[1], &d[2]);
+
+            v[i] = Math::Vector4(d[0], d[1], d[2], 0);
+            v[i] -= Math::Vector4(camera.getPosition(), 0);
+            v[i].Normalize();
+            v[i] *= view_rotation;
+        }
     }
 }

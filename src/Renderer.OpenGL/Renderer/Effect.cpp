@@ -54,19 +54,27 @@ namespace Renderer
             throw std::runtime_error("Technique not valid");
         }
 
-        modelViewProjection = cgGetEffectParameterBySemantic(effect, "ModelViewProjection");
-        modelView = cgGetEffectParameterBySemantic(effect, "ModelView");
-
-        const Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
-        const Math::Matrix4 view = Math::Matrix4::LookAt(Math::Vector3(4, 4, 4), Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
-
-        const Math::Matrix4 mvp = view * projection;
-        cgSetMatrixParameterdc(modelViewProjection, mvp);
-        cgSetMatrixParameterdc(modelView, view);
+//        modelViewProjection = cgGetEffectParameterBySemantic(effect, "ModelViewProjection");
+//        modelView = cgGetEffectParameterBySemantic(effect, "ModelView");
+//
+//        const Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
+//        const Math::Matrix4 view = Math::Matrix4::LookAt(Math::Vector3(4, 4, 4), Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
+//
+//        const Math::Matrix4 mvp = view * projection;
+//        
+//        cgSetMatrixParameterdc(modelView, view);
     }
     
-    void Effect::setTexture(const char* semantic, unsigned int id)
+    void Effect::setMatrix(const char* semantic, const Math::Matrix4& matrix)
     {
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        cgSetMatrixParameterdc(parameter, matrix);
+    }
+    
+    void Effect::setTexture(unsigned int level, unsigned int id)
+    {
+        char semantic[] = {'T', 'E', 'X', static_cast<unsigned char> (level + 48), '\0'};
+        
         CGparameter texture = cgGetEffectParameterBySemantic(effect, semantic);
         cgGLSetTextureParameter(texture, id);
     }

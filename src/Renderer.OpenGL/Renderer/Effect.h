@@ -10,6 +10,11 @@
 
 #include <Cg/cg.h>
 
+namespace Math
+{
+    class Matrix4;
+}
+
 namespace Renderer
 {
 
@@ -21,7 +26,8 @@ namespace Renderer
         
         void load(const char* code);
         
-        void setTexture(const char* semantic, unsigned int id);
+        void setMatrix(const char* semantic, const Math::Matrix4& matrix);
+        void setTexture(unsigned int level, unsigned int id);
         
         void activate();
         
@@ -37,8 +43,8 @@ namespace Renderer
         CGtechnique technique;
         CGpass currentPass;
         
-        CGparameter modelViewProjection;
-        CGparameter modelView;
+//        CGparameter modelViewProjection;
+//        CGparameter modelView;
         
         static void CgErrorHandler(CGcontext context, CGerror error, void* pData);
     };

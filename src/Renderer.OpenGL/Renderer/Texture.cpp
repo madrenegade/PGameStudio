@@ -35,13 +35,13 @@ namespace Renderer
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void Texture::bind(unsigned int level)
+    void Texture::bind(unsigned int level) const
     {
         glActiveTexture(GL_TEXTURE0 + level);
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
-    void Texture::unbind(unsigned int level)
+    void Texture::unbind(unsigned int level) const
     {
         glActiveTexture(GL_TEXTURE0 + level);
         glBindTexture(GL_TEXTURE_2D, 0);
