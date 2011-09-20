@@ -24,7 +24,10 @@ SOURCES += main.cpp\
     assetimportwizard.cpp \
     multiviewwidget.cpp \
     assetimporter.cpp \
-    scenedata.cpp
+    scenedata.cpp \
+    scenedockwidget.cpp \
+    mesh.cpp \
+    scenenode.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \
@@ -38,7 +41,10 @@ HEADERS  += mainwindow.h \
     assetimportwizard.h \
     multiviewwidget.h \
     assetimporter.h \
-    scenedata.h
+    scenedata.h \
+    scenedockwidget.h \
+    mesh.h \
+    scenenode.h
 
 FORMS    += mainwindow.ui \
     newscenewizard.ui \
@@ -47,9 +53,15 @@ FORMS    += mainwindow.ui \
     singleviewwidget.ui \
     renderingviewwidget.ui \
     assetimportwizard.ui \
-    multiviewwidget.ui
+    multiviewwidget.ui \
+    scenedockwidget.ui
 
 unix:!macx:!symbian: LIBS += -L$$PWD/../../../../../../../usr/lib64/ -lassimp_d
 
 INCLUDEPATH += $$PWD/../../../../../../../usr/lib64
 DEPENDPATH += $$PWD/../../../../../../../usr/lib64
+
+unix:!macx:!symbian: LIBS += -L$$PWD/../../bin/Debug/Linux/x86_64/ -lMath
+
+INCLUDEPATH += $$PWD/../Math
+DEPENDPATH += $$PWD/../Math

@@ -19,11 +19,11 @@ public:
     QStringList availableSystems() const;
     QStringList getAssetImportPostProcessingSteps() const;
 
+    SceneData* getSceneData() const;
+
 signals:
     void sceneDirectorySelected(const QString& dir);
     void sceneChanged();
-
-    void assetImported();
 
 public slots:
     void onNewScene();
@@ -34,6 +34,8 @@ public slots:
     void onImportConfigured();
 
     void onRun();
+
+    void onExport();
 
 private:
     MainWindow* mainWindow;

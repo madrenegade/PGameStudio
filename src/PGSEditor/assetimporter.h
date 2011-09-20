@@ -10,7 +10,12 @@ class Importer;
 }
 
 class aiScene;
+class aiMesh;
+class aiNode;
+class aiTexture;
+class aiMaterial;
 class SceneData;
+class SceneNode;
 
 class AssetImporter
 {
@@ -25,6 +30,14 @@ public:
 
 private:
     void processScene(const aiScene* scene);
+
+    void processTextures(aiTexture** textures, unsigned int numTextures);
+    void processMaterials(aiMaterial** materials, unsigned int numMaterials);
+    void processMeshes(aiMesh** meshes, unsigned int numMeshes);
+    void processCameras();
+    void processNodes(const aiNode* rootNode);
+
+    boost::shared_ptr<SceneNode> processNode(const aiNode* node);
 
     boost::shared_ptr<Assimp::Importer> importer;
     boost::shared_ptr<SceneData> importedData;

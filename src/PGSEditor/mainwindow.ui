@@ -34,6 +34,7 @@
      <string>File</string>
     </property>
     <addaction name="actionNew_Scene"/>
+    <addaction name="actionExport"/>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
@@ -93,6 +94,11 @@
   <action name="actionMulti_View">
    <property name="text">
     <string>Multi View</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export</string>
    </property>
   </action>
  </widget>

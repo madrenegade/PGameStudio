@@ -17,8 +17,6 @@ Controller::Controller(MainWindow* mainWindow)
 
     connect(this, SIGNAL(sceneDirectorySelected(const QString&)), this, SLOT(onSaveNewScene(const QString&)));
     connect(this, SIGNAL(sceneChanged()), mainWindow, SLOT(onSceneChanged()));
-
-    connect(this, SIGNAL(assetImported()), mainWindow, SLOT(onAssetImported()));
 }
 
 QStringList Controller::availableSystems() const
@@ -62,6 +60,11 @@ QStringList Controller::getAssetImportPostProcessingSteps() const
     return postProcessingSteps;
 }
 
+SceneData* Controller::getSceneData() const
+{
+    return currentScene.get();
+}
+
 void Controller::onNewScene()
 {
     newSceneWizard->restart();
@@ -90,8 +93,9 @@ void Controller::onImportAsset()
 {
     if(!currentScene)
     {
-        QMessageBox::warning(this, "Import not possible", "Please create a new scene before importing assets", QMessageBox::Close);
-        return;
+//        QMessageBox::warning(this, "Import not possible", "Please create a new scene before importing assets", QMessageBox::Close);
+//        return;
+        currentScene.reset(new SceneData());
     }
 
     assetImportWizard->restart();
@@ -112,11 +116,25 @@ void Controller::onImportConfigured()
     {
         currentScene->mergeWith(importer.getImportedData());
 
-        assetImported();
+        sceneChanged();
     }
 }
 
 void Controller::onRun()
 {
     QMessageBox::information(this, "Not implemented", "This feature is not yet implemented", QMessageBox::Close);
+}
+
+void Controller::onExport()
+{
+    SceneExporter exporter;
+
+    if(!exporter.save(currentScene, "."))
+    {
+        QMessageBox::critical(this, "Export error", "Exporting the scene failed", QMessageBox::Close);
+    }
+    else
+    {
+        QMessageBox::information(this, "Result", "The scene has been exported", QMessageBox::Close);
+    }
 }

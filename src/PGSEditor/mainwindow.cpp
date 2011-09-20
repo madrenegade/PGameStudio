@@ -4,10 +4,13 @@
 
 #include "systemsdockwidget.h"
 #include "renderingdockwidget.h"
+#include "scenedockwidget.h"
+
 #include "singleviewwidget.h"
 #include "multiviewwidget.h"
 
 #include <QMessageBox>
+#include <QTreeWidget>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow), controller(new Controller(this))
@@ -17,13 +20,16 @@ MainWindow::MainWindow(QWidget *parent) :
     viewWidget = new SingleViewWidget(this);
     ui->centralWidget->layout()->addWidget(viewWidget);
 
-    addDockWidget(Qt::LeftDockWidgetArea, new SystemsDockWidget(controller, this));
-    addDockWidget(Qt::LeftDockWidgetArea, new RenderingDockWidget(controller, this));
+    sceneDock = new SceneDockWidget(controller, this);
+    addDockWidget(Qt::LeftDockWidgetArea, sceneDock);
+    addDockWidget(Qt::RightDockWidgetArea, new SystemsDockWidget(controller, this));
+    addDockWidget(Qt::RightDockWidgetArea, new RenderingDockWidget(controller, this));
 
     ui->mainToolBar->addAction(QIcon::fromTheme("run"), "Run", controller, SLOT(onRun()));
 
     connect(ui->actionNew_Scene, SIGNAL(triggered()), controller, SLOT(onNewScene()));
     connect(ui->actionImport, SIGNAL(triggered()), controller, SLOT(onImportAsset()));
+    connect(ui->actionExport, SIGNAL(triggered()), controller, SLOT(onExport()));
 }
 
 MainWindow::~MainWindow()
@@ -33,12 +39,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::onSceneChanged()
 {
-    QMessageBox::information(this, "Not implemented", "This feature is not yet implemented", QMessageBox::Close);
-}
-
-void MainWindow::onAssetImported()
-{
-    //QMessageBox::information(this, "Not implemented", "This feature is not yet implemented", QMessageBox::Close);
 }
 
 void MainWindow::onSetSingleView()

@@ -8,6 +8,7 @@ namespace Ui {
 }
 
 class Controller;
+class SceneDockWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -19,7 +20,6 @@ public:
 
 public slots:
     void onSceneChanged();
-    void onAssetImported();
 
     void onSetSingleView();
     void onSetMultiView();
@@ -30,6 +30,8 @@ private:
     Controller* controller;
 
     QWidget* viewWidget;
+
+    SceneDockWidget* sceneDock;
 };
 
 #endif // MAINWINDOW_H
