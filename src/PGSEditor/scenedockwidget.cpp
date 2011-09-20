@@ -11,6 +11,9 @@ SceneDockWidget::SceneDockWidget(Controller* controller, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    materialPreviewScene = new QGraphicsScene(this);
+    ui->materialPreview->setScene(materialPreviewScene);
+
     connect(controller, SIGNAL(sceneChanged()), this, SLOT(onSceneChanged()));
 }
 
@@ -24,6 +27,18 @@ void SceneDockWidget::onSceneChanged()
     rebuildSceneGraph();
     rebuildMeshList();
     rebuildMaterialList();
+}
+
+void SceneDockWidget::onMaterialSelected(QListWidgetItem *item)
+{
+    Material* mat = controller->getMaterial(item->text());
+
+    int r = mat->diffuse.X * 255.0;
+    int g = mat->diffuse.Y * 255.0;
+    int b = mat->diffuse.Z * 255.0;
+
+    materialPreviewScene->clear();
+    materialPreviewScene->addRect(0, 0, 128, 128, QPen(QColor(r, g, b)));
 }
 
 void SceneDockWidget::rebuildSceneGraph()

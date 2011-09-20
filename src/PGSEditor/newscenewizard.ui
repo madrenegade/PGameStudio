@@ -46,14 +46,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWizardPage" name="wizardPageConfirm">
-   <property name="title">
-    <string>Create New Scene</string>
-   </property>
-   <property name="subTitle">
-    <string>Finish</string>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections/>

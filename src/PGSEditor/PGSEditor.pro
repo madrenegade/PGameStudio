@@ -25,8 +25,7 @@ SOURCES += main.cpp\
     multiviewwidget.cpp \
     assetimporter.cpp \
     scenedata.cpp \
-    scenedockwidget.cpp \
-    scenenode.cpp
+    scenedockwidget.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \

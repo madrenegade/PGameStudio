@@ -11,6 +11,8 @@ namespace Ui {
 class Controller;
 class SceneNode;
 class QTreeWidgetItem;
+class QListWidgetItem;
+class QGraphicsScene;
 
 class SceneDockWidget : public QDockWidget
 {
@@ -23,6 +25,8 @@ public:
 public slots:
     void onSceneChanged();
 
+    void onMaterialSelected(QListWidgetItem* item);
+
 private:
     void rebuildSceneGraph();
     void rebuildMeshList();
@@ -33,6 +37,8 @@ private:
     Ui::SceneDockWidget *ui;
 
     Controller* controller;
+
+    QGraphicsScene* materialPreviewScene;
 };
 
 #endif // SCENEDOCKWIDGET_H

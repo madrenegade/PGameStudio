@@ -14,6 +14,8 @@ struct Face
 
 struct Mesh
 {
+    unsigned int index; // automatically set during export
+
     std::vector<Math::Vector3> positions;
     std::vector<Math::Vector3> normals;
     std::vector<Math::Vector3> tangents;
@@ -23,7 +25,7 @@ struct Mesh
 
     std::vector<Face> faces;
 
-    Material material;
+    Material* material;
 };
 
 #endif // MESH_H

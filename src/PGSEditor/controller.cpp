@@ -2,6 +2,7 @@
 #include "sceneexporter.h"
 #include "assetimporter.h"
 #include "scenedata.h"
+#include "material.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -63,6 +64,19 @@ QStringList Controller::getAssetImportPostProcessingSteps() const
 SceneData* Controller::getSceneData() const
 {
     return currentScene.get();
+}
+
+Material* Controller::getMaterial(const QString& name) const
+{
+    for(auto i = 0; i < currentScene->materials.size(); ++i)
+    {
+        if(currentScene->materials.at(i)->name == name.toStdString())
+        {
+            return currentScene->materials.at(i).get();
+        }
+    }
+
+    return 0;
 }
 
 void Controller::onNewScene()

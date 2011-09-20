@@ -6,11 +6,12 @@
 
 struct Material
 {
+    unsigned int index; // automatically set during export
+
     std::string name;
 
     Math::Vector4 diffuse;
-
-    double shininess;
+    Math::Vector4 specular;
 };
 
 #endif // MATERIAL_H

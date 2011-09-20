@@ -1,6 +1,8 @@
 #include "sceneexporter.h"
 #include "scenedata.h"
+#include "scenenode.h"
 #include "mesh.h"
+#include "Math/Matrix4.h"
 
 SceneExporter::SceneExporter()
 {
@@ -27,15 +29,27 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
 
     // textures
     // materials
+    unsigned int numMaterials = scene->materials.size();
+    write(numMaterials);
 
+    for(unsigned int i = 0; i < numMaterials; ++i)
+    {
+        Material* mat = scene->materials.at(i).get();
+        mat->index = i;
+
+        writeString(mat->name);
+        write(mat->diffuse);
+        write(mat->specular);
+    }
 
     // meshes
     unsigned int numMeshes = scene->meshes.size();
     write(numMeshes);
 
-    for(unsigned int i = 0; i < scene->meshes.size(); ++i)
+    for(unsigned int i = 0; i < numMeshes; ++i)
     {
         Mesh* mesh = scene->meshes.at(i).get();
+        mesh->index = i;
 
         bool hasPositions = !mesh->positions.empty();
         bool hasNormals = !mesh->normals.empty();
@@ -62,6 +76,14 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
                 write(mesh->positions[v]);
             }
 
+            if(hasTexCoords)
+            {
+                for(unsigned int c = 0; c < numUVChannels; ++c)
+                {
+                    write(mesh->texCoords[c][v]);
+                }
+            }
+
             if(hasNormals)
             {
                 write(mesh->normals[v]);
@@ -76,21 +98,47 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
             {
                 write(mesh->bitangents[v]);
             }
-
-            if(hasTexCoords)
-            {
-                for(unsigned int c = 0; c < numUVChannels; ++c)
-                {
-                    write(mesh->texCoords[c][v]);
-                }
-            }
         }
     }
 
     // cameras
     // scene graph
+    writeNode(scene->rootNode.get());
 
     out.reset();
 
     return true;
+}
+
+void SceneExporter::writeString(const std::string& s)
+{
+    unsigned int len = s.size();
+    write(len);
+    out->write(s.c_str(), len);
+}
+
+void SceneExporter::writeNode(const SceneNode* node)
+{
+    writeString(node->name);
+
+    const double* transform = *node->transform;
+
+    out->write(reinterpret_cast<const char*>(transform), 16 * sizeof(double));
+
+    unsigned int numMeshes = node->meshes.size();
+    write(numMeshes);
+
+    for(unsigned int i = 0; i < numMeshes; ++i)
+    {
+        unsigned int meshIndex = node->meshes.at(i)->index;
+        write(meshIndex);
+    }
+
+    unsigned int numChildren = node->children.size();
+    write(numChildren);
+
+    for(unsigned int i = 0; i < numChildren; ++i)
+    {
+        writeNode(node->children.at(i).get());
+    }
 }

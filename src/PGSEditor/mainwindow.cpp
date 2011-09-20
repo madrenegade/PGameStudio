@@ -25,11 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
     addDockWidget(Qt::RightDockWidgetArea, new SystemsDockWidget(controller, this));
     addDockWidget(Qt::RightDockWidgetArea, new RenderingDockWidget(controller, this));
 
-    ui->mainToolBar->addAction(QIcon::fromTheme("run"), "Run", controller, SLOT(onRun()));
+    ui->mainToolBar->addAction(QIcon::fromTheme("media-play").pixmap(16), "Run", controller, SLOT(onRun()));
 
     connect(ui->actionNew_Scene, SIGNAL(triggered()), controller, SLOT(onNewScene()));
     connect(ui->actionImport, SIGNAL(triggered()), controller, SLOT(onImportAsset()));
     connect(ui->actionExport, SIGNAL(triggered()), controller, SLOT(onExport()));
+
+    setWindowState(Qt::WindowMaximized);
 }
 
 MainWindow::~MainWindow()

@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 class SceneData;
+class Material;
 
 class Controller : public QWidget
 {
@@ -20,6 +21,8 @@ public:
     QStringList getAssetImportPostProcessingSteps() const;
 
     SceneData* getSceneData() const;
+
+    Material* getMaterial(const QString& name) const;
 
 signals:
     void sceneDirectorySelected(const QString& dir);

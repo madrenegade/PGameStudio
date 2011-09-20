@@ -4,6 +4,8 @@
 #include "material.h"
 #include "scenenode.h"
 
+#include "Math/Matrix4.h"
+
 #include <assimp/assimp.hpp>
 #include <assimp/aiScene.h>
 #include <assimp/aiPostProcess.h>
@@ -54,7 +56,7 @@ void AssetImporter::processTextures(aiTexture** textures, unsigned int numTextur
 {
     for(unsigned int i = 0; i < numTextures; ++i)
     {
-        aiTexture* texture = textures[i];
+        //aiTexture* texture = textures[i];
 
         // TODO
     }
@@ -74,6 +76,9 @@ void AssetImporter::processMaterials(aiMaterial** materials, unsigned int numMat
         aiColor3D diffuse;
         material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
 
+        aiColor3D specular;
+        material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+
         float opacity;
         material->Get(AI_MATKEY_OPACITY, opacity);
 
@@ -82,7 +87,7 @@ void AssetImporter::processMaterials(aiMaterial** materials, unsigned int numMat
 
         mat->name.assign(name.data, name.length);
         mat->diffuse = Math::Vector4(diffuse.r, diffuse.g, diffuse.b, opacity);
-        mat->shininess = shininess;
+        mat->specular = Math::Vector4(specular.r, specular.g, specular.b, shininess);
 
         importedData->materials.push_back(mat);
     }
@@ -94,6 +99,8 @@ void AssetImporter::processMeshes(aiMesh** meshes, unsigned int numMeshes)
     {
         aiMesh* mesh = meshes[i];
         boost::shared_ptr<Mesh> m(new Mesh());
+
+        m->material = importedData->materials.at(mesh->mMaterialIndex).get();
 
         if(mesh->HasPositions())
         {
@@ -178,6 +185,23 @@ boost::shared_ptr<SceneNode> AssetImporter::processNode(const aiNode *node)
 
     boost::shared_ptr<SceneNode> sceneNode(new SceneNode());
     sceneNode->name = name;
+
+    // transform
+    aiVector3D scaling;
+    aiQuaternion rotation;
+    aiVector3D position;
+    node->mTransformation.Decompose(scaling, rotation, position);
+
+    sceneNode->transform.reset(new Math::Matrix4(Math::Matrix4::CreateTransform(Math::Vector3(position.x, position.y, position.z),
+                                                                                Math::Quaternion(rotation.x, rotation.y, rotation.z, rotation.w),
+                                                                                Math::Vector3(scaling.x, scaling.y, scaling.z))));
+
+    for(unsigned int i = 0; i < node->mNumMeshes; ++i)
+    {
+        unsigned int meshIndex = node->mMeshes[i];
+
+        sceneNode->meshes.push_back(importedData->meshes.at(meshIndex).get());
+    }
 
     for(unsigned int i = 0; i < node->mNumChildren; ++i)
     {

@@ -57,6 +57,22 @@
         <item>
          <widget class="QListWidget" name="listWidgetMaterials"/>
         </item>
+        <item>
+         <widget class="QGraphicsView" name="materialPreview">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>135</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>135</height>
+           </size>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_4">
@@ -67,6 +83,22 @@
         <item>
          <widget class="QListWidget" name="listWidgetTextures"/>
         </item>
+        <item>
+         <widget class="QGraphicsView" name="texturePreview">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>128</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>128</height>
+           </size>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -75,5 +107,25 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>listWidgetMaterials</sender>
+   <signal>itemClicked(QListWidgetItem*)</signal>
+   <receiver>SceneDockWidget</receiver>
+   <slot>onMaterialSelected(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>219</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>219</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onMaterialSelected(QListWidgetItem*)</slot>
+ </slots>
 </ui>

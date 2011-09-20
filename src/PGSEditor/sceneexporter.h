@@ -9,6 +9,7 @@
 #include "Math/Vector3.h"
 
 class SceneData;
+class SceneNode;
 
 class SceneExporter
 {
@@ -25,12 +26,8 @@ private:
         out->write(reinterpret_cast<const char*>(&data), sizeof(T));
     }
 
-    void write(const std::string& s)
-    {
-        unsigned int len = s.size();
-        write(len);
-        out->write(s.c_str(), len);
-    }
+    void writeString(const std::string& s);
+    void writeNode(const SceneNode* node);
 
     boost::shared_ptr<std::fstream> out;
 };
