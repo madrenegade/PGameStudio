@@ -216,9 +216,9 @@ namespace Renderer
         const Math::Matrix4 view = Math::Matrix4::LookAt(camera, Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
         
         Math::Matrix4 view_rotation = view;
-//        view_rotation.M41(0);
-//        view_rotation.M42(0);
-//        view_rotation.M43(0);
+        view_rotation.M14(0);
+        view_rotation.M24(0);
+        view_rotation.M34(0);
         
         Math::Vector4 v[4];
         double d[3];

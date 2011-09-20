@@ -42,6 +42,8 @@ namespace Math
         Matrix4 operator*(const Matrix4& rhs) const;
 
         operator const double*() const;
+        
+        Matrix4& Transpose();
 
 
 #ifdef DEBUG
@@ -97,6 +99,8 @@ namespace Math
         static Matrix4 CreateTransform(const Vector3& translation = Vector3(0, 0, 0),
                                        const Quaternion& rotation = Quaternion(),
                                        const Vector3& scale = Vector3(1, 1, 1));
+        
+        static Matrix4 CreateShearing(double s);
 
     private:
         std::vector<double> m_values;

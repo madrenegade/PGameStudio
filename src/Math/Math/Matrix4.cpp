@@ -9,70 +9,73 @@
 namespace Math
 {
 #ifdef CXX0X_INITIALIZER_LISTS
+
     Matrix4::Matrix4()
-        : m_values( {
-        1,0,0,0,
-        0,1,0,0,
-        0,0,1,0,
-        0,0,0,1
+    : m_values({
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
     })
     {
     }
 #else
+
     Matrix4::Matrix4(double m11, double m12, double m13, double m14,
-                double m21, double m22, double m23, double m24,
-                double m31, double m32, double m33, double m34,
-                double m41, double m42, double m43, double m44)
-                : m_values(16)
+                     double m21, double m22, double m23, double m24,
+                     double m31, double m32, double m33, double m34,
+                     double m41, double m42, double m43, double m44)
+    : m_values(16)
     {
-		this->m_values[0] = m11;
-		this->m_values[1] = m12;
-		this->m_values[2] = m13;
-		this->m_values[3] = m14;
-		this->m_values[4] = m21;
-		this->m_values[5] = m22;
-		this->m_values[6] = m23;
-		this->m_values[7] = m24;
-		this->m_values[8] = m31;
-		this->m_values[9] = m32;
-		this->m_values[10] = m33;
-		this->m_values[11] = m34;
-		this->m_values[12] = m41;
-		this->m_values[13] = m42;
-		this->m_values[14] = m43;
-		this->m_values[15] = m44;
+        this->m_values[0] = m11;
+        this->m_values[1] = m12;
+        this->m_values[2] = m13;
+        this->m_values[3] = m14;
+        this->m_values[4] = m21;
+        this->m_values[5] = m22;
+        this->m_values[6] = m23;
+        this->m_values[7] = m24;
+        this->m_values[8] = m31;
+        this->m_values[9] = m32;
+        this->m_values[10] = m33;
+        this->m_values[11] = m34;
+        this->m_values[12] = m41;
+        this->m_values[13] = m42;
+        this->m_values[14] = m43;
+        this->m_values[15] = m44;
     }
 #endif
 
     Matrix4::Matrix4(const double* const d)
 #ifdef CXX0X_INITIALIZER_LISTS
-        : m_values( {
-        d[0],d[1],d[2],d[3],
-        d[4],d[5],d[6],d[7],
-        d[8],d[9],d[10],d[11],
-        d[12],d[13],d[14],d[15]
+    : m_values({
+        d[0], d[1], d[2], d[3],
+        d[4], d[5], d[6], d[7],
+        d[8], d[9], d[10], d[11],
+        d[12], d[13], d[14], d[15]
     })
 #else
-		: m_values(16)
+    : m_values(16)
 #endif
     {
 #ifndef CXX0X_INITIALIZER_LISTS
-		for(unsigned int i = 0; i < 16; ++i)
-		{
-			this->m_values[i] = d[i];
-		}
+        for (unsigned int i = 0; i < 16; ++i)
+        {
+            this->m_values[i] = d[i];
+        }
 #endif
     }
 
 #ifdef CXX0X_INITIALIZER_LISTS
+
     Matrix4::Matrix4(std::initializer_list<double> d)
-        : m_values(d)
+    : m_values(d)
     {
     }
 #endif
 
     Matrix4::Matrix4(const Matrix4& m)
-        : m_values(m.m_values)
+    : m_values(m.m_values)
     {
     }
 
@@ -81,7 +84,7 @@ namespace Math
         //dtor
     }
 
-    Matrix4& Matrix4::operator = (const Matrix4& rhs)
+    Matrix4& Matrix4::operator =(const Matrix4& rhs)
     {
         this->m_values = rhs.m_values;
 
@@ -113,12 +116,39 @@ namespace Math
 #ifdef CXX0X_INITIALIZER_LISTS
         }
 #endif
-               );
+        );
     }
 
     Matrix4::operator const double*() const
     {
         return &this->m_values[0];
+    }
+    
+    Matrix4& Matrix4::Transpose()
+    {
+        const Matrix4 temp(*this);
+        
+        this->M11(temp.M11());
+        this->M12(temp.M21());
+        this->M13(temp.M31());
+        this->M14(temp.M41());
+        
+        this->M21(temp.M12());
+        this->M22(temp.M22());
+        this->M23(temp.M32());
+        this->M24(temp.M42());
+        
+        this->M31(temp.M13());
+        this->M32(temp.M23());
+        this->M33(temp.M33());
+        this->M34(temp.M43());
+        
+        this->M41(temp.M14());
+        this->M42(temp.M24());
+        this->M43(temp.M34());
+        this->M44(temp.M44());
+        
+        return *this;
     }
 
     Matrix4 Matrix4::CreatePerspectiveFieldOfView(double fieldOfView, double aspect, double near, double far)
@@ -146,7 +176,7 @@ namespace Math
 #ifdef CXX0X_INITIALIZER_LISTS
         }
 #endif
-               );
+        );
     }
 
     Matrix4 Matrix4::LookAt(const Vector3& position, const Vector3& lookAt, const Vector3& up)
@@ -167,7 +197,7 @@ namespace Math
             x.X, y.X, z.X, 0,
             x.Y, y.Y, z.Y, 0,
             x.Z, y.Z, z.Z, 0,
-            0,   0,   0, 1
+            0, 0, 0, 1
 #ifdef CXX0X_INITIALIZER_LISTS
         }
 #endif
@@ -176,7 +206,7 @@ namespace Math
 
         Matrix4 trans(Matrix4::CreateTranslation(-position));
 
-        return trans * rot;
+        return trans.Transpose() * rot;
     }
 
     Matrix4 Matrix4::CreateTranslation(const Vector3& translation)
@@ -185,14 +215,18 @@ namespace Math
 #ifdef CXX0X_INITIALIZER_LISTS
         {
 #endif
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            translation.X, translation.Y, translation.Z, 1
+            //            1, 0, 0, 0,
+            //            0, 1, 0, 0,
+            //            0, 0, 1, 0,
+            //            translation.X, translation.Y, translation.Z, 1
+            1, 0, 0, translation.X,
+            0, 1, 0, translation.Y,
+            0, 0, 1, translation.Z,
+            0, 0, 0, 1
 #ifdef CXX0X_INITIALIZER_LISTS
         }
 #endif
-               );
+        );
     }
 
     Matrix4 Matrix4::CreateRotation(const Quaternion& rotation)
@@ -219,7 +253,7 @@ namespace Math
 #ifdef CXX0X_INITIALIZER_LISTS
         }
 #endif
-               );
+        );
     }
 
     Matrix4 Matrix4::Scale(const Vector3& scale)
@@ -235,15 +269,32 @@ namespace Math
 #ifdef CXX0X_INITIALIZER_LISTS
         }
 #endif
-               );
+        );
     }
 
     Matrix4 Matrix4::CreateTransform(const Vector3& translation, const Quaternion& rotation, const Vector3& scale)
     {
-        return  Scale(scale) * CreateTranslation(translation) * CreateRotation(rotation);
+        return Scale(scale) * CreateTranslation(translation) * CreateRotation(rotation);
+    }
+
+    Matrix4 Matrix4::CreateShearing(double s)
+    {
+        return Matrix4(
+#ifdef CXX0X_INITIALIZER_LISTS
+        {
+#endif
+            1, 0, s, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+#ifdef CXX0X_INITIALIZER_LISTS
+        }
+#endif
+        );
     }
 
 #ifdef DEBUG
+
     Matrix4::operator std::string() const
     {
         std::stringstream s;
