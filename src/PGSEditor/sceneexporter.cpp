@@ -27,6 +27,8 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
 
     // textures
     // materials
+
+
     // meshes
     unsigned int numMeshes = scene->meshes.size();
     write(numMeshes);

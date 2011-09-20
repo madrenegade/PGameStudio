@@ -66,9 +66,25 @@ void AssetImporter::processMaterials(aiMaterial** materials, unsigned int numMat
     {
         aiMaterial* material = materials[i];
 
-        Material mat;
+        boost::shared_ptr<Material> mat(new Material);
 
-        // TODO
+        aiString name;
+        material->Get(AI_MATKEY_NAME, name);
+
+        aiColor3D diffuse;
+        material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+
+        float opacity;
+        material->Get(AI_MATKEY_OPACITY, opacity);
+
+        float shininess;
+        material->Get(AI_MATKEY_SHININESS, shininess);
+
+        mat->name.assign(name.data, name.length);
+        mat->diffuse = Math::Vector4(diffuse.r, diffuse.g, diffuse.b, opacity);
+        mat->shininess = shininess;
+
+        importedData->materials.push_back(mat);
     }
 }
 

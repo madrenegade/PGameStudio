@@ -23,6 +23,7 @@ void SceneDockWidget::onSceneChanged()
 {
     rebuildSceneGraph();
     rebuildMeshList();
+    rebuildMaterialList();
 }
 
 void SceneDockWidget::rebuildSceneGraph()
@@ -52,6 +53,21 @@ void SceneDockWidget::rebuildMeshList()
         Mesh* mesh = data->meshes.at(i).get();
 
         meshList->addItem(QString("Mesh%1").arg(i));
+    }
+}
+
+void SceneDockWidget::rebuildMaterialList()
+{
+    SceneData* data = controller->getSceneData();
+
+    QListWidget* materialList = ui->listWidgetMaterials;
+    materialList->clear();
+
+    for(unsigned int i = 0; i < data->materials.size(); ++i)
+    {
+        Material* mat = data->materials.at(i).get();
+
+        materialList->addItem(QString::fromStdString(mat->name));
     }
 }
 
