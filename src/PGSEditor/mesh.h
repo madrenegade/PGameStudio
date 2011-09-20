@@ -12,11 +12,8 @@ struct Face
     std::vector<unsigned int> indexes;
 };
 
-class Mesh
+struct Mesh
 {
-public:
-    Mesh();
-
     std::vector<Math::Vector3> positions;
     std::vector<Math::Vector3> normals;
     std::vector<Math::Vector3> tangents;

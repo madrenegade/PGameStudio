@@ -26,9 +26,7 @@ SOURCES += main.cpp\
     assetimporter.cpp \
     scenedata.cpp \
     scenedockwidget.cpp \
-    mesh.cpp \
-    scenenode.cpp \
-    material.cpp
+    scenenode.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \

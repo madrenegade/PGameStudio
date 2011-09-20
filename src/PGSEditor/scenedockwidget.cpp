@@ -3,6 +3,7 @@
 #include "controller.h"
 #include "scenedata.h"
 #include "scenenode.h"
+#include "mesh.h"
 
 SceneDockWidget::SceneDockWidget(Controller* controller, QWidget *parent) :
     QDockWidget(parent),
@@ -21,6 +22,7 @@ SceneDockWidget::~SceneDockWidget()
 void SceneDockWidget::onSceneChanged()
 {
     rebuildSceneGraph();
+    rebuildMeshList();
 }
 
 void SceneDockWidget::rebuildSceneGraph()
@@ -36,6 +38,21 @@ void SceneDockWidget::rebuildSceneGraph()
     sceneGraph->addTopLevelItem(root);
 
     sceneGraph->expandAll();
+}
+
+void SceneDockWidget::rebuildMeshList()
+{
+    SceneData* data = controller->getSceneData();
+
+    QListWidget* meshList = ui->listWidgetMeshes;
+    meshList->clear();
+
+    for(unsigned int i = 0; i < data->meshes.size(); ++i)
+    {
+        Mesh* mesh = data->meshes.at(i).get();
+
+        meshList->addItem(QString("Mesh%1").arg(i));
+    }
 }
 
 QTreeWidgetItem* SceneDockWidget::createNodeItem(const boost::shared_ptr<SceneNode>& node)

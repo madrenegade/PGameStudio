@@ -8,11 +8,8 @@ class Mesh;
 
 class SceneNode;
 
-class SceneData
+struct SceneData
 {
-public:
-    SceneData();
-
     void mergeWith(const boost::shared_ptr<SceneData>& other);
 
     std::vector<boost::shared_ptr<Mesh> > meshes;

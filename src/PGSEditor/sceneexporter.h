@@ -25,17 +25,11 @@ private:
         out->write(reinterpret_cast<const char*>(&data), sizeof(T));
     }
 
-    void write(const Math::Vector2& v)
+    void write(const std::string& s)
     {
-        write(v.X);
-        write(v.Y);
-    }
-
-    void write(const Math::Vector3& v)
-    {
-        write(v.X);
-        write(v.Y);
-        write(v.Z);
+        unsigned int len = s.size();
+        write(len);
+        out->write(s.c_str(), len);
     }
 
     boost::shared_ptr<std::fstream> out;

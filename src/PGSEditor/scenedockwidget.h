@@ -25,6 +25,7 @@ public slots:
 
 private:
     void rebuildSceneGraph();
+    void rebuildMeshList();
 
     QTreeWidgetItem* createNodeItem(const boost::shared_ptr<SceneNode>& node);
 

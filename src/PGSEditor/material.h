@@ -1,9 +1,10 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-class Material
+#include <string>
+
+struct Material
 {
-public:
     std::string name;
 };
 
