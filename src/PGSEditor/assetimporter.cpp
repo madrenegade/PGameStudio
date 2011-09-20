@@ -1,6 +1,7 @@
 #include "assetimporter.h"
 #include "scenedata.h"
 #include "mesh.h"
+#include "material.h"
 #include "scenenode.h"
 
 #include <assimp/assimp.hpp>
@@ -64,6 +65,8 @@ void AssetImporter::processMaterials(aiMaterial** materials, unsigned int numMat
     for(unsigned int i = 0; i < numMaterials; ++i)
     {
         aiMaterial* material = materials[i];
+
+        Material mat;
 
         // TODO
     }

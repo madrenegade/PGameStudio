@@ -5,6 +5,9 @@
 #include <fstream>
 #include <boost/shared_ptr.hpp>
 
+#include "Math/Vector2.h"
+#include "Math/Vector3.h"
+
 class SceneData;
 
 class SceneExporter
@@ -20,6 +23,19 @@ private:
     void write(const T& data)
     {
         out->write(reinterpret_cast<const char*>(&data), sizeof(T));
+    }
+
+    void write(const Math::Vector2& v)
+    {
+        write(v.X);
+        write(v.Y);
+    }
+
+    void write(const Math::Vector3& v)
+    {
+        write(v.X);
+        write(v.Y);
+        write(v.Z);
     }
 
     boost::shared_ptr<std::fstream> out;

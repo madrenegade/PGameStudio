@@ -1,5 +1,6 @@
 #include "sceneexporter.h"
-#include <fstream>
+#include "scenedata.h"
+#include "mesh.h"
 
 SceneExporter::SceneExporter()
 {
@@ -33,6 +34,55 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
     for(unsigned int i = 0; i < scene->meshes.size(); ++i)
     {
         Mesh* mesh = scene->meshes.at(i).get();
+
+        bool hasPositions = !mesh->positions.empty();
+        bool hasNormals = !mesh->normals.empty();
+        bool hasTangents = !mesh->tangents.empty();
+        bool hasBitangents = !mesh->bitangents.empty();
+
+        bool hasTexCoords = !mesh->texCoords.empty();
+        unsigned char numUVChannels = mesh->texCoords.size();
+
+        write(hasPositions);
+        write(hasNormals);
+        write(hasTangents);
+        write(hasBitangents);
+        write(hasTexCoords);
+        write(numUVChannels);
+
+        const unsigned int numVertices = mesh->positions.size();
+        write(numVertices);
+
+        for(unsigned int v = 0; v < numVertices; ++v)
+        {
+            if(hasPositions)
+            {
+                write(mesh->positions[v]);
+            }
+
+            if(hasNormals)
+            {
+                write(mesh->normals[v]);
+            }
+
+            if(hasTangents)
+            {
+                write(mesh->tangents[v]);
+            }
+
+            if(hasBitangents)
+            {
+                write(mesh->bitangents[v]);
+            }
+
+            if(hasTexCoords)
+            {
+                for(unsigned int c = 0; c < numUVChannels; ++c)
+                {
+                    write(mesh->texCoords[c][v]);
+                }
+            }
+        }
     }
 
     // cameras

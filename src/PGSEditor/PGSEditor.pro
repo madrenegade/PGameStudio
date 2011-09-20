@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     scenedata.cpp \
     scenedockwidget.cpp \
     mesh.cpp \
-    scenenode.cpp
+    scenenode.cpp \
+    material.cpp
 
 HEADERS  += mainwindow.h \
     newscenewizard.h \
@@ -44,7 +45,8 @@ HEADERS  += mainwindow.h \
     scenedata.h \
     scenedockwidget.h \
     mesh.h \
-    scenenode.h
+    scenenode.h \
+    material.h
 
 FORMS    += mainwindow.ui \
     newscenewizard.ui \
