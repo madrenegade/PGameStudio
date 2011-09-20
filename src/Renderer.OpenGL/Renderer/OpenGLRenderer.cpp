@@ -18,11 +18,14 @@
 #include "Math/Matrix4.h"
 #include "Math/Vector4.h"
 #include "Math/Vector3.h"
+#include "Math/Quaternion.h"
+#include "Math/Vector2.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glog/logging.h>
 #include <list>
+#include <chrono>
 
 namespace Renderer
 {
@@ -37,6 +40,7 @@ namespace Renderer
 
     OpenGLRenderer::~OpenGLRenderer()
     {
+        Effect::deinitialize();
     }
 
     void OpenGLRenderer::initialize()
@@ -53,6 +57,8 @@ namespace Renderer
         projection.reset(new Math::Matrix4(Math::Matrix4::CreatePerspectiveFieldOfView(Math::PI * fieldOfView / 180.0, static_cast<double>(width) / static_cast<double>(height), zNear, zFar)));
 
         frameBuffer.reset(new FrameBuffer(3, width, height));
+        
+        Effect::initialize();
 
         ErrorHandler::checkForErrors();
     }
@@ -165,6 +171,8 @@ namespace Renderer
         }
     }
 
+    typedef std::chrono::duration<double, std::ratio < 1, 1 >> sec;
+    
     void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
                                              const Graphics::Camera& camera)
     {
@@ -174,11 +182,18 @@ namespace Renderer
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
         glDrawBuffers(3, buffers);
         
+        static double t = 0.0;
+        const Math::Quaternion rot(0, 1, 0, std::sin(t));
+        t += 0.0001;
+        
+        const Math::Matrix4 transform(Math::Matrix4::CreateTransform(Math::Vector3(), rot));
         const Math::Matrix4 view(camera.getViewMatrix());
+        
+        const Math::Matrix4 mv(transform * view);
 
         Effect* effect = effects->get(0);
-        effect->setMatrix("ModelView", view);
-        effect->setMatrix("ModelViewProjection", view * (*projection));
+        effect->set("ModelView", mv);
+        effect->set("ModelViewProjection", mv * (*projection));
         effect->activate();
 
         while (effect->hasNextPass())
@@ -195,6 +210,8 @@ namespace Renderer
     void OpenGLRenderer::renderToScreen(const Graphics::Camera& camera)
     {
         Effect* effect = effects->get(1);
+        effect->set("ZNear", zNear);
+        effect->set("ZFar", zFar);
 
         const Texture* colorTexture = frameBuffer->getColorAttachment(0);
         const Texture* aux0Texture = frameBuffer->getColorAttachment(1);
@@ -202,16 +219,16 @@ namespace Renderer
         const Texture* depthTexture = frameBuffer->getDepthAttachment();
 
         colorTexture->bind(0);
-        effect->setTexture(0, colorTexture->getID());
+        effect->set(0, colorTexture);
 
         aux0Texture->bind(1);
-        effect->setTexture(1, aux0Texture->getID());
+        effect->set(1, aux0Texture);
 
         aux1Texture->bind(2);
-        effect->setTexture(2, aux1Texture->getID());
+        effect->set(2, aux1Texture);
 
         depthTexture->bind(3);
-        effect->setTexture(3, depthTexture->getID());
+        effect->set(3, depthTexture);
 
         effect->activate();
 
@@ -250,7 +267,7 @@ namespace Renderer
                 texture = textures->get(i->material->textures[t]);
                 texture->bind(t);
 
-                effect->setTexture(t, texture->getID());
+                effect->set(t, texture);
             }
 
             vertexBuffers->get(i->vertexBuffer)->render(indexBuffers->get(i->indexBuffer));

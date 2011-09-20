@@ -21,7 +21,7 @@ namespace Graphics
     tbb::task* RenderTask::execute()
     {
         std::vector<Camera> cams;
-        cams.push_back(Camera(Math::Vector3(4, 4, 4), Math::Vector3(0, 0, 0)));
+        cams.push_back(Camera(Math::Vector3(4, 2, 4), Math::Vector3(0, 0, 0)));
         
         context->MakeCurrent();
         

@@ -6,19 +6,31 @@
  */
 
 #include "Renderer/Effect.h"
+#include "Renderer/Texture.h"
 
 #include <GL/glew.h>
 #include <Cg/cgGL.h>
 #include <stdexcept>
 #include <glog/logging.h>
 
-
+#include "Math/Vector2.h"
 #include "Math/Matrix4.h"
 
 namespace Renderer
 {
-
+    CGcontext Effect::context = 0;
+    
     Effect::Effect()
+    {
+
+    }
+    
+    Effect::~Effect()
+    {
+//        cgDestroyEffect(effect);
+    }
+
+    void Effect::initialize()
     {
         context = cgCreateContext();
 
@@ -31,6 +43,11 @@ namespace Renderer
 
         cgGLRegisterStates(context);
         cgGLSetManageTextureParameters(context, true);
+    }
+
+    void Effect::deinitialize()
+    {
+        cgDestroyContext(context);
     }
 
     void Effect::load(const char* code)
@@ -53,30 +70,44 @@ namespace Renderer
         {
             throw std::runtime_error("Technique not valid");
         }
-
-//        modelViewProjection = cgGetEffectParameterBySemantic(effect, "ModelViewProjection");
-//        modelView = cgGetEffectParameterBySemantic(effect, "ModelView");
-//
-//        const Math::Matrix4 projection = Math::Matrix4::CreatePerspectiveFieldOfView(3.1415 * 60.0 / 180.0, 16.0 / 9.0, 0.1, 100);
-//        const Math::Matrix4 view = Math::Matrix4::LookAt(Math::Vector3(4, 4, 4), Math::Vector3(0, 0, 0), Math::Vector3(0, 1, 0));
-//
-//        const Math::Matrix4 mvp = view * projection;
-//        
-//        cgSetMatrixParameterdc(modelView, view);
     }
-    
-    void Effect::setMatrix(const char* semantic, const Math::Matrix4& matrix)
+
+    void Effect::set(const char* semantic, double d)
+    {
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        cgSetParameter1d(parameter, d);
+    }
+
+    void Effect::set(const char* semantic, const Math::Vector2& v)
+    {
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        cgSetParameter2d(parameter, v.X, v.Y);
+    }
+
+    void Effect::set(const char* semantic, const Math::Vector3& v)
+    {
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        cgSetParameter3d(parameter, v.X, v.Y, v.Z);
+    }
+
+    void Effect::set(const char* semantic, const Math::Vector4& v)
+    {
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        cgSetParameter4d(parameter, v.X, v.Y, v.Z, v.W);
+    }
+
+    void Effect::set(const char* semantic, const Math::Matrix4& matrix)
     {
         CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
         cgSetMatrixParameterdc(parameter, matrix);
     }
-    
-    void Effect::setTexture(unsigned int level, unsigned int id)
+
+    void Effect::set(unsigned int level, const Texture* texture)
     {
         char semantic[] = {'T', 'E', 'X', static_cast<unsigned char> (level + 48), '\0'};
-        
-        CGparameter texture = cgGetEffectParameterBySemantic(effect, semantic);
-        cgGLSetTextureParameter(texture, id);
+
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        cgGLSetTextureParameter(parameter, texture->getID());
     }
 
     void Effect::CgErrorHandler(CGcontext context, CGerror error, void* pData)
@@ -95,11 +126,7 @@ namespace Renderer
         throw std::runtime_error("CG ERROR");
     }
 
-    Effect::~Effect()
-    {
-        //        cgDestroyEffect(effect);
-        //        cgDestroyContext(context);
-    }
+    
 
     void Effect::activate()
     {
@@ -115,7 +142,7 @@ namespace Renderer
     void Effect::gotoNextPass()
     {
         cgResetPassState(currentPass);
-        
+
         currentPass = cgGetNextPass(currentPass);
 
         if (currentPass != 0)
@@ -126,6 +153,6 @@ namespace Renderer
 
     void Effect::deactivate()
     {
-//        cgResetPassState(currentPass);
+        //        cgResetPassState(currentPass);
     }
 }
