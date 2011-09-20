@@ -38,7 +38,6 @@ public:
     QWizardPage *wizardPageOptimizations;
     QVBoxLayout *verticalLayout_2;
     QVBoxLayout *verticalLayout;
-    QWizardPage *wizardPageConfirm;
 
     void setupUi(QWizard *AssetImportWizard)
     {
@@ -81,9 +80,6 @@ public:
         verticalLayout_2->addLayout(verticalLayout);
 
         AssetImportWizard->addPage(wizardPageOptimizations);
-        wizardPageConfirm = new QWizardPage();
-        wizardPageConfirm->setObjectName(QString::fromUtf8("wizardPageConfirm"));
-        AssetImportWizard->addPage(wizardPageConfirm);
 
         retranslateUi(AssetImportWizard);
         QObject::connect(pushButtonChooseFile, SIGNAL(clicked()), AssetImportWizard, SLOT(onChooseFile()));
@@ -100,8 +96,6 @@ public:
         pushButtonChooseFile->setText(QApplication::translate("AssetImportWizard", "...", 0, QApplication::UnicodeUTF8));
         wizardPageOptimizations->setTitle(QApplication::translate("AssetImportWizard", "Import Asset", 0, QApplication::UnicodeUTF8));
         wizardPageOptimizations->setSubTitle(QApplication::translate("AssetImportWizard", "Optimizations", 0, QApplication::UnicodeUTF8));
-        wizardPageConfirm->setTitle(QApplication::translate("AssetImportWizard", "Import Asset", 0, QApplication::UnicodeUTF8));
-        wizardPageConfirm->setSubTitle(QApplication::translate("AssetImportWizard", "Overview", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -29,6 +29,14 @@ namespace Utilities
     void fillMemory(Memory::byte_pointer start, size_t bytes, char c);
     
     /**
+     * Copies n bytes from src to dest.
+     * @param src - the source data
+     * @param dest - the destination
+     * @param n - the number of bytes to copy
+     */
+    void copy(Memory::const_byte_pointer src, Memory::byte_pointer dest, size_t n);
+    
+    /**
      * count the number of bits set to zero from the right
      * @param v the bitset to use
      * @return the number of bits set to zero from the right

@@ -53,6 +53,11 @@ namespace Utilities
         
         std::fill_n(start, bytes, c);
     }
+    
+    void copy(Memory::const_byte_pointer src, Memory::byte_pointer dest, size_t n)
+    {
+        std::copy(src, &src[n], dest);
+    }
 
     int countZeroBitsFromRight(unsigned long v)
     {

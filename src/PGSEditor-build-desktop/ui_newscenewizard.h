@@ -34,7 +34,6 @@ public:
     QWizardPage *wizardPageSystems;
     QVBoxLayout *verticalLayout;
     QFormLayout *formLayout;
-    QWizardPage *wizardPageConfirm;
 
     void setupUi(QWizard *Wizard)
     {
@@ -66,9 +65,6 @@ public:
         verticalLayout->addLayout(formLayout);
 
         Wizard->addPage(wizardPageSystems);
-        wizardPageConfirm = new QWizardPage();
-        wizardPageConfirm->setObjectName(QString::fromUtf8("wizardPageConfirm"));
-        Wizard->addPage(wizardPageConfirm);
 
         retranslateUi(Wizard);
 
@@ -83,8 +79,6 @@ public:
         label->setText(QApplication::translate("Wizard", "Name:", 0, QApplication::UnicodeUTF8));
         wizardPageSystems->setTitle(QApplication::translate("Wizard", "Create New Scene", 0, QApplication::UnicodeUTF8));
         wizardPageSystems->setSubTitle(QApplication::translate("Wizard", "Needed Systems", 0, QApplication::UnicodeUTF8));
-        wizardPageConfirm->setTitle(QApplication::translate("Wizard", "Create New Scene", 0, QApplication::UnicodeUTF8));
-        wizardPageConfirm->setSubTitle(QApplication::translate("Wizard", "Finish", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

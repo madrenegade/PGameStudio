@@ -99,6 +99,22 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
                 write(mesh->bitangents[v]);
             }
         }
+
+        const unsigned int numFaces = mesh->faces.size();
+        write(numFaces);
+
+        for(unsigned int f = 0; f < numFaces; ++f)
+        {
+            const unsigned char numIndexes = mesh->faces.at(f).indexes.size();
+            write(numIndexes);
+
+            for(unsigned int index = 0; index < numIndexes; ++index)
+            {
+                const unsigned short vertexIndex = mesh->faces.at(f).indexes.at(index);
+                write(vertexIndex);
+            }
+        }
+
     }
 
     // cameras

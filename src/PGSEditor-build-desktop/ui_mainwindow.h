@@ -35,6 +35,7 @@ public:
     QAction *actionImport;
     QAction *actionSingle_View;
     QAction *actionMulti_View;
+    QAction *actionExport;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QGridLayout *gridLayout;
@@ -62,6 +63,8 @@ public:
         actionSingle_View->setObjectName(QString::fromUtf8("actionSingle_View"));
         actionMulti_View = new QAction(MainWindow);
         actionMulti_View->setObjectName(QString::fromUtf8("actionMulti_View"));
+        actionExport = new QAction(MainWindow);
+        actionExport->setObjectName(QString::fromUtf8("actionExport"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -87,7 +90,9 @@ public:
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        mainToolBar->setIconSize(QSize(24, 24));
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
+        MainWindow->insertToolBarBreak(mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
@@ -96,13 +101,13 @@ public:
         menuBar->addAction(menuAssets->menuAction());
         menuBar->addAction(menuView->menuAction());
         menuFile->addAction(actionNew_Scene);
+        menuFile->addAction(actionExport);
         menuFile->addAction(actionOpen);
         menuFile->addSeparator();
         menuFile->addAction(actionQuit);
         menuAssets->addAction(actionImport);
         menuView->addAction(actionSingle_View);
         menuView->addAction(actionMulti_View);
-        mainToolBar->addSeparator();
 
         retranslateUi(MainWindow);
         QObject::connect(actionSingle_View, SIGNAL(triggered()), MainWindow, SLOT(onSetSingleView()));
@@ -120,6 +125,7 @@ public:
         actionImport->setText(QApplication::translate("MainWindow", "Import", 0, QApplication::UnicodeUTF8));
         actionSingle_View->setText(QApplication::translate("MainWindow", "Single View", 0, QApplication::UnicodeUTF8));
         actionMulti_View->setText(QApplication::translate("MainWindow", "Multi View", 0, QApplication::UnicodeUTF8));
+        actionExport->setText(QApplication::translate("MainWindow", "Export", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuAssets->setTitle(QApplication::translate("MainWindow", "Assets", 0, QApplication::UnicodeUTF8));
         menuView->setTitle(QApplication::translate("MainWindow", "View", 0, QApplication::UnicodeUTF8));

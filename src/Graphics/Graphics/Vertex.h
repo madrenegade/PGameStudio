@@ -31,8 +31,8 @@ namespace Graphics
         Math::Vector3 position;
         Math::Vector2 texcoords;
         Math::Vector3 normal;
-        Math::Vector3 bitangent;
         Math::Vector3 tangent;
+        Math::Vector3 bitangent;
     };
 }
 
