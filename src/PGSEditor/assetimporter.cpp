@@ -148,7 +148,7 @@ void AssetImporter::processMeshes(aiMesh** meshes, unsigned int numMeshes)
 
             for(unsigned int t = 0; t < mesh->GetNumUVChannels(); ++t)
             {
-                m->texCoords[t][v] = Math::Vector2(mesh->mTextureCoords[t]->x, mesh->mTextureCoords[t]->y);
+                m->texCoords[t][v] = Math::Vector2(mesh->mTextureCoords[t][v].x, mesh->mTextureCoords[t][v].y);
             }
         }
 

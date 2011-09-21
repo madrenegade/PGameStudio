@@ -4,6 +4,8 @@
 #include "mesh.h"
 #include "Math/Matrix4.h"
 
+#include <iostream>
+
 SceneExporter::SceneExporter()
 {
 }
