@@ -8,6 +8,8 @@
 #ifndef UTILITIES_MEMORY_CONSTANTS_H
 #define	UTILITIES_MEMORY_CONSTANTS_H
 
+#include <cstddef>
+
 namespace Utilities
 {
     namespace Memory

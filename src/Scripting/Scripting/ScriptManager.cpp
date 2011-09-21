@@ -27,23 +27,16 @@ namespace Scripting
 
     void ScriptManager::addOptionsTo(const PropertyManager::Ptr& properties)
     {
+        MemoryPoolSettings scriptPool(1 * KByte, 1 * KByte, 128 * Byte,
+            1 * KByte, 1 * KByte, 128 * Byte,
+            1 * KByte, 1 * KByte, 128 * Byte);
+        scriptPool.addOptionsTo(properties, "Scripting");
+
         po::options_description options("Scripting options");
 
         options.add_options()
             ("Scripting.engine", po::value<std::string > (), "The scripting engine to use")
-            ("Scripting.startup", po::value<std::string > (), "The script to run at startup")
-
-            ("Scripting.memory.smallObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the small object area in the Scripting memory pool")
-            ("Scripting.memory.smallObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the small object area in the Scripting memory pool")
-            ("Scripting.memory.smallObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the small object area in the Scripting memory pool")
-
-            ("Scripting.memory.mediumObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the medium object area in the Scripting memory pool")
-            ("Scripting.memory.mediumObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the medium object area in the Scripting memory pool")
-            ("Scripting.memory.mediumObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the medium object area in the Scripting memory pool")
-
-            ("Scripting.memory.largeObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the large object area in the Scripting memory pool")
-            ("Scripting.memory.largeObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the large object area in the Scripting memory pool")
-            ("Scripting.memory.largeObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the large object area in the Scripting memory pool");
+            ("Scripting.startup", po::value<std::string > (), "The script to run at startup");
 
         properties->addOptions(options);
     }

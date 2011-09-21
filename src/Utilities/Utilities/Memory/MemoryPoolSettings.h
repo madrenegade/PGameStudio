@@ -9,14 +9,36 @@
 #define	UTILITIES_MEMORY_MEMORYPOOLSETTINGS_H
 
 #include "Utilities/Memory/constants.h"
+#include <boost/shared_ptr.hpp>
 
 namespace Utilities
 {
+    namespace Properties
+    {
+        class PropertyManager;
+    }
+    
     namespace Memory
     {
 
         struct MemoryPoolSettings
         {
+            /**
+             * Add options to the properties using a basename for determining the property name.
+             * The settings from this object are used as default property values.
+             * @param properties - the property manager to add the options to
+             * @param basename - the basename used for the property names
+             */
+            void addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* basename);
+            
+            /**
+             * Load memory pool settings from a property manager
+             * @param properties
+             * @param basename
+             * @return the loaded settings
+             */
+            static MemoryPoolSettings loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* basename);
+        
             MemoryPoolSettings(size_t smallObjectPoolSize = 16*KByte,
                                size_t smallObjectPageSize = 4*KByte,
                                size_t smallObjectBlockSize = 128*Byte,
@@ -48,6 +70,8 @@ namespace Utilities
             size_t largeObjectPageSize;
             size_t largeObjectBlockSize;
         };
+        
+        
     }
 }
 

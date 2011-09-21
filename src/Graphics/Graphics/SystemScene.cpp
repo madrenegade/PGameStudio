@@ -43,6 +43,11 @@ namespace Graphics
 
     void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
     {
+        MemoryPoolSettings graphicsPool(1 * KByte, 1 * KByte, 128 * Byte,
+            1 * KByte, 1 * KByte, 128 * Byte,
+            1 * KByte, 1 * KByte, 128 * Byte);
+        graphicsPool.addOptionsTo(properties, "Graphics");
+
         po::options_description options("Graphics options");
 
         options.add_options()
@@ -61,7 +66,7 @@ namespace Graphics
 
         CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createRenderer"));
 
-        renderer = create(memoryManager, properties, 0);
+        renderer = create(memoryManager, properties, pool);
 
         platformManager->getWindow()->getGraphicsContext()->MakeCurrent();
         renderer->initialize();
@@ -81,7 +86,7 @@ namespace Graphics
         renderer->requestEffect(effectFile);
         renderer->requestEffect(finalEffectFile);
 
-        SceneLoader loader(fileSystem, memoryManager, 0, renderer.get());
+        SceneLoader loader(fileSystem, memoryManager, pool, renderer.get());
         scene = loader.loadFrom(file);
     }
 

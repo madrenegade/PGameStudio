@@ -9,6 +9,7 @@
 #define	GRAPHICS_MATERIAL_H
 
 #include <vector>
+#include "Utilities/Memory/STLAllocator.h"
 #include "Math/Vector4.h"
 
 namespace Graphics
@@ -19,7 +20,7 @@ namespace Graphics
         Math::Vector4 diffuse;
         Math::Vector4 specular;
         
-        std::vector<unsigned long> textures;
+        std::vector<unsigned long/*, Utilities::Memory::STLAllocator<unsigned long>*/> textures;
     };
 }
 

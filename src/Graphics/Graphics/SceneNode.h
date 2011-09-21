@@ -10,6 +10,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "Utilities/Memory/STLAllocator.h"
 #include "Math/Matrix4.h"
 
 namespace Graphics
@@ -31,10 +32,12 @@ namespace Graphics
         void addMesh(const boost::shared_ptr<Mesh>& mesh);
          
     private:
-        std::vector<boost::shared_ptr<SceneNode> > children;
+        typedef boost::shared_ptr<SceneNode> SceneNodePtr;
+        std::vector<SceneNodePtr/*, Utilities::Memory::STLAllocator<SceneNodePtr>*/> children;
 //        Math::Matrix4 transform;
         
-        std::vector<boost::shared_ptr<Mesh> > meshes;
+        typedef boost::shared_ptr<Mesh> MeshPtr;
+        std::vector<MeshPtr/*, Utilities::Memory::STLAllocator<MeshPtr>*/> meshes;
     };
 }
 

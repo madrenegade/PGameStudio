@@ -51,7 +51,12 @@ namespace Scripting
 
         void Engine::runScript(const Utilities::IO::File& file, const char* name)
         {
+            VLOG(2) << "Running script " << name;
+            VLOG(2) << "Data size: " << file.getSize();
+            
             int status = luaL_loadbuffer(state, file.getData(), file.getSize(), name);
+            
+            VLOG(2) << "Loaded data to buffer: " << status;
 
             if (status == 0)
             {

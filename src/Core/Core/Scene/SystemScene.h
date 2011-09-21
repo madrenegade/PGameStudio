@@ -11,6 +11,8 @@
 #include <tbb/task.h>
 #include <boost/shared_ptr.hpp>
 
+#include "Utilities/Memory/typedefs.h"
+
 namespace Utilities
 {
     namespace Memory
@@ -53,13 +55,19 @@ namespace Core
         
         virtual void load(const Utilities::IO::File& file) = 0;
         
-        virtual void initialize();
+        virtual void initialize() = 0;
 
         /**
          * Set the memory manager which should be used by this system scene.
          * @param memoryManager - the memory manager to use
          */
         void setMemoryManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
+        
+        /**
+         * Set the memory pool.
+         * @param pool - the memory pool to be used by this system.
+         */
+        void setMemoryPool(Utilities::Memory::pool_id pool);
         
         /**
          * Make the platform manager available to this system scene.
@@ -76,6 +84,8 @@ namespace Core
         SystemScene();
 
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        Utilities::Memory::pool_id pool;
+        
         boost::shared_ptr<Platform::PlatformManager> platformManager;
         boost::shared_ptr<Events::EventManager> eventManager;
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;

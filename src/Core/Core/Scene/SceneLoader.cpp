@@ -66,7 +66,7 @@ namespace Core
         systemScene->load(f);
     }
 
-    typedef boost::shared_ptr<SystemScene> (*CreateFn)(const MemoryManager::Ptr&, pool_id pool);
+    typedef boost::shared_ptr<SystemScene> (*CreateFn)(const MemoryManager::Ptr&);
 
     void SceneLoader::loadSystemLibraries(const SystemVector& systems, Scene* scene)
     {
@@ -77,7 +77,7 @@ namespace Core
             CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createSystemScene"));
 
             // TODO: seperate pools for each system
-            auto systemScene = create(memoryManager, 0);
+            auto systemScene = create(memoryManager);
             
             // get option descriptions
             String iniFile(i->c_str(), i->size());
@@ -92,6 +92,12 @@ namespace Core
             systemScene->setEventManager(eventManager);
             systemScene->setFileSystem(fileSystem);
             systemScene->setProperties(properties);
+            
+            // create memory pool for this system
+            boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, i->c_str()));
+            pool_id systemPool = memoryManager->registerMemoryPool(pool);
+            
+            systemScene->setMemoryPool(systemPool);
             
             systemScene->initialize();
 

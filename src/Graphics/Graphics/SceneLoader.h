@@ -9,12 +9,12 @@
 #define	GRAPHICS_SCENELOADER_H
 
 #include <boost/shared_ptr.hpp>
-#include <string>
 
 #include "Math/Vector4.h"
 #include "Math/Matrix4.h"
 
 #include "Utilities/Memory/typedefs.h"
+#include "Utilities/string.h"
 
 namespace Utilities
 {
@@ -85,6 +85,9 @@ namespace Graphics
         std::vector<boost::shared_ptr<Mesh> > meshes;
     };
 
+    template<>
+    const String read(const char** from);
+    
     template<>
     const std::string read(const char** from);
 

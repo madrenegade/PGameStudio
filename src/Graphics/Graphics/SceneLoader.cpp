@@ -25,6 +25,17 @@ namespace Graphics
 {
 
     template<>
+    const String read(const char** from)
+    {
+        const unsigned int length = read<unsigned int>(from);
+
+        String s(*from, length);
+        *from += length;
+
+        return s;
+    }
+    
+    template<>
     const std::string read(const char** from)
     {
         const unsigned int length = read<unsigned int>(from);
@@ -227,6 +238,7 @@ namespace Graphics
     
     boost::shared_ptr<SceneNode> SceneLoader::readNode()
     {
+        // FIXME: creation with memoryManager crashes
         boost::shared_ptr<SceneNode> node(new SceneNode());
         
         std::string name(read<std::string>());

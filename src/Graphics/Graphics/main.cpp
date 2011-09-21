@@ -3,9 +3,8 @@
 
 extern "C"
 {
-    boost::shared_ptr<Core::SystemScene> createSystemScene(const Utilities::Memory::MemoryManager::Ptr& memory, 
-                                                           Utilities::Memory::pool_id pool)
+    boost::shared_ptr<Core::SystemScene> createSystemScene(const Utilities::Memory::MemoryManager::Ptr& memory)
     {
-        return memory->construct(Graphics::SystemScene(), pool);
+        return memory->construct(Graphics::SystemScene());
     }
 }

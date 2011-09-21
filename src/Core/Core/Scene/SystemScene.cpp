@@ -20,14 +20,14 @@ namespace Core
     {
     }
     
-    void SystemScene::initialize()
-    {
-        
-    }
-    
     void SystemScene::setMemoryManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
     {
         this->memoryManager = memoryManager;
+    }
+    
+    void SystemScene::setMemoryPool(Utilities::Memory::pool_id pool)
+    {
+        this->pool = pool;
     }
     
     void SystemScene::setPlatformManager(const boost::shared_ptr<Platform::PlatformManager>& platformManager)

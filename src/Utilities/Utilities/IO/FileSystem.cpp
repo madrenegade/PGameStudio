@@ -23,25 +23,18 @@ namespace Utilities
 
         void FileSystem::addOptionsTo(const PropertyManager::Ptr& properties)
         {
+            MemoryPoolSettings fileSystemPool(1 * KByte, 1 * KByte, 128 * Byte,
+                1 * KByte, 1 * KByte, 128 * Byte,
+                1 * KByte, 1 * KByte, 128 * Byte);
+            fileSystemPool.addOptionsTo(properties, "FileSystem");
+            
             po::options_description options("Filesystem options");
 
             options.add_options()
                 ("FileSystem.backend", po::value<unsigned char>()->default_value(0), "The backend to use")
                 ("FileSystem.mount", po::value<std::vector<std::string> >(), "Directories and their mount points")
                 ("FileSystem.organization", po::value<std::string > (), "An organization named used to determine the writable directory")
-                ("FileSystem.appName", po::value<std::string > (), "The application name used to determine the writable directory")
-
-                ("FileSystem.memory.smallObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the small object area in the filesystem memory pool")
-                ("FileSystem.memory.smallObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the small object area in the filesystem memory pool")
-                ("FileSystem.memory.smallObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the small object area in the filesystem memory pool")
-
-                ("FileSystem.memory.mediumObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the medium object area in the filesystem memory pool")
-                ("FileSystem.memory.mediumObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the medium object area in the filesystem memory pool")
-                ("FileSystem.memory.mediumObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the medium object area in the filesystem memory pool")
-
-                ("FileSystem.memory.largeObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the large object area in the filesystem memory pool")
-                ("FileSystem.memory.largeObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the large object area in the filesystem memory pool")
-                ("FileSystem.memory.largeObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the large object area in the filesystem memory pool");
+                ("FileSystem.appName", po::value<std::string > (), "The application name used to determine the writable directory");
 
             properties->addOptions(options);
         }

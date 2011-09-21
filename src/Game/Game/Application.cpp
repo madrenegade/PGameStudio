@@ -132,23 +132,10 @@ namespace Game
     {
         VLOG(1) << "Initializing program settings";
 
-        // options for the default memory pool
-        po::options_description options("Default memory pool options");
-
-        options.add_options()
-            ("Default.memory.smallObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the small object area in the default memory pool")
-            ("Default.memory.smallObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the small object area in the default memory pool")
-            ("Default.memory.smallObjects.blockSize", po::value<size_t > ()->default_value(128 * Byte), "Block size for the small object area in the default memory pool")
-
-            ("Default.memory.mediumObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the medium object area in the default memory pool")
-            ("Default.memory.mediumObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the medium object area in the default memory pool")
-            ("Default.memory.mediumObjects.blockSize", po::value<size_t > ()->default_value(256 * Byte), "Block size for the medium object area in the default memory pool")
-
-            ("Default.memory.largeObjects.maxSize", po::value<size_t > ()->default_value(1 * KByte), "Maximum size for the large object area in the default memory pool")
-            ("Default.memory.largeObjects.pageSize", po::value<size_t > ()->default_value(1 * KByte), "Page size for the large object area in the default memory pool")
-            ("Default.memory.largeObjects.blockSize", po::value<size_t > ()->default_value(512 * Byte), "Block size for the large object area in the default memory pool");
-
-        properties->addOptions(options);
+        MemoryPoolSettings defaultSettings(1 * KByte, 1 * KByte, 128 * Byte,
+                                           1 * KByte, 1 * KByte, 256 * Byte,
+                                           1 * KByte, 1 * KByte, 512 * Byte);
+        defaultSettings.addOptionsTo(properties, "Default");
 
         FileSystem::addOptionsTo(properties);
         Graphics::Window::addOptionsTo(properties);
@@ -162,24 +149,7 @@ namespace Game
     {
         VLOG(1) << "Initializing default memory pool";
 
-        size_t soMax = properties->get<size_t > ("Default.memory.smallObjects.maxSize");
-        size_t soPage = properties->get<size_t > ("Default.memory.smallObjects.pageSize");
-        size_t soBlock = properties->get<size_t > ("Default.memory.smallObjects.blockSize");
-
-        size_t moMax = properties->get<size_t > ("Default.memory.mediumObjects.maxSize");
-        size_t moPage = properties->get<size_t > ("Default.memory.mediumObjects.pageSize");
-        size_t moBlock = properties->get<size_t > ("Default.memory.mediumObjects.blockSize");
-
-        size_t loMax = properties->get<size_t > ("Default.memory.largeObjects.maxSize");
-        size_t loPage = properties->get<size_t > ("Default.memory.largeObjects.pageSize");
-        size_t loBlock = properties->get<size_t > ("Default.memory.largeObjects.blockSize");
-
-        MemoryPoolSettings defaultPoolSettings(
-            soMax, soPage, soBlock,
-            moMax, moPage, moBlock,
-            loMax, loPage, loBlock);
-
-        boost::shared_ptr<Pool> pool = Pool::create(defaultPoolSettings);
+        boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, "Default"));
         memoryManager->registerMemoryPool(pool);
     }
 
