@@ -23,12 +23,12 @@ namespace Renderer
         glDeleteBuffers(1, &id);
     }
 
-    void IndexBuffer::setData(const boost::shared_array<unsigned short>& data, unsigned int numIndexes)
+    void IndexBuffer::setData(const boost::shared_array<unsigned int>& data, unsigned int numIndexes)
     {
         this->numIndexes = numIndexes;
         
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndexes * sizeof (unsigned short), data.get(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndexes * sizeof (unsigned int), data.get(), GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
     

@@ -2,6 +2,7 @@
 #define MATH_VECTOR4_H
 
 #include "math_defines.h"
+#include <ostream>
 
 namespace Math
 {
@@ -31,5 +32,13 @@ namespace Math
     };
 
 } // namespace Math
+
+template<class T>
+std::ostream& operator <<(std::ostream& stream, const Math::Vector4& vector)
+{
+    stream << "v(" << vector.X() << " " << vector.Y() << " " << vector.Z() << " " << vector.W << ")";
+
+    return stream;
+}
 
 #endif // MATH_VECTOR4_H

@@ -74,7 +74,7 @@ namespace Renderer
         if (ib)
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->getID());
-            glDrawElements(GL_TRIANGLES, ib->getNumIndexes(), GL_UNSIGNED_SHORT, 0);
+            glDrawElements(GL_TRIANGLES, ib->getNumIndexes(), GL_UNSIGNED_INT, 0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
         else

@@ -40,8 +40,20 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
         mat->index = i;
 
         writeString(mat->name);
-        write(mat->diffuse);
+        write(mat->diffuse.X);
+        write(mat->diffuse.Y);
+        write(mat->diffuse.Z);
+        write(mat->diffuse.W);
+        std::cout << "Writing diffuse " << mat->diffuse.X << ", " << mat->diffuse.Y << ", " << mat->diffuse.Z << ", " << mat->diffuse.W << std::endl;
         write(mat->specular);
+
+        unsigned int numTextures = mat->textures.size();
+        write(numTextures);
+
+        for(unsigned int j = 0; j < numTextures; ++j)
+        {
+            writeString(mat->textures.at(j));
+        }
     }
 
     // meshes
@@ -52,6 +64,9 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
     {
         Mesh* mesh = scene->meshes.at(i).get();
         mesh->index = i;
+
+        unsigned int materialIndex = mesh->material->index;
+        write(materialIndex);
 
         bool hasPositions = !mesh->positions.empty();
         bool hasNormals = !mesh->normals.empty();
@@ -112,7 +127,7 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
 
             for(unsigned int index = 0; index < numIndexes; ++index)
             {
-                const unsigned short vertexIndex = mesh->faces.at(f).indexes.at(index);
+                const unsigned int vertexIndex = mesh->faces.at(f).indexes.at(index);
                 write(vertexIndex);
             }
         }

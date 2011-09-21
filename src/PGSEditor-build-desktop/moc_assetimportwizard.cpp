@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'assetimportwizard.h'
 **
-** Created: Sun Sep 18 11:48:58 2011
+** Created: Wed Sep 21 14:38:40 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!

@@ -9,10 +9,6 @@
 
 #include <vector>
 
-#ifdef CXX0X_INITIALIZER_LISTS
-#include <initializer_list>
-#endif
-
 #include "Math/Vector3.h"
 #include "Math/Quaternion.h"
 
@@ -25,14 +21,10 @@ namespace Math
         Matrix4();
         Matrix4(const double* const d);
 
-#ifdef CXX0X_INITIALIZER_LISTS
-        Matrix4(std::initializer_list<double> d);
-#else
         Matrix4(double m11, double m12, double m13, double m14,
                 double m21, double m22, double m23, double m24,
                 double m31, double m32, double m33, double m34,
                 double m41, double m42, double m43, double m44);
-#endif
 
         Matrix4(const Matrix4& m);
         ~Matrix4();

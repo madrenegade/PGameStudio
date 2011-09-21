@@ -26,11 +26,13 @@ public slots:
     void onSceneChanged();
 
     void onMaterialSelected(QListWidgetItem* item);
+    void onTextureSelected(QListWidgetItem* item);
 
 private:
     void rebuildSceneGraph();
     void rebuildMeshList();
     void rebuildMaterialList();
+    void rebuildTextureList();
 
     QTreeWidgetItem* createNodeItem(const boost::shared_ptr<SceneNode>& node);
 

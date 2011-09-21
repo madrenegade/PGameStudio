@@ -8,19 +8,6 @@
 
 namespace Math
 {
-#ifdef CXX0X_INITIALIZER_LISTS
-
-    Matrix4::Matrix4()
-    : m_values({
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    })
-    {
-    }
-#else
-
     Matrix4::Matrix4(double m11, double m12, double m13, double m14,
                      double m21, double m22, double m23, double m24,
                      double m31, double m32, double m33, double m34,
@@ -44,35 +31,15 @@ namespace Math
         this->m_values[14] = m43;
         this->m_values[15] = m44;
     }
-#endif
 
     Matrix4::Matrix4(const double* const d)
-#ifdef CXX0X_INITIALIZER_LISTS
-    : m_values({
-        d[0], d[1], d[2], d[3],
-        d[4], d[5], d[6], d[7],
-        d[8], d[9], d[10], d[11],
-        d[12], d[13], d[14], d[15]
-    })
-#else
     : m_values(16)
-#endif
     {
-#ifndef CXX0X_INITIALIZER_LISTS
         for (unsigned int i = 0; i < 16; ++i)
         {
             this->m_values[i] = d[i];
         }
-#endif
     }
-
-#ifdef CXX0X_INITIALIZER_LISTS
-
-    Matrix4::Matrix4(std::initializer_list<double> d)
-    : m_values(d)
-    {
-    }
-#endif
 
     Matrix4::Matrix4(const Matrix4& m)
     : m_values(m.m_values)
@@ -94,9 +61,6 @@ namespace Math
     Matrix4 Matrix4::operator*(const Matrix4& rhs) const
     {
         return Matrix4(
-#ifdef CXX0X_INITIALIZER_LISTS
-        {
-#endif
             this->M11() * rhs.M11() + this->M12() * rhs.M21() + this->M13() * rhs.M31() + this->M14() * rhs.M41(),
             this->M11() * rhs.M12() + this->M12() * rhs.M22() + this->M13() * rhs.M32() + this->M14() * rhs.M42(),
             this->M11() * rhs.M13() + this->M12() * rhs.M23() + this->M13() * rhs.M33() + this->M14() * rhs.M43(),
@@ -113,9 +77,6 @@ namespace Math
             this->M41() * rhs.M12() + this->M42() * rhs.M22() + this->M43() * rhs.M32() + this->M44() * rhs.M42(),
             this->M41() * rhs.M13() + this->M42() * rhs.M23() + this->M43() * rhs.M33() + this->M44() * rhs.M43(),
             this->M41() * rhs.M14() + this->M42() * rhs.M24() + this->M43() * rhs.M34() + this->M44() * rhs.M44()
-#ifdef CXX0X_INITIALIZER_LISTS
-        }
-#endif
         );
     }
 
@@ -166,16 +127,10 @@ namespace Math
         double d = -(2.0 * far * near) / (far - near);
 
         return Matrix4(
-#ifdef CXX0X_INITIALIZER_LISTS
-        {
-#endif
             x, 0, 0, 0,
             0, y, 0, 0,
             a, b, c, -1,
             0, 0, d, 0
-#ifdef CXX0X_INITIALIZER_LISTS
-        }
-#endif
         );
     }
 
@@ -191,16 +146,10 @@ namespace Math
         y.Normalize();
 
         Matrix4 rot(
-#ifdef CXX0X_INITIALIZER_LISTS
-        {
-#endif
             x.X, y.X, z.X, 0,
             x.Y, y.Y, z.Y, 0,
             x.Z, y.Z, z.Z, 0,
             0, 0, 0, 1
-#ifdef CXX0X_INITIALIZER_LISTS
-        }
-#endif
         );
 
         return Matrix4::CreateTranslation(-position).Transpose() * rot;
@@ -209,20 +158,10 @@ namespace Math
     Matrix4 Matrix4::CreateTranslation(const Vector3& translation)
     {
         return Matrix4(
-#ifdef CXX0X_INITIALIZER_LISTS
-        {
-#endif
-            //            1, 0, 0, 0,
-            //            0, 1, 0, 0,
-            //            0, 0, 1, 0,
-            //            translation.X, translation.Y, translation.Z, 1
             1, 0, 0, translation.X,
             0, 1, 0, translation.Y,
             0, 0, 1, translation.Z,
             0, 0, 0, 1
-#ifdef CXX0X_INITIALIZER_LISTS
-        }
-#endif
         );
     }
 
@@ -240,32 +179,20 @@ namespace Math
         double t = 1.0 - cos;
 
         return Matrix4(
-#ifdef CXX0X_INITIALIZER_LISTS
-        {
-#endif
             t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0,
             t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0,
             t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0,
             0, 0, 0, 1
-#ifdef CXX0X_INITIALIZER_LISTS
-        }
-#endif
         );
     }
 
     Matrix4 Matrix4::Scale(const Vector3& scale)
     {
         return Matrix4(
-#ifdef CXX0X_INITIALIZER_LISTS
-        {
-#endif
             scale.X, 0, 0, 0,
             0, scale.Y, 0, 0,
             0, 0, scale.Z, 0,
             0, 0, 0, 1
-#ifdef CXX0X_INITIALIZER_LISTS
-        }
-#endif
         );
     }
 
@@ -277,16 +204,10 @@ namespace Math
     Matrix4 Matrix4::CreateShearing(double s)
     {
         return Matrix4(
-#ifdef CXX0X_INITIALIZER_LISTS
-        {
-#endif
             1, 0, s, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1
-#ifdef CXX0X_INITIALIZER_LISTS
-        }
-#endif
         );
     }
 

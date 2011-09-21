@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'scenedockwidget.h'
 **
-** Created: Tue Sep 20 16:39:17 2011
+** Created: Wed Sep 21 14:38:40 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_SceneDockWidget[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -33,6 +33,7 @@ static const uint qt_meta_data_SceneDockWidget[] = {
  // slots: signature, parameters, type, tag, flags
       17,   16,   16,   16, 0x0a,
       39,   34,   16,   16, 0x0a,
+      76,   34,   16,   16, 0x0a,
 
        0        // eod
 };
@@ -40,6 +41,7 @@ static const uint qt_meta_data_SceneDockWidget[] = {
 static const char qt_meta_stringdata_SceneDockWidget[] = {
     "SceneDockWidget\0\0onSceneChanged()\0"
     "item\0onMaterialSelected(QListWidgetItem*)\0"
+    "onTextureSelected(QListWidgetItem*)\0"
 };
 
 const QMetaObject SceneDockWidget::staticMetaObject = {
@@ -73,9 +75,10 @@ int SceneDockWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: onSceneChanged(); break;
         case 1: onMaterialSelected((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
+        case 2: onTextureSelected((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }

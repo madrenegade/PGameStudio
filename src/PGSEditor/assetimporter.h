@@ -4,6 +4,8 @@
 #include <QString>
 #include <boost/shared_ptr.hpp>
 
+#include <assimp/aiMaterial.h>
+
 namespace Assimp
 {
 class Importer;
@@ -13,9 +15,10 @@ class aiScene;
 class aiMesh;
 class aiNode;
 class aiTexture;
-class aiMaterial;
+
 class SceneData;
 class SceneNode;
+class Material;
 
 class AssetImporter
 {
@@ -36,6 +39,8 @@ private:
     void processMeshes(aiMesh** meshes, unsigned int numMeshes);
     void processCameras();
     void processNodes(const aiNode* rootNode);
+
+    void addTextureToMaterial(Material* material, aiMaterial* aiMat, aiTextureType type);
 
     boost::shared_ptr<SceneNode> processNode(const aiNode* node);
 

@@ -123,7 +123,7 @@ public:
         retranslateUi(SceneDockWidget);
         QObject::connect(listWidgetMaterials, SIGNAL(itemClicked(QListWidgetItem*)), SceneDockWidget, SLOT(onMaterialSelected(QListWidgetItem*)));
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(SceneDockWidget);

@@ -36,7 +36,7 @@ namespace Graphics
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data, unsigned int numVertices, const VertexFormat& fmt) = 0;
 
         //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned char>& data, unsigned int numIndexes) = 0;
-        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned short>& data, unsigned int numIndexes) = 0;
+        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
         //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
 
         virtual unsigned long requestEffect(const Utilities::IO::File& file) = 0;

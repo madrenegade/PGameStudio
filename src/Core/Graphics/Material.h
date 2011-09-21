@@ -17,6 +17,7 @@ namespace Graphics
     struct Material
     {
         Math::Vector4 diffuse;
+        Math::Vector4 specular;
         
         std::vector<unsigned long> textures;
     };

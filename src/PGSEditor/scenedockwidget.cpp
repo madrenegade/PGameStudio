@@ -27,6 +27,7 @@ void SceneDockWidget::onSceneChanged()
     rebuildSceneGraph();
     rebuildMeshList();
     rebuildMaterialList();
+    rebuildTextureList();
 }
 
 void SceneDockWidget::onMaterialSelected(QListWidgetItem *item)
@@ -39,6 +40,11 @@ void SceneDockWidget::onMaterialSelected(QListWidgetItem *item)
 
     materialPreviewScene->clear();
     materialPreviewScene->addRect(0, 0, 128, 128, QPen(QColor(r, g, b)));
+}
+
+void SceneDockWidget::onTextureSelected(QListWidgetItem *item)
+{
+
 }
 
 void SceneDockWidget::rebuildSceneGraph()
@@ -83,6 +89,24 @@ void SceneDockWidget::rebuildMaterialList()
         Material* mat = data->materials.at(i).get();
 
         materialList->addItem(QString::fromStdString(mat->name));
+    }
+}
+
+void SceneDockWidget::rebuildTextureList()
+{
+    SceneData* data = controller->getSceneData();
+
+    QListWidget* textureList = ui->listWidgetTextures;
+    textureList->clear();
+
+    for(unsigned int i = 0; i < data->materials.size(); ++i)
+    {
+        Material* mat = data->materials.at(i).get();
+
+        for(unsigned int j = 0; j < mat->textures.size(); ++j)
+        {
+            textureList->addItem(QString::fromStdString(mat->textures.at(j)));
+        }
     }
 }
 

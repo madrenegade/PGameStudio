@@ -4,6 +4,7 @@
 #include "material.h"
 #include "scenenode.h"
 
+#include "Math/Vector4.h"
 #include "Math/Matrix4.h"
 
 #include <assimp/assimp.hpp>
@@ -62,6 +63,22 @@ void AssetImporter::processTextures(aiTexture** textures, unsigned int numTextur
     }
 }
 
+void AssetImporter::addTextureToMaterial(Material* material, aiMaterial* aiMat, aiTextureType type)
+{
+    const unsigned int numTextures = aiMat->GetTextureCount(type);
+    std::cout << "numTextures: " << numTextures << std::endl;
+    for(unsigned int j = 0; j < numTextures; ++j)
+    {
+        aiString path;
+        aiMat->GetTexture(type, j, &path);
+
+        std::string s(path.data, path.length);
+        size_t lastSlash = s.find_last_of('/');
+
+        material->textures.push_back(s.substr(lastSlash + 1));
+    }
+}
+
 void AssetImporter::processMaterials(aiMaterial** materials, unsigned int numMaterials)
 {
     for(unsigned int i = 0; i < numMaterials; ++i)
@@ -88,6 +105,22 @@ void AssetImporter::processMaterials(aiMaterial** materials, unsigned int numMat
         mat->name.assign(name.data, name.length);
         mat->diffuse = Math::Vector4(diffuse.r, diffuse.g, diffuse.b, opacity);
         mat->specular = Math::Vector4(specular.r, specular.g, specular.b, shininess);
+
+        addTextureToMaterial(mat.get(), material, aiTextureType_NONE);
+        addTextureToMaterial(mat.get(), material, aiTextureType_DIFFUSE);
+        addTextureToMaterial(mat.get(), material, aiTextureType_SPECULAR);
+        addTextureToMaterial(mat.get(), material, aiTextureType_AMBIENT);
+        addTextureToMaterial(mat.get(), material, aiTextureType_EMISSIVE);
+        addTextureToMaterial(mat.get(), material, aiTextureType_HEIGHT);
+        addTextureToMaterial(mat.get(), material, aiTextureType_NORMALS);
+        addTextureToMaterial(mat.get(), material, aiTextureType_SHININESS);
+        addTextureToMaterial(mat.get(), material, aiTextureType_OPACITY);
+        addTextureToMaterial(mat.get(), material, aiTextureType_DISPLACEMENT);
+        addTextureToMaterial(mat.get(), material, aiTextureType_LIGHTMAP);
+        addTextureToMaterial(mat.get(), material, aiTextureType_REFLECTION);
+        addTextureToMaterial(mat.get(), material, aiTextureType_UNKNOWN);
+
+        std::cout << "Textures: " << mat->textures.size() << std::endl;
 
         importedData->materials.push_back(mat);
     }

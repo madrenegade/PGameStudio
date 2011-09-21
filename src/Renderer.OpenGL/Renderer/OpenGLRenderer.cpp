@@ -74,7 +74,7 @@ namespace Renderer
         return vertexBuffers->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned short>& data, unsigned int numIndexes)
+    unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes)
     {
         IndexBufferRequest request;
         request.data = data;
@@ -271,6 +271,8 @@ namespace Renderer
             }
 
             effect->set("Diffuse", i->material->diffuse);
+            effect->set("Specular", i->material->specular);
+            
             vertexBuffers->get(i->vertexBuffer)->render(indexBuffers->get(i->indexBuffer));
 
             for (auto t = 0; t != i->material->textures.size(); ++t)
@@ -293,10 +295,10 @@ namespace Renderer
 
         const Math::Matrix4 view(camera.getViewMatrix());
 
-        Math::Matrix4 view_rotation(view);
-        view_rotation.M14(0);
-        view_rotation.M24(0);
-        view_rotation.M34(0);
+//        Math::Matrix4 view_rotation(view);
+//        view_rotation.M14(0);
+//        view_rotation.M24(0);
+//        view_rotation.M34(0);
 
         double d[3];
 
@@ -309,7 +311,9 @@ namespace Renderer
             v[i] = Math::Vector4(d[0], d[1], d[2], 0);
             v[i] -= Math::Vector4(camera.getPosition(), 0);
             v[i].Normalize();
-            v[i] *= view_rotation;
+//            v[i] *= view_rotation;
+            
+//            LOG(INFO) << "v[" << i << "] " << v[i].X << ", " << v[i].Y << ", " << v[i].Z;
         }
     }
 }

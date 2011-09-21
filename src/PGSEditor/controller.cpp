@@ -68,7 +68,7 @@ SceneData* Controller::getSceneData() const
 
 Material* Controller::getMaterial(const QString& name) const
 {
-    for(auto i = 0; i < currentScene->materials.size(); ++i)
+    for(unsigned int i = 0; i < currentScene->materials.size(); ++i)
     {
         if(currentScene->materials.at(i)->name == name.toStdString())
         {

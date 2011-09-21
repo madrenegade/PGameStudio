@@ -15,7 +15,7 @@ namespace Renderer
     struct IndexBufferRequest
     {
         unsigned long id;
-        boost::shared_array<unsigned short> data;
+        boost::shared_array<unsigned int> data;
         unsigned int numIndexes;
     };
 }

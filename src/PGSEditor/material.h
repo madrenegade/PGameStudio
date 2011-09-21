@@ -12,6 +12,8 @@ struct Material
 
     Math::Vector4 diffuse;
     Math::Vector4 specular;
+
+    std::vector<std::string> textures;
 };
 
 #endif // MATERIAL_H

@@ -19,7 +19,7 @@ namespace Renderer
         IndexBuffer();
         ~IndexBuffer();
         
-        void setData(const boost::shared_array<unsigned short>& data, unsigned int numIndexes);
+        void setData(const boost::shared_array<unsigned int>& data, unsigned int numIndexes);
         
         unsigned int getID() const;
         unsigned int getNumIndexes() const;
