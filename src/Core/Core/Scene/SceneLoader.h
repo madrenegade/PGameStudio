@@ -22,6 +22,11 @@ namespace Utilities
     {
         class MemoryManager;
     }
+    
+    namespace Properties
+    {
+        class PropertyManager;
+    }
 }
 
 namespace Platform
@@ -47,7 +52,8 @@ namespace Core
         SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
                     const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                     const boost::shared_ptr<Platform::PlatformManager>& platform,
-                    const boost::shared_ptr<Events::EventManager>& eventManager);
+                    const boost::shared_ptr<Events::EventManager>& eventManager,
+                    const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~SceneLoader();
         
         /**
@@ -69,6 +75,7 @@ namespace Core
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         boost::shared_ptr<Platform::PlatformManager> platform;
         boost::shared_ptr<Events::EventManager> eventManager;
+        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
     };
 }
 

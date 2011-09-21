@@ -23,6 +23,11 @@ namespace Utilities
         class File;
         class FileSystem;
     }
+    
+    namespace Properties
+    {
+        class PropertyManager;
+    }
 }
 
 namespace Platform
@@ -42,6 +47,8 @@ namespace Core
     public:
         virtual ~SystemScene();
         
+        virtual void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) = 0;
+        
         virtual const char* getSceneFileExtension() const = 0;
         
         virtual void load(const Utilities::IO::File& file) = 0;
@@ -59,10 +66,9 @@ namespace Core
          * @param platformManager
          */
         void setPlatformManager(const boost::shared_ptr<Platform::PlatformManager>& platformManager);
-        
         void setEventManager(const boost::shared_ptr<Events::EventManager>& eventManager);
-        
         void setFileSystem(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem);
+        void setProperties(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
         virtual tbb::task* getTask(tbb::task* parent) = 0;
 
@@ -73,6 +79,7 @@ namespace Core
         boost::shared_ptr<Platform::PlatformManager> platformManager;
         boost::shared_ptr<Events::EventManager> eventManager;
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
+        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
     };
 }
 

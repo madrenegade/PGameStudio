@@ -44,4 +44,9 @@ namespace Core
     {
         this->fileSystem = fileSystem;
     }
+    
+    void SystemScene::setProperties(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    {
+        this->properties = properties;
+    }
 }

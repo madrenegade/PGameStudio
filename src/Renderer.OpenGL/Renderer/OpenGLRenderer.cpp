@@ -20,6 +20,7 @@
 #include "Math/Vector3.h"
 #include "Math/Quaternion.h"
 #include "Math/Vector2.h"
+#include "Utilities/Properties/PropertyManager.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -30,11 +31,12 @@
 namespace Renderer
 {
 
-    OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
+    OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
+                                   const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
                                    const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
                                    const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
                                    const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager)
-    : vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
+    : properties(properties), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
     {
     }
 
@@ -45,19 +47,19 @@ namespace Renderer
 
     void OpenGLRenderer::initialize()
     {
-        width = 800;
-        height = 600;
-        fieldOfView = 60.0;
-        zNear = 0.1;
-        zFar = 100.0;
-        
+        width = properties->get<unsigned int>("Window.width");
+        height = properties->get<unsigned int>("Window.height");
+        fieldOfView = properties->get<double>("Graphics.fieldOfView");
+        zNear = properties->get<double>("Graphics.zNear");
+        zFar = properties->get<double>("Graphics.zFar");
+
         glewInit();
         glViewport(0, 0, width, height);
-        
-        projection.reset(new Math::Matrix4(Math::Matrix4::CreatePerspectiveFieldOfView(Math::PI * fieldOfView / 180.0, static_cast<double>(width) / static_cast<double>(height), zNear, zFar)));
+
+        projection.reset(new Math::Matrix4(Math::Matrix4::CreatePerspectiveFieldOfView(Math::PI * fieldOfView / 180.0, static_cast<double> (width) / static_cast<double> (height), zNear, zFar)));
 
         frameBuffer.reset(new FrameBuffer(3, width, height));
-        
+
         Effect::initialize();
 
         ErrorHandler::checkForErrors();
@@ -172,7 +174,7 @@ namespace Renderer
     }
 
     typedef std::chrono::duration<double, std::ratio < 1, 1 >> sec;
-    
+
     void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
                                              const Graphics::Camera& camera)
     {
@@ -181,14 +183,14 @@ namespace Renderer
 
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
         glDrawBuffers(3, buffers);
-        
+
         static double t = 0.0;
         const Math::Quaternion rot(0, 1, 0, std::sin(t));
         t += 0.0001;
-        
+
         const Math::Matrix4 transform(Math::Matrix4::CreateTransform(Math::Vector3(), rot));
         const Math::Matrix4 view(camera.getViewMatrix());
-        
+
         const Math::Matrix4 mv(transform * view);
 
         Effect* effect = effects->get(0);
@@ -272,7 +274,7 @@ namespace Renderer
 
             effect->set("Diffuse", i->material->diffuse);
             effect->set("Specular", i->material->specular);
-            
+
             vertexBuffers->get(i->vertexBuffer)->render(indexBuffers->get(i->indexBuffer));
 
             for (auto t = 0; t != i->material->textures.size(); ++t)
@@ -295,10 +297,10 @@ namespace Renderer
 
         const Math::Matrix4 view(camera.getViewMatrix());
 
-//        Math::Matrix4 view_rotation(view);
-//        view_rotation.M14(0);
-//        view_rotation.M24(0);
-//        view_rotation.M34(0);
+        //        Math::Matrix4 view_rotation(view);
+        //        view_rotation.M14(0);
+        //        view_rotation.M24(0);
+        //        view_rotation.M34(0);
 
         double d[3];
 
@@ -311,9 +313,9 @@ namespace Renderer
             v[i] = Math::Vector4(d[0], d[1], d[2], 0);
             v[i] -= Math::Vector4(camera.getPosition(), 0);
             v[i].Normalize();
-//            v[i] *= view_rotation;
-            
-//            LOG(INFO) << "v[" << i << "] " << v[i].X << ", " << v[i].Y << ", " << v[i].Z;
+            //            v[i] *= view_rotation;
+
+            //            LOG(INFO) << "v[" << i << "] " << v[i].X << ", " << v[i].Y << ", " << v[i].Z;
         }
     }
 }

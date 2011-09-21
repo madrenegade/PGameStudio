@@ -21,6 +21,8 @@ namespace Graphics
         SystemScene();
         virtual ~SystemScene();
         
+        virtual void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        
         virtual void initialize();
         
         virtual const char* getSceneFileExtension() const;

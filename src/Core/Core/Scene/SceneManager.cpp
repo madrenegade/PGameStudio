@@ -32,7 +32,7 @@ namespace Core
     {
         std::string sceneFile(SCENE_PATH + "/" + name + ".scene");
 
-        SceneLoader loader(fileSystem, memoryManager, platform, eventManager);
+        SceneLoader loader(fileSystem, memoryManager, platform, eventManager, properties);
 
         ScenePtr scene = loader.loadScene(sceneFile.c_str());
         

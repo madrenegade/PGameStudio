@@ -32,6 +32,14 @@ namespace Math
     class Matrix4;
 }
 
+namespace Utilities
+{
+    namespace Properties
+    {
+        class PropertyManager;
+    }
+}
+
 namespace Renderer
 {
     class FrameBuffer;
@@ -39,7 +47,8 @@ namespace Renderer
     class OpenGLRenderer : public Graphics::Renderer
     {
     public:
-        OpenGLRenderer(const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer> >& vbManager,
+        OpenGLRenderer(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
+                       const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer> >& vbManager,
                        const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer> >& ibManager,
                        const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
                        const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager);
@@ -81,6 +90,8 @@ namespace Renderer
 
         void getViewVectors(Math::Vector4* v, const Graphics::Camera& camera);
 
+        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        
         boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
         boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
         boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;

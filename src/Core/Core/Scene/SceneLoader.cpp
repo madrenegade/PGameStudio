@@ -10,15 +10,17 @@
 #include "Core/Scene/SystemScene.h"
 
 #include "Utilities/Memory/STLAllocator.h"
+#include "Utilities/IO/FileSystem.h"
+#include "Utilities/Properties/PropertyManager.h"
 
 #include "Platform/PlatformManager.h"
 #include "Platform/Library.h"
-#include "Utilities/IO/FileSystem.h"
 
 #include <glog/logging.h>
 
 using namespace Utilities::Memory;
 using namespace Utilities::IO;
+using namespace Utilities::Properties;
 
 namespace Core
 {
@@ -28,11 +30,13 @@ namespace Core
 
     }
 
-    SceneLoader::SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                             const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+    SceneLoader::SceneLoader(const boost::shared_ptr<FileSystem>& fileSystem,
+                             const boost::shared_ptr<MemoryManager>& memoryManager,
                              const boost::shared_ptr<Platform::PlatformManager>& platform,
-                             const boost::shared_ptr<Events::EventManager>& eventManager)
-    : fileSystem(fileSystem), memoryManager(memoryManager), platform(platform), eventManager(eventManager)
+                             const boost::shared_ptr<Events::EventManager>& eventManager,
+                             const boost::shared_ptr<PropertyManager>& properties)
+    : fileSystem(fileSystem), memoryManager(memoryManager), platform(platform), eventManager(eventManager),
+        properties(properties)
     {
     }
 
@@ -74,10 +78,20 @@ namespace Core
 
             // TODO: seperate pools for each system
             auto systemScene = create(memoryManager, 0);
+            
+            // get option descriptions
+            String iniFile(i->c_str(), i->size());
+            iniFile.append(".ini");
+
+            systemScene->addOptionsTo(properties);
+            properties->parse(iniFile.c_str());
+            // parse system ini file
+            
             systemScene->setMemoryManager(memoryManager);
             systemScene->setPlatformManager(platform);
             systemScene->setEventManager(eventManager);
             systemScene->setFileSystem(fileSystem);
+            systemScene->setProperties(properties);
             
             systemScene->initialize();
 

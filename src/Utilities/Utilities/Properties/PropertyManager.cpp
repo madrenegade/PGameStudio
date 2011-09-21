@@ -55,6 +55,7 @@ namespace Utilities
             if(!in)
             {
                 LOG(WARNING) << "Could not open config file";
+                return;
             }
             
             po::store(po::parse_config_file(in, options), vm);
@@ -94,7 +95,9 @@ namespace Utilities
         {
             if (propertyExists(name))
             {
-                throw std::logic_error("Property already exists");
+                // the property already exists if another config file has been loaded before
+                // to prevent overwriting the current value with the default value we must return here
+                return;
             }
 
             properties[name] = value.value();

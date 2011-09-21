@@ -27,6 +27,7 @@
 #include <sstream>
 
 using namespace Utilities::Memory;
+using namespace Utilities::Properties;
 
 namespace Graphics
 {
@@ -40,7 +41,19 @@ namespace Graphics
     {
     }
 
-    typedef boost::shared_ptr<Renderer> (*CreateFn)(const MemoryManager::Ptr&, pool_id pool);
+    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    {
+        po::options_description options("Graphics options");
+
+        options.add_options()
+            ("Graphics.fieldOfView", po::value<double>()->default_value(60.0), "The field of view")
+            ("Graphics.zNear", po::value<double>()->default_value(0.1), "The near clipping plane")
+            ("Graphics.zFar", po::value<double>()->default_value(100.0), "The far clipping plane");
+
+        properties->addOptions(options);
+    }
+
+    typedef boost::shared_ptr<Renderer> (*CreateFn)(const MemoryManager::Ptr&, const PropertyManager::Ptr&, pool_id pool);
 
     void SystemScene::initialize()
     {
@@ -48,7 +61,7 @@ namespace Graphics
 
         CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createRenderer"));
 
-        renderer = create(memoryManager, 0);
+        renderer = create(memoryManager, properties, 0);
 
         platformManager->getWindow()->getGraphicsContext()->MakeCurrent();
         renderer->initialize();
