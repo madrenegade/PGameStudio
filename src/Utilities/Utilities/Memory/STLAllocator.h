@@ -105,7 +105,7 @@ namespace Utilities
             {
                 DCHECK(memory.get() != 0);
 
-                memory->deallocate<T > (p, n, false);
+                memory->stl_deallocate<T > (p, n);
             }
 
             size_type max_size() const throw ()

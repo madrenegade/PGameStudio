@@ -95,7 +95,7 @@ namespace Utilities
 #endif
 
                 boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID)) T(obj),
-                                         boost::bind(&MemoryManager::deallocate<T>, this, _1, 1, true));
+                                         boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
                 return ptr;
             }
 
@@ -116,7 +116,7 @@ namespace Utilities
 #endif
 
                 boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
-                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects, true));
+                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
                 return ptr;
             }
 
@@ -137,7 +137,7 @@ namespace Utilities
 #endif
 
                 boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
-                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects, true));
+                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
                 return ptr;
             }
 
@@ -203,6 +203,30 @@ namespace Utilities
                 return internalAllocate<T > (numObjects, poolID);
             }
 
+            template<typename T>
+            void stl_deallocate(const T* ptr, size_t n)
+            {
+                const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
+
+#ifdef DEBUG
+                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx, %i objects of type %s)", BYTES_TO_DEALLOCATE, ptr, n, demangle(typeid (T).name()).c_str());
+#endif
+
+                const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
+
+                {
+                    PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
+                    pool_id poolID = findPoolContaining(rawPtr);
+
+                    pools[poolID]->deallocate(rawPtr, sizeof (T), n);
+                }
+
+                {
+                    MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
+                    memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
+                }
+            }
+
             /**
              * allocate space for a bunch of objects
              * @param numObjects - the amount of objects to allocate space for
@@ -256,7 +280,7 @@ namespace Utilities
              * @param n - the amount of objects to determine how much space must be deallocated
              */
             template<typename T>
-            void deallocate(const T* ptr, size_t n, bool callDestructor)
+            void deallocate(const T* ptr, size_t n)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
@@ -264,13 +288,9 @@ namespace Utilities
                 RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx, %i objects of type %s)", BYTES_TO_DEALLOCATE, ptr, n, demangle(typeid (T).name()).c_str());
 #endif
 
-                // call destructors
-                if (callDestructor)
+                for (size_t i = 0; i < n; ++i)
                 {
-                    for (size_t i = 0; i < n; ++i)
-                    {
-                        ptr[i].~T();
-                    }
+                    ptr[i].~T();
                 }
 
                 const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
