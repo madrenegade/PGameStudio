@@ -34,7 +34,8 @@ namespace Graphics
     private:
         typedef boost::shared_ptr<SceneNode> SceneNodePtr;
         std::vector<SceneNodePtr/*, Utilities::Memory::STLAllocator<SceneNodePtr>*/> children;
-//        Math::Matrix4 transform;
+        
+        Math::Matrix4 transform;
         
         typedef boost::shared_ptr<Mesh> MeshPtr;
         std::vector<MeshPtr/*, Utilities::Memory::STLAllocator<MeshPtr>*/> meshes;

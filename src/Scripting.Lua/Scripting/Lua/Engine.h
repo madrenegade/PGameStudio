@@ -60,7 +60,7 @@ namespace Scripting
             boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
             Utilities::Memory::pool_id pool;
             
-            lua_State* state;
+            std::shared_ptr<lua_State> state;
 
             void logErrors(int status);
 

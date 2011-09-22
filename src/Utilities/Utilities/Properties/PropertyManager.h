@@ -28,6 +28,7 @@ namespace Utilities
             typedef boost::shared_ptr<PropertyManager> Ptr;
             
             PropertyManager();
+            ~PropertyManager();
             
             /**
              * Add some options description. This merges the already added descriptions with this one.

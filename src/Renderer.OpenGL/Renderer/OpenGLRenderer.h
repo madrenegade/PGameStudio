@@ -86,12 +86,13 @@ namespace Renderer
                                  const Graphics::Camera& camera);
         void renderToScreen(const Graphics::Camera& camera);
 
-        void renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect);
+        void renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect,
+                            const Math::Matrix4& viewMatrix);
 
         void getViewVectors(Math::Vector4* v, const Graphics::Camera& camera);
 
         boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
-        
+
         boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
         boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
         boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;
@@ -102,7 +103,7 @@ namespace Renderer
         double fieldOfView;
         double zNear;
         double zFar;
-        
+
         boost::shared_ptr<Math::Matrix4> projection;
 
         boost::shared_ptr<FrameBuffer> frameBuffer;

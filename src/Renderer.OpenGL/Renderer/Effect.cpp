@@ -20,19 +20,21 @@ namespace Renderer
 {
     CGcontext Effect::context = 0;
     
+    struct EffectDeleter
+    {
+        void operator()(CGeffect effect)
+        {
+            cgDestroyEffect(effect);
+        }
+    };
+    
     Effect::Effect()
     {
 
     }
     
-    Effect::Effect(const Effect& other)
-    {
-//        effect = cgCopyEffect(other.effect);
-    }
-    
     Effect::~Effect()
     {
-//        cgDestroyEffect(effect);
     }
 
     void Effect::initialize()
@@ -57,14 +59,14 @@ namespace Renderer
 
     void Effect::load(const char* code)
     {
-        effect = cgCreateEffect(context, code, 0);
+        effect.reset(cgCreateEffect(context, code, 0), EffectDeleter());
 
-        if (effect == 0)
+        if (!effect)
         {
             throw std::runtime_error("Could not create effect");
         }
 
-        technique = cgGetNamedTechnique(effect, "High");
+        technique = cgGetNamedTechnique(effect.get(), "High");
 
         if (technique == 0)
         {
@@ -79,31 +81,31 @@ namespace Renderer
 
     void Effect::set(const char* semantic, double d)
     {
-        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect.get(), semantic);
         cgSetParameter1d(parameter, d);
     }
 
     void Effect::set(const char* semantic, const Math::Vector2& v)
     {
-        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect.get(), semantic);
         cgSetParameter2d(parameter, v.X, v.Y);
     }
 
     void Effect::set(const char* semantic, const Math::Vector3& v)
     {
-        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect.get(), semantic);
         cgSetParameter3d(parameter, v.X, v.Y, v.Z);
     }
 
     void Effect::set(const char* semantic, const Math::Vector4& v)
     {
-        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect.get(), semantic);
         cgSetParameter4d(parameter, v.X, v.Y, v.Z, v.W);
     }
 
     void Effect::set(const char* semantic, const Math::Matrix4& matrix)
     {
-        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect.get(), semantic);
         cgSetMatrixParameterdc(parameter, matrix);
     }
 
@@ -111,7 +113,7 @@ namespace Renderer
     {
         char semantic[] = {'T', 'E', 'X', static_cast<unsigned char> (level + 48), '\0'};
 
-        CGparameter parameter = cgGetEffectParameterBySemantic(effect, semantic);
+        CGparameter parameter = cgGetEffectParameterBySemantic(effect.get(), semantic);
         cgGLSetTextureParameter(parameter, texture->getID());
     }
 

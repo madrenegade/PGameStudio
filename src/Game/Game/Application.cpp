@@ -1,9 +1,9 @@
 #include "Game/Application.h"
 
 // TODO: Release memory tracker
-#ifdef DEBUG
+//#ifdef DEBUG
 #include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
-#endif
+//#endif
 
 #include "Utilities/Memory/MemoryManager.h"
 #include "Utilities/Memory/Pages/PageManager.h"

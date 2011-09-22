@@ -31,6 +31,8 @@ namespace Platform
         
     private:
         void* handle;
+        
+        void check();
     };
 }
 #endif

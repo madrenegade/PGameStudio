@@ -11,6 +11,8 @@
 #include <dlfcn.h>
 #include <stdexcept>
 
+#include <glog/logging.h>
+
 namespace Platform
 {
     std::string Library::PREFIX("lib");
@@ -28,10 +30,8 @@ namespace Platform
 
         if (handle == 0)
         {
-            throw std::runtime_error(dlerror());
+            check();
         }
-
-        dlerror();
     }
 
     void* Library::getFunction(const char* name)
@@ -41,7 +41,7 @@ namespace Platform
 
         if (ptr == 0)
         {
-            throw std::runtime_error(dlerror());
+            check();
         }
 
         return ptr;
@@ -54,8 +54,22 @@ namespace Platform
     {
         if (handle != 0)
         {
-            dlclose(handle);
+            if(dlclose(handle) != 0)
+            {
+                check();
+            }
+            
             handle = 0;
+        }
+    }
+    
+    void Library::check()
+    {
+        const char* error = dlerror();
+        
+        if(error != 0)
+        {
+            LOG(FATAL) << "Dynamic library error: " << error;
         }
     }
 }

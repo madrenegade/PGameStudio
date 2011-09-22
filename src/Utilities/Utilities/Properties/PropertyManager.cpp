@@ -20,6 +20,10 @@ namespace Utilities
         {
 
         }
+        
+        PropertyManager::~PropertyManager()
+        {
+        }
 
         void PropertyManager::addOptions(const po::options_description& options)
         {

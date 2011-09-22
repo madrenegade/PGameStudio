@@ -46,6 +46,7 @@ namespace Graphics
                 if (allTexturesLoaded)
                 {
                     DrawCall drawCall;
+                    drawCall.transform = transform;
                     drawCall.vertexBuffer = mesh->vertexBuffer;
                     drawCall.indexBuffer = mesh->indexBuffer;
                     drawCall.material = mat;
@@ -62,7 +63,7 @@ namespace Graphics
 
     void SceneNode::setTransform(const Math::Matrix4& transform)
     {
-//        this->transform = transform;
+        this->transform = transform;
     }
 
     void SceneNode::addChild(const boost::shared_ptr<SceneNode>& node)

@@ -9,6 +9,7 @@
 #define	RENDERER_EFFECT_H
 
 #include <Cg/cg.h>
+#include <boost/shared_ptr.hpp>
 
 namespace Math
 {
@@ -26,7 +27,6 @@ namespace Renderer
     {
     public:
         Effect();
-        Effect(const Effect& other);
         ~Effect();
         
         static void initialize();
@@ -52,7 +52,7 @@ namespace Renderer
     private:
         static CGcontext context;
         
-        CGeffect effect;
+        boost::shared_ptr<_CGeffect> effect;
         CGtechnique technique;
         CGpass currentPass;
         

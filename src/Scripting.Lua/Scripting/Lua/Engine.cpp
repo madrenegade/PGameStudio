@@ -21,27 +21,32 @@ namespace Scripting
 {
     namespace Lua
     {
-
+        struct LuaStateDeleter
+        {
+            void operator()(lua_State* state)
+            {
+                lua_close(state);
+            }
+        };
+        
         const std::string Engine::EXTENSION(".lua");
 
         Engine::Engine(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
                        Utilities::Memory::pool_id poolID)
-        : memory(memory), pool(poolID), state(0)
+        : memory(memory), pool(poolID)
         {
-            state = lua_open();
+            state.reset(lua_open(), LuaStateDeleter());
 
-            if (state == 0)
+            if (!state)
             {
                 LOG(FATAL) << "Could not initialize LUA";
             }
 
-            luaL_openlibs(state);
+            luaL_openlibs(state.get());
         }
 
         Engine::~Engine()
         {
-            // NOTE: close always crashes event for the simplest use case
-            // lua_close(state);
         }
 
         const char* Engine::getExtension() const
@@ -54,13 +59,13 @@ namespace Scripting
             VLOG(2) << "Running script " << name;
             VLOG(2) << "Data size: " << file.getSize();
             
-            int status = luaL_loadbuffer(state, file.getData(), file.getSize(), name);
+            int status = luaL_loadbuffer(state.get(), file.getData(), file.getSize(), name);
             
             VLOG(2) << "Loaded data to buffer: " << status;
 
             if (status == 0)
             {
-                status = lua_pcall(state, 0, LUA_MULTRET, 0);
+                status = lua_pcall(state.get(), 0, LUA_MULTRET, 0);
             }
 
             logErrors(status);
@@ -68,13 +73,13 @@ namespace Scripting
 
         boost::shared_ptr<Scripting::Extractor> Engine::createExtractor(AnyVector& params) const
         {
-            boost::shared_ptr<Scripting::Extractor> extractor = memory->construct(Lua::Extractor(params, state), pool);
+            boost::shared_ptr<Scripting::Extractor> extractor = memory->construct(Lua::Extractor(params, state.get()), pool);
             return extractor;
         }
 
         Command* Engine::getCommand() const
         {
-            return reinterpret_cast<Command*> (lua_tointeger(state, lua_upvalueindex(1)));
+            return reinterpret_cast<Command*> (lua_tointeger(state.get(), lua_upvalueindex(1)));
         }
 
         static int wrapperFunction(lua_State* state)
@@ -89,40 +94,40 @@ namespace Scripting
             boost::shared_ptr<Wrapper> wrapper = memory->construct(Wrapper(fn, this), pool);
             wrappers.push_back(wrapper);
 
-            lua_pushinteger(state, reinterpret_cast<long> (cmd));
-            lua_pushinteger(state, reinterpret_cast<long> (wrapper.get()));
+            lua_pushinteger(state.get(), reinterpret_cast<long> (cmd));
+            lua_pushinteger(state.get(), reinterpret_cast<long> (wrapper.get()));
 
-            lua_pushcclosure(state, wrapperFunction, 2);
+            lua_pushcclosure(state.get(), wrapperFunction, 2);
 
-            lua_setglobal(state, name);
+            lua_setglobal(state.get(), name);
         }
 
         void Engine::setReturnValue(const bool& b)
         {
-            lua_pushboolean(state, b ? 1 : 0);
+            lua_pushboolean(state.get(), b ? 1 : 0);
         }
 
         void Engine::setReturnValue(const long& i)
         {
-            lua_pushinteger(state, i);
+            lua_pushinteger(state.get(), i);
         }
 
         void Engine::setReturnValue(const double& d)
         {
-            lua_pushnumber(state, d);
+            lua_pushnumber(state.get(), d);
         }
 
         void Engine::setReturnValue(const std::string& s)
         {
-            lua_pushlstring(state, s.c_str(), s.length());
+            lua_pushlstring(state.get(), s.c_str(), s.length());
         }
 
         void Engine::logErrors(int status)
         {
             if (status != 0)
             {
-                LOG(FATAL) << "-- " << lua_tostring(state, -1) << std::endl;
-                lua_pop(state, 1); // remove error message
+                LOG(FATAL) << "-- " << lua_tostring(state.get(), -1) << std::endl;
+                lua_pop(state.get(), 1); // remove error message
             }
         }
     }

@@ -42,6 +42,7 @@ namespace Renderer
 
     OpenGLRenderer::~OpenGLRenderer()
     {
+        effects->clear();
         Effect::deinitialize();
     }
 
@@ -184,23 +185,15 @@ namespace Renderer
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
         glDrawBuffers(3, buffers);
 
-        static double t = 0.0;
-        const Math::Quaternion rot(0, 1, 0, std::sin(t));
-        t += 0.0001;
-
-        const Math::Matrix4 transform(Math::Matrix4::CreateTransform(Math::Vector3(), rot));
         const Math::Matrix4 view(camera.getViewMatrix());
 
-        const Math::Matrix4 mv(transform * view);
-
         Effect* effect = effects->get(0);
-        effect->set("ModelView", mv);
-        effect->set("ModelViewProjection", mv * (*projection));
+
         effect->activate();
 
         while (effect->hasNextPass())
         {
-            renderGeometry(drawCallList, effect);
+            renderGeometry(drawCallList, effect, view);
             effect->gotoNextPass();
         }
 
@@ -258,7 +251,8 @@ namespace Renderer
         effect->deactivate();
     }
 
-    void OpenGLRenderer::renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect)
+    void OpenGLRenderer::renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect,
+                                        const Math::Matrix4& viewMatrix)
     {
         Texture* texture = 0;
 
@@ -274,6 +268,10 @@ namespace Renderer
 
             effect->set("Diffuse", i->material->diffuse);
             effect->set("Specular", i->material->specular);
+
+            const Math::Matrix4 mv(i->transform * viewMatrix);
+            effect->set("ModelView", mv);
+            effect->set("ModelViewProjection", mv * (*projection));
 
             vertexBuffers->get(i->vertexBuffer)->render(indexBuffers->get(i->indexBuffer));
 

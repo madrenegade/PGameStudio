@@ -56,10 +56,10 @@ namespace Math
     {
         Vector4 temp(*this);
 
-        this->X = rhs.M11() * temp.X + rhs.M12() * temp.Y + rhs.M13() * temp.Z + rhs.M14() * temp.W;
-        this->Y = rhs.M21() * temp.X + rhs.M22() * temp.Y + rhs.M23() * temp.Z + rhs.M24() * temp.W;
-        this->Z = rhs.M31() * temp.X + rhs.M32() * temp.Y + rhs.M33() * temp.Z + rhs.M34() * temp.W;
-        this->W = rhs.M41() * temp.X + rhs.M42() * temp.Y + rhs.M43() * temp.Z + rhs.M44() * temp.W;
+        this->X = rhs.m11 * temp.X + rhs.m12 * temp.Y + rhs.m13 * temp.Z + rhs.m14 * temp.W;
+        this->Y = rhs.m21 * temp.X + rhs.m22 * temp.Y + rhs.m23 * temp.Z + rhs.m24 * temp.W;
+        this->Z = rhs.m31 * temp.X + rhs.m32 * temp.Y + rhs.m33 * temp.Z + rhs.m34 * temp.W;
+        this->W = rhs.m41 * temp.X + rhs.m42 * temp.Y + rhs.m43 * temp.Z + rhs.m44 * temp.W;
 
         return *this;
     }

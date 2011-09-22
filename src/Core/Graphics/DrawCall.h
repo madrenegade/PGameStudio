@@ -9,11 +9,14 @@
 #define	GRAPHICS_DRAWCALL_H
 
 #include "Material.h"
+#include "Math/Matrix4.h"
 
 namespace Graphics
 {
     struct DrawCall
     {
+        Math::Matrix4 transform;
+        
         unsigned long vertexBuffer;
         unsigned long indexBuffer;
         Material* material;

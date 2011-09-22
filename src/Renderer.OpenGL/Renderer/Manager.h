@@ -30,6 +30,11 @@ namespace Renderer
         : currentID(), memory(memoryManager), pool(pool)
         {
         }
+        
+        void clear()
+        {
+            data.clear();
+        }
 
         unsigned long queueRequest(RequestType& request)
         {
