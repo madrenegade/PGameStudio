@@ -95,9 +95,9 @@ namespace Utilities
                 DCHECK(memory.get() != 0);
 
 #ifdef DEBUG
-                return memory->stl_allocate<T > (n, StackTrace());
+                return memory->rawAllocate<T > (n, StackTrace());
 #else
-                return memory->stl_allocate<T > (n);
+                return memory->rawAllocate<T > (n);
 #endif
             }
 
@@ -105,7 +105,7 @@ namespace Utilities
             {
                 DCHECK(memory.get() != 0);
 
-                memory->stl_deallocate<T > (p, n);
+                memory->rawDeallocate<T > (p, n);
             }
 
             size_type max_size() const throw ()

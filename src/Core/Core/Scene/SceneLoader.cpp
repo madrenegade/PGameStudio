@@ -52,7 +52,7 @@ namespace Core
         SystemVector neededSystems;
         
         File sceneFile(fileSystem->read(filename));
-        XmlReader reader(sceneFile);
+        XmlReader reader(memoryManager, sceneFile);
         reader.getAttributeValues("/scene/systems/system/@name", neededSystems);
 
         boost::shared_ptr<Scene> scene = memoryManager->construct(Scene());

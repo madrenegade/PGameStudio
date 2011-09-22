@@ -144,6 +144,56 @@ namespace Utilities
 #ifdef DEBUG
 
             /**
+             * Allocation without using smart pointers.
+             * This function is intended for use with external libraries
+             * that can swap out their memory management functions.
+             * @param numObjects
+             * @param poolID
+             * @param stacktrace
+             * @return 
+             */
+            template<typename T>
+            T* rawAllocate(size_t numObjects
+#ifdef DEBUG
+                , const StackTrace& stacktrace
+#endif
+                , pool_id poolID = 0)
+            {
+#ifdef DEBUG
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
+                }
+#endif
+
+                return internalAllocate<T > (numObjects, poolID);
+            }
+
+            template<typename T>
+            void rawDeallocate(const T* ptr, size_t n)
+            {
+                const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
+
+#ifdef DEBUG
+                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx, %i objects of type %s)", BYTES_TO_DEALLOCATE, ptr, n, demangle(typeid (T).name()).c_str());
+#endif
+
+                const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
+
+                {
+                    PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
+                    pool_id poolID = findPoolContaining(rawPtr);
+
+                    pools[poolID]->deallocate(rawPtr, sizeof (T), n);
+                }
+
+                {
+                    MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
+                    memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
+                }
+            }
+
+            /**
              * do not use directly
              */
             void beginNewFrame()
@@ -176,56 +226,6 @@ namespace Utilities
 #endif
 
             pool_id findPoolContaining(const_byte_pointer ptr) const;
-
-            template<typename> friend class STLAllocator;
-
-            /**
-             * only for the stl allocator
-             * @param numObjects
-             * @param poolID
-             * @param stacktrace
-             * @return 
-             */
-            template<typename T>
-            T* stl_allocate(size_t numObjects
-#ifdef DEBUG
-                , const StackTrace& stacktrace
-#endif
-                , pool_id poolID = 0)
-            {
-#ifdef DEBUG
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
-                }
-#endif
-
-                return internalAllocate<T > (numObjects, poolID);
-            }
-
-            template<typename T>
-            void stl_deallocate(const T* ptr, size_t n)
-            {
-                const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
-
-#ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx, %i objects of type %s)", BYTES_TO_DEALLOCATE, ptr, n, demangle(typeid (T).name()).c_str());
-#endif
-
-                const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
-
-                {
-                    PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
-                    pool_id poolID = findPoolContaining(rawPtr);
-
-                    pools[poolID]->deallocate(rawPtr, sizeof (T), n);
-                }
-
-                {
-                    MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
-                    memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
-                }
-            }
 
             /**
              * allocate space for a bunch of objects

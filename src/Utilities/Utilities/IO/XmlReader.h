@@ -25,7 +25,7 @@ namespace Utilities
         class XmlReader
         {
         public:
-            XmlReader(const File& file);
+            XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory, const File& file);
             ~XmlReader();
             
             template<typename ContainerType>
@@ -54,6 +54,12 @@ namespace Utilities
             
             std::shared_ptr<xmlDoc> doc;
             std::shared_ptr<xmlXPathContext> context;
+            
+            static Memory::MemoryManager* memory;
+            static void deallocate(void* ptr);
+            static void* allocate(size_t size);
+            static void* reallocate(void* ptr, size_t size);
+            static char* duplicate(const char* str);
         };
     }
 }

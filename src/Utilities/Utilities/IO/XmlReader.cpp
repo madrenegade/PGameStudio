@@ -51,8 +51,17 @@ namespace Utilities
             }
         };
 
-        XmlReader::XmlReader(const File& file)
+        Memory::MemoryManager* XmlReader::memory = 0;
+
+        XmlReader::XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory, const File& file)
         {
+            XmlReader::memory = memory.get();
+
+//            if (xmlMemSetup(&XmlReader::deallocate, &XmlReader::allocate, &XmlReader::reallocate, &XmlReader::duplicate) != 0)
+//            {
+//                LOG(FATAL) << "Could not set libxml2 memory functions";
+//            }
+
             xmlInitParser();
             doc.reset(xmlParseMemory(file.getData(), file.getSize()), XmlDocDeleter());
 
@@ -103,7 +112,7 @@ namespace Utilities
                         results[i] = content;
                     }
                         break;
-                        
+
                     case XML_ELEMENT_NODE:
                     {
                         String content(reinterpret_cast<const char*> (xmlNodeListGetString(doc.get(), current->children, 1)));
@@ -115,6 +124,30 @@ namespace Utilities
                         throw std::runtime_error("Unhandled node type");
                 }
             }
+        }
+
+        void XmlReader::deallocate(void* ptr)
+        {
+//            memory->rawDeallocate(ptr);
+        }
+
+        void* XmlReader::allocate(size_t size)
+        {
+#ifdef DEBUG
+            return memory->rawAllocate<Memory::byte>(size, StackTrace());
+#else
+            return memory->rawAllocate<Memory::byte>(size);
+#endif
+        }
+
+        void* XmlReader::reallocate(void* ptr, size_t size)
+        {
+            return 0;
+        }
+
+        char* XmlReader::duplicate(const char* str)
+        {
+            return 0;
         }
     }
 }
