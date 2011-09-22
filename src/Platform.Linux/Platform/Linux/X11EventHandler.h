@@ -39,6 +39,10 @@ namespace Platform
             Display* display;
 
             Core::Events::EventID quitEvent;
+            Core::Events::EventID keyPressEvent;
+            Core::Events::EventID keyReleaseEvent;
+            Core::Events::EventID buttonPressEvent;
+            Core::Events::EventID buttonReleaseEvent;
         };
     }
 }

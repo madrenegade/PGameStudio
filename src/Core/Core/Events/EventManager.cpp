@@ -38,7 +38,7 @@ namespace Core
         
         EventID EventManager::getEventID(const char* name) const
         {
-            RAW_CHECK(events.find(name) != events.end(), "Event is not registered");
+            RAW_CHECK(events.find(name) != events.end(), (std::string("Event is not registered: ") + name).c_str());
             
             return events.at(name);
         }

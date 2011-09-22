@@ -8,6 +8,8 @@
 #include "Platform/Linux/X11EventHandler.h"
 #include "Core/Events/EventManager.h"
 
+#include <glog/logging.h>
+
 namespace Platform
 {
     namespace Linux
@@ -17,115 +19,115 @@ namespace Platform
         : eventManager(eventManager), display(display)
         {
             quitEvent = eventManager->getEventID("QUIT");
+            keyPressEvent = eventManager->getEventID("KEY_PRESSED");
+            keyReleaseEvent = eventManager->getEventID("KEY_RELEASED");
+            buttonPressEvent = eventManager->getEventID("BUTTON_PRESSED");
+            buttonReleaseEvent = eventManager->getEventID("BUTTON_RELEASED");
         }
 
         X11EventHandler::~X11EventHandler()
         {
         }
 
-//        unsigned int X11EventHandler::GetKeysym(const char* const name) const
-//        {
-//            unsigned int keysym = XStringToKeysym(name);
-//
-//            if(keysym == NoSymbol)
-//            {
-//                throw std::runtime_error("Unknown key name");
-//            }
-//
-//            return keysym;
-//        }
+        //        unsigned int X11EventHandler::GetKeysym(const char* const name) const
+        //        {
+        //            unsigned int keysym = XStringToKeysym(name);
+        //
+        //            if(keysym == NoSymbol)
+        //            {
+        //                throw std::runtime_error("Unknown key name");
+        //            }
+        //
+        //            return keysym;
+        //        }
 
         void X11EventHandler::handleEvents()
         {
             XEvent event;
 
-            while(XPending(display) > 0)
+            while (XPending(display) > 0)
             {
                 XNextEvent(display, &event);
 
-                switch(event.type)
+                switch (event.type)
                 {
                     case KeyPress:
-//                        Logger::Debug(XKeysymToString(XLookupKeysym(&event.xkey, 0)));
-//                        eventHandler->pushEvent(this->m_keyPressEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, 0)));
+                        LOG(INFO) << XKeysymToString(XLookupKeysym(&event.xkey, 0));
+                        eventManager->pushEvent(keyPressEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, 0)));
                         break;
 
                     case KeyRelease:
-//                        this->m_pEventHandler->PushEvent(this->m_keyReleaseEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, 0)));
+                        eventManager->pushEvent(keyReleaseEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, 0)));
                         break;
 
                     case ButtonPress:
-//                        this->m_pEventHandler->PushEvent(this->m_mousePressEvent,
-//                                                         Core::MouseButtonEvent(event.xbutton.button,
-//                                                                                event.xbutton.x,
-//                                                                                event.xbutton.y));
+                        eventManager->pushEvent(buttonPressEvent, std::make_tuple(event.xbutton.button,
+                            event.xbutton.x, event.xbutton.y));
                         break;
 
                     case ButtonRelease:
-//                        this->m_pEventHandler->PushEvent(this->m_mouseReleaseEvent,
-//                                                         Core::MouseButtonEvent(event.xbutton.button,
-//                                                                                event.xbutton.x,
-//                                                                                event.xbutton.y));
+                        eventManager->pushEvent(buttonReleaseEvent, std::make_tuple(event.xbutton.button,
+                            event.xbutton.x, event.xbutton.y));
                         break;
 
                     case MotionNotify:
-//                        this->m_pEventHandler->PushEvent(this->m_mouseMotionEvent,
-//                                                         Core::MouseMotionEvent(event.xmotion.x,
-//                                                                                event.xmotion.y));
+//                       eventManager->pushEvent(this->m_mouseMotionEvent,
+//                            Core::MouseMotionEvent(event.xmotion.x,
+//                            event.xmotion.y));
                         break;
 
                     case EnterNotify:
-//                        this->m_pEventHandler->PushEvent(this->m_activeEvent, true);
+                        //                        this->m_pEventHandler->PushEvent(this->m_activeEvent, true);
                         break;
 
                     case LeaveNotify:
-//                        this->m_pEventHandler->PushEvent(this->m_activeEvent, false);
+                        //                        this->m_pEventHandler->PushEvent(this->m_activeEvent, false);
                         break;
 
                     case FocusIn:
-//                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, false);
+                        //                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, false);
                         break;
 
                     case FocusOut:
-//                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, true);
+                        //                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, true);
                         break;
 
                     case Expose:
-//                        Logger::Warning("Unhandled event: Expose");
+                        //                        Logger::Warning("Unhandled event: Expose");
                         break;
 
                     case GraphicsExpose:
-//                        Logger::Warning("Unhandled event: GraphicsExpose");
+                        //                        Logger::Warning("Unhandled event: GraphicsExpose");
                         break;
 
                     case NoExpose:
-//                        Logger::Warning("Unhandled event: NoExpose");
+                        //                        Logger::Warning("Unhandled event: NoExpose");
                         break;
 
                     case VisibilityNotify:
-//                        Logger::Warning("Unhandled event: Visibility");
+                        //                        Logger::Warning("Unhandled event: Visibility");
                         break;
 
                     case CreateNotify:
-//                        Logger::Warning("Unhandled event: Create");
+                        //                        Logger::Warning("Unhandled event: Create");
                         break;
 
                     case DestroyNotify:
-//                        Logger::Warning("Unhandled event: Destroy");
+                        //                        Logger::Warning("Unhandled event: Destroy");
                         break;
 
                     case ConfigureNotify:
-//                        Logger::Warning("Unhandled event: Configure");
+                        //                        Logger::Warning("Unhandled event: Configure");
                         break;
 
                     case ConfigureRequest:
-//                        Logger::Warning("Unhandled event: ConfigureRequest");
+                        //                        Logger::Warning("Unhandled event: ConfigureRequest");
                         break;
 
                     case ResizeRequest:
-//                        this->m_pEventHandler->PushEvent(this->m_resizeEvent,
-//                                                         Core::ResizeEvent(event.xresizerequest.width,
-//                                                                           event.xresizerequest.height));
+                        //                        this->m_pEventHandler->PushEvent(this->m_resizeEvent,
+                        //                                                         Core::ResizeEvent(event.xresizerequest.width,
+                        //                                                                           event.xresizerequest.height));
                         break;
 
                     case ClientMessage:
@@ -133,7 +135,7 @@ namespace Platform
                         return;
 
                     default:
-//                        Logger::Warning("Unhandled unknown event");
+                        //                        Logger::Warning("Unhandled unknown event");
                         break;
                 }
             }
