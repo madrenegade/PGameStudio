@@ -27,6 +27,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 find_package(PhysFS REQUIRED)
 include_directories(${PhysFS_INCLUDE_DIR})
 
+find_package(LibXml2 REQUIRED)
+include_directories(${LIBXML2_INCLUDE_DIR})
+
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
 add_dependencies(${PROJECT_NAME} memprof StackTrace)
@@ -36,6 +39,7 @@ include_directories(${SRC_DIR}/StackTrace)
 target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBRARIES}
     ${Boost_LIBRARIES}
+    ${LIBXML2_LIBRARIES}
     physfs
     memprof
     StackTrace

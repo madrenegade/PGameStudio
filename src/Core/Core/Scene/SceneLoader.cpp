@@ -12,6 +12,7 @@
 #include "Utilities/Memory/STLAllocator.h"
 #include "Utilities/IO/FileSystem.h"
 #include "Utilities/Properties/PropertyManager.h"
+#include "Utilities/IO/XmlReader.h"
 
 #include "Platform/PlatformManager.h"
 #include "Platform/Library.h"
@@ -49,7 +50,10 @@ namespace Core
         LOG(INFO) << "Loading scene " << filename;
 
         SystemVector neededSystems;
-        neededSystems.push_back("Graphics");
+        
+        File sceneFile(fileSystem->read(filename));
+        XmlReader reader(sceneFile);
+        reader.getAttributeValues("/scene/systems/system/@name", neededSystems);
 
         boost::shared_ptr<Scene> scene = memoryManager->construct(Scene());
 
