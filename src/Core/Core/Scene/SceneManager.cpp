@@ -30,7 +30,10 @@ namespace Core
 
     void SceneManager::loadScene(const char* name)
     {
-        std::string sceneFile(SCENE_PATH + "/" + name + ".scene");
+        String sceneFile(SCENE_PATH.c_str(), SCENE_PATH.size());
+        sceneFile.append("/");
+        sceneFile.append(name);
+        sceneFile.append(".scene");
 
         SceneLoader loader(fileSystem, memoryManager, platform, eventManager, properties);
 
@@ -39,7 +42,12 @@ namespace Core
         auto& systemScenes = scene->getSystemScenes();
         
         std::for_each(systemScenes.begin(), systemScenes.end(), [name, &loader](const boost::shared_ptr<SystemScene>& systemScene) {
-            std::string systemSceneFile(SCENE_PATH + "/" + name + "." + systemScene->getSceneFileExtension());
+            String systemSceneFile(SCENE_PATH.c_str(), SCENE_PATH.size());
+            systemSceneFile.append("/");
+            systemSceneFile.append(name);
+            systemSceneFile.append(".");
+            systemSceneFile.append(systemScene->getSceneFileExtension());
+            
             loader.loadSystemScene(systemScene.get(), systemSceneFile.c_str());
         });
         

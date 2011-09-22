@@ -74,7 +74,10 @@ namespace Scripting
 
     void ScriptManager::runScript(const char* name)
     {
-        std::string filename(SCRIPT_BASE_PATH + "/" + name + engine->getExtension());
+        String filename(SCRIPT_BASE_PATH.c_str(), SCRIPT_BASE_PATH.size());
+        filename.append("/");
+        filename.append(name);
+        filename.append(engine->getExtension());
 
         File scriptFile = fileSystem->read(filename.c_str());
 

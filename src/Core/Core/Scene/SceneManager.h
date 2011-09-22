@@ -11,6 +11,8 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
+#include "Utilities/string.h"
+
 namespace Utilities
 {
     namespace IO
@@ -69,7 +71,7 @@ namespace Core
         
         typedef boost::shared_ptr<Scene> ScenePtr;
         
-        typedef std::map<std::string, ScenePtr> SceneMap;
+        typedef std::map<String, ScenePtr> SceneMap;
         SceneMap loadedScenes;
         
         ScenePtr currentScene;
