@@ -9,6 +9,7 @@
 #define	RENDERER_TEXTURE_H
 
 #include <boost/shared_array.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace Renderer
 {
@@ -27,7 +28,7 @@ namespace Renderer
         unsigned int getID() const;
         
     private:
-        unsigned int id;
+        boost::shared_ptr<unsigned int> id;
     };
 }
 

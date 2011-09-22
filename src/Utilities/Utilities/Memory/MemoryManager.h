@@ -65,7 +65,7 @@ namespace Utilities
              * @param poolID
              */
             void unregisterMemoryPool(pool_id poolID);
-            
+
             /**
              * Get the amount of memory in bytes used at the moment.
              * @return 
@@ -95,7 +95,7 @@ namespace Utilities
 #endif
 
                 boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID)) T(obj),
-                                         boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
+                                         boost::bind(&MemoryManager::deallocate<T>, this, _1, 1, true));
                 return ptr;
             }
 
@@ -116,10 +116,10 @@ namespace Utilities
 #endif
 
                 boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
-                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
+                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects, true));
                 return ptr;
             }
-            
+
             template<typename T>
             boost::shared_array<T> allocate(size_t numObjects, pool_id poolID = 0
 #ifdef DEBUG
@@ -129,15 +129,15 @@ namespace Utilities
             {
 #ifdef DEBUG
                 assert(numObjects > 1);
-                
+
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
                     profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
                 }
 #endif
-                
+
                 boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
-                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
+                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects, true));
                 return ptr;
             }
 
@@ -176,9 +176,10 @@ namespace Utilities
 #endif
 
             pool_id findPoolContaining(const_byte_pointer ptr) const;
-            
+
             template<typename> friend class STLAllocator;
-             /**
+
+            /**
              * only for the stl allocator
              * @param numObjects
              * @param poolID
@@ -199,7 +200,7 @@ namespace Utilities
                 }
 #endif
 
-                return internalAllocate<T>(numObjects, poolID);
+                return internalAllocate<T > (numObjects, poolID);
             }
 
             /**
@@ -214,9 +215,9 @@ namespace Utilities
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Allocating %i bytes for %i objects of type %s in pool %i", 
-                         BYTES_TO_ALLOCATE, numObjects, 
-                         Utilities::demangle(typeid(T).name()).c_str(), poolID);
+                RAW_VLOG(4, "Allocating %i bytes for %i objects of type %s in pool %i",
+                         BYTES_TO_ALLOCATE, numObjects,
+                         Utilities::demangle(typeid (T).name()).c_str(), poolID);
 #endif
 
                 T* ptr = 0;
@@ -234,7 +235,7 @@ namespace Utilities
                     fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
                     ptr = reinterpret_cast<T*> (rawPtr);
-                    
+
                     RAW_VLOG(4, "Allocated %i bytes at address 0x%lx in pool %i (0x%lx)", BYTES_TO_ALLOCATE, ptr, poolID, pools[poolID].get());
 #else
                     ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
@@ -255,18 +256,21 @@ namespace Utilities
              * @param n - the amount of objects to determine how much space must be deallocated
              */
             template<typename T>
-            void deallocate(const T* ptr, size_t n)
+            void deallocate(const T* ptr, size_t n, bool callDestructor)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx)", BYTES_TO_DEALLOCATE, ptr);
+                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx, %i objects of type %s)", BYTES_TO_DEALLOCATE, ptr, n, demangle(typeid (T).name()).c_str());
 #endif
 
                 // call destructors
-                for (size_t i = 0; i < n; ++i)
+                if (callDestructor)
                 {
-                    ptr[i].~T();
+                    for (size_t i = 0; i < n; ++i)
+                    {
+                        ptr[i].~T();
+                    }
                 }
 
                 const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);

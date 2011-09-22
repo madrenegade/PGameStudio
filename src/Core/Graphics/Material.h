@@ -20,7 +20,7 @@ namespace Graphics
         Math::Vector4 diffuse;
         Math::Vector4 specular;
         
-        std::vector<unsigned long/*, Utilities::Memory::STLAllocator<unsigned long>*/> textures;
+        std::vector<unsigned long, Utilities::Memory::STLAllocator<unsigned long>> textures;
     };
 }
 

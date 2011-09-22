@@ -105,7 +105,7 @@ namespace Utilities
             {
                 DCHECK(memory.get() != 0);
 
-                memory->deallocate<T > (p, n);
+                memory->deallocate<T > (p, n, false);
             }
 
             size_type max_size() const throw ()
@@ -121,6 +121,7 @@ namespace Utilities
 
             void destroy(pointer p)
             {
+                p->~T();
             }
 
         private:

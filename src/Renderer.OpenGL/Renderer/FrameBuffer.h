@@ -14,6 +14,8 @@
 
 #include "Renderer/Texture.h"
 
+#include "Utilities/Memory/STLAllocator.h"
+
 namespace Renderer
 {
     
@@ -45,7 +47,8 @@ namespace Renderer
         
         unsigned int id;
         
-        std::vector<boost::shared_ptr<Texture> > colorAttachments;
+        typedef boost::shared_ptr<Texture> TexturePtr;
+        std::vector<TexturePtr, Utilities::Memory::STLAllocator<TexturePtr>> colorAttachments;
         
         boost::scoped_ptr<Texture> depthTexture;
     };
