@@ -78,6 +78,7 @@ namespace Game
 
     void Application::onInitialized()
     {
+        LOG(INFO) << "Memory usage: " << memoryManager->getMemoryUsage();
         LOG(INFO) << "Loading startup script";
 
         scriptManager->runStartupScript();
@@ -117,6 +118,8 @@ namespace Game
         properties->set("Frametime", framerate);
         
         VLOG_EVERY_N(3, 1000) << "Framerate: " << (1.0 / framerate);
+        
+        VLOG_EVERY_N(3, 1000) << "Memory usage: " << memoryManager->getMemoryUsage();
 
         return running;
     }

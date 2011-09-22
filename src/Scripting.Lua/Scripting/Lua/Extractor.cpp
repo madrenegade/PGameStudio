@@ -65,14 +65,14 @@ namespace Scripting
             ++stackIndex;
         }
 
-        void Extractor::extract(const std::string& s)
+        void Extractor::extract(const String& s)
         {
             if (!lua_isstring(state, stackIndex))
             {
                 LOG(FATAL) << "Expected parameter of type string as parameter " << stackIndex;
             }
             
-            params.push_back(std::string(lua_tostring(state, stackIndex)));
+            params.push_back(String(lua_tostring(state, stackIndex)));
             ++stackIndex;
         }
     }

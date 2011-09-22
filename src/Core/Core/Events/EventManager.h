@@ -67,7 +67,7 @@ namespace Core
         private:
             boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
             
-            typedef std::map<std::string, EventID> EventMap;
+            typedef std::map<String, EventID> EventMap;
             EventMap events;
             
             typedef std::map<EventID, boost::shared_ptr<EventSignal> > SignalMap;

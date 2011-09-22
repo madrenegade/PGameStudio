@@ -8,9 +8,8 @@
 #ifndef SCRIPTING_EXTRACTOR_H
 #define	SCRIPTING_EXTRACTOR_H
 
-#include <glog/logging.h>
-#include <typeinfo>
 #include "Scripting/typedefs.h"
+#include "Utilities/string.h"
 
 namespace Scripting
 {
@@ -32,7 +31,7 @@ namespace Scripting
         virtual void extract(const double& d) = 0;
         
         virtual void extract(const char* s) = 0;
-        virtual void extract(const std::string& s) = 0;
+        virtual void extract(const String& s) = 0;
         
     protected:
         Extractor(AnyVector& params);

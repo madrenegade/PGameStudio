@@ -9,11 +9,13 @@
 #include "Renderer/EffectRequest.h"
 #include "Renderer/Effect.h"
 
+#include "Utilities/string.h"
+
 namespace Renderer
 {
     void EffectInitializer::initialize(const boost::shared_ptr<Effect>& effect, const EffectRequest& request)
     {
-        std::string code(request.file.getData(), request.file.getSize());
+        String code(request.file.getData(), request.file.getSize());
         effect->load(code.c_str());
     }
 }

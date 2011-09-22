@@ -88,8 +88,8 @@ namespace Graphics
     template<>
     const String read(const char** from);
     
-    template<>
-    const std::string read(const char** from);
+//    template<>
+//    const std::string read(const char** from);
 
     template<>
     const Math::Vector4 read(const char** from);

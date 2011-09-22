@@ -74,6 +74,18 @@ namespace Utilities
 
             pools.erase(poolID);
         }
+        
+        size_t  MemoryManager::getMemoryUsage() const
+        {
+            size_t memory = 0;
+            
+            for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
+            {
+                memory += i->second->getMemoryUsage();
+            }
+            
+            return memory;
+        }
 
         pool_id MemoryManager::findPoolContaining(const_byte_pointer ptr) const
         {

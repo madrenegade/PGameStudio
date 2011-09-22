@@ -35,16 +35,16 @@ namespace Graphics
         return s;
     }
     
-    template<>
-    const std::string read(const char** from)
-    {
-        const unsigned int length = read<unsigned int>(from);
-
-        std::string s(*from, length);
-        *from += length;
-
-        return s;
-    }
+//    template<>
+//    const std::string read(const char** from)
+//    {
+//        const unsigned int length = read<unsigned int>(from);
+//
+//        std::string s(*from, length);
+//        *from += length;
+//
+//        return s;
+//    }
 
     template<>
     const Math::Vector4 read(const char** from)
@@ -120,7 +120,7 @@ namespace Graphics
 
         for (unsigned int i = 0; i < numMaterials; ++i)
         {
-            std::string name(read<std::string > ());
+            String name(read<String > ());
             VLOG(2) << "Material: '" << name << "'";
 
             boost::shared_ptr<Material> material = memoryManager->construct(Material(), pool);
@@ -134,7 +134,7 @@ namespace Graphics
 
             for (unsigned int j = 0; j < numTextures; ++j)
             {
-                std::string textureName("textures/" + read<std::string > ());
+                String textureName("textures/" + read<String > ());
                 VLOG(2) << "texture: " << textureName;
 
                 Utilities::IO::File texture(fileSystem->read(textureName.c_str()));

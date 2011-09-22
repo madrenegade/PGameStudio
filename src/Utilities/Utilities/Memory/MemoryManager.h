@@ -65,6 +65,12 @@ namespace Utilities
              * @param poolID
              */
             void unregisterMemoryPool(pool_id poolID);
+            
+            /**
+             * Get the amount of memory in bytes used at the moment.
+             * @return 
+             */
+            size_t getMemoryUsage() const;
 
             /**
              * construct the given object in the given memory pool

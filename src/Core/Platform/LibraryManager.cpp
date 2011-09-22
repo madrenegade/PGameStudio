@@ -27,7 +27,10 @@ namespace Platform
 
     boost::shared_ptr<Library> LibraryManager::load(const char* name)
     {
-        const std::string fullName(Library::PREFIX + name + "." + Library::SUFFIX);
+        String fullName(Library::PREFIX.c_str(), Library::PREFIX.size());
+        fullName.append(name); 
+        fullName.append(".");
+        fullName.append(Library::SUFFIX.c_str(), Library::SUFFIX.size());
         
         LOG(INFO) << "Loading library " << fullName;
         

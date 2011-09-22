@@ -117,7 +117,7 @@ namespace Scripting
             lua_pushnumber(state.get(), d);
         }
 
-        void Engine::setReturnValue(const std::string& s)
+        void Engine::setReturnValue(const String& s)
         {
             lua_pushlstring(state.get(), s.c_str(), s.length());
         }

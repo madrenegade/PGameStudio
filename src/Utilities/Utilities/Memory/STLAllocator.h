@@ -62,43 +62,36 @@ namespace Utilities
 
             STLAllocator() throw ()
             {
-                RAW_VLOG(2, "Creating STL allocator");
                 setMemoryManager();
             }
 
             STLAllocator(const STLAllocator& allocator) throw ()
             {
-                RAW_VLOG(2, "Copy constructing STL allocator");
                 setMemoryManager();
             }
 
             template <class U>
             STLAllocator(const STLAllocator<U>& allocator) throw ()
             {
-                RAW_VLOG(2, "Copy constructing 2 STL allocator");
                 setMemoryManager();
             }
 
             ~STLAllocator() throw ()
             {
-                RAW_VLOG(2, "Destroying STL allocator");
             }
 
             pointer address(reference x) const
             {
-                RAW_VLOG(2, "address ref");
                 throw std::runtime_error("address not implemented");
             }
 
             const_pointer address(const_reference x) const
             {
-                RAW_VLOG(2, "address const_ref");
                 throw std::runtime_error("address not implemented");
             }
 
             pointer allocate(size_type n, STLAllocator<void>::const_pointer hint = 0)
             {
-                RAW_VLOG(2, "allocate %i", n * sizeof(T));
                 DCHECK(memory.get() != 0);
 
 #ifdef DEBUG
@@ -110,7 +103,6 @@ namespace Utilities
 
             void deallocate(pointer p, size_type n)
             {
-                RAW_VLOG(2, "deallocate");
                 DCHECK(memory.get() != 0);
 
                 memory->deallocate<T > (p, n);
@@ -118,20 +110,17 @@ namespace Utilities
 
             size_type max_size() const throw ()
             {
-                RAW_VLOG(2, "max_size");
                 // TODO: return largest block
                 return 128 * Byte;
             }
 
             void construct(pointer p, const_reference val)
             {
-                RAW_VLOG(2, "construct");
                 new(p) T(val);
             }
 
             void destroy(pointer p)
             {
-                RAW_VLOG(2, "destroy");
             }
 
         private:

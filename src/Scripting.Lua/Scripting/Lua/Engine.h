@@ -52,7 +52,7 @@ namespace Scripting
             virtual void setReturnValue(const long& i);
             virtual void setReturnValue(const double& d);
 
-            virtual void setReturnValue(const std::string& s);
+            virtual void setReturnValue(const String& s);
 
         private:
             static const std::string EXTENSION;

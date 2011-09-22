@@ -9,6 +9,7 @@
 #define	SCRIPTING_SCRIPTENGINE_H
 
 #include "Scripting/typedefs.h"
+#include "Utilities/string.h"
 
 namespace Utilities
 {
@@ -66,7 +67,7 @@ namespace Scripting
         virtual void setReturnValue(const long& i) = 0;
         virtual void setReturnValue(const double& d) = 0;
         
-        virtual void setReturnValue(const std::string& s) = 0;
+        virtual void setReturnValue(const String& s) = 0;
 
     protected:
         ScriptEngine();

@@ -32,7 +32,7 @@ namespace Scripting
             virtual void extract(const double& d);
             
             virtual void extract(const char* s);
-            virtual void extract(const std::string& s);
+            virtual void extract(const String& s);
 
         private:
             lua_State* state;
