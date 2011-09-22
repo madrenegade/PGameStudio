@@ -238,10 +238,15 @@ namespace Graphics
     
     boost::shared_ptr<SceneNode> SceneLoader::readNode()
     {
-        // FIXME: creation with memoryManager crashes
+        // construction fails in 64bit debug mode because
+        // backtrace from glibc crashes for recursive functions
+#if defined GCC && defined X64 && defined DEBUG
         boost::shared_ptr<SceneNode> node(new SceneNode());
+#else
+        boost::shared_ptr<SceneNode> node = memoryManager->construct(SceneNode(), pool);
+#endif
         
-        std::string name(read<std::string>());
+        String name(read<String>());
         VLOG(2) << "Reading scene node " << name;
         
         node->setTransform(read<Math::Matrix4>());

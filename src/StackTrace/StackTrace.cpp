@@ -49,9 +49,10 @@ StackTrace::StackTrace(bool x)
     {
         // this code crashes sometimes at heavy load when the google profiler is used
         // this happens with libunwind and also with backtrace
-#ifdef GCC
+#if defined GCC && !defined(X64)
         // use backtrace because it is much faster
         void* data[25];
+        
         size_t size = backtrace(data, sizeof(data));
 
         char** symbols = backtrace_symbols(data, size);
@@ -64,28 +65,27 @@ StackTrace::StackTrace(bool x)
         }
 
         free(symbols);
-
 #else
 
-        unw_cursor_t cursor;
-        unw_context_t uc;
-        unw_word_t ip, sp, offp;
-
-        unw_getcontext(&uc);
-        unw_init_local(&cursor, &uc);
-
-        char buffer[128];
-
-        while (unw_step(&cursor) > 0)
-        {
-            unw_get_proc_name(&cursor, buffer, 128, &offp);
-            unw_get_reg(&cursor, UNW_REG_IP, &ip);
-            unw_get_reg(&cursor, UNW_REG_SP, &sp);
-
-            frames.push_front(StackFrame(demangle("func")));
-
-            //RAW_LOG_INFO("name = %s\nip = %lx, sp = %lx\n", buffer, (long) ip, (long) sp);
-        }
+//        unw_cursor_t cursor;
+//        unw_context_t uc;
+//        unw_word_t ip, sp, offp;
+//
+//        unw_getcontext(&uc);
+//        unw_init_local(&cursor, &uc);
+//
+//        char buffer[128];
+//
+//        while (unw_step(&cursor) > 0)
+//        {
+//            unw_get_proc_name(&cursor, buffer, 128, &offp);
+//            unw_get_reg(&cursor, UNW_REG_IP, &ip);
+//            unw_get_reg(&cursor, UNW_REG_SP, &sp);
+//
+//            frames.push_front(StackFrame(demangle("func")));
+//
+//            //RAW_LOG_INFO("name = %s\nip = %lx, sp = %lx\n", buffer, (long) ip, (long) sp);
+//        }
 #endif
     }
 }
