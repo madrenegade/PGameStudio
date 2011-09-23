@@ -58,7 +58,7 @@ namespace Utilities
             
             if(!in)
             {
-                LOG(WARNING) << "Could not open config file";
+                LOG(WARNING) << "Could not open config file " << filename;
                 return;
             }
             

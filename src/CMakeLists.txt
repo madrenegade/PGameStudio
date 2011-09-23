@@ -10,7 +10,7 @@ SUBDIRS(Core)
 SUBDIRS(Platform.Linux)
 
 SUBDIRS(Renderer.OpenGL)
-#SUBDIRS(Input)
+SUBDIRS(Input)
 
 #SUBDIRS(Geometry)
 SUBDIRS(Graphics)
