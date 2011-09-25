@@ -114,7 +114,7 @@ namespace Utilities
                 return 128 * Byte;
             }
 
-            void construct(pointer p, const_reference val)
+            void construct(pointer p, const_reference val = T())
             {
                 new(p) T(val);
             }

@@ -10,7 +10,7 @@
 
 #include "Platform/Linux/XWindow.h"
 #include "Graphics/GraphicsContext.h"
-#include "GLXGraphicsContext.h"
+#include "Platform/Linux/GLXGraphicsContext.h"
 
 namespace Platform
 {
@@ -162,11 +162,11 @@ namespace Platform
             // Done with the visual info data
             XFree(vi);
 
-            XStoreName(display, window, "GL 3.0 Window");
+            XStoreName(display, window, "Window");
 
             XMapWindow(display, window);
 
-            m_pGraphicsContext.reset(GLXGraphicsContext::Create(3, 0, display, window, fbConfig));
+            m_pGraphicsContext.reset(GLXGraphicsContext::Create(display, window, fbConfig));
         }
 
         Graphics::GraphicsContext* XWindow::getGraphicsContext() const

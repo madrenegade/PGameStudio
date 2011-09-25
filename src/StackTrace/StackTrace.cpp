@@ -1,7 +1,7 @@
 #include "StackTrace.h"
 #include "StackFrame.h"
 
-#include <libunwind.h>
+//#include <libunwind.h>
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 

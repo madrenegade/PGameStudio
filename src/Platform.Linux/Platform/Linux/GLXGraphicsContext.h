@@ -19,9 +19,7 @@ namespace Platform
         class GLXGraphicsContext : public Graphics::GraphicsContext
         {
         public:
-            static GLXGraphicsContext* Create(unsigned int majorVersion,
-                                              unsigned int minorVersion,
-                                              Display* pDisplay,
+            static GLXGraphicsContext* Create(Display* pDisplay,
                                               Window window,
                                               GLXFBConfig fbConfig);
 
@@ -32,9 +30,8 @@ namespace Platform
             virtual void SwapBuffers();
 
         private:
-            static GLXGraphicsContext* CreateOldContext(Display* pDisplay, Window window, GLXFBConfig fbConfig);
-            static GLXGraphicsContext* CreateNewContext(Display* pDisplay, Window window, GLXFBConfig fbConfig);
-
+            static GLXGraphicsContext* CreateInternalContext(Display* pDisplay, Window window, GLXFBConfig fbConfig);
+            
             GLXGraphicsContext(Display* pDisplay, Window window, GLXContext context);
 
             Display* m_pDisplay;
