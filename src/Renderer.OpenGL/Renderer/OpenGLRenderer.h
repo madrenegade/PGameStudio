@@ -64,13 +64,13 @@ namespace Renderer
 
         virtual void initialize();
 
-        virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
+        virtual const unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
                                                   unsigned int numVertices, const Graphics::VertexFormat& fmt);
 
-        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes);
+        virtual const unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes);
 
-        virtual unsigned long requestEffect(const Utilities::IO::File& file);
-        virtual unsigned long requestTexture(const Utilities::IO::File& file);
+        virtual const unsigned long requestEffect(const Utilities::IO::File& file);
+        virtual const unsigned long requestTexture(const Utilities::IO::File& file);
 
         virtual bool isVertexBufferLoaded(unsigned long vbID) const;
         virtual bool isIndexBufferLoaded(unsigned long ibID) const;

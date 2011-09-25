@@ -45,43 +45,43 @@ namespace Core
     {
     }
 
-    boost::shared_ptr<Scene> SceneLoader::loadScene(const char* filename)
+    const boost::shared_ptr<Scene> SceneLoader::loadScene(const char* const filename) const
     {
         LOG(INFO) << "Loading scene " << filename;
 
         SystemVector neededSystems;
         
-        File sceneFile(fileSystem->read(filename));
-        XmlReader reader(memoryManager, sceneFile);
+        const File sceneFile(fileSystem->read(filename));
+        const XmlReader reader(memoryManager, sceneFile);
         reader.getAttributeValues("/scene/systems/system/@name", neededSystems);
 
-        boost::shared_ptr<Scene> scene = memoryManager->construct(Scene());
+        const boost::shared_ptr<Scene> scene = memoryManager->construct(Scene());
 
         loadSystemLibraries(neededSystems, scene.get());
 
         return scene;
     }
 
-    void SceneLoader::loadSystemScene(SystemScene* systemScene, const char* filename)
+    void SceneLoader::loadSystemScene(SystemScene* const systemScene, const char* const filename) const
     {
         LOG(INFO) << "Loading system scene " << filename;
 
-        File f = fileSystem->read(filename);
+        const File f(fileSystem->read(filename));
         systemScene->load(f);
     }
 
     typedef boost::shared_ptr<SystemScene> (*CreateFn)(const MemoryManager::Ptr&);
 
-    void SceneLoader::loadSystemLibraries(const SystemVector& systems, Scene* scene)
+    void SceneLoader::loadSystemLibraries(const SystemVector& systems, Scene* const scene) const
     {
         for (auto i = systems.begin(); i != systems.end(); ++i)
         {
-            boost::shared_ptr<Platform::Library> lib = platform->libraries()->load(i->c_str());
+            const boost::shared_ptr<Platform::Library> lib = platform->libraries()->load(i->c_str());
 
             CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createSystemScene"));
 
             // TODO: seperate pools for each system
-            auto systemScene = create(memoryManager);
+            const auto systemScene = create(memoryManager);
             
             // get option descriptions
             String iniFile(i->c_str(), i->size());
@@ -98,8 +98,8 @@ namespace Core
             systemScene->setProperties(properties);
             
             // create memory pool for this system
-            boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, i->c_str()));
-            pool_id systemPool = memoryManager->registerMemoryPool(pool);
+            const boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, i->c_str()));
+            const pool_id systemPool = memoryManager->registerMemoryPool(pool);
             
             systemScene->setMemoryPool(systemPool);
             

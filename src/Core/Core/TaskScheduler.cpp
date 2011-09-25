@@ -33,12 +33,10 @@ namespace Core
     TaskScheduler::TaskScheduler(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
     : backgroundTask(0), rootTask(0)
     {
-        unsigned int numThreads = properties->get<unsigned int>("Scheduler.numThreads");
+        const unsigned int numThreadsFromConfig = properties->get<unsigned int>("Scheduler.numThreads");
 
-        if (numThreads == 0)
-        {
-            numThreads = tbb::task_scheduler_init::default_num_threads();
-        }
+        const unsigned int numThreads = numThreadsFromConfig == 0 ? 
+            tbb::task_scheduler_init::default_num_threads() : numThreadsFromConfig;
         
         VLOG(1) << "Task scheduler uses " << numThreads << " threads";
 
@@ -55,7 +53,7 @@ namespace Core
         waitForBackgroundTask();
     }
 
-    void TaskScheduler::executeTasks(Scene* scene)
+    void TaskScheduler::executeTasks(const Scene* const scene)
     {
         rootTask = new(tbb::task::allocate_root(taskContext)) tbb::empty_task;
         

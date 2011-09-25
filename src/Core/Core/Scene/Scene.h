@@ -25,7 +25,7 @@ namespace Core
         
         void addSystemScene(const SystemScenePtr& scene);
         
-        SystemSceneList& getSystemScenes();
+        const SystemSceneList& getSystemScenes() const;
         
     private:
         SystemSceneList systemScenes;

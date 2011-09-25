@@ -25,7 +25,7 @@ namespace Core
         this->memoryManager = memoryManager;
     }
     
-    void SystemScene::setMemoryPool(Utilities::Memory::pool_id pool)
+    void SystemScene::setMemoryPool(const Utilities::Memory::pool_id& pool)
     {
         this->pool = pool;
     }

@@ -49,9 +49,9 @@ namespace Core
     public:
         virtual ~SystemScene();
         
-        virtual void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) = 0;
+        virtual void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const = 0;
         
-        virtual const char* getSceneFileExtension() const = 0;
+        virtual const char* const getSceneFileExtension() const = 0;
         
         virtual void load(const Utilities::IO::File& file) = 0;
         
@@ -67,7 +67,7 @@ namespace Core
          * Set the memory pool.
          * @param pool - the memory pool to be used by this system.
          */
-        void setMemoryPool(Utilities::Memory::pool_id pool);
+        void setMemoryPool(const Utilities::Memory::pool_id& pool);
         
         /**
          * Make the platform manager available to this system scene.

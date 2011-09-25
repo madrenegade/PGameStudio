@@ -23,7 +23,7 @@ namespace Core
         systemScenes.push_front(scene);
     }
     
-    Scene::SystemSceneList& Scene::getSystemScenes()
+    const Scene::SystemSceneList& Scene::getSystemScenes() const
     {
         return systemScenes;
     }

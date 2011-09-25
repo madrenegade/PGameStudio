@@ -29,7 +29,7 @@ namespace Utilities
              * @param properties - the property manager to add the options to
              * @param basename - the basename used for the property names
              */
-            void addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* basename);
+            void addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const basename) const;
             
             /**
              * Load memory pool settings from a property manager
@@ -37,17 +37,17 @@ namespace Utilities
              * @param basename
              * @return the loaded settings
              */
-            static MemoryPoolSettings loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* basename);
+            static const MemoryPoolSettings loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char*const basename);
         
-            MemoryPoolSettings(size_t smallObjectPoolSize = 16*KByte,
-                               size_t smallObjectPageSize = 4*KByte,
-                               size_t smallObjectBlockSize = 128*Byte,
-                               size_t mediumObjectPoolSize = 4*MByte,
-                               size_t mediumObjectPageSize = 4*KByte,
-                               size_t mediumObjectBlockSize = 128*Byte,
-                               size_t largeObjectPoolSize = 16*MByte,
-                               size_t largeObjectPageSize = 4*KByte,
-                               size_t largeObjectBlockSize = 512*Byte)
+            MemoryPoolSettings(const size_t smallObjectPoolSize = 16*KByte,
+                               const size_t smallObjectPageSize = 4*KByte,
+                               const size_t smallObjectBlockSize = 128*Byte,
+                               const size_t mediumObjectPoolSize = 4*MByte,
+                               const size_t mediumObjectPageSize = 4*KByte,
+                               const size_t mediumObjectBlockSize = 128*Byte,
+                               const size_t largeObjectPoolSize = 16*MByte,
+                               const size_t largeObjectPageSize = 4*KByte,
+                               const size_t largeObjectBlockSize = 512*Byte)
             : smallObjectPoolSize(smallObjectPoolSize),
             smallObjectPageSize(smallObjectPageSize),
             smallObjectBlockSize(smallObjectBlockSize),
@@ -60,15 +60,15 @@ namespace Utilities
             {
             }
 
-            size_t smallObjectPoolSize;
-            size_t smallObjectPageSize;
-            size_t smallObjectBlockSize;
-            size_t mediumObjectPoolSize;
-            size_t mediumObjectPageSize;
-            size_t mediumObjectBlockSize;
-            size_t largeObjectPoolSize;
-            size_t largeObjectPageSize;
-            size_t largeObjectBlockSize;
+            const size_t smallObjectPoolSize;
+            const size_t smallObjectPageSize;
+            const size_t smallObjectBlockSize;
+            const size_t mediumObjectPoolSize;
+            const size_t mediumObjectPageSize;
+            const size_t mediumObjectBlockSize;
+            const size_t largeObjectPoolSize;
+            const size_t largeObjectPageSize;
+            const size_t largeObjectBlockSize;
         };
         
         

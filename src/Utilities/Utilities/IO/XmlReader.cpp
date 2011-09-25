@@ -85,7 +85,7 @@ namespace Utilities
             xmlCleanupParser();
         }
 
-        void XmlReader::evaluate(const unsigned char* xpath, std::vector<String, Utilities::Memory::STLAllocator<String >> &results)
+        void XmlReader::evaluate(const unsigned char* xpath, std::vector<String, Utilities::Memory::STLAllocator<String>>& results) const
         {
             std::shared_ptr<xmlXPathObject> xpathObject(xmlXPathEvalExpression(xpath, context.get()), XPathObjectDeleter());
 

@@ -29,7 +29,7 @@ namespace Utilities
             ~XmlReader();
             
             template<typename ContainerType>
-            void getAttributeValues(const char* xpath, ContainerType& container)
+            void getAttributeValues(const char* const xpath, ContainerType& container) const
             {
                 std::vector<String, Utilities::Memory::STLAllocator<String>> results;
                 evaluate(reinterpret_cast<const unsigned char*>(xpath), results);
@@ -50,7 +50,7 @@ namespace Utilities
             
         private:
             void evaluate(const unsigned char* xpath,
-                          std::vector<String, Utilities::Memory::STLAllocator<String>>& results);
+                          std::vector<String, Utilities::Memory::STLAllocator<String>>& results) const;
             
             std::shared_ptr<xmlDoc> doc;
             std::shared_ptr<xmlXPathContext> context;

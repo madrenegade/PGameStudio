@@ -29,13 +29,13 @@ namespace Core
              * @param name - the event name
              * @return the generated ID
              */
-            EventID registerEvent(const char* name);
+            const EventID registerEvent(const char* const name);
             
             /**
              * Get the id of a registered event.
              * @param name - the name of the event
              */
-            EventID getEventID(const char* name) const;
+            const EventID getEventID(const char* const name) const;
             
             /**
              * Register an event handler so that it is autmatically called.
@@ -65,12 +65,12 @@ namespace Core
             void handleEvents();
             
         private:
-            boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+            const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
            
             typedef std::map<String, EventID> EventMap;
             EventMap events;
             
-            typedef std::map<EventID, boost::shared_ptr<EventSignal> > SignalMap;
+            typedef std::map<EventID, boost::shared_ptr<EventSignal>> SignalMap;
             SignalMap signals;
             
             tbb::atomic<EventID> serial;

@@ -78,7 +78,7 @@ namespace Renderer
         ErrorHandler::checkForErrors();
     }
 
-    unsigned long OpenGLRenderer::requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
+    const unsigned long OpenGLRenderer::requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
                                                       unsigned int numVertices, const Graphics::VertexFormat& fmt)
     {
         VertexBufferRequest request;
@@ -89,7 +89,7 @@ namespace Renderer
         return vertexBuffers->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes)
+    const unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes)
     {
         IndexBufferRequest request;
         request.data = data;
@@ -98,7 +98,7 @@ namespace Renderer
         return indexBuffers->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestEffect(const Utilities::IO::File& file)
+    const unsigned long OpenGLRenderer::requestEffect(const Utilities::IO::File& file)
     {
         EffectRequest request;
         request.file = file;
@@ -106,7 +106,7 @@ namespace Renderer
         return effects->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestTexture(const Utilities::IO::File& file)
+    const unsigned long OpenGLRenderer::requestTexture(const Utilities::IO::File& file)
     {
         TextureRequest request;
         request.file = file;

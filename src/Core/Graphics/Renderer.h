@@ -33,14 +33,14 @@ namespace Graphics
 
         virtual void initialize() = 0;
 
-        virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data, unsigned int numVertices, const VertexFormat& fmt) = 0;
+        virtual const unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data, unsigned int numVertices, const VertexFormat& fmt) = 0;
 
         //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned char>& data, unsigned int numIndexes) = 0;
-        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
+        virtual const unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
         //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
 
-        virtual unsigned long requestEffect(const Utilities::IO::File& file) = 0;
-        virtual unsigned long requestTexture(const Utilities::IO::File& file) = 0;
+        virtual const unsigned long requestEffect(const Utilities::IO::File& file) = 0;
+        virtual const unsigned long requestTexture(const Utilities::IO::File& file) = 0;
 
         virtual bool isVertexBufferLoaded(unsigned long vbID) const = 0;
         virtual bool isIndexBufferLoaded(unsigned long ibID) const = 0;

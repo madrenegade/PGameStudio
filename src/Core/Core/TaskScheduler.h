@@ -46,7 +46,7 @@ namespace Core
         /**
          * Execute the all tasks from the system scenes.
          */
-        void executeTasks(Scene* scene);
+        void executeTasks(const Scene* const scene);
         
     private:
         void startBackgroundTask();

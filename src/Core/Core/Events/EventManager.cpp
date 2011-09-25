@@ -21,13 +21,13 @@ namespace Core
         {
         }
         
-        EventID EventManager::registerEvent(const char* name)
+        const EventID EventManager::registerEvent(const char* const name)
         {
             RAW_VLOG(2, "Registering event %s", name);
             
             RAW_CHECK(events.find(name) == events.end(), "Event is already registered");
             
-            EventID id = serial.fetch_and_add(1);
+            const EventID id = serial.fetch_and_add(1);
             
             events[name] = id;
             
@@ -36,7 +36,7 @@ namespace Core
             return id;
         }
         
-        EventID EventManager::getEventID(const char* name) const
+        const EventID EventManager::getEventID(const char* const name) const
         {
             RAW_CHECK(events.find(name) != events.end(), (std::string("Event is not registered: ") + name).c_str());
             

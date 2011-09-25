@@ -60,22 +60,22 @@ namespace Core
          * Load the scene with the given name
          * @param name
          */
-        boost::shared_ptr<Scene> loadScene(const char* filename);
+        const boost::shared_ptr<Scene> loadScene(const char* const filename) const;
         
-        void loadSystemScene(SystemScene* systemScene, const char* filename);
+        void loadSystemScene(SystemScene* const systemScene, const char* const filename) const;
         
     private:
         SceneLoader();
         
         typedef std::vector<String, Utilities::Memory::STLAllocator<String>> SystemVector;
         
-        void loadSystemLibraries(const SystemVector& systems, Scene* scene);
+        void loadSystemLibraries(const SystemVector& systems, Scene* const scene) const;
         
-        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        boost::shared_ptr<Platform::PlatformManager> platform;
-        boost::shared_ptr<Events::EventManager> eventManager;
-        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        const boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
+        const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        const boost::shared_ptr<Platform::PlatformManager> platform;
+        const boost::shared_ptr<Events::EventManager> eventManager;
+        const boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
     };
 }
 

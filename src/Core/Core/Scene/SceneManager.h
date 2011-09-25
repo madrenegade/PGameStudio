@@ -55,19 +55,19 @@ namespace Core
                      const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~SceneManager();
 
-        void loadScene(const char* name);
-        void switchScene(const char* name);
+        void loadScene(const char* const name);
+        void switchScene(const char* const name);
         
-        Scene* getCurrentScene() const;
+        Scene* const getCurrentScene() const;
 
     private:
         static const std::string SCENE_PATH;
         
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
-        boost::shared_ptr<Platform::PlatformManager> platform;
-        boost::shared_ptr<Events::EventManager> eventManager;
-        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        const boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
+        const boost::shared_ptr<Platform::PlatformManager> platform;
+        const boost::shared_ptr<Events::EventManager> eventManager;
+        const boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
         
         typedef boost::shared_ptr<Scene> ScenePtr;
         

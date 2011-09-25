@@ -41,9 +41,9 @@ namespace Graphics
     {
     }
 
-    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const
     {
-        MemoryPoolSettings graphicsPool(1 * KByte, 1 * KByte, 128 * Byte,
+        const MemoryPoolSettings graphicsPool(1 * KByte, 1 * KByte, 128 * Byte,
             1 * KByte, 1 * KByte, 128 * Byte,
             1 * KByte, 1 * KByte, 128 * Byte);
         graphicsPool.addOptionsTo(properties, "Graphics");
@@ -74,7 +74,7 @@ namespace Graphics
 
     }
 
-    const char* SystemScene::getSceneFileExtension() const
+    const char* const SystemScene::getSceneFileExtension() const
     {
         return SCENE_FILE_EXTENSION.c_str();
     }

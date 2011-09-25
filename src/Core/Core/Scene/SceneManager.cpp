@@ -28,7 +28,7 @@ namespace Core
     {
     }
 
-    void SceneManager::loadScene(const char* name)
+    void SceneManager::loadScene(const char* const name)
     {
         String sceneFile(SCENE_PATH.c_str(), SCENE_PATH.size());
         sceneFile.append("/");
@@ -37,9 +37,9 @@ namespace Core
 
         SceneLoader loader(fileSystem, memoryManager, platform, eventManager, properties);
 
-        ScenePtr scene = loader.loadScene(sceneFile.c_str());
+        const ScenePtr scene = loader.loadScene(sceneFile.c_str());
         
-        auto& systemScenes = scene->getSystemScenes();
+        const auto& systemScenes = scene->getSystemScenes();
         
         std::for_each(systemScenes.begin(), systemScenes.end(), [name, &loader](const boost::shared_ptr<SystemScene>& systemScene) {
             String systemSceneFile(SCENE_PATH.c_str(), SCENE_PATH.size());
@@ -54,13 +54,13 @@ namespace Core
         loadedScenes[name] = scene;
     }
 
-    void SceneManager::switchScene(const char* name)
+    void SceneManager::switchScene(const char* const name)
     {
         LOG(INFO) << "Switching to scene " << name;
         currentScene = loadedScenes.at(name);
     }
     
-    Scene* SceneManager::getCurrentScene() const
+    Scene* const SceneManager::getCurrentScene() const
     {
         return currentScene.get();
     }

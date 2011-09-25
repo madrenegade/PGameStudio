@@ -24,15 +24,15 @@ namespace Input
     {
     }
 
-    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const
     {
-        MemoryPoolSettings inputPool(1 * KByte, 1 * KByte, 128 * Byte,
+        const MemoryPoolSettings inputPool(1 * KByte, 1 * KByte, 128 * Byte,
             1 * KByte, 1 * KByte, 128 * Byte,
             1 * KByte, 1 * KByte, 128 * Byte);
         inputPool.addOptionsTo(properties, "Input");
     }
 
-    const char* SystemScene::getSceneFileExtension() const
+    const char* const SystemScene::getSceneFileExtension() const
     {
         return EXTENSION.c_str();
     }

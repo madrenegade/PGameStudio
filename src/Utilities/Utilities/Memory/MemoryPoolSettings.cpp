@@ -6,9 +6,9 @@ namespace Utilities
     namespace Memory
     {
 
-        void MemoryPoolSettings::addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* sbasename)
+        void MemoryPoolSettings::addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const sbasename) const
         {
-            std::string basename(sbasename);
+            const std::string basename(sbasename);
 
             po::options_description options(basename + " memory pool options");
 
@@ -28,21 +28,21 @@ namespace Utilities
             properties->addOptions(options);
         }
 
-        MemoryPoolSettings MemoryPoolSettings::loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* sbasename)
+        const MemoryPoolSettings MemoryPoolSettings::loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const sbasename)
         {
-            std::string basename(sbasename);
+            const std::string basename(sbasename);
             
-            size_t soMax = properties->get<size_t > ((basename + ".memory.smallObjects.maxSize").c_str());
-            size_t soPage = properties->get<size_t > ((basename + ".memory.smallObjects.pageSize").c_str());
-            size_t soBlock = properties->get<size_t > ((basename + ".memory.smallObjects.blockSize").c_str());
+            const size_t soMax = properties->get<size_t > ((basename + ".memory.smallObjects.maxSize").c_str());
+            const size_t soPage = properties->get<size_t > ((basename + ".memory.smallObjects.pageSize").c_str());
+            const size_t soBlock = properties->get<size_t > ((basename + ".memory.smallObjects.blockSize").c_str());
 
-            size_t moMax = properties->get<size_t > ((basename + ".memory.mediumObjects.maxSize").c_str());
-            size_t moPage = properties->get<size_t > ((basename + ".memory.mediumObjects.pageSize").c_str());
-            size_t moBlock = properties->get<size_t > ((basename + ".memory.mediumObjects.blockSize").c_str());
+            const size_t moMax = properties->get<size_t > ((basename + ".memory.mediumObjects.maxSize").c_str());
+            const size_t moPage = properties->get<size_t > ((basename + ".memory.mediumObjects.pageSize").c_str());
+            const size_t moBlock = properties->get<size_t > ((basename + ".memory.mediumObjects.blockSize").c_str());
 
-            size_t loMax = properties->get<size_t > ((basename + ".memory.largeObjects.maxSize").c_str());
-            size_t loPage = properties->get<size_t > ((basename + ".memory.largeObjects.pageSize").c_str());
-            size_t loBlock = properties->get<size_t > ((basename + ".memory.largeObjects.blockSize").c_str());
+            const size_t loMax = properties->get<size_t > ((basename + ".memory.largeObjects.maxSize").c_str());
+            const size_t loPage = properties->get<size_t > ((basename + ".memory.largeObjects.pageSize").c_str());
+            const size_t loBlock = properties->get<size_t > ((basename + ".memory.largeObjects.blockSize").c_str());
 
             return MemoryPoolSettings(
                 soMax, soPage, soBlock,
