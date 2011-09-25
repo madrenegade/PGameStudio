@@ -38,16 +38,24 @@ namespace Utilities
     {
         class PropertyManager;
     }
+    
+    namespace Memory
+    {
+        class MemoryManager;
+    }
 }
 
 namespace Renderer
 {
     class FrameBuffer;
+    class Viewport;
 
     class OpenGLRenderer : public Graphics::Renderer
     {
     public:
-        OpenGLRenderer(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
+        OpenGLRenderer(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
+                       Utilities::Memory::pool_id pool,
+                       const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
                        const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer> >& vbManager,
                        const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer> >& ibManager,
                        const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
@@ -91,6 +99,9 @@ namespace Renderer
 
         void getViewVectors(Math::Vector4* v, const Graphics::Camera& camera);
 
+        boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        Utilities::Memory::pool_id pool;
+        
         boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
 
         boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
@@ -106,6 +117,7 @@ namespace Renderer
 
         boost::shared_ptr<Math::Matrix4> projection;
 
+        boost::shared_ptr<Viewport> viewport;
         boost::shared_ptr<FrameBuffer> frameBuffer;
         //        unsigned int frameBuffer;
         //

@@ -28,7 +28,7 @@ extern "C"
         auto effectManager = memory->construct(Manager<Effect, EffectRequest, EffectInitializer>(memory, pool));
         auto textureManager = memory->construct(Manager<Texture, TextureRequest, TextureInitializer>(memory, pool));
         
-        boost::shared_ptr<Graphics::Renderer> renderer = memory->construct(OpenGLRenderer(properties, vbManager, ibManager, effectManager, textureManager), pool);
+        boost::shared_ptr<Graphics::Renderer> renderer = memory->construct(OpenGLRenderer(memory, pool, properties, vbManager, ibManager, effectManager, textureManager), pool);
         
         return renderer;
     }

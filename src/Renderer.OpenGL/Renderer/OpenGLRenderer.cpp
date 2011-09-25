@@ -13,6 +13,8 @@
 #include "Renderer/FrameBuffer.h"
 #include "Renderer/ErrorHandler.h"
 
+#include "Renderer/Viewport.h"
+
 #include "Graphics/Camera.h"
 
 #include "Math/Matrix4.h"
@@ -28,15 +30,19 @@
 #include <list>
 #include <chrono>
 
+using namespace Utilities::Memory;
+
 namespace Renderer
 {
 
-    OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
+    OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<MemoryManager>& memory,
+                                   pool_id pool,
+                                   const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
                                    const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
                                    const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
                                    const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
                                    const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager)
-    : properties(properties), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
+    : memory(memory), pool(pool), properties(properties), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
     {
     }
 
@@ -55,7 +61,13 @@ namespace Renderer
         zFar = properties->get<double>("Graphics.zFar");
 
         glewInit();
-        glViewport(0, 0, width, height);
+        
+        // create multiview camera
+        // attach framebuffers to camera views
+        // attach camera to viewport
+
+        viewport = memory->construct(Viewport(0, 0, width, height), pool);
+        viewport->activate();
 
         projection.reset(new Math::Matrix4(Math::Matrix4::CreatePerspectiveFieldOfView(Math::PI * fieldOfView / 180.0, static_cast<double> (width) / static_cast<double> (height), zNear, zFar)));
 
@@ -305,8 +317,8 @@ namespace Renderer
         for (int i = 0; i < 4; ++i)
         {
             gluUnProject(pixels[i][0], pixels[i][1], 1,
-                view, *projection, viewport,
-                &d[0], &d[1], &d[2]);
+                         view, *projection, viewport,
+                         &d[0], &d[1], &d[2]);
 
             v[i] = Math::Vector4(d[0], d[1], d[2], 0);
             v[i] -= Math::Vector4(camera.getPosition(), 0);
