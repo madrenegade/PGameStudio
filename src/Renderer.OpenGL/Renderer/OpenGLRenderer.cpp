@@ -12,8 +12,8 @@
 #include "Renderer/Texture.h"
 #include "Renderer/FrameBuffer.h"
 #include "Renderer/ErrorHandler.h"
-
 #include "Renderer/Viewport.h"
+#include "Renderer/AnaglyphCompositor.h"
 
 #include "Graphics/StereoViewCamera.h"
 
@@ -61,19 +61,23 @@ namespace Renderer
         zFar = properties->get<double>("Graphics.zFar");
 
         glewInit();
-        
+
         boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
         camera->setPosition(Math::Vector3(4, 2, 4));
         camera->update();
-        // create multiview camera
-        // attach framebuffers to camera views
-        // attach camera to viewport
 
         viewport = memory->construct(Viewport(0, 0, width, height), pool);
         viewport->setCamera(camera);
         viewport->activate();
 
-        frameBuffer.reset(new FrameBuffer(3, width, height));
+        for (unsigned int i = 0; i < camera->getViewCount(); ++i)
+        {
+            boost::shared_ptr<FrameBuffer> frameBuffer(new FrameBuffer(4, width, height));
+            viewport->attachFrameBuffer(frameBuffer);
+        }
+
+        boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);
+        viewport->setCompositor(compositor);
 
         Effect::initialize();
 
@@ -81,7 +85,7 @@ namespace Renderer
     }
 
     const unsigned long OpenGLRenderer::requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
-                                                      unsigned int numVertices, const Graphics::VertexFormat& fmt)
+                                                            unsigned int numVertices, const Graphics::VertexFormat& fmt)
     {
         VertexBufferRequest request;
         request.data = data;
@@ -147,49 +151,26 @@ namespace Renderer
         std::list<Graphics::DrawCall> drawCallList;
         popDrawCallsTo(drawCallList);
 
-        renderToFrameBuffer(drawCallList);
+        const FrameBuffer* fb = 0;
+
+        for (unsigned int i = 0; i < viewport->getCamera()->getViewCount(); ++i)
+        {
+            fb = viewport->getFrameBuffer(i);
+            viewport->getCamera()->activateView(i);
+
+            fb->bind();
+            renderToFrameBuffer(drawCallList);
+            renderToTexture(i);
+            fb->unbind();
+        }
+
         renderToScreen();
 
         ErrorHandler::checkForErrors();
     }
-
-    void OpenGLRenderer::processVertexBufferRequests()
-    {
-        vertexBuffers->processRequests();
-    }
-
-    void OpenGLRenderer::processIndexBufferRequests()
-    {
-        indexBuffers->processRequests();
-    }
-
-    void OpenGLRenderer::processEffectRequests()
-    {
-        effects->processRequests();
-    }
-
-    void OpenGLRenderer::processTextureRequests()
-    {
-        textures->processRequests();
-    }
-
-    void OpenGLRenderer::popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList)
-    {
-        Graphics::DrawCall drawCall;
-        while (!drawCalls.empty())
-        {
-            if (drawCalls.try_pop(drawCall))
-            {
-                drawCallList.push_back(drawCall);
-            }
-        }
-    }
-
-    typedef std::chrono::duration<double, std::ratio < 1, 1 >> sec;
-
+    
     void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList)
     {
-        frameBuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
@@ -208,20 +189,23 @@ namespace Renderer
         }
 
         effect->deactivate();
-
-        frameBuffer->unbind();
     }
 
-    void OpenGLRenderer::renderToScreen()
+    void OpenGLRenderer::renderToTexture(unsigned int viewIndex)
     {
+        const FrameBuffer* fb = viewport->getFrameBuffer(viewIndex);
+
+        GLenum colorAccumulationBuffers[] = {GL_COLOR_ATTACHMENT3};
+        glDrawBuffers(1, colorAccumulationBuffers);
+
         Effect* effect = effects->get(1);
         effect->set("ZNear", zNear);
         effect->set("ZFar", zFar);
 
-        const Texture* colorTexture = frameBuffer->getColorAttachment(0);
-        const Texture* aux0Texture = frameBuffer->getColorAttachment(1);
-        const Texture* aux1Texture = frameBuffer->getColorAttachment(2);
-        const Texture* depthTexture = frameBuffer->getDepthAttachment();
+        const Texture* colorTexture = fb->getColorAttachment(0);
+        const Texture* aux0Texture = fb->getColorAttachment(1);
+        const Texture* aux1Texture = fb->getColorAttachment(2);
+        const Texture* depthTexture = fb->getDepthAttachment();
 
         colorTexture->bind(0);
         effect->set(0, colorTexture);
@@ -259,6 +243,31 @@ namespace Renderer
         glEnd();
 
         effect->deactivate();
+
+        colorTexture->unbind(0);
+        aux0Texture->unbind(1);
+        aux1Texture->unbind(2);
+        depthTexture->unbind(3);
+    }
+
+    void OpenGLRenderer::renderToScreen()
+    {
+        viewport->getCompositor()->startCompose();
+        glBegin(GL_QUADS);
+        glMultiTexCoord2d(GL_TEXTURE0, 0, 0);
+        glVertex2d(-1, -1);
+
+        glMultiTexCoord2d(GL_TEXTURE0, 1, 0);
+        glVertex2d(1, -1);
+
+        glMultiTexCoord2d(GL_TEXTURE0, 1, 1);
+        glVertex2d(1, 1);
+
+        glMultiTexCoord2d(GL_TEXTURE0, 0, 1);
+        glVertex2d(-1, 1);
+        glEnd();
+
+        viewport->getCompositor()->endCompose();
     }
 
     void OpenGLRenderer::renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect,
@@ -324,6 +333,38 @@ namespace Renderer
             //            v[i] *= view_rotation;
 
             //            LOG(INFO) << "v[" << i << "] " << v[i].X << ", " << v[i].Y << ", " << v[i].Z;
+        }
+    }
+
+    void OpenGLRenderer::processVertexBufferRequests()
+    {
+        vertexBuffers->processRequests();
+    }
+
+    void OpenGLRenderer::processIndexBufferRequests()
+    {
+        indexBuffers->processRequests();
+    }
+
+    void OpenGLRenderer::processEffectRequests()
+    {
+        effects->processRequests();
+    }
+
+    void OpenGLRenderer::processTextureRequests()
+    {
+        textures->processRequests();
+    }
+
+    void OpenGLRenderer::popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList)
+    {
+        Graphics::DrawCall drawCall;
+        while (!drawCalls.empty())
+        {
+            if (drawCalls.try_pop(drawCall))
+            {
+                drawCallList.push_back(drawCall);
+            }
         }
     }
 }

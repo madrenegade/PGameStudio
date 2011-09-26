@@ -25,8 +25,8 @@ namespace Renderer
         FrameBuffer(unsigned int numColorAttachments, unsigned int width, unsigned int height);
         ~FrameBuffer();
         
-        void bind();
-        void unbind();
+        void bind() const;
+        void unbind() const;
         
         const Texture* getColorAttachment(unsigned int index) const
         {

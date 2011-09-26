@@ -83,8 +83,10 @@ namespace Graphics
     {
         Utilities::IO::File effectFile(fileSystem->read("fx/default.cgfx"));
         Utilities::IO::File finalEffectFile(fileSystem->read("fx/final.cgfx"));
+        Utilities::IO::File anaglyphEffectFile(fileSystem->read("fx/anaglyph.cgfx"));
         renderer->requestEffect(effectFile);
         renderer->requestEffect(finalEffectFile);
+        renderer->requestEffect(anaglyphEffectFile);
 
         SceneLoader loader(fileSystem, memoryManager, pool, renderer.get());
         scene = loader.loadFrom(file);

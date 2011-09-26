@@ -9,11 +9,15 @@
 #define RENDERER_VIEWPORT_H
 
 #include <boost/shared_ptr.hpp>
+#include <vector>
+
 #include "Graphics/Camera.h"
 
 namespace Renderer
 {
-
+    class FrameBuffer;
+    class MultiViewCompositor;
+    
     class Viewport
     {
     public:
@@ -23,7 +27,13 @@ namespace Renderer
         void activate() const;
         
         void setCamera(const boost::shared_ptr<Graphics::Camera>& camera);
-        const Graphics::Camera* getCamera() const;
+        Graphics::Camera* getCamera() const;
+        
+        void attachFrameBuffer(const boost::shared_ptr<FrameBuffer>& frameBuffer);
+        const FrameBuffer* getFrameBuffer(unsigned int index) const;
+        
+        void setCompositor(const boost::shared_ptr<MultiViewCompositor>& compositor);
+        const MultiViewCompositor* getCompositor() const;
         
     private:
         const unsigned int x;
@@ -32,6 +42,10 @@ namespace Renderer
         const unsigned int height;
         
         boost::shared_ptr<Graphics::Camera> camera;
+        
+        std::vector<boost::shared_ptr<FrameBuffer>> frameBuffers;
+        
+        boost::shared_ptr<MultiViewCompositor> compositor;
     };
 }
 

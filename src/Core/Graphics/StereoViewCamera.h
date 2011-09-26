@@ -18,6 +18,13 @@ namespace Graphics
     public:
         StereoViewCamera(double fieldOfView, double aspectRatio, double zNear, double zFar);
         virtual ~StereoViewCamera();
+        
+        virtual unsigned int getViewCount() const;
+        virtual void activateView(unsigned int index);
+        
+    private:
+        static const unsigned int LEFT;
+        static const unsigned int RIGHT;
     };
 }
 

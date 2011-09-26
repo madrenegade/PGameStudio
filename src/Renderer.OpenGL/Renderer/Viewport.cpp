@@ -6,6 +6,8 @@
  */
 
 #include "Renderer/Viewport.h"
+#include "Renderer/FrameBuffer.h"
+#include "MultiViewCompositor.h"
 
 #include <GL/gl.h>
 
@@ -31,8 +33,28 @@ namespace Renderer
         this->camera = camera;
     }
     
-    const Graphics::Camera* Viewport::getCamera() const
+    Graphics::Camera* Viewport::getCamera() const
     {
         return camera.get();
+    }
+    
+    void Viewport::attachFrameBuffer(const boost::shared_ptr<FrameBuffer>& frameBuffer)
+    {
+        frameBuffers.push_back(frameBuffer);
+    }
+    
+    const FrameBuffer* Viewport::getFrameBuffer(unsigned int index) const
+    {
+        return frameBuffers.at(index).get();
+    }
+    
+    void Viewport::setCompositor(const boost::shared_ptr<MultiViewCompositor>& compositor)
+    {
+        this->compositor = compositor;
+    }
+    
+    const MultiViewCompositor* Viewport::getCompositor() const
+    {
+        return compositor.get();
     }
 }

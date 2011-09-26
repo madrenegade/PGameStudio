@@ -47,7 +47,6 @@ namespace Utilities
 
 namespace Renderer
 {
-    class FrameBuffer;
     class Viewport;
 
     class OpenGLRenderer : public Graphics::Renderer
@@ -91,6 +90,7 @@ namespace Renderer
         void popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList);
 
         void renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList);
+        void renderToTexture(unsigned int viewIndex);
         void renderToScreen();
 
         void renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect,
@@ -115,7 +115,6 @@ namespace Renderer
         double zFar;
 
         boost::shared_ptr<Viewport> viewport;
-        boost::shared_ptr<FrameBuffer> frameBuffer;
     };
 }
 

@@ -81,12 +81,12 @@ namespace Renderer
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->getID(), 0);
     }
     
-    void FrameBuffer::bind()
+    void FrameBuffer::bind() const
     {
         glBindFramebuffer(GL_FRAMEBUFFER, id);
     }
     
-    void FrameBuffer::unbind()
+    void FrameBuffer::unbind() const
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
