@@ -254,16 +254,16 @@ namespace Renderer
     {
         viewport->getCompositor()->startCompose();
         glBegin(GL_QUADS);
-        glMultiTexCoord2d(GL_TEXTURE0, 0, 0);
+        glTexCoord2d(0, 0);
         glVertex2d(-1, -1);
 
-        glMultiTexCoord2d(GL_TEXTURE0, 1, 0);
+        glTexCoord2d(1, 0);
         glVertex2d(1, -1);
 
-        glMultiTexCoord2d(GL_TEXTURE0, 1, 1);
+        glTexCoord2d(1, 1);
         glVertex2d(1, 1);
 
-        glMultiTexCoord2d(GL_TEXTURE0, 0, 1);
+        glTexCoord2d(0, 1);
         glVertex2d(-1, 1);
         glEnd();
 

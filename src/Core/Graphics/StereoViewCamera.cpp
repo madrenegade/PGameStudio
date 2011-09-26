@@ -31,15 +31,16 @@ namespace Graphics
     void StereoViewCamera::activateView(unsigned int index)
     {
         Math::Vector3 p(getPosition());
+        Math::Vector3 l(getLookAt());
         
         switch (index)
         {
             case LEFT:
-                updateViewMatrix(Math::Matrix4::LookAt(Math::Vector3(p.X - 1, p.Y, p.Z), getLookAt(), getUp()));
+                updateViewMatrix(Math::Matrix4::LookAt(Math::Vector3(p.X - 1, p.Y, p.Z), Math::Vector3(l.X - 1, l.Y, l.Z), getUp()));
                 break;
 
             case RIGHT:
-                updateViewMatrix(Math::Matrix4::LookAt(Math::Vector3(p.X + 1, p.Y, p.Z), getLookAt(), getUp()));
+                updateViewMatrix(Math::Matrix4::LookAt(Math::Vector3(p.X + 1, p.Y, p.Z), Math::Vector3(l.X + 1, l.Y, l.Z), getUp()));
                 break;
 
             default:
