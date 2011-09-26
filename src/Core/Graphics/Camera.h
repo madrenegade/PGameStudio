@@ -8,7 +8,6 @@
 #ifndef GRAPHICS_CAMERA_H
 #define	GRAPHICS_CAMERA_H
 
-#include "Math/Vector3.h"
 #include "Math/Matrix4.h"
 
 namespace Graphics
@@ -17,25 +16,30 @@ namespace Graphics
     class Camera
     {
     public:
-        Camera(const Math::Vector3& position = Math::Vector3(0, 0, 0),
-               const Math::Vector3& lookAt = Math::Vector3(0, 0, -1),
-               const Math::Vector3& up = Math::Vector3(0, 1, 0));
-        ~Camera();
-        
+        virtual ~Camera();
+
+        virtual unsigned int getViewCount() const;
+        virtual void activateView(unsigned int index);
+
+        const Math::Matrix4& getViewMatrix() const;
+        virtual const Math::Matrix4& getProjectionMatrix() const = 0;
+
         void setPosition(const Math::Vector3& position);
-        void setLookAt(const Math::Vector3& lookAt);
-        void setUp(const Math::Vector3& up);
-        
         const Math::Vector3& getPosition() const;
-        const Math::Vector3& getLookAt() const;
-        const Math::Vector3& getUp() const;
         
-        const Math::Matrix4 getViewMatrix() const;
+        virtual void update();
+
+    protected:
+        Camera();
         
+        void updateViewMatrix(const Math::Matrix4& m);
+        
+        bool viewMatrixDirty;
+
     private:
         Math::Vector3 position;
-        Math::Vector3 lookAt;
-        Math::Vector3 up;
+        
+        Math::Matrix4 view;
     };
 }
 

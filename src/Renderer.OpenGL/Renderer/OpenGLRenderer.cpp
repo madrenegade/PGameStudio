@@ -15,7 +15,7 @@
 
 #include "Renderer/Viewport.h"
 
-#include "Graphics/Camera.h"
+#include "Graphics/StereoViewCamera.h"
 
 #include "Math/Matrix4.h"
 #include "Math/Vector4.h"
@@ -62,14 +62,16 @@ namespace Renderer
 
         glewInit();
         
+        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+        camera->setPosition(Math::Vector3(4, 2, 4));
+        camera->update();
         // create multiview camera
         // attach framebuffers to camera views
         // attach camera to viewport
 
         viewport = memory->construct(Viewport(0, 0, width, height), pool);
+        viewport->setCamera(camera);
         viewport->activate();
-
-        projection.reset(new Math::Matrix4(Math::Matrix4::CreatePerspectiveFieldOfView(Math::PI * fieldOfView / 180.0, static_cast<double> (width) / static_cast<double> (height), zNear, zFar)));
 
         frameBuffer.reset(new FrameBuffer(3, width, height));
 
@@ -140,16 +142,13 @@ namespace Renderer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void OpenGLRenderer::processDrawCalls(const std::vector<Graphics::Camera>& cameras)
+    void OpenGLRenderer::processDrawCalls()
     {
         std::list<Graphics::DrawCall> drawCallList;
         popDrawCallsTo(drawCallList);
 
-        for (unsigned int i = 0; i < cameras.size(); ++i)
-        {
-            renderToFrameBuffer(drawCallList, cameras.at(i));
-            renderToScreen(cameras.at(i));
-        }
+        renderToFrameBuffer(drawCallList);
+        renderToScreen();
 
         ErrorHandler::checkForErrors();
     }
@@ -188,8 +187,7 @@ namespace Renderer
 
     typedef std::chrono::duration<double, std::ratio < 1, 1 >> sec;
 
-    void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
-                                             const Graphics::Camera& camera)
+    void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList)
     {
         frameBuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -197,7 +195,7 @@ namespace Renderer
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
         glDrawBuffers(3, buffers);
 
-        const Math::Matrix4 view(camera.getViewMatrix());
+        const Math::Matrix4 view(viewport->getCamera()->getViewMatrix());
 
         Effect* effect = effects->get(0);
 
@@ -214,7 +212,7 @@ namespace Renderer
         frameBuffer->unbind();
     }
 
-    void OpenGLRenderer::renderToScreen(const Graphics::Camera& camera)
+    void OpenGLRenderer::renderToScreen()
     {
         Effect* effect = effects->get(1);
         effect->set("ZNear", zNear);
@@ -240,7 +238,7 @@ namespace Renderer
         effect->activate();
 
         Math::Vector4 v[4];
-        getViewVectors(v, camera);
+        getViewVectors(v, viewport->getCamera());
 
         glBegin(GL_QUADS);
         glMultiTexCoord2d(GL_TEXTURE0, 0, 0);
@@ -283,7 +281,7 @@ namespace Renderer
 
             const Math::Matrix4 mv(i->transform * viewMatrix);
             effect->set("ModelView", mv);
-            effect->set("ModelViewProjection", mv * (*projection));
+            effect->set("ModelViewProjection", mv * (viewport->getCamera()->getProjectionMatrix()));
 
             vertexBuffers->get(i->vertexBuffer)->render(indexBuffers->get(i->indexBuffer));
 
@@ -294,7 +292,7 @@ namespace Renderer
         }
     }
 
-    void OpenGLRenderer::getViewVectors(Math::Vector4* v, const Graphics::Camera& camera)
+    void OpenGLRenderer::getViewVectors(Math::Vector4* v, const Graphics::Camera* camera)
     {
         static const int pixels[4][2] = {
             {0, 0},
@@ -305,7 +303,7 @@ namespace Renderer
 
         static const int viewport[4] = {0, 0, width, height};
 
-        const Math::Matrix4 view(camera.getViewMatrix());
+        const Math::Matrix4 view(camera->getViewMatrix());
 
         //        Math::Matrix4 view_rotation(view);
         //        view_rotation.M14(0);
@@ -317,11 +315,11 @@ namespace Renderer
         for (int i = 0; i < 4; ++i)
         {
             gluUnProject(pixels[i][0], pixels[i][1], 1,
-                         view, *projection, viewport,
+                         view, this->viewport->getCamera()->getProjectionMatrix(), viewport,
                          &d[0], &d[1], &d[2]);
 
             v[i] = Math::Vector4(d[0], d[1], d[2], 0);
-            v[i] -= Math::Vector4(camera.getPosition(), 0);
+            v[i] -= Math::Vector4(camera->getPosition(), 0);
             v[i].Normalize();
             //            v[i] *= view_rotation;
 

@@ -53,7 +53,7 @@ namespace Graphics
 
         void pushDrawCall(const DrawCall& drawCall);
 
-        virtual void processDrawCalls(const std::vector<Camera>& cameras) = 0;
+        virtual void processDrawCalls() = 0;
 
     protected:
         Renderer();

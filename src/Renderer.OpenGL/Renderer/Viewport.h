@@ -8,6 +8,9 @@
 #ifndef RENDERER_VIEWPORT_H
 #define RENDERER_VIEWPORT_H
 
+#include <boost/shared_ptr.hpp>
+#include "Graphics/Camera.h"
+
 namespace Renderer
 {
 
@@ -19,11 +22,16 @@ namespace Renderer
         
         void activate() const;
         
+        void setCamera(const boost::shared_ptr<Graphics::Camera>& camera);
+        const Graphics::Camera* getCamera() const;
+        
     private:
         const unsigned int x;
         const unsigned int y;
         const unsigned int width;
         const unsigned int height;
+        
+        boost::shared_ptr<Graphics::Camera> camera;
     };
 }
 

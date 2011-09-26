@@ -25,4 +25,14 @@ namespace Renderer
     {
         glViewport(x, y, width, height);
     }
+    
+    void Viewport::setCamera(const boost::shared_ptr<Graphics::Camera>& camera)
+    {
+        this->camera = camera;
+    }
+    
+    const Graphics::Camera* Viewport::getCamera() const
+    {
+        return camera.get();
+    }
 }

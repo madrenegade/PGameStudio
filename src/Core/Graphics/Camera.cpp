@@ -9,50 +9,51 @@
 
 namespace Graphics
 {
-
-    Camera::Camera(const Math::Vector3& position,
-                   const Math::Vector3& lookAt,
-                   const Math::Vector3& up)
-    : position(position), lookAt(lookAt), up(up)
+    Camera::Camera()
+    : viewMatrixDirty(false)
     {
+        
     }
 
     Camera::~Camera()
     {
     }
 
+    unsigned int Camera::getViewCount() const
+    {
+        return 1;
+    }
+
+    void Camera::activateView(unsigned int index)
+    {
+
+    }
+    
+    const Math::Matrix4& Camera::getViewMatrix() const
+    {
+        return view;
+    }
+
     void Camera::setPosition(const Math::Vector3& position)
     {
+        viewMatrixDirty = true;
         this->position = position;
-    }
-
-    void Camera::setLookAt(const Math::Vector3& lookAt)
-    {
-        this->lookAt = lookAt;
-    }
-
-    void Camera::setUp(const Math::Vector3& up)
-    {
-        this->up = up;
     }
 
     const Math::Vector3& Camera::getPosition() const
     {
         return position;
     }
-
-    const Math::Vector3& Camera::getLookAt() const
+    
+    void Camera::updateViewMatrix(const Math::Matrix4& m)
     {
-        return lookAt;
+        view = m;
+        
+        viewMatrixDirty = false;
     }
-
-    const Math::Vector3& Camera::getUp() const
+    
+    void Camera::update()
     {
-        return up;
-    }
-
-    const Math::Matrix4 Camera::getViewMatrix() const
-    {
-        return Math::Matrix4::LookAt(position, lookAt, up);
+        
     }
 }
