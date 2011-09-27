@@ -213,6 +213,7 @@ namespace Game
 
         scriptManager = Scripting::ScriptManagerFactory::create(memoryManager,
             platformManager, fileSystem, properties);
+        properties->set("SCRIPT_MANAGER", scriptManager.get());
         
         Core::Events::EventID id = eventManager->registerEvent("RUN_SCRIPT");
         eventManager->registerEventHandler(id, boost::bind(&Scripting::ScriptManager::runScript, scriptManager.get(), _1, _2));
