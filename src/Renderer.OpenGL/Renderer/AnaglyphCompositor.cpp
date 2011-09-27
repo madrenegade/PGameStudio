@@ -27,10 +27,10 @@ namespace Renderer
     
     void AnaglyphCompositor::startCompose() const
     {
-        const Texture* leftTexture = viewport->getFrameBuffer(0)->getColorAttachment(3);
+        const Texture* leftTexture = viewport->getFrameBuffer()->getColorAttachment(3);
         leftTexture->bind(0);
         
-        const Texture* rightTexture = viewport->getFrameBuffer(1)->getColorAttachment(3);
+        const Texture* rightTexture = viewport->getFrameBuffer()->getColorAttachment(7);
         rightTexture->bind(1);
         
         Effect* effect = effects->get(composeEffect);
@@ -46,10 +46,10 @@ namespace Renderer
         Effect* effect = effects->get(composeEffect);
         effect->deactivate();
         
-        const Texture* leftTexture = viewport->getFrameBuffer(0)->getColorAttachment(3);
+        const Texture* leftTexture = viewport->getFrameBuffer()->getColorAttachment(3);
         leftTexture->unbind(0);
         
-        const Texture* rightTexture = viewport->getFrameBuffer(1)->getColorAttachment(3);
+        const Texture* rightTexture = viewport->getFrameBuffer()->getColorAttachment(7);
         rightTexture->unbind(1);
     }
 }

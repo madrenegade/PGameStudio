@@ -13,6 +13,7 @@ namespace Math
         Vector3(const Vector3& v);
         ~Vector3();
 
+        Vector3& operator*=(double value);
         Vector3& operator/=(double value);
         Vector3& operator+=(const Vector3& rhs);
         Vector3& operator-=(const Vector3& rhs);

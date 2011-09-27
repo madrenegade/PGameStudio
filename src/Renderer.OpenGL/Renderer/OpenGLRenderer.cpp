@@ -62,7 +62,7 @@ namespace Renderer
 
         glewInit();
 
-        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar, 0.2), pool);
         camera->setPosition(Math::Vector3(4, 2, 4));
         camera->update();
 
@@ -70,11 +70,8 @@ namespace Renderer
         viewport->setCamera(camera);
         viewport->activate();
 
-        for (unsigned int i = 0; i < camera->getViewCount(); ++i)
-        {
-            boost::shared_ptr<FrameBuffer> frameBuffer(new FrameBuffer(4, width, height));
-            viewport->attachFrameBuffer(frameBuffer);
-        }
+        boost::shared_ptr<FrameBuffer> frameBuffer(new FrameBuffer(4 * camera->getViewCount(), width, height));
+        viewport->attachFrameBuffer(frameBuffer);
 
         boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);
         viewport->setCompositor(compositor);
@@ -151,29 +148,32 @@ namespace Renderer
         std::list<Graphics::DrawCall> drawCallList;
         popDrawCallsTo(drawCallList);
 
-        const FrameBuffer* fb = 0;
+        const FrameBuffer* fb = viewport->getFrameBuffer();
+        fb->bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (unsigned int i = 0; i < viewport->getCamera()->getViewCount(); ++i)
         {
-            fb = viewport->getFrameBuffer(i);
+            unsigned int firstAttachment = 4 * i;
             viewport->getCamera()->activateView(i);
 
-            fb->bind();
-            renderToFrameBuffer(drawCallList);
-            renderToTexture(i);
-            fb->unbind();
+            renderToFrameBuffer(drawCallList, firstAttachment);
+            renderToTexture(i, firstAttachment);
         }
+
+        fb->unbind();
 
         renderToScreen();
 
         ErrorHandler::checkForErrors();
     }
-    
-    void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList)
-    {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+    void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
+                                             unsigned int firstAttachment)
+    {
+
+
+        GLenum buffers[] = {GL_COLOR_ATTACHMENT0 + firstAttachment, GL_COLOR_ATTACHMENT1 + firstAttachment, GL_COLOR_ATTACHMENT2 + firstAttachment};
         glDrawBuffers(3, buffers);
 
         const Math::Matrix4 view(viewport->getCamera()->getViewMatrix());
@@ -191,20 +191,21 @@ namespace Renderer
         effect->deactivate();
     }
 
-    void OpenGLRenderer::renderToTexture(unsigned int viewIndex)
+    void OpenGLRenderer::renderToTexture(unsigned int viewIndex,
+                                         unsigned int firstAttachment)
     {
-        const FrameBuffer* fb = viewport->getFrameBuffer(viewIndex);
+        const FrameBuffer* fb = viewport->getFrameBuffer();
 
-        GLenum colorAccumulationBuffers[] = {GL_COLOR_ATTACHMENT3};
+        GLenum colorAccumulationBuffers[] = {GL_COLOR_ATTACHMENT3 + firstAttachment};
         glDrawBuffers(1, colorAccumulationBuffers);
 
         Effect* effect = effects->get(1);
         effect->set("ZNear", zNear);
         effect->set("ZFar", zFar);
 
-        const Texture* colorTexture = fb->getColorAttachment(0);
-        const Texture* aux0Texture = fb->getColorAttachment(1);
-        const Texture* aux1Texture = fb->getColorAttachment(2);
+        const Texture* colorTexture = fb->getColorAttachment(0 + firstAttachment);
+        const Texture* aux0Texture = fb->getColorAttachment(1 + firstAttachment);
+        const Texture* aux1Texture = fb->getColorAttachment(2 + firstAttachment);
         const Texture* depthTexture = fb->getDepthAttachment();
 
         colorTexture->bind(0);

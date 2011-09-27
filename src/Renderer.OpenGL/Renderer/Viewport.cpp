@@ -40,12 +40,12 @@ namespace Renderer
     
     void Viewport::attachFrameBuffer(const boost::shared_ptr<FrameBuffer>& frameBuffer)
     {
-        frameBuffers.push_back(frameBuffer);
+        this->frameBuffer = frameBuffer;
     }
     
-    const FrameBuffer* Viewport::getFrameBuffer(unsigned int index) const
+    const FrameBuffer* Viewport::getFrameBuffer() const
     {
-        return frameBuffers.at(index).get();
+        return frameBuffer.get();
     }
     
     void Viewport::setCompositor(const boost::shared_ptr<MultiViewCompositor>& compositor)

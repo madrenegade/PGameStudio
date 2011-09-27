@@ -14,8 +14,9 @@ namespace Graphics
     const unsigned int StereoViewCamera::LEFT = 0;
     const unsigned int StereoViewCamera::RIGHT = 1;
 
-    StereoViewCamera::StereoViewCamera(double fieldOfView, double aspectRatio, double zNear, double zFar)
-    : MultiViewCamera(fieldOfView, aspectRatio, zNear, zFar)
+    StereoViewCamera::StereoViewCamera(double fieldOfView, double aspectRatio, double zNear, double zFar,
+                                       double eyeSeparation)
+    : MultiViewCamera(fieldOfView, aspectRatio, zNear, zFar), OFFSET(eyeSeparation / 2.0)
     {
     }
 
@@ -29,18 +30,21 @@ namespace Graphics
     }
 
     void StereoViewCamera::activateView(unsigned int index)
-    {
-        Math::Vector3 p(getPosition());
-        Math::Vector3 l(getLookAt());
+    {    
+        const Math::Vector3 dir(getLookAt() - getPosition());
+        
+        Math::Vector3 left(dir.Cross(getUp()));
+        left.Normalize();
+        left *= OFFSET;
         
         switch (index)
         {
             case LEFT:
-                updateViewMatrix(Math::Matrix4::LookAt(Math::Vector3(p.X - 1, p.Y, p.Z), Math::Vector3(l.X - 1, l.Y, l.Z), getUp()));
+                updateViewMatrix(Math::Matrix4::LookAt(getPosition() - left, getLookAt(), getUp()));
                 break;
 
             case RIGHT:
-                updateViewMatrix(Math::Matrix4::LookAt(Math::Vector3(p.X + 1, p.Y, p.Z), Math::Vector3(l.X + 1, l.Y, l.Z), getUp()));
+                updateViewMatrix(Math::Matrix4::LookAt(getPosition() + left, getLookAt(), getUp()));
                 break;
 
             default:

@@ -30,7 +30,7 @@ namespace Renderer
         Graphics::Camera* getCamera() const;
         
         void attachFrameBuffer(const boost::shared_ptr<FrameBuffer>& frameBuffer);
-        const FrameBuffer* getFrameBuffer(unsigned int index) const;
+        const FrameBuffer* getFrameBuffer() const;
         
         void setCompositor(const boost::shared_ptr<MultiViewCompositor>& compositor);
         const MultiViewCompositor* getCompositor() const;
@@ -42,9 +42,7 @@ namespace Renderer
         const unsigned int height;
         
         boost::shared_ptr<Graphics::Camera> camera;
-        
-        std::vector<boost::shared_ptr<FrameBuffer>> frameBuffers;
-        
+        boost::shared_ptr<FrameBuffer> frameBuffer;
         boost::shared_ptr<MultiViewCompositor> compositor;
     };
 }

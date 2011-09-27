@@ -89,8 +89,8 @@ namespace Renderer
     private:
         void popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList);
 
-        void renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList);
-        void renderToTexture(unsigned int viewIndex);
+        void renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList, unsigned int firstAttachment);
+        void renderToTexture(unsigned int viewIndex, unsigned int firstAttachment);
         void renderToScreen();
 
         void renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect,
