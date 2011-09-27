@@ -65,6 +65,10 @@ namespace Core
             void handleEvents();
             
         private:
+#ifdef DEBUG
+            String getEventName(const EventID& id) const;
+#endif
+            
             const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
            
             typedef std::map<String, EventID> EventMap;

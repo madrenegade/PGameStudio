@@ -8,6 +8,8 @@
 #ifndef SCRIPTING_SCRIPTENGINE_H
 #define	SCRIPTING_SCRIPTENGINE_H
 
+#include <boost/shared_ptr.hpp>
+
 #include "Scripting/typedefs.h"
 #include "Utilities/string.h"
 
@@ -23,6 +25,7 @@ namespace Scripting
 {
     class Extractor;
     class Command;
+    class Script;
     
     class ScriptEngine
     {
@@ -32,11 +35,12 @@ namespace Scripting
         virtual const char* getExtension() const = 0;
         
         /**
-         * Execute a script.
+         * Load a script.
          * @param file - the data of the script
          * @param name - the name of the script
+         * @return 
          */
-        virtual void runScript(const Utilities::IO::File& file, const char* name) = 0;
+        virtual boost::shared_ptr<Script> load(const Utilities::IO::File& file, const char* name) = 0;
         
         /**
          * Create an extractor.

@@ -7,6 +7,7 @@
 
 #include "Scripting/ScriptManager.h"
 #include "Scripting/ScriptEngine.h"
+#include "Scripting/Script.h"
 
 #include "Utilities/Properties/PropertyManager.h"
 #include "Utilities/Memory/MemoryManager.h"
@@ -28,8 +29,8 @@ namespace Scripting
     void ScriptManager::addOptionsTo(const PropertyManager::Ptr& properties)
     {
         MemoryPoolSettings scriptPool(1 * KByte, 1 * KByte, 128 * Byte,
-            1 * KByte, 1 * KByte, 128 * Byte,
-            1 * KByte, 1 * KByte, 128 * Byte);
+            1 * KByte, 1 * KByte, 256 * Byte,
+            1 * KByte, 1 * KByte, 512 * Byte);
         scriptPool.addOptionsTo(properties, "Scripting");
 
         po::options_description options("Scripting options");
@@ -51,11 +52,8 @@ namespace Scripting
     : startupScriptName(properties->get<std::string>("Scripting.startup")),
     memory(memoryManager), fileSystem(fileSystem)
     {
-        // TODO: dedicated scripting memory pool
-
         std::string engineName("Scripting." + properties->get<std::string > ("Scripting.engine"));
 
-        // load script engine plugin
         boost::shared_ptr<Library> engineLibrary = platformManager->libraries()->load(engineName.c_str());
 
         CreateFn create = reinterpret_cast<CreateFn> (engineLibrary->getFunction("create"));
@@ -74,13 +72,25 @@ namespace Scripting
 
     void ScriptManager::runScript(const char* name)
     {
-        String filename(SCRIPT_BASE_PATH.c_str(), SCRIPT_BASE_PATH.size());
-        filename.append("/");
-        filename.append(name);
-        filename.append(engine->getExtension());
+        if(scripts.find(name) == scripts.end())
+        {
+            String filename(SCRIPT_BASE_PATH.c_str(), SCRIPT_BASE_PATH.size());
+            filename.append("/");
+            filename.append(name);
+            filename.append(engine->getExtension());
 
-        File scriptFile = fileSystem->read(filename.c_str());
+            File scriptFile = fileSystem->read(filename.c_str());
+            
+            ScriptPtr script = engine->load(scriptFile, filename.c_str());
+            scripts[name] = script;
+        }
 
-        engine->runScript(scriptFile, filename.c_str());
+        scripts[name]->run();
+    }
+    
+    void ScriptManager::runScript(const Core::Events::EventID& id, const boost::any& data)
+    {
+        const char* scriptName = boost::any_cast<const char*>(data);
+        runScript(scriptName);
     }
 }

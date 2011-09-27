@@ -113,7 +113,7 @@ namespace Game
         auto end = std::chrono::system_clock::now();
 
         // maybe use EventManager for this
-        double framerate = std::chrono::duration_cast<sec > (end - start).count();
+        const double framerate = std::chrono::duration_cast<sec> (end - start).count();
         
         properties->set("Frametime", framerate);
         
@@ -213,22 +213,28 @@ namespace Game
 
         scriptManager = Scripting::ScriptManagerFactory::create(memoryManager,
             platformManager, fileSystem, properties);
+        
+        Core::Events::EventID id = eventManager->registerEvent("RUN_SCRIPT");
+        eventManager->registerEventHandler(id, boost::bind(&Scripting::ScriptManager::runScript, scriptManager.get(), _1, _2));
 
         registerFunctionsForScripting();
     }
 
     void Application::registerFunctionsForScripting()
     {
-        boost::function<long (const char*) > getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
-        boost::function<void (long) > pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, 0);
-
+        boost::function<long (const char*)> getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
+        boost::function<void (long)> pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, 0);
+        boost::function<void (long, const char* data)> pushEvent2 = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, _2);
+        
         scriptManager->registerFunction("getEventID", getEventID);
         scriptManager->registerFunction("pushEvent", pushEvent);
+        scriptManager->registerFunction("pushEvent", pushEvent2);
 
         boost::function<void (const char*) > loadScene = boost::bind(&Core::SceneManager::loadScene, sceneManager.get(), _1);
         boost::function<void (const char*) > switchScene = boost::bind(&Core::SceneManager::switchScene, sceneManager.get(), _1);
 
         scriptManager->registerFunction("loadScene", loadScene);
         scriptManager->registerFunction("switchScene", switchScene);
+        
     }
 }

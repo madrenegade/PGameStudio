@@ -1,7 +1,6 @@
 #include "Graphics/RenderTask.h"
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/Renderer.h"
-#include "Graphics/Camera.h"
 #include "Graphics/SceneNode.h"
 
 #include <glog/logging.h>
@@ -20,9 +19,6 @@ namespace Graphics
 
     tbb::task* RenderTask::execute()
     {
-//        std::vector<Camera> cams;
-//        cams.push_back(Camera(Math::Vector3(4, 2, 4), Math::Vector3(0, 0, 0)));
-        
         context->MakeCurrent();
         
         renderer->processRequests();

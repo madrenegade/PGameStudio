@@ -11,6 +11,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 
+#include "Core/Events/typedefs.h"
+
 #include "Scripting/typedefs.h"
 #include "Scripting/Command.h"
 
@@ -45,6 +47,7 @@ namespace Platform
 namespace Scripting
 {
     class ScriptEngine;
+    class Script;
 
     class ScriptManager
     {
@@ -56,6 +59,7 @@ namespace Scripting
         void runStartupScript();
 
         void runScript(const char* name);
+        void runScript(const Core::Events::EventID& id, const boost::any& data);
 
         template<typename T>
         void registerFunction(const char* name, const boost::function<T>& fn)
@@ -86,6 +90,10 @@ namespace Scripting
 
         typedef boost::shared_ptr<Command> CommandPtr;
         std::vector<CommandPtr, Utilities::Memory::STLAllocator<CommandPtr>> commands;
+        
+        typedef boost::shared_ptr<Script> ScriptPtr;
+        typedef std::map<std::string, ScriptPtr> ScriptMap;
+        ScriptMap scripts;
     };
 }
 

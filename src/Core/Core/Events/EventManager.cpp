@@ -45,8 +45,6 @@ namespace Core
         
         void EventManager::registerEventHandler(const EventID& id, const EventHandlerFunction& fn)
         {
-            // TODO check that id is valid
-            
             signals[id]->connect(fn);
         }
         
@@ -63,9 +61,30 @@ namespace Core
             {
                 if(eventQueue.try_pop(eventData))
                 {
+#ifdef DEBUG
+                    if(signals[eventData.first]->empty())
+                    {
+                        LOG(WARNING) << "Unhandled event " << getEventName(eventData.first);
+                    }
+#endif
                     (*signals[eventData.first])(eventData.first, eventData.second);
                 }
             }
         }
+        
+#ifdef DEBUG
+        String EventManager::getEventName(const EventID& id) const
+        {
+            for(auto i = events.begin(); i != events.end(); ++i)
+            {
+                if(i->second == id)
+                {
+                    return i->first;
+                }
+            }
+            
+            return "UNKNOWN";
+        }
+#endif
 	}
 }

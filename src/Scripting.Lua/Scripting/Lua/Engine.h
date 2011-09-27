@@ -41,7 +41,7 @@ namespace Scripting
 
             virtual const char* getExtension() const;
 
-            virtual void runScript(const Utilities::IO::File& file, const char* name);
+            virtual boost::shared_ptr<Script> load(const Utilities::IO::File& file, const char* name);
 
             virtual boost::shared_ptr<Extractor> createExtractor(AnyVector& params) const;
 

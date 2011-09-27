@@ -7,6 +7,8 @@
 
 #include "Scripting/Lua/Engine.h"
 #include "Scripting/Lua/Extractor.h"
+#include "Scripting/Lua/LuaScript.h"
+
 #include "Utilities/IO/File.h"
 #include "Utilities/Memory/MemoryManager.h"
 
@@ -53,22 +55,14 @@ namespace Scripting
         {
             return EXTENSION.c_str();
         }
-
-        void Engine::runScript(const Utilities::IO::File& file, const char* name)
+        
+        boost::shared_ptr<Script> Engine::load(const Utilities::IO::File& file, const char* name)
         {
-            VLOG(2) << "Running script " << name;
-            VLOG(2) << "Data size: " << file.getSize();
-            
-            int status = luaL_loadbuffer(state.get(), file.getData(), file.getSize(), name);
-            
-            VLOG(2) << "Loaded data to buffer: " << status;
-
-            if (status == 0)
-            {
-                status = lua_pcall(state.get(), 0, LUA_MULTRET, 0);
-            }
-
-            logErrors(status);
+           VLOG(2) << "Loading script " << name; 
+           
+           boost::shared_ptr<Script> script = memory->construct(LuaScript(state.get(), file, name), pool);
+           
+           return script;
         }
 
         boost::shared_ptr<Scripting::Extractor> Engine::createExtractor(AnyVector& params) const
