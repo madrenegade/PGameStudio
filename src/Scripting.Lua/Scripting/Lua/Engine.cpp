@@ -76,6 +76,7 @@ namespace Scripting
         
         void Engine::runGarbageCollection()
         {
+            VLOG_EVERY_N(3, 100) << "LUA mem: " << lua_getgccount(state.get()) << "kB";
             //lua_gc(state.get(), LUA_GCCOLLECT, 0);
         }
 
