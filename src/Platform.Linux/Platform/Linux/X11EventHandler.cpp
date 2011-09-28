@@ -21,8 +21,9 @@ namespace Platform
             quitEvent = eventManager->getEventID("QUIT");
             keyPressEvent = eventManager->getEventID("KEY_PRESSED");
             keyReleaseEvent = eventManager->getEventID("KEY_RELEASED");
-            buttonPressEvent = eventManager->getEventID("BUTTON_PRESSED");
-            buttonReleaseEvent = eventManager->getEventID("BUTTON_RELEASED");
+            buttonPressEvent = eventManager->getEventID("MOUSE_BUTTON_PRESSED");
+            buttonReleaseEvent = eventManager->getEventID("MOUSE_BUTTON_RELEASED");
+            mouseMoveEvent = eventManager->getEventID("MOUSE_MOVED");
         }
 
         X11EventHandler::~X11EventHandler()
@@ -65,19 +66,15 @@ namespace Platform
                         break;
 
                     case ButtonPress:
-                        eventManager->pushEvent(buttonPressEvent, std::make_tuple(event.xbutton.button,
-                            event.xbutton.x, event.xbutton.y));
+                        eventManager->pushEvent(buttonPressEvent, event.xbutton.button);
                         break;
 
                     case ButtonRelease:
-                        eventManager->pushEvent(buttonReleaseEvent, std::make_tuple(event.xbutton.button,
-                            event.xbutton.x, event.xbutton.y));
+                        eventManager->pushEvent(buttonReleaseEvent, event.xbutton.button);
                         break;
 
                     case MotionNotify:
-                        //                       eventManager->pushEvent(this->m_mouseMotionEvent,
-                        //                            Core::MouseMotionEvent(event.xmotion.x,
-                        //                            event.xmotion.y));
+                        eventManager->pushEvent(mouseMoveEvent, std::make_pair(event.xmotion.x, event.xmotion.y));
                         break;
 
                     case EnterNotify:

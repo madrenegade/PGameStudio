@@ -171,11 +171,13 @@ namespace Game
         eventManager = memoryManager->construct(EventManager(memoryManager));
 
         EventID quitEvent = eventManager->registerEvent("QUIT");
-        EventID keyPressEvent = eventManager->registerEvent("KEY_PRESSED");
-        EventID keyReleaseEvent = eventManager->registerEvent("KEY_RELEASED");
-        EventID buttonPressEvent = eventManager->registerEvent("BUTTON_PRESSED");
-        EventID buttonReleaseEvent = eventManager->registerEvent("BUTTON_RELEASED");
         eventManager->registerEventHandler(quitEvent, boost::bind(&Application::onQuit, this, _1, _2));
+        
+        eventManager->registerEvent("KEY_PRESSED");
+        eventManager->registerEvent("KEY_RELEASED");
+        eventManager->registerEvent("MOUSE_BUTTON_PRESSED");
+        eventManager->registerEvent("MOUSE_BUTTON_RELEASED");
+        eventManager->registerEvent("MOUSE_MOVED");
     }
 
     void Application::initializePlatformManager()

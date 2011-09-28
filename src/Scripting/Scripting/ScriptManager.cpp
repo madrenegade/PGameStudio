@@ -72,7 +72,7 @@ namespace Scripting
 
     void ScriptManager::runScript(const char* name)
     {
-        if(scripts.find(name) == scripts.end())
+        if (scripts.find(name) == scripts.end())
         {
             String filename(SCRIPT_BASE_PATH.c_str(), SCRIPT_BASE_PATH.size());
             filename.append("/");
@@ -80,25 +80,51 @@ namespace Scripting
             filename.append(engine->getExtension());
 
             File scriptFile = fileSystem->read(filename.c_str());
-            
+
             ScriptPtr script = engine->load(scriptFile, filename.c_str());
             scripts[name] = script;
         }
 
         scripts[name]->run();
     }
-    
+
     void ScriptManager::runScript(const Core::Events::EventID& id, const boost::any& data)
     {
         const char* scriptName = boost::any_cast<const char*>(data);
         runScript(scriptName);
     }
-    
+
     void ScriptManager::setVariable(const Core::Events::EventID& id, const boost::any& data)
     {
-        typedef std::pair<const char*, bool> DataType;
-        
-        const DataType var = boost::any_cast<DataType>(data);
-        engine->setVariable(var.first, var.second);
+        typedef std::pair<const char*, bool> DataTypeBool;
+        typedef std::pair<const char*, long> DataTypeLong;
+        typedef std::pair<const char*, double> DataTypeDouble;
+        typedef std::pair<const char*, String> DataTypeString;
+
+        if (typeid (DataTypeBool) == data.type())
+        {
+            const DataTypeBool var = boost::any_cast<DataTypeBool> (data);
+            engine->setVariable(var.first, var.second);
+        }
+        else if (typeid (DataTypeLong) == data.type())
+        {
+            const DataTypeLong var = boost::any_cast<DataTypeLong> (data);
+            engine->setVariable(var.first, var.second);
+        }
+        else if (typeid (DataTypeDouble) == data.type())
+        {
+            const DataTypeDouble var = boost::any_cast<DataTypeDouble> (data);
+            engine->setVariable(var.first, var.second);
+        }
+        else if (typeid (DataTypeString) == data.type())
+        {
+            const DataTypeString var = boost::any_cast<DataTypeString> (data);
+            engine->setVariable(var.first, var.second);
+        }
+        else
+        {
+            LOG(FATAL) << "setVariable does not support type " << data.type().name();
+        }
+
     }
 }

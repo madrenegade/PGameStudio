@@ -72,7 +72,15 @@ namespace Scripting
         virtual void setReturnValue(const double& d) = 0;
         virtual void setReturnValue(const String& s) = 0;
         
+        /**
+         * Set the value of a global variable
+         * @param name - the variable name
+         * @param value - the variable value
+         */
         virtual void setVariable(const char* const name, const bool& value) = 0;
+        virtual void setVariable(const char* const name, const long& value) = 0;
+        virtual void setVariable(const char* const name, const double& value) = 0;
+        virtual void setVariable(const char* const name, const String& value) = 0;
 
     protected:
         ScriptEngine();

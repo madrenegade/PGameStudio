@@ -43,6 +43,7 @@ namespace Platform
             Core::Events::EventID keyReleaseEvent;
             Core::Events::EventID buttonPressEvent;
             Core::Events::EventID buttonReleaseEvent;
+            Core::Events::EventID mouseMoveEvent;
         };
     }
 }

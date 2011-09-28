@@ -47,7 +47,7 @@ namespace Scripting
             }
 
             luaL_openlibs(state.get());
-            
+
             lua_newtable(state.get());
             lua_setglobal(state.get(), "var");
         }
@@ -120,12 +120,36 @@ namespace Scripting
         {
             lua_pushlstring(state.get(), s.c_str(), s.length());
         }
-        
+
         void Engine::setVariable(const char* const name, const bool& value)
         {
             lua_getglobal(state.get(), "var");
             lua_pushstring(state.get(), name);
             lua_pushboolean(state.get(), value);
+            lua_settable(state.get(), -3);
+        }
+
+        void Engine::setVariable(const char* const name, const long& value)
+        {
+            lua_getglobal(state.get(), "var");
+            lua_pushstring(state.get(), name);
+            lua_pushinteger(state.get(), value);
+            lua_settable(state.get(), -3);
+        }
+
+        void Engine::setVariable(const char* const name, const double& value)
+        {
+            lua_getglobal(state.get(), "var");
+            lua_pushstring(state.get(), name);
+            lua_pushnumber(state.get(), value);
+            lua_settable(state.get(), -3);
+        }
+
+        void Engine::setVariable(const char* const name, const String& value)
+        {
+            lua_getglobal(state.get(), "var");
+            lua_pushstring(state.get(), name);
+            lua_pushstring(state.get(), value.c_str());
             lua_settable(state.get(), -3);
         }
 

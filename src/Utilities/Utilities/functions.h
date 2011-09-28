@@ -10,6 +10,7 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include <string>
+#include <sstream>
 
 namespace Utilities
 {
@@ -57,6 +58,17 @@ namespace Utilities
 //    {
 //        
 //    }
+    
+    template<typename T>
+    T convertString(const char* const s)
+    {
+        T value;
+        std::stringstream stream;
+        stream << s;
+        stream >> value;
+        
+        return value;
+    }
 }
 
 #endif	/* UTILITIES_FUNCTIONS_H */

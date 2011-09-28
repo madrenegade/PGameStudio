@@ -52,8 +52,11 @@ namespace Scripting
             virtual void setReturnValue(const long& i);
             virtual void setReturnValue(const double& d);
             virtual void setReturnValue(const String& s);
-            
+
             virtual void setVariable(const char* const name, const bool& value);
+            virtual void setVariable(const char* const name, const long& value);
+            virtual void setVariable(const char* const name, const double& value);
+            virtual void setVariable(const char* const name, const String& value);
 
         private:
             static const std::string EXTENSION;
