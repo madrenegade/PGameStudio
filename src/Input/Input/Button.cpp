@@ -10,21 +10,27 @@
 namespace Input
 {
 
-    Button::Button()
+    Button::Button(const Core::Events::EventID& event)
+    : event(event), m_isPressed(false)
     {
     }
 
     Button::~Button()
     {
     }
-    
-    bool Button::isUp() const
+
+    bool Button::isPressed() const
     {
-        return !isPressed;
+        return m_isPressed;
     }
-    
-    bool Button::isDown() const
+
+    void Button::setState(bool pressed)
     {
-        return isPressed;
+        m_isPressed = pressed;
+    }
+
+    const Core::Events::EventID& Button::getEvent() const
+    {
+        return event;
     }
 }

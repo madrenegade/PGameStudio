@@ -11,9 +11,13 @@
 #include "Core/Scene/SystemScene.h"
 #include "Core/Events/typedefs.h"
 
+#include "Utilities/string.h"
+
 namespace Input
 {
-
+    class Controller;
+    class Button;
+    
     class SystemScene : public Core::SystemScene
     {
     public:
@@ -34,6 +38,8 @@ namespace Input
         void onKeyPressed(const Core::Events::EventID& event, const boost::any& data);
         void onKeyReleased(const Core::Events::EventID& event, const boost::any& data);
         
+        void updateButton(unsigned int keysym, bool state);
+        
         static const std::string EXTENSION;
         
         Core::Events::EventID quit;
@@ -41,10 +47,15 @@ namespace Input
         Core::Events::EventID keyPressed;
         Core::Events::EventID keyReleased;
         
-//        typedef std::map<unsigned int, Button> ButtonMap;
-//        ButtonMap buttons;
+        typedef boost::shared_ptr<Controller> ControllerPtr;
         
-        //typedef std::map<unsigned int, 
+        typedef std::map<String, ControllerPtr> ControllerMap;
+        ControllerMap controllers;
+        
+        typedef std::map<unsigned int, Controller*> KeysymMap;
+        KeysymMap keysymControllerMapping;
+        
+        std::vector<Button*, Utilities::Memory::STLAllocator<Button*>> dirtyButtons;
     };
 }
 

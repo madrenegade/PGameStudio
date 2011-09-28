@@ -35,6 +35,7 @@ namespace Platform
 
             if (keysym == NoSymbol)
             {
+                LOG(FATAL) << "Unknown key name: " << name;
                 throw std::runtime_error("Unknown key name");
             }
 

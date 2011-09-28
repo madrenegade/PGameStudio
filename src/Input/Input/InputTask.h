@@ -9,17 +9,35 @@
 #define	INPUT_INPUTTASK_H
 
 #include <tbb/task.h>
+#include <vector>
+
+#include "Utilities/Memory/STLAllocator.h"
+
+namespace Core
+{
+    namespace Events
+    {
+        class EventManager;
+    }
+}
 
 namespace Input
 {
-
+    class Button;
+    
     class InputTask : public tbb::task
     {
     public:
-        InputTask();
+        InputTask(Core::Events::EventManager* eventManager, std::vector<Button*, Utilities::Memory::STLAllocator<Button*>>& dirtyButtons);
         virtual ~InputTask();
         
         virtual tbb::task* execute();
+        
+    private:
+        void processDirtyButtons();
+        
+        Core::Events::EventManager* eventManager;
+        std::vector<Button*, Utilities::Memory::STLAllocator<Button*>>& dirtyButtons;
     };
 }
 

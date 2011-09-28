@@ -8,29 +8,35 @@
 #ifndef INPUT_BUTTON_H
 #define	INPUT_BUTTON_H
 
+#include "Core/Events/typedefs.h"
+
 namespace Input
 {
 
     class Button
     {
     public:
-        Button();
+        Button(const Core::Events::EventID& event);
         ~Button();
-        
-        /**
-         * 
-         * @return true if the button is not pressed at all.
-         */
-        bool isUp() const;
         
         /**
          * 
          * @return true if the button is pressed.
          */
-        bool isDown() const;
+        bool isPressed() const;
+        
+        /**
+         * Set the button state.
+         * @param pressed - true if button is pressed, false otherwise
+         */
+        void setState(bool pressed);
+        
+        const Core::Events::EventID& getEvent() const;
         
     private:
-        bool isPressed;
+        const Core::Events::EventID event;
+        
+        bool m_isPressed;
     };
 }
 
