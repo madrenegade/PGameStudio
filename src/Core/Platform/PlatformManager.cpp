@@ -46,6 +46,11 @@ namespace Platform
     {
         impl->handleOSEvents();
     }
+    
+    unsigned int PlatformManager::getKeysym(const char* name) const
+    {
+        return impl->getKeysym(name);
+    }
 
     boost::shared_ptr<Graphics::Window> PlatformManager::createWindow()
     {

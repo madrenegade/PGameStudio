@@ -40,6 +40,11 @@ namespace Platform
         {
             eventHandler->handleEvents();
         }
+        
+        unsigned int Platform::getKeysym(const char* name) const
+        {
+            return eventHandler->GetKeysym(name);
+        }
 
         boost::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
                                                                    const boost::shared_ptr<EventManager>& eventManager,

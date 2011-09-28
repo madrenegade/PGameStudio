@@ -9,6 +9,7 @@
 #define	INPUT_SYSTEMSCENE_H
 
 #include "Core/Scene/SystemScene.h"
+#include "Core/Events/typedefs.h"
 
 namespace Input
 {
@@ -23,14 +24,27 @@ namespace Input
         
         virtual const char* const getSceneFileExtension() const;
         
-        virtual void load(const Utilities::IO::File& file);
-        
         virtual void initialize();
+        
+        virtual void load(const Utilities::IO::File& file);
         
         virtual tbb::task* getTask(tbb::task* parent);
         
     private:
+        void onKeyPressed(const Core::Events::EventID& event, const boost::any& data);
+        void onKeyReleased(const Core::Events::EventID& event, const boost::any& data);
+        
         static const std::string EXTENSION;
+        
+        Core::Events::EventID quit;
+        
+        Core::Events::EventID keyPressed;
+        Core::Events::EventID keyReleased;
+        
+//        typedef std::map<unsigned int, Button> ButtonMap;
+//        ButtonMap buttons;
+        
+        //typedef std::map<unsigned int, 
     };
 }
 

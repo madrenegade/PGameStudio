@@ -29,17 +29,17 @@ namespace Platform
         {
         }
 
-        //        unsigned int X11EventHandler::GetKeysym(const char* const name) const
-        //        {
-        //            unsigned int keysym = XStringToKeysym(name);
-        //
-        //            if(keysym == NoSymbol)
-        //            {
-        //                throw std::runtime_error("Unknown key name");
-        //            }
-        //
-        //            return keysym;
-        //        }
+        unsigned int X11EventHandler::GetKeysym(const char* const name) const
+        {
+            unsigned int keysym = XStringToKeysym(name);
+
+            if (keysym == NoSymbol)
+            {
+                throw std::runtime_error("Unknown key name");
+            }
+
+            return keysym;
+        }
 
         void X11EventHandler::handleEvents()
         {
@@ -71,9 +71,9 @@ namespace Platform
                         break;
 
                     case MotionNotify:
-//                       eventManager->pushEvent(this->m_mouseMotionEvent,
-//                            Core::MouseMotionEvent(event.xmotion.x,
-//                            event.xmotion.y));
+                        //                       eventManager->pushEvent(this->m_mouseMotionEvent,
+                        //                            Core::MouseMotionEvent(event.xmotion.x,
+                        //                            event.xmotion.y));
                         break;
 
                     case EnterNotify:

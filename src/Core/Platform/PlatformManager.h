@@ -54,6 +54,13 @@ namespace Platform
          * Handle all operating system events.
          */
         void handleOSEvents();
+        
+        /**
+         * Get the id of the key with the specified name.
+         * @param name - the name of the key
+         * @return the key id
+         */
+        unsigned int getKeysym(const char* name) const;
 
         /**
          * Creates a window, an renderer and a corresponding graphics context.

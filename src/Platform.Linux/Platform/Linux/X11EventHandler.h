@@ -32,7 +32,7 @@ namespace Platform
             virtual ~X11EventHandler();
 
             virtual void handleEvents();
-//            virtual unsigned int GetKeysym(const char* const name) const;
+            virtual unsigned int GetKeysym(const char* const name) const;
 
         private:
             boost::shared_ptr<Core::Events::EventManager> eventManager;

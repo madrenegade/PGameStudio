@@ -49,11 +49,18 @@ namespace Core
     {
         LOG(INFO) << "Loading scene " << filename;
 
-        SystemVector neededSystems;
-        
         const File sceneFile(fileSystem->read(filename));
         const XmlReader reader(memoryManager, sceneFile);
-        reader.getAttributeValues("/scene/systems/system/@name", neededSystems);
+        
+        const XmlReader::Document* doc = reader.getDocument(); 
+        
+        SystemVector neededSystems;
+        XmlReader::Node* systemNode = doc->first_node("scene")->first_node("systems")->first_node("system");
+        
+        for(XmlReader::Node* node = systemNode; node; node = node->next_sibling("system"))
+        {
+            neededSystems.push_back(node->first_attribute("name")->value());
+        }
 
         const boost::shared_ptr<Scene> scene = memoryManager->construct(Scene());
 

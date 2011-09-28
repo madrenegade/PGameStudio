@@ -46,6 +46,7 @@ namespace Platform
         virtual ~PlatformImpl();
 
         virtual void handleOSEvents() = 0;
+        virtual unsigned int getKeysym(const char* const) const = 0;
 
         virtual boost::shared_ptr<Graphics::Window> createWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                                                                  const boost::shared_ptr<Core::Events::EventManager>& eventManager,
