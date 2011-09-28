@@ -16,7 +16,8 @@ namespace Input
     class TwoAxisControl
     {
     public:
-        TwoAxisControl(const char* const xVar, const char* const yVar);
+        TwoAxisControl(const char* const xVar, const char* const yVar,
+                       const char* const xDeltaVar, const char* const yDeltaVar);
         ~TwoAxisControl();
         
         /**
@@ -32,10 +33,14 @@ namespace Input
         
         const char* const getXVariableName() const;
         const char* const getYVariableName() const;
+        const char* const getDeltaXVariableName() const;
+        const char* const getDeltaYVariableName() const;
         
     private:
         String xVar;
         String yVar;
+        String xDeltaVar;
+        String yDeltaVar;
         
         double x;
         double y;

@@ -10,8 +10,8 @@
 namespace Input
 {
 
-    OneAxisControl::OneAxisControl(const char* const var)
-    : var(var), state(0), delta(0)
+    OneAxisControl::OneAxisControl(const char* const var, const char* const deltaVar)
+    : var(var), deltaVar(deltaVar), state(0), delta(0)
     {
     }
 
@@ -38,5 +38,10 @@ namespace Input
     const char* const OneAxisControl::getVariableName() const
     {
         return var.c_str();
+    }
+    
+    const char* const OneAxisControl::getDeltaVariableName() const
+    {
+        return deltaVar.c_str();
     }
 }

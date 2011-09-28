@@ -23,6 +23,7 @@ namespace Scripting
     tbb::task* ExecutorTask::execute()
     {
         scriptManager->runScript("update");
+        scriptManager->runGarbageCollection();
         
         return 0;
     }

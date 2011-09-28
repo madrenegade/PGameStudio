@@ -10,8 +10,9 @@
 namespace Input
 {
 
-    TwoAxisControl::TwoAxisControl(const char* const xVar, const char* const yVar)
-    : xVar(xVar), yVar(yVar), x(0), y(0), deltaX(0), deltaY(0)
+    TwoAxisControl::TwoAxisControl(const char* const xVar, const char* const yVar,
+                                   const char* const xDeltaVar, const char* const yDeltaVar)
+    : xVar(xVar), yVar(yVar), xDeltaVar(xDeltaVar), yDeltaVar(yDeltaVar), x(0), y(0), deltaX(0), deltaY(0)
     {
     }
 
@@ -48,5 +49,15 @@ namespace Input
     const char* const TwoAxisControl::getYVariableName() const
     {
         return yVar.c_str();
+    }
+    
+    const char* const TwoAxisControl::getDeltaXVariableName() const
+    {
+        return xDeltaVar.c_str();
+    }
+    
+    const char* const TwoAxisControl::getDeltaYVariableName() const
+    {
+        return yDeltaVar.c_str();
     }
 }

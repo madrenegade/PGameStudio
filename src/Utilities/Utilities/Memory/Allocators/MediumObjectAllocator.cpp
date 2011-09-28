@@ -55,7 +55,7 @@ namespace Utilities
 #ifdef DEBUG
             if(bytes > USABLE_BLOCKS_PER_PAGE * BLOCK_SIZE)
             {
-                throw OutOfMemoryException("Cannot allocate more bytes than PAGE_SIZE");
+                throw OutOfMemoryException("Cannot allocate more bytes than USABLE_BLOCKS_PER_PAGE * BLOCK_SIZE");
             }
 #endif
 

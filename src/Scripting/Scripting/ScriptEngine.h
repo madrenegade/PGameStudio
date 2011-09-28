@@ -43,6 +43,11 @@ namespace Scripting
         virtual boost::shared_ptr<Script> load(const Utilities::IO::File& file, const char* name) = 0;
         
         /**
+         * Run the garbage collection if available.
+         */
+        virtual void runGarbageCollection();
+        
+        /**
          * Create an extractor.
          * @param params - the vector to push extracted params to
          * @return 

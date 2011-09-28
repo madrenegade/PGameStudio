@@ -31,8 +31,6 @@ namespace Scripting
             void logErrors(int status);
             
             lua_State* state;
-            
-            Utilities::IO::File file;
             String name;
         };
     }

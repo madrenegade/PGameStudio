@@ -54,7 +54,7 @@ namespace Input
         for(auto i = dirtyOneAxisControls.begin(); i != dirtyOneAxisControls.end(); ++i)
         {
             eventManager->pushEvent(event, std::make_pair((*i)->getVariableName(), (*i)->getState()));
-            eventManager->pushEvent(event, std::make_pair((*i)->getVariableName(), (*i)->getDelta()));
+            eventManager->pushEvent(event, std::make_pair((*i)->getDeltaVariableName(), (*i)->getDelta()));
         }
         
         dirtyOneAxisControls.clear();
@@ -63,7 +63,7 @@ namespace Input
     void InputTask::processDirtyTwoAxisControls()
     {
         double x, y;
-        double deltaY, deltaY;
+        double deltaX, deltaY;
         
         for(auto i = dirtyTwoAxisControls.begin(); i != dirtyTwoAxisControls.end(); ++i)
         {

@@ -167,7 +167,8 @@ namespace Input
             LOG(FATAL) << "Axis control needs xVar, yVar, xDeltaVar and yDeltaVar attributes";
         }
         
-        controller->registerTwoAxisControl(axisControl, xVarAttribute->value(), yVarAttribute->value(), xDeltaVarAttribute->value(), yDeltaVarAttribute->value());
+        controller->registerTwoAxisControl(axisControl, xVarAttribute->value(), yVarAttribute->value(), 
+                                           xDeltaVarAttribute->value(), yDeltaVarAttribute->value());
         idTwoAxisControlMapping[axisControl] = controller;
     }
 

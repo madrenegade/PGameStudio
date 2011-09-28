@@ -125,6 +125,10 @@ namespace Scripting
         {
             LOG(FATAL) << "setVariable does not support type " << data.type().name();
         }
-
+    }
+    
+    void ScriptManager::runGarbageCollection()
+    {
+        engine->runGarbageCollection();
     }
 }

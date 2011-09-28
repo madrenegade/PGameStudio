@@ -15,8 +15,12 @@ namespace Scripting
     {
 
         LuaScript::LuaScript(lua_State* state, const Utilities::IO::File& file, const char* name)
-        : state(state), file(file), name(name)
+        : state(state), name(name)
         {
+            int status = luaL_loadbuffer(state, file.getData(), file.getSize(), name);
+            logErrors(status);
+            
+            lua_setglobal(state, name);
         }
 
         LuaScript::~LuaScript()
@@ -25,12 +29,8 @@ namespace Scripting
         
         void LuaScript::run()
         {
-            int status = luaL_loadbuffer(state, file.getData(), file.getSize(), name.c_str());
-
-            if (status == 0)
-            {
-                status = lua_pcall(state, 0, LUA_MULTRET, 0);
-            }
+            lua_getglobal(state, name.c_str());
+            int status = lua_pcall(state, 0, 0, 0);
 
             logErrors(status);
         }

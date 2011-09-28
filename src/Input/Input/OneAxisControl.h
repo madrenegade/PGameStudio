@@ -16,7 +16,7 @@ namespace Input
     class OneAxisControl
     {
     public:
-        OneAxisControl(const char* const var);
+        OneAxisControl(const char* const var, const char* const deltaVar);
         ~OneAxisControl();
         
         /**
@@ -36,9 +36,11 @@ namespace Input
         void setState(double x);
         
         const char* const getVariableName() const;
+        const char* const getDeltaVariableName() const;
         
     private:
         String var;
+        String deltaVar;
         
         double state;
         double delta;

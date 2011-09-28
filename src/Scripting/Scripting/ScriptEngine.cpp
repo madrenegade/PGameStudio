@@ -16,4 +16,9 @@ namespace Scripting
     ScriptEngine::~ScriptEngine()
     {
     }
+    
+    void ScriptEngine::runGarbageCollection()
+    {
+        
+    }
 }

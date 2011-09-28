@@ -42,6 +42,8 @@ namespace Scripting
             virtual const char* getExtension() const;
 
             virtual boost::shared_ptr<Script> load(const Utilities::IO::File& file, const char* name);
+            
+            virtual void runGarbageCollection();
 
             virtual boost::shared_ptr<Extractor> createExtractor(AnyVector& params) const;
 
@@ -70,6 +72,8 @@ namespace Scripting
 
             typedef boost::shared_ptr<Wrapper> WrapperPtr;
             std::vector<WrapperPtr, Utilities::Memory::STLAllocator<WrapperPtr> > wrappers;
+            
+            unsigned int frame;
         };
     }
 }

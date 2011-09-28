@@ -8,6 +8,7 @@
 #include "Scripting/Lua/Engine.h"
 #include "Scripting/Lua/Extractor.h"
 #include "Scripting/Lua/LuaScript.h"
+#include "Scripting/Lua/Allocator.h"
 
 #include "Utilities/IO/File.h"
 #include "Utilities/Memory/MemoryManager.h"
@@ -37,9 +38,12 @@ namespace Scripting
 
         Engine::Engine(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
                        Utilities::Memory::pool_id poolID)
-        : memory(memory), pool(poolID)
+        : memory(memory), pool(poolID), frame(0)
         {
-            state.reset(lua_open(), LuaStateDeleter());
+            Allocator::memory = memory;
+            Allocator::pool = poolID;
+            
+            state.reset(lua_newstate(Allocator::allocate, 0), LuaStateDeleter());
 
             if (!state)
             {
@@ -68,6 +72,11 @@ namespace Scripting
             boost::shared_ptr<Script> script = memory->construct(LuaScript(state.get(), file, name), pool);
 
             return script;
+        }
+        
+        void Engine::runGarbageCollection()
+        {
+            //lua_gc(state.get(), LUA_GCCOLLECT, 0);
         }
 
         boost::shared_ptr<Scripting::Extractor> Engine::createExtractor(AnyVector& params) const

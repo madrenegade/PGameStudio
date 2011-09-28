@@ -33,16 +33,17 @@ namespace Input
         buttons[keysym].reset(new Button(var));
     }
 
-    void Controller::registerOneAxisControl(const unsigned int controlID, const char* const var)
+    void Controller::registerOneAxisControl(const unsigned int controlID, const char* const var, const char* const deltaVar)
     {
         // TODO: check that controlID is not already registered
-        oneAxisControls[controlID].reset(new OneAxisControl(var));
+        oneAxisControls[controlID].reset(new OneAxisControl(var, deltaVar));
     }
 
-    void Controller::registerTwoAxisControl(const unsigned int controlID, const char* const xVar, const char* const yVar)
+    void Controller::registerTwoAxisControl(const unsigned int controlID, const char* const xVar, const char* const yVar,
+                                            const char* const xDeltaVar, const char* const yDeltaVar)
     {
         // TODO: check that controlID is not already registered
-        twoAxisControls[controlID].reset(new TwoAxisControl(xVar, yVar));
+        twoAxisControls[controlID].reset(new TwoAxisControl(xVar, yVar, xDeltaVar, yDeltaVar));
     }
 
     Button* Controller::getButtonFor(const unsigned int keysym)
@@ -54,7 +55,7 @@ namespace Input
     {
         return oneAxisControls[id].get();
     }
-    
+
     TwoAxisControl* Controller::getTwoAxisControl(const unsigned int id)
     {
         return twoAxisControls[id].get();
