@@ -14,8 +14,9 @@ namespace Input
 {
 
     InputTask::InputTask(Core::Events::EventManager* eventManager,
-        std::vector<Button*, Utilities::Memory::STLAllocator<Button*>>& dirtyButtons)
-    : eventManager(eventManager), dirtyButtons(dirtyButtons)
+                         const Core::Events::EventID& event,
+                         std::vector<Button*, Utilities::Memory::STLAllocator<Button* >> &dirtyButtons)
+    : eventManager(eventManager), event(event), dirtyButtons(dirtyButtons)
     {
     }
 
@@ -28,14 +29,14 @@ namespace Input
         processDirtyButtons();
         return 0;
     }
-    
+
     void InputTask::processDirtyButtons()
     {
-        for(auto i = dirtyButtons.begin(); i != dirtyButtons.end(); ++i)
+        for (auto i = dirtyButtons.begin(); i != dirtyButtons.end(); ++i)
         {
-            eventManager->pushEvent((*i)->getEvent(), (*i)->isPressed());
+            eventManager->pushEvent(event, std::make_pair((*i)->getVariableName(), (*i)->isPressed()));
         }
-        
+
         dirtyButtons.clear();
     }
 }

@@ -45,6 +45,7 @@ namespace Input
 
     void SystemScene::initialize()
     {
+        setScriptVar = eventManager->getEventID("SET_SCRIPT_VAR");
         // register input event handlers
         quit = eventManager->getEventID("QUIT");
 
@@ -79,53 +80,57 @@ namespace Input
             XmlReader::Node* firstKeyNode = controlsNode->first_node("key");
             for (XmlReader::Node* keyNode = firstKeyNode; keyNode; keyNode = keyNode->next_sibling("key"))
             {
-                const String event(keyNode->first_attribute("event")->value());
-                const Core::Events::EventID eventID = eventManager->getEventID(event.c_str());
-                
                 const String keyName(keyNode->first_attribute("name")->value());
                 const unsigned int keysym = platformManager->getKeysym(keyName.c_str());
-
-                controller->registerButton(keysym, eventID);
+                
+                XmlReader::Attribute* varAttribute = keyNode->first_attribute("var");
+                
+                if (varAttribute)
+                {
+                    controller->registerButton(keysym, varAttribute->value());
+                }
+                else
+                {
+                    LOG(FATAL) << "Control '" << keyName << "' must have var attribute";
+                }
 
                 // TODO: check that key is not already bind to another controller
                 keysymControllerMapping[keysym] = controller.get();
             }
-
-            // TODO: read other controls
         }
     }
 
     tbb::task* SystemScene::getTask(tbb::task* parent)
     {
-        return new(parent->allocate_child()) InputTask(eventManager.get(), dirtyButtons);
+        return new(parent->allocate_child()) InputTask(eventManager.get(), setScriptVar, dirtyButtons);
     }
 
     void SystemScene::onKeyPressed(const Core::Events::EventID& event, const boost::any& data)
     {
         const unsigned int keysym = boost::any_cast<unsigned int>(data);
-        
+
         updateButton(keysym, true);
     }
 
     void SystemScene::onKeyReleased(const Core::Events::EventID& event, const boost::any& data)
     {
         const unsigned int keysym = boost::any_cast<unsigned int>(data);
-        
+
         updateButton(keysym, false);
     }
-    
+
     void SystemScene::updateButton(unsigned int keysym, bool state)
     {
-        if(keysymControllerMapping.find(keysym) == keysymControllerMapping.end())
+        if (keysymControllerMapping.find(keysym) == keysymControllerMapping.end())
         {
             return;
         }
-        
+
         Controller* controller = keysymControllerMapping[keysym];
-        
+
         Button* button = controller->getButtonFor(keysym);
         button->setState(state);
-        
+
         dirtyButtons.push_back(button);
     }
 }

@@ -25,6 +25,7 @@ namespace Utilities
         public:
             typedef rapidxml::xml_document<> Document;
             typedef rapidxml::xml_node<> Node;
+            typedef rapidxml::xml_attribute<> Attribute;
             
             XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory, const File& file);
             ~XmlReader();

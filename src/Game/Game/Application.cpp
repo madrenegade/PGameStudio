@@ -215,21 +215,24 @@ namespace Game
             platformManager, fileSystem, properties);
         properties->set("SCRIPT_MANAGER", scriptManager.get());
         
-        Core::Events::EventID id = eventManager->registerEvent("RUN_SCRIPT");
-        eventManager->registerEventHandler(id, boost::bind(&Scripting::ScriptManager::runScript, scriptManager.get(), _1, _2));
-
+        Core::Events::EventID runScript = eventManager->registerEvent("RUN_SCRIPT");
+        eventManager->registerEventHandler(runScript, boost::bind(&Scripting::ScriptManager::runScript, scriptManager.get(), _1, _2));
+        
+        Core::Events::EventID setVar = eventManager->registerEvent("SET_SCRIPT_VAR");
+        eventManager->registerEventHandler(setVar, boost::bind(&Scripting::ScriptManager::setVariable, scriptManager.get(), _1, _2));
+        
         registerFunctionsForScripting();
     }
 
     void Application::registerFunctionsForScripting()
     {
+        boost::function<long (const char*)> registerEvent = boost::bind(&EventManager::registerEvent, eventManager.get(), _1);
         boost::function<long (const char*)> getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
-        boost::function<void (long)> pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, 0);
-        boost::function<void (long, const char* data)> pushEvent2 = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, _2);
+        boost::function<void (long, const char* data)> pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, _2);
         
+        scriptManager->registerFunction("registerEvent", registerEvent);
         scriptManager->registerFunction("getEventID", getEventID);
         scriptManager->registerFunction("pushEvent", pushEvent);
-        scriptManager->registerFunction("pushEvent", pushEvent2);
 
         boost::function<void (const char*) > loadScene = boost::bind(&Core::SceneManager::loadScene, sceneManager.get(), _1);
         boost::function<void (const char*) > switchScene = boost::bind(&Core::SceneManager::switchScene, sceneManager.get(), _1);

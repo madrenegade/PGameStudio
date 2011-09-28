@@ -21,7 +21,7 @@ namespace Input
         
         const String& getID() const;
         
-        void registerButton(const unsigned int keysym, const Core::Events::EventID& event);
+        void registerButton(const unsigned int keysym, const char* const var);
         
         Button* getButtonFor(const unsigned int keysym);
         

@@ -24,10 +24,10 @@ namespace Input
         return id;
     }
     
-    void Controller::registerButton(const unsigned int keysym, const Core::Events::EventID& event)
+    void Controller::registerButton(const unsigned int keysym, const char* const var)
     {
         // TODO: check that button is not already registered
-        buttons[keysym].reset(new Button(event));
+        buttons[keysym].reset(new Button(var));
     }
     
     Button* Controller::getButtonFor(const unsigned int keysym)

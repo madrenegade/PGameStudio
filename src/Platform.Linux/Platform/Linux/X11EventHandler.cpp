@@ -53,12 +53,15 @@ namespace Platform
                 switch (event.type)
                 {
                     case KeyPress:
-                        LOG(INFO) << XKeysymToString(XLookupKeysym(&event.xkey, 0));
-                        eventManager->pushEvent(keyPressEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, 0)));
+                    {
+                        auto ks = XLookupKeysym(&event.xkey, event.xkey.state);
+                        LOG(INFO) << ks << ": " << XKeysymToString(ks);
+                        eventManager->pushEvent(keyPressEvent, static_cast<unsigned int> (ks));
+                    }
                         break;
 
                     case KeyRelease:
-                        eventManager->pushEvent(keyReleaseEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, 0)));
+                        eventManager->pushEvent(keyReleaseEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, event.xkey.state)));
                         break;
 
                     case ButtonPress:

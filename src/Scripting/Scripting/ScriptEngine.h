@@ -70,8 +70,9 @@ namespace Scripting
         virtual void setReturnValue(const bool& b) = 0;
         virtual void setReturnValue(const long& i) = 0;
         virtual void setReturnValue(const double& d) = 0;
-        
         virtual void setReturnValue(const String& s) = 0;
+        
+        virtual void setVariable(const char* const name, const bool& value) = 0;
 
     protected:
         ScriptEngine();

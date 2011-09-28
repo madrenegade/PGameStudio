@@ -10,8 +10,8 @@
 namespace Input
 {
 
-    Button::Button(const Core::Events::EventID& event)
-    : event(event), m_isPressed(false)
+    Button::Button(const char* const var)
+    : var(var), m_isPressed(false)
     {
     }
 
@@ -29,8 +29,8 @@ namespace Input
         m_isPressed = pressed;
     }
 
-    const Core::Events::EventID& Button::getEvent() const
+    const char* const Button::getVariableName() const
     {
-        return event;
+        return var.c_str();
     }
 }

@@ -42,6 +42,8 @@ namespace Input
         
         static const std::string EXTENSION;
         
+        Core::Events::EventID setScriptVar;
+        
         Core::Events::EventID quit;
         
         Core::Events::EventID keyPressed;

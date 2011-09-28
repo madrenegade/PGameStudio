@@ -23,14 +23,16 @@ namespace Scripting
 {
     namespace Lua
     {
+
         struct LuaStateDeleter
         {
-            void operator()(lua_State* state)
+
+            void operator()(lua_State * state)
             {
                 lua_close(state);
             }
         };
-        
+
         const std::string Engine::EXTENSION(".lua");
 
         Engine::Engine(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
@@ -45,6 +47,9 @@ namespace Scripting
             }
 
             luaL_openlibs(state.get());
+            
+            lua_newtable(state.get());
+            lua_setglobal(state.get(), "var");
         }
 
         Engine::~Engine()
@@ -55,14 +60,14 @@ namespace Scripting
         {
             return EXTENSION.c_str();
         }
-        
+
         boost::shared_ptr<Script> Engine::load(const Utilities::IO::File& file, const char* name)
         {
-           VLOG(2) << "Loading script " << name; 
-           
-           boost::shared_ptr<Script> script = memory->construct(LuaScript(state.get(), file, name), pool);
-           
-           return script;
+            VLOG(2) << "Loading script " << name;
+
+            boost::shared_ptr<Script> script = memory->construct(LuaScript(state.get(), file, name), pool);
+
+            return script;
         }
 
         boost::shared_ptr<Scripting::Extractor> Engine::createExtractor(AnyVector& params) const
@@ -114,6 +119,14 @@ namespace Scripting
         void Engine::setReturnValue(const String& s)
         {
             lua_pushlstring(state.get(), s.c_str(), s.length());
+        }
+        
+        void Engine::setVariable(const char* const name, const bool& value)
+        {
+            lua_getglobal(state.get(), "var");
+            lua_pushstring(state.get(), name);
+            lua_pushboolean(state.get(), value);
+            lua_settable(state.get(), -3);
         }
 
         void Engine::logErrors(int status)

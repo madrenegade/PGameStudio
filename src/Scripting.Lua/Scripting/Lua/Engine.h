@@ -34,9 +34,9 @@ namespace Scripting
         class Engine : public ScriptEngine
         {
         public:
-            Engine(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory, 
+            Engine(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
                    Utilities::Memory::pool_id poolID);
-            
+
             virtual ~Engine();
 
             virtual const char* getExtension() const;
@@ -51,15 +51,16 @@ namespace Scripting
             virtual void setReturnValue(const bool& b);
             virtual void setReturnValue(const long& i);
             virtual void setReturnValue(const double& d);
-
             virtual void setReturnValue(const String& s);
+            
+            virtual void setVariable(const char* const name, const bool& value);
 
         private:
             static const std::string EXTENSION;
-            
+
             boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
             Utilities::Memory::pool_id pool;
-            
+
             std::shared_ptr<lua_State> state;
 
             void logErrors(int status);

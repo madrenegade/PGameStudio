@@ -8,7 +8,7 @@
 #ifndef INPUT_BUTTON_H
 #define	INPUT_BUTTON_H
 
-#include "Core/Events/typedefs.h"
+#include "Utilities/string.h"
 
 namespace Input
 {
@@ -16,7 +16,7 @@ namespace Input
     class Button
     {
     public:
-        Button(const Core::Events::EventID& event);
+        Button(const char* const var);
         ~Button();
         
         /**
@@ -31,10 +31,10 @@ namespace Input
          */
         void setState(bool pressed);
         
-        const Core::Events::EventID& getEvent() const;
+        const char* const getVariableName() const;
         
     private:
-        const Core::Events::EventID event;
+        String var;
         
         bool m_isPressed;
     };

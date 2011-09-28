@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "Utilities/Memory/STLAllocator.h"
+#include "Core/Events/typedefs.h"
 
 namespace Core
 {
@@ -28,7 +29,9 @@ namespace Input
     class InputTask : public tbb::task
     {
     public:
-        InputTask(Core::Events::EventManager* eventManager, std::vector<Button*, Utilities::Memory::STLAllocator<Button*>>& dirtyButtons);
+        InputTask(Core::Events::EventManager* eventManager, 
+                  const Core::Events::EventID& event, 
+                  std::vector<Button*, Utilities::Memory::STLAllocator<Button*>>& dirtyButtons);
         virtual ~InputTask();
         
         virtual tbb::task* execute();
@@ -37,6 +40,7 @@ namespace Input
         void processDirtyButtons();
         
         Core::Events::EventManager* eventManager;
+        const Core::Events::EventID event;
         std::vector<Button*, Utilities::Memory::STLAllocator<Button*>>& dirtyButtons;
     };
 }

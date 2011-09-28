@@ -60,6 +60,8 @@ namespace Scripting
 
         void runScript(const char* name);
         void runScript(const Core::Events::EventID& id, const boost::any& data);
+        
+        void setVariable(const Core::Events::EventID& id, const boost::any& data);
 
         template<typename T>
         void registerFunction(const char* name, const boost::function<T>& fn)

@@ -93,4 +93,12 @@ namespace Scripting
         const char* scriptName = boost::any_cast<const char*>(data);
         runScript(scriptName);
     }
+    
+    void ScriptManager::setVariable(const Core::Events::EventID& id, const boost::any& data)
+    {
+        typedef std::pair<const char*, bool> DataType;
+        
+        const DataType var = boost::any_cast<DataType>(data);
+        engine->setVariable(var.first, var.second);
+    }
 }
