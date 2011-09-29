@@ -1,8 +1,6 @@
 Build instructions
 ------------------
-./clean.sh
-cd build
-cmake -G "CodeBlocks - Unix Makefiles" ..
+./gen_cb_debug.sh
 
 Code coverage
 -------------
