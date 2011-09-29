@@ -32,12 +32,12 @@ namespace Utilities
             return deallocations;
         }
 
-        void MemoryTrackerMock::trackAllocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
+        void MemoryTrackerMock::trackAllocation(const_byte_pointer /*ptr*/, size_t /*bytes*/, const std::type_info& /*type*/)
         {
             ++allocations;
         }
 
-        void MemoryTrackerMock::trackDeallocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
+        void MemoryTrackerMock::trackDeallocation(const_byte_pointer /*ptr*/, size_t /*bytes*/, const std::type_info& /*type*/)
         {
             ++deallocations;
         }

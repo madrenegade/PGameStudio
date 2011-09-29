@@ -15,7 +15,7 @@ namespace Utilities
     namespace Memory
     {
 
-        DefaultPageManager::DefaultPageManager(size_t maxSize, size_t pageSize)
+        DefaultPageManager::DefaultPageManager(const size_t maxSize, const size_t pageSize)
         : PageManager(maxSize, pageSize), pageCount(0), dirty(false), lastPageSearchResult(0)
         {
             pages.reserve(MAX_PAGE_COUNT);
@@ -74,14 +74,14 @@ namespace Utilities
             throw std::logic_error("Pointer not found in any page");
         }
         
-        byte_pointer DefaultPageManager::getPage(size_t i) const
+        byte_pointer DefaultPageManager::getPage(const size_t i) const
         {
             return pages[i].get();
         }
 
         byte_pointer DefaultPageManager::allocatePage()
         {
-            Page page(new byte[PAGE_SIZE]);
+            const Page page(new byte[PAGE_SIZE]);
             
             pages.push_back(page);
             

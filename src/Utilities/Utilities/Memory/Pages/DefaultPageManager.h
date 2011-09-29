@@ -18,13 +18,13 @@ namespace Utilities
         class DefaultPageManager : public PageManager
         {
         public:
-            DefaultPageManager(size_t maxSize, size_t pageSize);
+            DefaultPageManager(const size_t maxSize, const size_t pageSize);
             
             virtual size_t getPagesInUse() const;
             
             virtual byte_pointer getPageFor(const_byte_pointer ptr);
             
-            virtual byte_pointer getPage(size_t i) const;
+            virtual byte_pointer getPage(const size_t i) const;
            
         protected:
             virtual byte_pointer allocatePage();

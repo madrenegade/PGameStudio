@@ -24,7 +24,7 @@ namespace Utilities
     namespace Memory
     {
 
-        SmallObjectAllocator::SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize)
+        SmallObjectAllocator::SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize)
         : Allocator(pageManager, blockSize), USABLE_BLOCKS_PER_PAGE(pageManager->getPageSize() / blockSize - 1)
         {
             // the tail block can handle this amount of blocks
@@ -47,7 +47,7 @@ namespace Utilities
             }
         }
 
-        byte_pointer SmallObjectAllocator::allocate(size_t bytes)
+        byte_pointer SmallObjectAllocator::allocate(const size_t bytes)
         {
 #ifdef DEBUG
             if (bytes > BLOCK_SIZE)
@@ -73,7 +73,7 @@ namespace Utilities
 
         byte_pointer SmallObjectAllocator::allocateBlockIn(byte_pointer startOfPage)
         {
-            int firstFreeBlock = findFreeBlockIn(startOfPage);
+            const int firstFreeBlock = findFreeBlockIn(startOfPage);
 
             if (firstFreeBlock != -1)
             {
@@ -85,7 +85,7 @@ namespace Utilities
             return 0;
         }
 
-        void SmallObjectAllocator::deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
+        void SmallObjectAllocator::deallocate(const_byte_pointer ptr, const size_t /*sizeOfOneObject*/, const size_t /*numObjects*/)
         {
             const byte_pointer startOfPage = pageManager->getPageFor(ptr);
 
@@ -112,7 +112,8 @@ namespace Utilities
 
             byte_pointer tail = getTailFor(page);
             
-            fillMemory(tail, BLOCK_SIZE - 2, 0xFF);
+            const unsigned char ONE = 0xFF;
+            fillMemory(tail, BLOCK_SIZE - 2, ONE);
             
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(page);
             *amountOfFreeBlocks = USABLE_BLOCKS_PER_PAGE;
@@ -134,23 +135,24 @@ namespace Utilities
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
             
-            int realBlock = 0;
+            unsigned int realBlock = 0;
+            unsigned int zeroBitsFromRight = 0;
 
             // split tail block in parts of 8 bytes
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
-                int c = countZeroBitsFromRight(tailParts[i]);
+                zeroBitsFromRight = countZeroBitsFromRight(tailParts[i]);
                 
-                realBlock = (i * ULONG_BITS) + c;
+                realBlock = (i * ULONG_BITS) + zeroBitsFromRight;
                 
-                if (realBlock > USABLE_BLOCKS_PER_PAGE || c == ULONG_BITS) continue;
+                if (realBlock > USABLE_BLOCKS_PER_PAGE || zeroBitsFromRight == ULONG_BITS) continue;
                 else return realBlock;
             }
 
             return -1;
         }
 
-        void SmallObjectAllocator::markBlockAsUsed(unsigned int block, byte_pointer startOfPage)
+        void SmallObjectAllocator::markBlockAsUsed(const unsigned int block, byte_pointer startOfPage)
         {
             // fetch amount of free blocks
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(startOfPage);

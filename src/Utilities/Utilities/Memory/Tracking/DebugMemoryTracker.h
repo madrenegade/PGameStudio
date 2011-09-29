@@ -22,8 +22,8 @@ namespace Utilities
              virtual MemoryDump getMemoryDump() const;
              
         protected:
-            virtual void trackAllocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type);
-            virtual void trackDeallocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type);
+            virtual void trackAllocation(const_byte_pointer ptr, const size_t bytes, const std::type_info& type);
+            virtual void trackDeallocation(const_byte_pointer ptr, const size_t bytes, const std::type_info& type);
             
         private:
             typedef std::unordered_map<const_byte_pointer, AllocationInfo> AllocationMap;

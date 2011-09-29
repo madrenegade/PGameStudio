@@ -22,9 +22,9 @@ namespace Utilities
         boost::shared_ptr<FileSystem> FileSystemFactory::create(const MemoryManager::Ptr& memory,
                                                                 const boost::shared_ptr<PropertyManager>& properties)
         {
-            FileSystemBackend backend = valueOf<FileSystemBackend>(properties->get<unsigned char>("FileSystem.backend"));
+            const FileSystemBackend backend = valueOf<FileSystemBackend>(properties->get<unsigned char>("FileSystem.backend"));
             
-            pool_id pool = memory->registerMemoryPool(createMemoryPool(properties));
+            const pool_id pool = memory->registerMemoryPool(createMemoryPool(properties));
             
             boost::shared_ptr<FileSystem> fileSystem;
 

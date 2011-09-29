@@ -17,7 +17,7 @@ namespace Utilities
     namespace Memory
     {
 
-        void DebugMemoryTracker::trackAllocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
+        void DebugMemoryTracker::trackAllocation(const_byte_pointer ptr, const size_t bytes, const std::type_info& type)
         {
             if(allocations.find(ptr) != allocations.end())
             {
@@ -33,16 +33,15 @@ namespace Utilities
             allocations[ptr] = allocationInfo;
         }
 
-        void DebugMemoryTracker::trackDeallocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
+        void DebugMemoryTracker::trackDeallocation(const_byte_pointer ptr, const size_t bytes, const std::type_info& type)
         {
             if(allocations.find(ptr) == allocations.end())
             {
                 throw AllocationException("Deallocate failed because pointer is not tracked");
             }
             
-            AllocationInfo actual(ptr, bytes, type);
-            
-            AllocationInfo expected(allocations[ptr]);
+            const AllocationInfo actual(ptr, bytes, type);
+            const AllocationInfo expected(allocations[ptr]);
             
             if(expected.getSize() != actual.getSize())
             {
@@ -61,7 +60,16 @@ namespace Utilities
 
         MemoryTracker::MemoryDump DebugMemoryTracker::getMemoryDump() const
         {
+            MemoryDump dump(allocations.size());
             
+            unsigned int index = 0;
+            for(auto i = allocations.begin(); i != allocations.end(); ++i)
+            {
+                dump[index] = i->second;
+                ++index;
+            }
+            
+            return dump;
         }
     }
 }

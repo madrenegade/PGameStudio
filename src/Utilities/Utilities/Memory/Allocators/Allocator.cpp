@@ -22,19 +22,19 @@ namespace Utilities
     namespace Memory
     {
 
-        Allocator::Allocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize)
+        Allocator::Allocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize)
         : pageManager(pageManager), memoryUsage(0), BLOCK_SIZE(blockSize)
         {
             if(pageManager->getPageSize() % blockSize != 0)
             {
-                RAW_LOG_ERROR("Page size: %i\nBlock size: %i\nRest: %i", pageManager->getPageSize(), blockSize, pageManager->getPageSize() % blockSize);
+                RAW_LOG_ERROR("Page size: %li\nBlock size: %li\nRest: %li", pageManager->getPageSize(), blockSize, pageManager->getPageSize() % blockSize);
                 
                 throw std::invalid_argument("Page size must be multiple of the block size");
             }
             
             if(blockSize % BITS_PER_BYTE != 0)
             {
-                RAW_LOG_ERROR("Block size: %i\nRest: %i", blockSize, blockSize % BITS_PER_BYTE);
+                RAW_LOG_ERROR("Block size: %li\nRest: %li", blockSize, blockSize % BITS_PER_BYTE);
                 
                 throw std::invalid_argument("Block size must be multiple of BITS_PER_BYTE");
             }

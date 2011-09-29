@@ -35,7 +35,7 @@ namespace Utilities
             const Document* getDocument() const;
 
         private:
-            boost::shared_array<Memory::byte> data;
+            const boost::shared_array<Memory::byte> data;
             boost::shared_ptr<Document> doc;
         };
     }

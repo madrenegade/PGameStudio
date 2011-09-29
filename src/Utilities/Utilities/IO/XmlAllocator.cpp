@@ -23,7 +23,7 @@ namespace Utilities
         {
         }
 
-        void* XmlAllocator::allocate(size_t bytes)
+        void* XmlAllocator::allocate(const size_t bytes)
         {
 #ifdef DEBUG
             void* ptr = memory->rawAllocate<Memory::byte>(bytes, StackTrace());

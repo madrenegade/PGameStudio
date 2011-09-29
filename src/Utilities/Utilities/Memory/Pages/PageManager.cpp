@@ -18,17 +18,17 @@ namespace Utilities
     namespace Memory
     {
 
-        PageManager::Ptr PageManager::create(size_t maxSize, size_t pageSize)
+        PageManager::Ptr PageManager::create(const size_t maxSize, const size_t pageSize)
         {
             return Ptr(new DefaultPageManager(maxSize, pageSize));
         }
 
-        PageManager::PageManager(size_t maxSize, size_t pageSize)
+        PageManager::PageManager(const size_t maxSize, const size_t pageSize)
         : MAX_SIZE(maxSize), PAGE_SIZE(pageSize), MAX_PAGE_COUNT(maxSize / pageSize)
         {
             if (maxSize % pageSize != 0)
             {
-                RAW_LOG_ERROR("Pool size: %i\nPage size: %i\nRest: %i", maxSize, pageSize, maxSize % pageSize);
+                RAW_LOG_ERROR("Pool size: %li\nPage size: %li\nRest: %li", maxSize, pageSize, maxSize % pageSize);
 
                 throw std::invalid_argument("Pool size must be multiple of the page size");
             }

@@ -23,7 +23,7 @@ namespace Utilities
         public:
             typedef boost::shared_ptr<PageManager> Ptr;
             
-            static Ptr create(size_t maxSize, size_t pageSize);
+            static Ptr create(const size_t maxSize, const size_t pageSize);
             
             size_t getPageSize() const;
             size_t getUnusedPages() const;
@@ -31,14 +31,14 @@ namespace Utilities
             byte_pointer requestNewPage();
             
             virtual byte_pointer getPageFor(const_byte_pointer ptr) = 0;
-            virtual byte_pointer getPage(size_t i) const = 0;
+            virtual byte_pointer getPage(const size_t i) const = 0;
             
             virtual size_t getPagesInUse() const = 0;
             
             virtual ~PageManager();
             
         protected:
-            PageManager(size_t maxSize, size_t pageSize);
+            PageManager(const size_t maxSize, const size_t pageSize);
             
             virtual byte_pointer allocatePage() = 0;
             

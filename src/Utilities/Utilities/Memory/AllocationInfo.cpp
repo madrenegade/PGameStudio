@@ -12,7 +12,7 @@ namespace Utilities
             
         }
         
-        AllocationInfo::AllocationInfo(const_byte_pointer ptr, size_t bytes, const std::type_info& type)
+        AllocationInfo::AllocationInfo(const_byte_pointer ptr, const size_t bytes, const std::type_info& type)
         : ptr(ptr), bytes(bytes), type(type.name())
         {
             

@@ -28,14 +28,14 @@ namespace Utilities
 
             if (!dump.empty())
             {
-                RAW_LOG_WARNING("Memory leaks detected: %i bytes in %i blocks", memoryUsage, dump.size());
+                RAW_LOG_WARNING("Memory leaks detected: %li bytes in %li blocks", memoryUsage, dump.size());
 
                 for (unsigned int i = 0; i < dump.size(); ++i)
                 {
                     const AllocationInfo& allocationInfo = dump.at(i);
 
-                    RAW_VLOG(2, "Block information:\nAddress: %i\nSize: %i\nType: %s",
-                        reinterpret_cast<long> (allocationInfo.getPointer()),
+                    RAW_VLOG(2, "Block information:\nAddress: %p\nSize: %li\nType: %s",
+                        allocationInfo.getPointer(),
                         allocationInfo.getSize(), allocationInfo.getType().c_str());
                 }
             }
@@ -51,8 +51,8 @@ namespace Utilities
             {
                 const AllocationInfo& allocationInfo = dump.at(i);
 
-                RAW_VLOG(1, "Block information:\nAddress: %i\nSize: %i\nType: %s",
-                    reinterpret_cast<long> (allocationInfo.getPointer()),
+                RAW_VLOG(1, "Block information:\nAddress: %p\nSize: %li\nType: %s",
+                    allocationInfo.getPointer(),
                     allocationInfo.getSize(), allocationInfo.getType().c_str());
             }
         }

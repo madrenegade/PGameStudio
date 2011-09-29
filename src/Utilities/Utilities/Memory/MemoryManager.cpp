@@ -50,7 +50,7 @@ namespace Utilities
             assertPoolIsUnique(pool);
 #endif
 
-            pool_id id = latestPoolID.fetch_and_add(1);
+            const pool_id id = latestPoolID.fetch_and_add(1);
 
             {
                 PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
@@ -61,7 +61,7 @@ namespace Utilities
             return id;
         }
 
-        void MemoryManager::unregisterMemoryPool(pool_id poolID)
+        void MemoryManager::unregisterMemoryPool(const pool_id poolID)
         {
             PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
 

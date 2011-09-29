@@ -25,8 +25,8 @@ namespace Utilities
         class Allocator
         {
         public:
-            virtual byte_pointer allocate(size_t bytes) = 0;
-            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects) = 0;
+            virtual byte_pointer allocate(const size_t bytes) = 0;
+            virtual void deallocate(const_byte_pointer ptr, const size_t sizeOfOneObject, const size_t numObjects) = 0;
             
             bool contains(const_byte_pointer ptr) const;
 
@@ -34,9 +34,9 @@ namespace Utilities
             virtual size_t getFreeMemory() const = 0;
 
         protected:
-            Allocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
+            Allocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize);
             
-            boost::shared_ptr<PageManager> pageManager;
+            const boost::shared_ptr<PageManager> pageManager;
             
             size_t memoryUsage;
             

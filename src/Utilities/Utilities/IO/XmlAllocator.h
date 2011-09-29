@@ -26,7 +26,7 @@ namespace Utilities
         class XmlAllocator
         {
         public:
-            static void* allocate(size_t bytes);
+            static void* allocate(const size_t bytes);
             static void deallocate(void* ptr);
 
             static boost::shared_ptr<Memory::MemoryManager> memory;

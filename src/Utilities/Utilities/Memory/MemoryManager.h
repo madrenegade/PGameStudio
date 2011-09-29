@@ -85,7 +85,7 @@ namespace Utilities
              * if the memory manager holds the last reference the pool will be deleted
              * @param poolID
              */
-            void unregisterMemoryPool(pool_id poolID);
+            void unregisterMemoryPool(const pool_id poolID);
 
             /**
              * Get the amount of memory in bytes used at the moment.
@@ -103,7 +103,7 @@ namespace Utilities
              * @return a pointer to the constructed object
              */
             template<typename T, typename Deleter>
-            boost::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, pool_id poolID = 0
+            boost::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, const pool_id poolID = 0
 #ifdef DEBUG
                 , const StackTrace& stacktrace = StackTrace()
 #endif
@@ -118,8 +118,8 @@ namespace Utilities
 
                 // combine deleter with deallocation function
                 typedef boost::function<void (T*)> MainDeleter;
-                MainDeleter mainDeleter = boost::bind(&MemoryManager::deallocate<T>, this, _1, 1);
-                ComposedDeleter<T, Deleter, MainDeleter> deleter(preDeleter, mainDeleter);
+                const MainDeleter mainDeleter = boost::bind(&MemoryManager::deallocate<T>, this, _1, 1);
+                const ComposedDeleter<T, Deleter, MainDeleter> deleter(preDeleter, mainDeleter);
 
                 boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID)) T(obj), deleter);
                 return ptr;
@@ -134,7 +134,7 @@ namespace Utilities
              * @return a pointer to the constructed object
              */
             template<typename T>
-            boost::shared_ptr<T> construct(const T& obj, pool_id poolID = 0
+            boost::shared_ptr<T> construct(const T& obj, const pool_id poolID = 0
 #ifdef DEBUG
                 , const StackTrace& stacktrace = StackTrace()
 #endif
@@ -153,7 +153,7 @@ namespace Utilities
             }
 
             template<typename T, size_t numObjects>
-            boost::shared_array<T> allocate(pool_id poolID = 0
+            boost::shared_array<T> allocate(const pool_id poolID = 0
 #ifdef DEBUG
                 , const StackTrace& stacktrace = StackTrace()
 #endif
@@ -174,7 +174,7 @@ namespace Utilities
             }
 
             template<typename T>
-            boost::shared_array<T> allocate(size_t numObjects, pool_id poolID = 0
+            boost::shared_array<T> allocate(const size_t numObjects, const pool_id poolID = 0
 #ifdef DEBUG
                 , const StackTrace& stacktrace = StackTrace()
 #endif
@@ -206,11 +206,11 @@ namespace Utilities
              * @return 
              */
             template<typename T>
-            T* rawAllocate(size_t numObjects
+            T* rawAllocate(const size_t numObjects
 #ifdef DEBUG
                 , const StackTrace& stacktrace
 #endif
-                , pool_id poolID = 0)
+                , const pool_id poolID = 0)
             {
 #ifdef DEBUG
                 {
@@ -223,7 +223,7 @@ namespace Utilities
             }
 
             template<typename T>
-            void rawDeallocate(const T* ptr, size_t n)
+            void rawDeallocate(const T* ptr, const size_t n)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
@@ -287,7 +287,7 @@ namespace Utilities
              * @return a pointer to the beginning of the allocated space
              */
             template<typename T>
-            T* internalAllocate(size_t numObjects, pool_id poolID = 0)
+            T* internalAllocate(const size_t numObjects, const pool_id poolID = 0)
             {
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
@@ -333,7 +333,7 @@ namespace Utilities
              * @param n - the amount of objects to determine how much space must be deallocated
              */
             template<typename T>
-            void deallocate(const T* ptr, size_t n)
+            void deallocate(const T* ptr, const size_t n)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 

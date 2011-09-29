@@ -90,13 +90,13 @@ namespace Utilities
 
             const size_t neededBlocks = std::ceil(static_cast<double> (bytes) / static_cast<double> (BLOCK_SIZE));
 
-            RAW_VLOG(4, "Needing %i blocks for %i bytes with blockSize=%i", neededBlocks, bytes, BLOCK_SIZE);
+            RAW_VLOG(4, "Needing %li blocks for %li bytes with blockSize=%li", neededBlocks, bytes, BLOCK_SIZE);
             return allocateBlocksIn(startOfPage, neededBlocks);
         }
 
-        byte_pointer MediumObjectAllocator::allocateBlocksIn(byte_pointer startOfPage, size_t neededBlocks)
+        byte_pointer MediumObjectAllocator::allocateBlocksIn(byte_pointer startOfPage, const size_t neededBlocks)
         {
-            int startOfFreeBlocks = findFreeBlocksIn(startOfPage, neededBlocks);
+            const int startOfFreeBlocks = findFreeBlocksIn(startOfPage, neededBlocks);
 
             if (startOfFreeBlocks != -1)
             {
@@ -112,7 +112,7 @@ namespace Utilities
         {
             const byte_pointer startOfPage = pageManager->getPageFor(ptr);
 
-            size_t blocksToDeallocate = std::ceil(static_cast<double> (sizeOfOneObject * numObjects) / static_cast<double> (BLOCK_SIZE));
+            const size_t blocksToDeallocate = std::ceil(static_cast<double> (sizeOfOneObject * numObjects) / static_cast<double> (BLOCK_SIZE));
 
             markBlocksAsFree((ptr - startOfPage) / BLOCK_SIZE, startOfPage, blocksToDeallocate);
         }
@@ -131,7 +131,7 @@ namespace Utilities
             return freeMemory;
         }
 
-        int MediumObjectAllocator::findFreeBlocksIn(byte_pointer page, size_t neededBlocks) const
+        int MediumObjectAllocator::findFreeBlocksIn(byte_pointer page, const size_t neededBlocks) const
         {
             byte_pointer tail = getTailFor(page);
 
@@ -141,15 +141,18 @@ namespace Utilities
             blockRangeBitmap >>= (ULONG_BITS - neededBlocks);
 
             const size_t possibleLeftShifts = ULONG_BITS - neededBlocks;
+            
+            unsigned long tailPart = 0;
+            unsigned long bitmap = 0;
 
             // split tail block in parts of 8 bytes
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
-                unsigned long tailPart = tailParts[i];
+                tailPart = tailParts[i];
 
                 for (unsigned int j = 0; j <= possibleLeftShifts; ++j)
                 {
-                    unsigned long bitmap = blockRangeBitmap << j;
+                    bitmap = blockRangeBitmap << j;
 
                     if ((tailPart & bitmap) == bitmap)
                     {
@@ -171,7 +174,7 @@ namespace Utilities
             return reinterpret_cast<unsigned short*> (page + pageManager->getPageSize() - 4);
         }
 
-        void MediumObjectAllocator::markBlocksAsUsed(unsigned int block, byte_pointer startOfPage, size_t numBlocks)
+        void MediumObjectAllocator::markBlocksAsUsed(const unsigned int block, byte_pointer startOfPage, const size_t numBlocks)
         {
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(startOfPage);
 
@@ -260,7 +263,8 @@ namespace Utilities
             byte_pointer tail = getTailFor(page);
 
             // set all bits to 1
-            fillMemory(tail, BLOCK_SIZE - 4, 0xFF);
+            const unsigned char ONE = 0xFF;
+            fillMemory(tail, BLOCK_SIZE - 4, ONE);
 
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(page);
             *amountOfFreeBlocks = USABLE_BLOCKS_PER_PAGE;
@@ -280,18 +284,21 @@ namespace Utilities
             
             unsigned short* largestBlockRange = getPointerToLargestFreeBlockRangeFor(page);
 
-            int totalShifts = 0;
+            unsigned int totalShifts = 0;
             
             unsigned short currentMax = 0;
             unsigned short temp = 0;
             
             int zeroBits = 0;
             
+            unsigned long tailPart = 0;
+            unsigned int j = 0;
+            
             for (unsigned int i = 0; i  < std::ceil(static_cast<double>(USABLE_BLOCKS_PER_PAGE) / static_cast<double>(ULONG_BITS)); ++i)
             {
-                unsigned long tailPart = tailParts[i];
+                tailPart = tailParts[i];
 
-                int j = 0;
+                j = 0;
                 
                 while(totalShifts < USABLE_BLOCKS_PER_PAGE && j < ULONG_BITS)
                 {

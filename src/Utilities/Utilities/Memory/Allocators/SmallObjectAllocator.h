@@ -25,10 +25,10 @@ namespace Utilities
         class SmallObjectAllocator : public Allocator
         {
         public:
-            SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize);
+            SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize);
             
-            virtual byte_pointer allocate(size_t bytes);
-            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
+            virtual byte_pointer allocate(const size_t bytes);
+            virtual void deallocate(const_byte_pointer ptr, const size_t sizeOfOneObject, const size_t numObjects);
             
             virtual size_t getFreeMemory() const;
             
@@ -55,8 +55,8 @@ namespace Utilities
              */
             int findFreeBlockIn(byte_pointer page) const;
             
-            void markBlockAsUsed(unsigned int block, byte_pointer startOfPage);
-            void markBlockAsFree(unsigned int block, byte_pointer startOfPage);
+            void markBlockAsUsed(const unsigned int block, byte_pointer startOfPage);
+            void markBlockAsFree(const unsigned int block, byte_pointer startOfPage);
             
             byte_pointer allocateBlockIn(byte_pointer startOfPage);
             

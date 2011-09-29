@@ -12,30 +12,30 @@ namespace Utilities
 {
     namespace Memory
     {
-        AllocatorMock::AllocatorMock(size_t maxSize, size_t pageSize, size_t blockSize)
+        AllocatorMock::AllocatorMock(const size_t maxSize, const size_t pageSize, const size_t blockSize)
         : Allocator(PageManager::create(maxSize, pageSize), blockSize)
         {
             
         }
 
-        byte_pointer AllocatorMock::allocate(size_t bytes)
+        byte_pointer AllocatorMock::allocate(const size_t /*bytes*/)
         {
             return pageManager->requestNewPage();
         }
 
-        void AllocatorMock::deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
+        void AllocatorMock::deallocate(const_byte_pointer /*ptr*/, const size_t /*sizeOfOneObject*/, const size_t /*numObjects*/)
         {
 
         }
 
         size_t AllocatorMock::getFreeMemory() const
         {
-
+            return 0;
         }
 
         size_t AllocatorMock::getLargestFreeArea() const
         {
-
+            return 0;
         }
     }
 }
