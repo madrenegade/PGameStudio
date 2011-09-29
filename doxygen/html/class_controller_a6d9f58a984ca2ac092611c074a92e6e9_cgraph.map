@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_scene_exporter.html#a2bfa2f46be697779d6a1eb5809d6d89d" title="SceneExporter::createEmptyScene" alt="" coords="253,5,480,35"/>
-<area shape="rect" id="node5" href="$class_controller.html#ab647f5edce6863cf9f64c94ec145e607" title="Controller::sceneChanged" alt="" coords="280,59,453,88"/>
-<area shape="rect" id="node7" href="$class_new_scene_wizard.html#a40b24abbcced57e963d77c71d6d0e2a7" title="NewSceneWizard::selectedSystems" alt="" coords="249,112,484,141"/>
-</map>

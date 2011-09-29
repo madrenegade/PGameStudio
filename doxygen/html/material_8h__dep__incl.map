@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$mesh_8h.html" title="mesh.h" alt="" coords="161,83,225,112"/>
-<area shape="rect" id="node5" href="$assetimporter_8cpp.html" title="assetimporter.cpp" alt="" coords="5,160,131,189"/>
-<area shape="rect" id="node14" href="$controller_8cpp.html" title="controller.cpp" alt="" coords="249,83,348,112"/>
-<area shape="rect" id="node16" href="$material_8cpp.html" title="material.cpp" alt="" coords="372,83,465,112"/>
-<area shape="rect" id="node7" href="$mesh_8cpp.html" title="mesh.cpp" alt="" coords="155,160,232,189"/>
-<area shape="rect" id="node9" href="$scenedockwidget_8cpp.html" title="scenedockwidget.cpp" alt="" coords="256,160,403,189"/>
-<area shape="rect" id="node11" href="$sceneexporter_8cpp.html" title="sceneexporter.cpp" alt="" coords="427,160,555,189"/>
-</map>

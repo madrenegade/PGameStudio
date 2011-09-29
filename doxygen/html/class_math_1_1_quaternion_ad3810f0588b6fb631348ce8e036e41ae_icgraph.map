@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_math_1_1_quaternion.html#a603d77e1ecc5ad840977fad166660f8a" title="Math::Quaternion::Normalize" alt="" coords="224,32,413,61"/>
-<area shape="rect" id="node5" href="$class_math_1_1_quaternion.html#a314aaf53d364249db629cd72b0d1d05e" title="Math::Quaternion::FromAxisAngle" alt="" coords="461,5,680,35"/>
-<area shape="rect" id="node7" href="$class_math_1_1_quaternion.html#a12bd7cd0763cc098002f69ccdb207a43" title="Math::Quaternion::ToAxisAngle" alt="" coords="469,59,672,88"/>
-<area shape="rect" id="node9" href="$class_math_1_1_matrix4.html#aa610bddf606d90dc05e2ae97fddd5957" title="Math::Matrix4::CreateRotation" alt="" coords="729,59,927,88"/>
-<area shape="rect" id="node11" href="$class_math_1_1_matrix4.html#a5c45b4feec1fee3b77b8df3ad21594ae" title="Math::Matrix4::CreateTransform" alt="" coords="976,59,1184,88"/>
-</map>

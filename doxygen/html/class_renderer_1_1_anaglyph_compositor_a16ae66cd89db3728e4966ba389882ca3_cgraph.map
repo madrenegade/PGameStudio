@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_renderer_1_1_effect.html#a1c33a6277a01abee3673bb9cc6de5a66" title="Renderer::Effect::deactivate" alt="" coords="391,5,577,35"/>
-<area shape="rect" id="node5" href="$class_renderer_1_1_frame_buffer.html#a5835f0a04b20cc6c81875efe774d9c2b" title="Renderer::FrameBuffer::getColorAttachment" alt="" coords="345,59,623,88"/>
-<area shape="rect" id="node7" href="$class_renderer_1_1_viewport.html#a24d44d49bb3e757b84b2e19333cbf473" title="Renderer::Viewport::getFrameBuffer" alt="" coords="368,112,600,141"/>
-<area shape="rect" id="node9" href="$class_renderer_1_1_texture.html#a590d297d69d70ef3b3156503a09867f6" title="Renderer::Texture::unbind" alt="" coords="397,165,571,195"/>
-</map>

@@ -13,3 +13,5 @@ nbproject
 coverage
 src/MemoryProfiler/MemoryProfiler-build-desktop/
 src/PGSEditor-build-desktop/
+doxygen/html/
+doxygen/doxygen.log

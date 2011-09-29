@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$_scripting_2_scripting_2_system_scene_8h.html" title="Scripting/SystemScene.h" alt="" coords="235,83,405,112"/>
-<area shape="rect" id="node18" href="$_executor_task_8h.html" title="Scripting/ExecutorTask.h" alt="" coords="5,83,173,112"/>
-<area shape="rect" id="node21" href="$_property_manager_8h.html" title="Utilities/Properties/PropertyManager.h" alt="" coords="581,83,824,112"/>
-<area shape="rect" id="node5" href="$_core_2_core_2_scene_2_system_scene_8h.html" title="Core/Scene/SystemScene.h" alt="" coords="227,160,413,189"/>
-<area shape="rect" id="node11" href="$_utilities_2_utilities_2_memory_2typedefs_8h.html" title="Utilities/Memory/typedefs.h" alt="" coords="396,315,577,344"/>
-<area shape="rect" id="node13" href="$_file_8h.html" title="Utilities/IO/File.h" alt="" coords="281,237,401,267"/>
-<area shape="rect" id="node23" href="$functions_8h.html" title="Utilities/functions.h" alt="" coords="456,160,589,189"/>
-</map>

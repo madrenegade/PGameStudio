@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_math_1_1_matrix4.html#a2febdc0731b466c88bb2e0f4e70df8e8" title="Math::Matrix4::LookAt" alt="" coords="225,32,375,61"/>
-<area shape="rect" id="node5" href="$class_graphics_1_1_stereo_view_camera.html#ac9cd6f907425c5eeb7348380bacd1983" title="Graphics::StereoViewCamera::activateView" alt="" coords="425,5,703,35"/>
-<area shape="rect" id="node7" href="$class_graphics_1_1_perspective_camera.html#a7a511a0d6f5f9d150c127699664a2fc4" title="Graphics::PerspectiveCamera::update" alt="" coords="443,59,685,88"/>
-</map>

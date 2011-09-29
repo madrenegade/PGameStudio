@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node7" href="$sample_8h.html" title="memprof/sample.h" alt="" coords="280,83,411,112"/>
-<area shape="rect" id="node11" href="$_stack_trace_8h.html" title="StackTrace.h" alt="" coords="347,160,445,189"/>
-<area shape="rect" id="node26" href="$server_8h.html" title="memprof/server.h" alt="" coords="485,83,608,112"/>
-<area shape="rect" id="node15" href="$_stack_frame_8h.html" title="StackFrame.h" alt="" coords="140,237,244,267"/>
-<area shape="rect" id="node28" href="$connection_8h.html" title="memprof/tcp/connection.h" alt="" coords="512,160,685,189"/>
-</map>

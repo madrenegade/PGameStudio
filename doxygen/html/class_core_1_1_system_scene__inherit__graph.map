@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_graphics_1_1_system_scene.html" title="Graphics::SystemScene" alt="" coords="5,83,168,112"/>
-<area shape="rect" id="node5" href="$class_input_1_1_system_scene.html" title="Input::SystemScene" alt="" coords="192,83,333,112"/>
-<area shape="rect" id="node7" href="$class_scripting_1_1_system_scene.html" title="Scripting::SystemScene" alt="" coords="357,83,520,112"/>
-</map>

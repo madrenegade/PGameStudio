@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$_command_8cpp.html" title="Command.cpp" alt="" coords="89,83,196,112"/>
-<area shape="rect" id="node5" href="$_script_manager_8h.html" title="ScriptManager.h" alt="" coords="220,83,337,112"/>
-<area shape="rect" id="node7" href="$_game_2_game_2_application_8cpp.html" title="Application.cpp" alt="" coords="5,160,115,189"/>
-<area shape="rect" id="node9" href="$_executor_task_8cpp.html" title="ExecutorTask.cpp" alt="" coords="139,160,267,189"/>
-<area shape="rect" id="node11" href="$_script_manager_8cpp.html" title="ScriptManager.cpp" alt="" coords="291,160,421,189"/>
-<area shape="rect" id="node13" href="$_script_manager_factory_8cpp.html" title="ScriptManagerFactory.cpp" alt="" coords="445,160,619,189"/>
-</map>

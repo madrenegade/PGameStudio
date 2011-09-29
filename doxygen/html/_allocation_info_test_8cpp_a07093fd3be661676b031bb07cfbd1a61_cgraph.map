@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$namespace_utilities.html#a8484c5f0d957ee88b68083265800fc5f" title="Utilities::demangle" alt="" coords="432,70,563,99"/>
-<area shape="rect" id="node5" href="$class_utilities_1_1_memory_1_1_allocation_info.html#ab581b2c486de8e25e60b048fb2d7d014" title="Utilities::Memory::AllocationInfo::getPointer" alt="" coords="109,42,384,71"/>
-<area shape="rect" id="node7" href="$class_utilities_1_1_memory_1_1_allocation_info.html#ae2e043092f9f63d5370bb8d3a6b8bc67" title="Utilities::Memory::AllocationInfo::getSize" alt="" coords="117,95,376,125"/>
-<area shape="rect" id="node9" href="$class_utilities_1_1_memory_1_1_allocation_info.html#abe5c158f841f8fd76129a1aa6b543499" title="Utilities::Memory::AllocationInfo::getType" alt="" coords="116,149,377,178"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_core_1_1_application.html#ada8e637699586d98cb6e4c058e62b04c" title="Core::Application::initialize" alt="" coords="105,59,281,88"/>
-<area shape="rect" id="node9" href="$class_core_1_1_application.html#a893ff1be224aaf0608892c713c217b91" title="Core::Application::run" alt="" coords="120,139,267,168"/>
-<area shape="rect" id="node5" href="$class_core_1_1_application.html#a116743a5b08f2d004762ec554b27bbf1" title="Core::Application::onInitialize" alt="" coords="336,5,528,35"/>
-<area shape="rect" id="node7" href="$class_core_1_1_application.html#ac921b6beef9595a3a72501bc5afd145d" title="Core::Application::onInitialized" alt="" coords="333,59,531,88"/>
-<area shape="rect" id="node11" href="$class_core_1_1_application.html#a5dfe0b8bacddf81eb71fd6f71d30aeb9" title="Core::Application::onRun" alt="" coords="348,112,516,141"/>
-<area shape="rect" id="node13" href="$class_core_1_1_application.html#a48ee7f4f225b0d788801e8d54b6cece3" title="Core::Application::onShutdown" alt="" coords="331,165,533,195"/>
-<area shape="rect" id="node15" href="$class_core_1_1_application.html#a1f09fcd1e3b8f8bd071a7ab20406b09d" title="Core::Application::onUpdate" alt="" coords="339,219,525,248"/>
-</map>

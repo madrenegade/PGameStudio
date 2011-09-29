@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$_mono_view_camera_8h.html" title="MonoViewCamera.h" alt="" coords="13,83,152,112"/>
-<area shape="rect" id="node7" href="$_multi_view_camera_8cpp.html" title="MultiViewCamera.cpp" alt="" coords="176,83,325,112"/>
-<area shape="rect" id="node9" href="$_stereo_view_camera_8h.html" title="StereoViewCamera.h" alt="" coords="349,83,496,112"/>
-<area shape="rect" id="node5" href="$_mono_view_camera_8cpp.html" title="MonoViewCamera.cpp" alt="" coords="5,160,160,189"/>
-<area shape="rect" id="node11" href="$_stereo_view_camera_8cpp.html" title="StereoViewCamera.cpp" alt="" coords="263,160,423,189"/>
-<area shape="rect" id="node13" href="$_open_g_l_renderer_8cpp.html" title="OpenGLRenderer.cpp" alt="" coords="447,160,593,189"/>
-</map>

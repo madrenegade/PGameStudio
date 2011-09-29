@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$_core_2_core_2_scene_2_scene_loader_8cpp.html" title="SceneLoader.cpp" alt="" coords="5,83,128,112"/>
-<area shape="rect" id="node5" href="$_input_2_input_2_system_scene_8h.html" title="SystemScene.h" alt="" coords="152,83,267,112"/>
-<area shape="rect" id="node11" href="$_file_system_8cpp.html" title="FileSystem.cpp" alt="" coords="291,83,403,112"/>
-<area shape="rect" id="node13" href="$_xml_reader_8cpp.html" title="XmlReader.cpp" alt="" coords="427,83,539,112"/>
-<area shape="rect" id="node7" href="$_input_2_input_2main_8cpp.html" title="main.cpp" alt="" coords="109,160,184,189"/>
-<area shape="rect" id="node9" href="$_input_2_input_2_system_scene_8cpp.html" title="SystemScene.cpp" alt="" coords="208,160,336,189"/>
-</map>

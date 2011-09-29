@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_math_1_1_vector3.html#a6205153a11158cd101ecc6b418ab4704" title="Math::Vector3::Cross" alt="" coords="261,5,408,35"/>
-<area shape="rect" id="node7" href="$class_math_1_1_vector3.html#a6be9e9eaaf0bceb067ee7e6dab30d2b3" title="Math::Vector3::Dot" alt="" coords="268,59,401,88"/>
-<area shape="rect" id="node9" href="$class_math_1_1_quaternion.html#af0705df02e570e35d722221de76fe334" title="Math::Quaternion::Quaternion" alt="" coords="239,112,431,141"/>
-<area shape="rect" id="node5" href="$class_math_1_1_vector3.html#ad2d53f3806161ef60737feb5e55d1b1a" title="Math::Vector3::Vector3" alt="" coords="480,5,637,35"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_main_window.html#a211c7fc6dcd80ffbf0dd24b0cf51ff5e" title="MainWindow::onResetData" alt="" coords="253,5,435,35"/>
-<area shape="rect" id="node5" href="$class_main_window.html#ab448aa10c2d9b594714069cb8cba4bc3" title="MainWindow::openAboutDialog" alt="" coords="243,59,445,88"/>
-<area shape="rect" id="node7" href="$class_main_window.html#a543297737b9f126bf3fc37e40f4405c5" title="MainWindow::rebuildViews" alt="" coords="255,112,433,141"/>
-<area shape="rect" id="node9" href="$classmemprof_1_1server.html#a1a6bd86df78061e941ef0b516e79fa41" title="memprof::server::register_listener" alt="" coords="236,165,452,195"/>
-</map>

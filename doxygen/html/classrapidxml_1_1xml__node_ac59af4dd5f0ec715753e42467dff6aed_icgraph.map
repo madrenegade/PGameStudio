@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$namespacerapidxml.html#aa2de039eee246be25e248fe522317424" title="rapidxml::count_children" alt="" coords="287,5,449,35"/>
-<area shape="rect" id="node5" href="$class_input_1_1_system_scene.html#a381a55bbe406b7aacc4251d131b745c3" title="Input::SystemScene::load" alt="" coords="281,59,455,88"/>
-<area shape="rect" id="node7" href="$class_core_1_1_scene_loader.html#a3bae63c1686a340ee2b19dfebe344996" title="Core::SceneLoader::loadScene" alt="" coords="267,112,469,141"/>
-<area shape="rect" id="node9" href="$class_core_1_1_scene_manager.html#a59f27fdaf769dfbaaeaf95a708c405ba" title="Core::SceneManager::loadScene" alt="" coords="519,112,732,141"/>
-</map>

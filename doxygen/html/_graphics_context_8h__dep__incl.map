@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$_graphics_context_8cpp.html" title="GraphicsContext.cpp" alt="" coords="5,83,149,112"/>
-<area shape="rect" id="node5" href="$_game_2_game_2_application_8cpp.html" title="Application.cpp" alt="" coords="173,83,283,112"/>
-<area shape="rect" id="node7" href="$_render_task_8cpp.html" title="RenderTask.cpp" alt="" coords="307,83,424,112"/>
-<area shape="rect" id="node9" href="$_graphics_2_graphics_2_system_scene_8cpp.html" title="SystemScene.cpp" alt="" coords="448,83,576,112"/>
-<area shape="rect" id="node11" href="$_g_l_x_graphics_context_8h.html" title="GLXGraphicsContext.h" alt="" coords="600,83,757,112"/>
-<area shape="rect" id="node15" href="$_x_window_8cpp.html" title="XWindow.cpp" alt="" coords="744,160,845,189"/>
-<area shape="rect" id="node13" href="$_g_l_x_graphics_context_8cpp.html" title="GLXGraphicsContext.cpp" alt="" coords="549,160,720,189"/>
-</map>

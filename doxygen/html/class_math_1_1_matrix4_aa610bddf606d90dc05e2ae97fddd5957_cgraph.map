@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_math_1_1_matrix4.html#a1505d63028addbd70671096e4935f63a" title="Math::Matrix4::Matrix4" alt="" coords="280,5,432,35"/>
-<area shape="rect" id="node5" href="$class_math_1_1_vector3.html#abb281e4e54af2f4ad38d0af1c2d5f5d5" title="Math::Vector3::Normalize" alt="" coords="271,59,441,88"/>
-<area shape="rect" id="node9" href="$class_math_1_1_quaternion.html#a12bd7cd0763cc098002f69ccdb207a43" title="Math::Quaternion::ToAxisAngle" alt="" coords="255,112,457,141"/>
-<area shape="rect" id="node7" href="$class_math_1_1_vector3.html#ad19d9dd032edb369ccbd67b3a106425e" title="Math::Vector3::Length" alt="" coords="527,59,676,88"/>
-<area shape="rect" id="node11" href="$class_math_1_1_quaternion.html#a603d77e1ecc5ad840977fad166660f8a" title="Math::Quaternion::Normalize" alt="" coords="507,112,696,141"/>
-<area shape="rect" id="node13" href="$class_math_1_1_quaternion.html#ad3810f0588b6fb631348ce8e036e41ae" title="Math::Quaternion::Length" alt="" coords="745,112,913,141"/>
-<area shape="rect" id="node15" href="$class_math_1_1_vector3.html#ad4aa19967bb981bcab341f655885e37f" title="Math::Vector3::LengthSquared" alt="" coords="964,112,1161,141"/>
-</map>

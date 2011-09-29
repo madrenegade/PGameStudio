@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$class_math_1_1_vector3.html#abb281e4e54af2f4ad38d0af1c2d5f5d5" title="Math::Vector3::Normalize" alt="" coords="205,84,376,113"/>
-<area shape="rect" id="node5" href="$class_graphics_1_1_stereo_view_camera.html#ac9cd6f907425c5eeb7348380bacd1983" title="Graphics::StereoViewCamera::activateView" alt="" coords="692,84,969,113"/>
-<area shape="rect" id="node7" href="$class_math_1_1_matrix4.html#aa610bddf606d90dc05e2ae97fddd5957" title="Math::Matrix4::CreateRotation" alt="" coords="435,5,632,35"/>
-<area shape="rect" id="node11" href="$class_math_1_1_quaternion.html#a314aaf53d364249db629cd72b0d1d05e" title="Math::Quaternion::FromAxisAngle" alt="" coords="424,109,643,139"/>
-<area shape="rect" id="node13" href="$class_math_1_1_matrix4.html#a2febdc0731b466c88bb2e0f4e70df8e8" title="Math::Matrix4::LookAt" alt="" coords="459,163,608,192"/>
-<area shape="rect" id="node9" href="$class_math_1_1_matrix4.html#a5c45b4feec1fee3b77b8df3ad21594ae" title="Math::Matrix4::CreateTransform" alt="" coords="727,5,935,35"/>
-<area shape="rect" id="node16" href="$class_graphics_1_1_perspective_camera.html#a7a511a0d6f5f9d150c127699664a2fc4" title="Graphics::PerspectiveCamera::update" alt="" coords="709,163,952,192"/>
-</map>
