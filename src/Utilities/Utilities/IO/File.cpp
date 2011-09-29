@@ -12,11 +12,12 @@ namespace Utilities
     namespace IO
     {
         File::File()
+        : size(0)
         {
             
         }
 
-        File::File(const boost::shared_array<Memory::byte>& data, size_t size)
+        File::File(const boost::shared_array<Memory::byte>& data, const size_t size)
         : data(data), size(size)
         {
 

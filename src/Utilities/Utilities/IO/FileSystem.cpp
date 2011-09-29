@@ -67,7 +67,7 @@ namespace Utilities
                 properties->get<std::string > ("FileSystem.appName").c_str());
         }
 
-        File FileSystem::read(const char* const path)
+        File::Handle FileSystem::read(const char* const path)
         {
             boost::shared_ptr<void> handle(openForReading(path), boost::bind(&FileSystem::close, this, _1));
 
@@ -86,7 +86,7 @@ namespace Utilities
                 throw std::runtime_error("File could not be read fully");
             }
 
-            return File(data, fileSize);
+            return memory->construct(File(data, fileSize));
         }
         
         boost::shared_ptr<XmlReader> FileSystem::readXml(const char* const path)
@@ -94,7 +94,7 @@ namespace Utilities
             return readXml(read(path));
         }
         
-        boost::shared_ptr<XmlReader> FileSystem::readXml(const File& file)
+        boost::shared_ptr<XmlReader> FileSystem::readXml(const File::Handle& file)
         {
             boost::shared_ptr<XmlReader> reader = memory->construct(XmlReader(memory, memoryPool, file));
             return reader;

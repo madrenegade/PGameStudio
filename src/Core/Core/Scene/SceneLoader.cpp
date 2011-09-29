@@ -71,7 +71,7 @@ namespace Core
     {
         LOG(INFO) << "Loading system scene " << filename;
 
-        const File f(fileSystem->read(filename));
+        auto f = fileSystem->read(filename);
         systemScene->load(f);
     }
 

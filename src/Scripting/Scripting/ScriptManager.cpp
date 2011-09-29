@@ -80,7 +80,7 @@ namespace Scripting
             filename.append(name);
             filename.append(engine->getExtension());
 
-            File scriptFile = fileSystem->read(filename.c_str());
+            File::Handle scriptFile = fileSystem->read(filename.c_str());
 
             ScriptPtr script = engine->load(scriptFile, filename.c_str());
             scripts[name] = script;

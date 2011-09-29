@@ -15,7 +15,7 @@ namespace Renderer
     struct TextureRequest
     {
         unsigned long id;
-        Utilities::IO::File file;
+        Utilities::IO::File::Handle file;
     };
 }
 

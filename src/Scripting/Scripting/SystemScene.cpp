@@ -31,7 +31,7 @@ namespace Scripting
         return EXTENSION.c_str();
     }
 
-    void SystemScene::load(const Utilities::IO::File& /*file*/)
+    void SystemScene::load(const Utilities::IO::File::Handle& /*file*/)
     {
         
     }

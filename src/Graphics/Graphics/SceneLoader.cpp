@@ -80,9 +80,9 @@ namespace Graphics
     {
     }
 
-    boost::shared_ptr<SceneNode> SceneLoader::loadFrom(const Utilities::IO::File& file)
+    boost::shared_ptr<SceneNode> SceneLoader::loadFrom(const Utilities::IO::File::Handle& file)
     {
-        data = file.getData();
+        data = file->getData();
 
         readHeader();
         readTextures();
@@ -137,7 +137,7 @@ namespace Graphics
                 String textureName("textures/" + read<String > ());
                 VLOG(2) << "texture: " << textureName;
 
-                Utilities::IO::File texture(fileSystem->read(textureName.c_str()));
+                Utilities::IO::File::Handle texture = fileSystem->read(textureName.c_str());
                 material->textures.push_back(renderer->requestTexture(texture));
             }
 

@@ -19,13 +19,13 @@ namespace Utilities
 
         XmlReader::XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory,
                              const Utilities::Memory::pool_id pool,
-                             const File& file)
-        : data(memory->allocate<Memory::byte>(file.getSize() + 1, pool))
+                             const File::Handle& file)
+        : data(memory->allocate<Memory::byte>(file->getSize() + 1, pool))
         {
             XmlAllocator::memory = memory;
             
-            copy(file.getData(), data.get(), file.getSize());
-            data[file.getSize()] = '\0';
+            copy(file->getData(), data.get(), file->getSize());
+            data[file->getSize()] = '\0';
             
             doc.reset(new Document); //, pool);
             doc->memory_pool::set_allocator(XmlAllocator::allocate, XmlAllocator::deallocate);

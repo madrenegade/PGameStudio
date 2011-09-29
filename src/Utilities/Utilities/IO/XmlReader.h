@@ -29,7 +29,7 @@ namespace Utilities
             typedef rapidxml::xml_attribute<> Attribute;
 
             XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory,
-                      const Utilities::Memory::pool_id pool, const File& file);
+                      const Utilities::Memory::pool_id pool, const File::Handle& file);
             ~XmlReader();
 
             const Document* getDocument() const;

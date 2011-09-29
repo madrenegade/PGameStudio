@@ -12,6 +12,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Utilities/Memory/typedefs.h"
+#include "Utilities/IO/File.h"
 
 namespace Utilities
 {
@@ -22,7 +23,6 @@ namespace Utilities
     
     namespace IO
     {
-        class File;
         class FileSystem;
     }
     
@@ -71,7 +71,7 @@ namespace Core
          * Load the system scene from the given file.
          * @param file
          */
-        virtual void load(const Utilities::IO::File& file) = 0;
+        virtual void load(const Utilities::IO::File::Handle& file) = 0;
  
         /**
          * Set the memory manager which should be used by this system scene.

@@ -26,9 +26,9 @@ namespace Utilities
 
             virtual ~FileSystem();
 
-            File read(const char* const path);
+            File::Handle read(const char* const path);
             boost::shared_ptr<XmlReader> readXml(const char* const path);
-            boost::shared_ptr<XmlReader> readXml(const File& file);
+            boost::shared_ptr<XmlReader> readXml(const File::Handle& file);
 
             void write(const char* const filename, const File& file);
 

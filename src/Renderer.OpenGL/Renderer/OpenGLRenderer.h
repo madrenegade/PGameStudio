@@ -68,8 +68,8 @@ namespace Renderer
 
         virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, const unsigned int numIndexes);
 
-        virtual unsigned long requestEffect(const Utilities::IO::File& file);
-        virtual unsigned long requestTexture(const Utilities::IO::File& file);
+        virtual unsigned long requestEffect(const Utilities::IO::File::Handle& file);
+        virtual unsigned long requestTexture(const Utilities::IO::File::Handle& file);
 
         virtual bool isVertexBufferLoaded(const unsigned long vbID) const;
         virtual bool isIndexBufferLoaded(const unsigned long ibID) const;

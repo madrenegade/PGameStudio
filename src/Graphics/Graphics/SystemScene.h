@@ -27,7 +27,7 @@ namespace Graphics
         
         virtual const char* getSceneFileExtension() const;
         
-        virtual void load(const Utilities::IO::File& file);
+        virtual void load(const Utilities::IO::File::Handle& file);
         
         virtual tbb::task* getTask(tbb::task* parent);
         

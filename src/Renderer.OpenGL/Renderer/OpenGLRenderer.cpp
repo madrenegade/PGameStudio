@@ -101,7 +101,7 @@ namespace Renderer
         return indexBuffers->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestEffect(const Utilities::IO::File& file)
+    unsigned long OpenGLRenderer::requestEffect(const Utilities::IO::File::Handle& file)
     {
         EffectRequest request;
         request.file = file;
@@ -109,7 +109,7 @@ namespace Renderer
         return effects->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestTexture(const Utilities::IO::File& file)
+    unsigned long OpenGLRenderer::requestTexture(const Utilities::IO::File::Handle& file)
     {
         TextureRequest request;
         request.file = file;

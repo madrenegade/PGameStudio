@@ -24,7 +24,7 @@ namespace Scripting
 
         virtual const char* getSceneFileExtension() const;
 
-        virtual void load(const Utilities::IO::File& file);
+        virtual void load(const Utilities::IO::File::Handle& file);
 
         virtual void initialize();
 

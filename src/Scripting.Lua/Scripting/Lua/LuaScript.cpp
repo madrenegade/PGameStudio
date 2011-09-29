@@ -14,10 +14,10 @@ namespace Scripting
     namespace Lua
     {
 
-        LuaScript::LuaScript(lua_State* state, const Utilities::IO::File& file, const char* name)
+        LuaScript::LuaScript(lua_State* state, const Utilities::IO::File::Handle& file, const char* name)
         : state(state), name(name)
         {
-            int status = luaL_loadbuffer(state, file.getData(), file.getSize(), name);
+            int status = luaL_loadbuffer(state, file->getData(), file->getSize(), name);
             logErrors(status);
             
             lua_setglobal(state, name);

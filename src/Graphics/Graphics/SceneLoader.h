@@ -15,12 +15,12 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/string.h"
+#include "Utilities/IO/File.h"
 
 namespace Utilities
 {
     namespace IO
     {
-        class File;
         class FileSystem;
     }
 
@@ -54,7 +54,7 @@ namespace Graphics
                     Utilities::Memory::pool_id pool, Renderer* renderer);
         ~SceneLoader();
 
-        boost::shared_ptr<SceneNode> loadFrom(const Utilities::IO::File& file);
+        boost::shared_ptr<SceneNode> loadFrom(const Utilities::IO::File::Handle& file);
 
     private:
         void readHeader();

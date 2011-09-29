@@ -41,7 +41,7 @@ namespace Scripting
 
             virtual const char* getExtension() const;
 
-            virtual boost::shared_ptr<Script> load(const Utilities::IO::File& file, const char* name);
+            virtual boost::shared_ptr<Script> load(const Utilities::IO::File::Handle& file, const char* name);
             
             virtual void runGarbageCollection();
 

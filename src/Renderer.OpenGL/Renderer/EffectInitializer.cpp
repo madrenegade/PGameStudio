@@ -15,7 +15,7 @@ namespace Renderer
 {
     void EffectInitializer::initialize(const boost::shared_ptr<Effect>& effect, const EffectRequest& request)
     {
-        String code(request.file.getData(), request.file.getSize());
+        String code(request.file->getData(), request.file->getSize());
         effect->load(code.c_str());
     }
 }

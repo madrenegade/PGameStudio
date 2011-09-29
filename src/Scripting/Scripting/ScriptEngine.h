@@ -12,14 +12,7 @@
 
 #include "Scripting/typedefs.h"
 #include "Utilities/string.h"
-
-namespace Utilities
-{
-    namespace IO
-    {
-        class File;
-    }
-}
+#include "Utilities/IO/File.h"
 
 namespace Scripting
 {
@@ -40,7 +33,7 @@ namespace Scripting
          * @param name - the name of the script
          * @return 
          */
-        virtual boost::shared_ptr<Script> load(const Utilities::IO::File& file, const char* name) = 0;
+        virtual boost::shared_ptr<Script> load(const Utilities::IO::File::Handle& file, const char* name) = 0;
         
         /**
          * Run the garbage collection if available.

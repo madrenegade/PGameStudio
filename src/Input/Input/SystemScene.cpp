@@ -69,7 +69,7 @@ namespace Input
         eventManager->registerEventHandler(mouseMoved, boost::bind(&SystemScene::onMouseMoved, this, _1, _2));
     }
 
-    void SystemScene::load(const Utilities::IO::File& file)
+    void SystemScene::load(const Utilities::IO::File::Handle& file)
     {
         boost::shared_ptr<XmlReader> reader = fileSystem->readXml(file);
 

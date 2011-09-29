@@ -80,11 +80,11 @@ namespace Graphics
         return SCENE_FILE_EXTENSION.c_str();
     }
 
-    void SystemScene::load(const Utilities::IO::File& file)
+    void SystemScene::load(const Utilities::IO::File::Handle& file)
     {
-        Utilities::IO::File effectFile(fileSystem->read("fx/default.cgfx"));
-        Utilities::IO::File finalEffectFile(fileSystem->read("fx/final.cgfx"));
-        Utilities::IO::File anaglyphEffectFile(fileSystem->read("fx/anaglyph.cgfx"));
+        Utilities::IO::File::Handle effectFile = fileSystem->read("fx/default.cgfx");
+        Utilities::IO::File::Handle finalEffectFile = fileSystem->read("fx/final.cgfx");
+        Utilities::IO::File::Handle anaglyphEffectFile = fileSystem->read("fx/anaglyph.cgfx");
         renderer->requestEffect(effectFile);
         renderer->requestEffect(finalEffectFile);
         renderer->requestEffect(anaglyphEffectFile);

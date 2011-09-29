@@ -22,7 +22,7 @@ namespace Scripting
         class LuaScript : public Scripting::Script
         {
         public:
-            LuaScript(lua_State* state, const Utilities::IO::File& file, const char* name);
+            LuaScript(lua_State* state, const Utilities::IO::File::Handle& file, const char* name);
             virtual ~LuaScript();
             
             virtual void run();

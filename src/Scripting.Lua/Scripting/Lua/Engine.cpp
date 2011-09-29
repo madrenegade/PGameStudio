@@ -65,7 +65,7 @@ namespace Scripting
             return EXTENSION.c_str();
         }
 
-        boost::shared_ptr<Script> Engine::load(const Utilities::IO::File& file, const char* name)
+        boost::shared_ptr<Script> Engine::load(const Utilities::IO::File::Handle& file, const char* name)
         {
             VLOG(2) << "Loading script " << name;
 

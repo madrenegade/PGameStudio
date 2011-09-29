@@ -15,7 +15,7 @@ struct ImageDeleter
 {
     unsigned int imageID;
     
-    void operator()(unsigned char* data)
+    void operator()(unsigned char* /*data*/)
     {
         ilBindImage(0);
         ilDeleteImages(1, &imageID);
@@ -32,7 +32,7 @@ namespace Renderer
         ilGenImages(1, &imageID);
         ilBindImage(imageID);
         
-        ilLoadL(IL_JPG, request.file.getData(), request.file.getSize());
+        ilLoadL(IL_JPG, request.file->getData(), request.file->getSize());
         
         deleter.imageID = imageID;
         
