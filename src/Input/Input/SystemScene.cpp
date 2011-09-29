@@ -20,6 +20,7 @@
 #include "Core/Events/EventManager.h"
 #include "Platform/PlatformManager.h"
 #include "OneAxisControl.h"
+#include "Utilities/IO/FileSystem.h"
 
 using namespace Utilities::Memory;
 using namespace Utilities::IO;
@@ -70,9 +71,9 @@ namespace Input
 
     void SystemScene::load(const Utilities::IO::File& file)
     {
-        const XmlReader reader(memoryManager, file);
+        boost::shared_ptr<XmlReader> reader = fileSystem->readXml(file);
 
-        XmlReader::Node* sceneNode = reader.getDocument()->first_node("input");
+        XmlReader::Node* sceneNode = reader->getDocument()->first_node("input");
 
         XmlReader::Node* firstControllerNode = sceneNode->first_node("controller");
 

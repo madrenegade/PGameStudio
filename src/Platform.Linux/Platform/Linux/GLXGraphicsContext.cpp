@@ -16,11 +16,13 @@
 #define GLX_CONTEXT_MINOR_VERSION_ARB       0x2092
 typedef GLXContext(*glXCreateContextAttribsARBProc)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
 
-namespace Platform {
-    namespace Linux {
+namespace Platform
+{
+    namespace Linux
+    {
 
         static bool isExtensionSupported(const char *extList, const char *extension)
- {
+        {
 
             const char *start;
             const char *where, *terminator;
@@ -33,7 +35,8 @@ namespace Platform {
             /* It takes a bit of care to be fool-proof about parsing the
                OpenGL extensions string. Don't be fooled by sub-strings,
                etc. */
-            for (start = extList;;) {
+            for (start = extList;;)
+            {
                 where = strstr(start, extension);
 
                 if (!where)
@@ -53,18 +56,21 @@ namespace Platform {
 
         static bool ctxErrorOccurred = false;
 
-        static int ctxErrorHandler(Display *dpy, XErrorEvent *ev) {
+        static int ctxErrorHandler(Display *dpy, XErrorEvent *ev)
+        {
             ctxErrorOccurred = true;
             return 0;
         }
 
         GLXGraphicsContext* GLXGraphicsContext::Create(Display* pDisplay,
-                Window window,
-                GLXFBConfig fbConfig) {
+                                                       Window window,
+                                                       GLXFBConfig fbConfig)
+        {
             return CreateInternalContext(pDisplay, window, fbConfig);
         }
 
-        GLXGraphicsContext* GLXGraphicsContext::CreateInternalContext(Display* pDisplay, Window window, GLXFBConfig fbConfig) {
+        GLXGraphicsContext* GLXGraphicsContext::CreateInternalContext(Display* pDisplay, Window window, GLXFBConfig fbConfig)
+        {
             // Get the default screen's GLX extension list
             const char* glxExts = glXQueryExtensionsString(pDisplay, DefaultScreen(pDisplay));
 
@@ -72,7 +78,7 @@ namespace Platform {
             // calling glXGetProcAddressARB
             glXCreateContextAttribsARBProc glXCreateContextAttribsARB = 0;
             glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)
-                    glXGetProcAddressARB((const GLubyte *) "glXCreateContextAttribsARB");
+                glXGetProcAddressARB((const GLubyte *) "glXCreateContextAttribsARB");
 
             GLXContext ctx = 0;
 
@@ -88,10 +94,11 @@ namespace Platform {
             // Check for the GLX_ARB_create_context extension string and the function.
             // If either is not present, use GLX 1.3 context creation method.
             if (!isExtensionSupported(glxExts, "GLX_ARB_create_context") ||
-                    !glXCreateContextAttribsARB) {
+                !glXCreateContextAttribsARB)
+            {
                 ctx = glXCreateNewContext(pDisplay, fbConfig, GLX_RGBA_TYPE, 0, True);
-            } 
-            else 
+            }
+            else
             {
 
                 int context_attribs[] = {
@@ -103,11 +110,12 @@ namespace Platform {
 
                 ctx = glXCreateContextAttribsARB(pDisplay, fbConfig, 0, True, context_attribs);
             }
-            
+
             // Sync to ensure any errors generated are processed.
             XSync(pDisplay, False);
 
-            if (ctxErrorOccurred || !ctx) {
+            if (ctxErrorOccurred || !ctx)
+            {
                 throw std::runtime_error("OpenGL 3.0 not supported");
             }
 
@@ -117,12 +125,14 @@ namespace Platform {
             // Restore the original error handler
             XSetErrorHandler(oldHandler);
 
-            if (ctxErrorOccurred || !ctx) {
+            if (ctxErrorOccurred || !ctx)
+            {
                 throw std::runtime_error("Could not create context");
             }
 
             // Verifying that context is a direct context
-            if (!glXIsDirect(pDisplay, ctx)) {
+            if (!glXIsDirect(pDisplay, ctx))
+            {
                 throw std::runtime_error("Direct rendering not supported");
             }
 
@@ -130,30 +140,38 @@ namespace Platform {
         }
 
         GLXGraphicsContext::GLXGraphicsContext(Display* pDisplay,
-                Window window,
-                GLXContext context)
-        : m_pDisplay(pDisplay), m_windowHandle(window), m_context(context) {
+                                               Window window,
+                                               GLXContext context)
+        : m_pDisplay(pDisplay), m_windowHandle(window), m_context(context)
+        {
         }
 
-        GLXGraphicsContext::~GLXGraphicsContext() {
-            if (this->m_context) {
+        GLXGraphicsContext::~GLXGraphicsContext()
+        {
+            if (this->m_context)
+            {
                 glXDestroyContext(this->m_pDisplay, this->m_context);
             }
         }
 
-        void GLXGraphicsContext::MakeCurrent() {
-            if (!glXMakeCurrent(this->m_pDisplay, this->m_windowHandle, this->m_context)) {
+        void GLXGraphicsContext::MakeCurrent()
+        {
+            if (!glXMakeCurrent(this->m_pDisplay, this->m_windowHandle, this->m_context))
+            {
                 throw std::runtime_error("MakeCurrent failed");
             }
         }
 
-        void GLXGraphicsContext::Release() {
-            if (!glXMakeCurrent(this->m_pDisplay, None, 0)) {
+        void GLXGraphicsContext::Release()
+        {
+            if (!glXMakeCurrent(this->m_pDisplay, None, 0))
+            {
                 throw std::runtime_error("Cannot release glx context");
             }
         }
 
-        void GLXGraphicsContext::SwapBuffers() {
+        void GLXGraphicsContext::SwapBuffers()
+        {
             glXSwapBuffers(this->m_pDisplay, this->m_windowHandle);
         }
     }

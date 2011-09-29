@@ -17,16 +17,19 @@ namespace Utilities
     namespace IO
     {
 
-        XmlReader::XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory, const File& file)
-        : data(new Memory::byte[file.getSize() + 1])
+        XmlReader::XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory,
+                             const Utilities::Memory::pool_id pool,
+                             const File& file)
+        : data(memory->allocate<Memory::byte>(file.getSize() + 1, pool))
         {
             XmlAllocator::memory = memory;
             
             copy(file.getData(), data.get(), file.getSize());
             data[file.getSize()] = '\0';
             
-            doc.memory_pool::set_allocator(XmlAllocator::allocate, XmlAllocator::deallocate);
-            doc.parse<0>(data.get());
+            doc.reset(new Document); //, pool);
+            doc->memory_pool::set_allocator(XmlAllocator::allocate, XmlAllocator::deallocate);
+            doc->parse<0>(data.get());
         }
 
         XmlReader::~XmlReader()
@@ -35,7 +38,7 @@ namespace Utilities
         
         const XmlReader::Document* XmlReader::getDocument() const
         {
-            return &doc;
+            return doc.get();
         }
     }
 }

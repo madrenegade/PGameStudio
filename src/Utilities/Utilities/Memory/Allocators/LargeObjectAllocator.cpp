@@ -18,22 +18,6 @@ namespace Utilities
         {
             
         }
-
-//        byte_pointer LargeObjectAllocator::allocate(size_t bytes)
-//        {
-//            throw std::runtime_error("LargeObjectAllocator not implemented");
-////            return new byte[bytes];
-//        }
-//
-//        void LargeObjectAllocator::deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects)
-//        {
-//            delete[] ptr;
-//        }
-//
-//        size_t LargeObjectAllocator::getFreeMemory() const
-//        {
-//
-//        }
     }
 }
 

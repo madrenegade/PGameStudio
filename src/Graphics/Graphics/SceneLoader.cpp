@@ -238,13 +238,7 @@ namespace Graphics
     
     boost::shared_ptr<SceneNode> SceneLoader::readNode()
     {
-        // construction fails in 64bit debug mode because
-        // backtrace from glibc crashes for recursive functions
-#if defined GCC && defined X64 && defined DEBUG
-        boost::shared_ptr<SceneNode> node(new SceneNode());
-#else
         boost::shared_ptr<SceneNode> node = memoryManager->construct(SceneNode(), pool);
-#endif
         
         String name(read<String>());
         VLOG(2) << "Reading scene node " << name;

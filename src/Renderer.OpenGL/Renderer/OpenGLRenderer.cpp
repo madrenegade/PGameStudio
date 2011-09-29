@@ -70,7 +70,7 @@ namespace Renderer
         viewport->setCamera(camera);
         viewport->activate();
 
-        boost::shared_ptr<FrameBuffer> frameBuffer(new FrameBuffer(4 * camera->getViewCount(), width, height));
+        boost::shared_ptr<FrameBuffer> frameBuffer = memory->construct(FrameBuffer(memory, pool, 4 * camera->getViewCount(), width, height), pool);
         viewport->attachFrameBuffer(frameBuffer);
 
         boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);

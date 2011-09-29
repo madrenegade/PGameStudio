@@ -5,6 +5,7 @@
  * Created on September 12, 2011, 1:59 PM
  */
 #include "Utilities/IO/FileSystem.h"
+#include "Utilities/IO/XmlReader.h"
 #include "Utilities/IO/Exceptions/FileNotFoundException.h"
 #include "Utilities/string.h"
 
@@ -55,7 +56,7 @@ namespace Utilities
             return memoryPool;
         }
 
-        void FileSystem::initialize(Memory::pool_id fsPool)
+        void FileSystem::initialize(const Memory::pool_id fsPool)
         {
             memoryPool = fsPool;
             
@@ -66,7 +67,7 @@ namespace Utilities
                 properties->get<std::string > ("FileSystem.appName").c_str());
         }
 
-        File FileSystem::read(const char* path)
+        File FileSystem::read(const char* const path)
         {
             boost::shared_ptr<void> handle(openForReading(path), boost::bind(&FileSystem::close, this, _1));
 
@@ -76,9 +77,9 @@ namespace Utilities
 
             assert(fileSize > 0);
 
-            boost::shared_array<Memory::byte> data = memory->allocate<Memory::byte > (fileSize, memoryPool);
+            const boost::shared_array<Memory::byte> data = memory->allocate<Memory::byte > (fileSize, memoryPool);
 
-            size_t bytesRead = read(handle.get(), data.get(), fileSize);
+            const size_t bytesRead = read(handle.get(), data.get(), fileSize);
 
             if (bytesRead < fileSize)
             {
@@ -87,17 +88,28 @@ namespace Utilities
 
             return File(data, fileSize);
         }
+        
+        boost::shared_ptr<XmlReader> FileSystem::readXml(const char* const path)
+        {
+            return readXml(read(path));
+        }
+        
+        boost::shared_ptr<XmlReader> FileSystem::readXml(const File& file)
+        {
+            boost::shared_ptr<XmlReader> reader = memory->construct(XmlReader(memory, memoryPool, file));
+            return reader;
+        }
 
-        void FileSystem::write(const char* filename, const File& file)
+        void FileSystem::write(const char* const filename, const File& file)
         {
             DCHECK(file.getSize() > 0);
             DCHECK(file.getData() != 0);
 
-            boost::shared_ptr<void> handle(openForWriting(filename), boost::bind(&FileSystem::close, this, _1));
+            const boost::shared_ptr<void> handle(openForWriting(filename), boost::bind(&FileSystem::close, this, _1));
 
             DCHECK(handle != 0);
 
-            size_t bytesWritten = write(handle.get(), file.getData(), file.getSize());
+            const size_t bytesWritten = write(handle.get(), file.getData(), file.getSize());
 
             if (bytesWritten < file.getSize())
             {
@@ -107,7 +119,7 @@ namespace Utilities
 
         void FileSystem::mountDirectories()
         {
-            std::vector<std::string> mounts(properties->get<std::vector<std::string> >("FileSystem.mount"));
+            const std::vector<std::string> mounts(properties->get<std::vector<std::string> >("FileSystem.mount"));
 
             std::vector<std::string> parts;
 
@@ -123,7 +135,7 @@ namespace Utilities
             }
         }
 
-        void FileSystem::assertPathExists(const char* path) const
+        void FileSystem::assertPathExists(const char* const path) const
         {
             if (!exists(path))
             {

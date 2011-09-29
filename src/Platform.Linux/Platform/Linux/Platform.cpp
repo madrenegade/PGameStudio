@@ -69,6 +69,7 @@ namespace Platform
             eventHandler.reset(new X11EventHandler(eventManager, x11Window->getDisplay()));
 
             boost::shared_ptr<Graphics::Window> window(x11Window);
+            
             return window;
         }
     }

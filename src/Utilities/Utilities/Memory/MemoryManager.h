@@ -93,6 +93,15 @@ namespace Utilities
              */
             size_t getMemoryUsage() const;
 
+            /**
+             * Construct the given object in the given memory pool using a custom pre-deleter.
+             * The pre-deleter is called right before deallocation and may be used for clean up.
+             * 
+             * @param obj - the object to place in the pool
+             * @param preDeleter - the pre-deleter
+             * @param poolID - the pool to place the object in
+             * @return a pointer to the constructed object
+             */
             template<typename T, typename Deleter>
             boost::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, pool_id poolID = 0
 #ifdef DEBUG
@@ -117,12 +126,12 @@ namespace Utilities
             }
 
             /**
-             * construct the given object in the given memory pool
-             * make sure that the memory manager instance exists when the ptr gets deleted
+             * Construct the given object in the given memory pool.
+             * Make sure that the memory manager instance exists when the ptr gets deleted.
              * 
              * @param obj - the object to place in the pool
              * @param poolID - the pool to place the object in
-             * @return a pointer to the object
+             * @return a pointer to the constructed object
              */
             template<typename T>
             boost::shared_ptr<T> construct(const T& obj, pool_id poolID = 0

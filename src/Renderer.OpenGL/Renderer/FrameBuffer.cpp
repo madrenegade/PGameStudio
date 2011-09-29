@@ -13,8 +13,10 @@
 namespace Renderer
 {
 
-    FrameBuffer::FrameBuffer(unsigned int numColorAttachments, unsigned int width, unsigned int height)
-    : width(width), height(height)
+    FrameBuffer::FrameBuffer(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                             Utilities::Memory::pool_id pool,
+                             const unsigned int numColorAttachments, const unsigned int width, const unsigned int height)
+    : memoryManager(memoryManager), pool(pool), width(width), height(height)
     {
         VLOG(2) << "creating framebuffer with size " << width << "x" << height;
         //        GLint maxbuffers;
@@ -27,13 +29,13 @@ namespace Renderer
         glGenFramebuffers(1, &id);
         bind();
 
-        for(unsigned int i = 0; i < numColorAttachments; ++i)
+        for (unsigned int i = 0; i < numColorAttachments; ++i)
         {
             createColorAttachment();
         }
-        
+
         createDepthAttachment();
-        
+
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         {
             LOG(FATAL) << "Frame buffer status incomplete";
@@ -47,29 +49,29 @@ namespace Renderer
     FrameBuffer::~FrameBuffer()
     {
     }
-    
+
     void FrameBuffer::createColorAttachment()
     {
         VLOG(2) << "Create color attachment " << colorAttachments.size();
-        
-        boost::shared_ptr<Texture> colorAttachmentTexture(new Texture());
+
+        boost::shared_ptr<Texture> colorAttachmentTexture = memoryManager->construct(Texture());
         colorAttachmentTexture->bind();
-        
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        
+
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachments.size(), GL_TEXTURE_2D, colorAttachmentTexture->getID(), 0);
-        
+
         colorAttachments.push_back(colorAttachmentTexture);
     }
-    
+
     void FrameBuffer::createDepthAttachment()
     {
         VLOG(2) << "creating depth buffer";
-        
-        depthTexture.reset(new Texture());
+
+        depthTexture = memoryManager->construct(Texture());
         depthTexture->bind();
-        
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
@@ -80,12 +82,12 @@ namespace Renderer
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture->getID(), 0);
     }
-    
+
     void FrameBuffer::bind() const
     {
         glBindFramebuffer(GL_FRAMEBUFFER, id);
     }
-    
+
     void FrameBuffer::unbind() const
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

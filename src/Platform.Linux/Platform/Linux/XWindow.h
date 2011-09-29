@@ -10,6 +10,7 @@
 
 #include "Graphics/Window.h"
 #include <GL/glx.h>
+#include <boost/shared_ptr.hpp>
 
 namespace Utilities
 {

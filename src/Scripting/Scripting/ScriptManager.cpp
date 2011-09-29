@@ -50,7 +50,7 @@ namespace Scripting
                                  const boost::shared_ptr<FileSystem>& fileSystem,
                                  const PropertyManager::Ptr& properties)
     : startupScriptName(properties->get<std::string>("Scripting.startup")),
-    memory(memoryManager), fileSystem(fileSystem)
+    memory(memoryManager), pool(pool), fileSystem(fileSystem)
     {
         std::string engineName("Scripting." + properties->get<std::string > ("Scripting.engine"));
 

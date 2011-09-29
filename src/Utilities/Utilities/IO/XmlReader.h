@@ -20,21 +20,23 @@ namespace Utilities
 {
     namespace IO
     {
+
         class XmlReader
         {
         public:
             typedef rapidxml::xml_document<> Document;
             typedef rapidxml::xml_node<> Node;
             typedef rapidxml::xml_attribute<> Attribute;
-            
-            XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory, const File& file);
+
+            XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory,
+                      const Utilities::Memory::pool_id pool, const File& file);
             ~XmlReader();
-            
+
             const Document* getDocument() const;
-            
+
         private:
-            boost::scoped_array<Memory::byte> data;
-            Document doc;
+            boost::shared_array<Memory::byte> data;
+            boost::shared_ptr<Document> doc;
         };
     }
 }

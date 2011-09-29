@@ -19,7 +19,7 @@ namespace Platform
 
         XWindow::XWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory, unsigned int w, unsigned int h,
                          unsigned int bpp, bool fullscreen)
-        : display(0), fbConfig(0), window(0)
+        : fbConfig(0), window(0)
         {
             openDisplay();
             findFrameBufferConfiguration();
@@ -100,7 +100,7 @@ namespace Platform
                     glXGetFBConfigAttrib(display, fbc[i], GLX_SAMPLE_BUFFERS, &samp_buf);
                     glXGetFBConfigAttrib(display, fbc[i], GLX_SAMPLES, &samples);
 
-                    if (best_fbc < 0 || samp_buf && samples > best_num_samp)
+                    if (best_fbc < 0 || (samp_buf && samples > best_num_samp))
                     {
                         best_fbc = i, best_num_samp = samples;
                     }
@@ -129,7 +129,7 @@ namespace Platform
             windowAttributes.colormap = cmap = XCreateColormap(display,
                 RootWindow(display, vi->screen),
                 vi->visual, AllocNone);
-            
+
             windowAttributes.background_pixmap = None;
             windowAttributes.border_pixel = 0;
             windowAttributes.event_mask =
@@ -173,7 +173,7 @@ namespace Platform
         {
             return m_pGraphicsContext.get();
         }
-        
+
         Display* XWindow::getDisplay() const
         {
             return display;

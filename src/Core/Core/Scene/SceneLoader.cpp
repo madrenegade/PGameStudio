@@ -49,10 +49,8 @@ namespace Core
     {
         LOG(INFO) << "Loading scene " << filename;
 
-        const File sceneFile(fileSystem->read(filename));
-        const XmlReader reader(memoryManager, sceneFile);
-        
-        const XmlReader::Document* doc = reader.getDocument(); 
+        boost::shared_ptr<XmlReader> reader = fileSystem->readXml(filename);
+        const XmlReader::Document* doc = reader->getDocument(); 
         
         SystemVector neededSystems;
         XmlReader::Node* systemNode = doc->first_node("scene")->first_node("systems")->first_node("system");

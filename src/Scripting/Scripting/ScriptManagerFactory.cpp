@@ -30,9 +30,7 @@ namespace Scripting
         
         pool_id poolID = memoryManager->registerMemoryPool(pool);
         
-        boost::shared_ptr<ScriptManager> scriptManager(new ScriptManager(memoryManager, poolID, platformManager, fileSystem, properties));
-
-        return scriptManager;
+        return memoryManager->construct(ScriptManager(memoryManager, poolID, platformManager, fileSystem, properties), poolID);
     }
 
     ScriptManagerFactory::ScriptManagerFactory()

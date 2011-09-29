@@ -24,23 +24,23 @@ namespace Utilities
                 virtual ~PhysFS();
 
             protected:
-                virtual void initialize(Memory::pool_id id);
+                virtual void initialize(const Memory::pool_id id);
                 
-                virtual void mount(const char* path, const char* mountPoint);
+                virtual void mount(const char* const path, const char* const mountPoint);
 
-                virtual bool exists(const char* path) const;
+                virtual bool exists(const char* const path) const;
 
-                virtual size_t getFileSize(void* handle) const;
+                virtual size_t getFileSize(void* const handle) const;
 
-                virtual void* openForReading(const char* path);
-                virtual void* openForWriting(const char* filename);
+                virtual void* openForReading(const char* const path);
+                virtual void* openForWriting(const char* const filename);
                 
-                virtual void close(void* handle);
+                virtual void close(void* const handle);
                 
-                virtual size_t read(void* handle, Memory::byte_pointer buffer, size_t size);
-                virtual size_t write(void* handle, Memory::const_byte_pointer buffer, size_t size);
+                virtual size_t read(void* const handle, Memory::byte_pointer const buffer, const size_t size);
+                virtual size_t write(void* const handle, Memory::const_byte_pointer const buffer, const size_t size);
                 
-                virtual void setWriteDirectory(const char* organization, const char* appName);
+                virtual void setWriteDirectory(const char* const organization, const char* const appName);
 
                 void checkVersion() const;
                 void logError() const;

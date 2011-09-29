@@ -31,6 +31,7 @@ namespace Core
             
             events[name] = id;
             
+            // cannot use memory manager because signal is copy protected
             signals[id].reset(new EventSignal());
             
             return id;

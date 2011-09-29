@@ -34,7 +34,7 @@ namespace Utilities
                 }
             }
 
-            void PhysFS::initialize(Memory::pool_id id)
+            void PhysFS::initialize(const Memory::pool_id id)
             {
                 PHYSFS_Version linked;
                 PHYSFS_getLinkedVersion(&linked);
@@ -56,7 +56,7 @@ namespace Utilities
                 RAW_VLOG(1, "Write dir: %s", PHYSFS_getWriteDir());
             }
 
-            void PhysFS::mount(const char* path, const char* mountPoint)
+            void PhysFS::mount(const char* const path, const char* const mountPoint)
             {
                 if (PHYSFS_mount(path, mountPoint, 1) == 0)
                 {
@@ -64,19 +64,19 @@ namespace Utilities
                 }
             }
 
-            bool PhysFS::exists(const char* path) const
+            bool PhysFS::exists(const char* const path) const
             {
                 return PHYSFS_exists(path) != 0 || PHYSFS_isDirectory(path) != 0;
             }
 
-            size_t PhysFS::getFileSize(void* handle) const
+            size_t PhysFS::getFileSize(void* const handle) const
             {
                 PHYSFS_File* internalHandle = static_cast<PHYSFS_File*> (handle);
 
                 return PHYSFS_fileLength(internalHandle);
             }
 
-            void* PhysFS::openForReading(const char* path)
+            void* PhysFS::openForReading(const char* const path)
             {
 #ifdef DEBUG
                 RAW_LOG_INFO("Opening %s", path);
@@ -94,7 +94,7 @@ namespace Utilities
 #endif
             }
             
-            void* PhysFS::openForWriting(const char* filename)
+            void* PhysFS::openForWriting(const char* const filename)
             { 
 #ifdef DEBUG
                 RAW_LOG_INFO("Opening %s for writing", filename);
@@ -112,7 +112,7 @@ namespace Utilities
 #endif
             }
             
-            void PhysFS::close(void* handle)
+            void PhysFS::close(void* const handle)
             {
                 DCHECK(handle != 0);
                 
@@ -122,10 +122,10 @@ namespace Utilities
                 }
             }
 
-            size_t PhysFS::read(void* handle, Memory::byte_pointer buffer, size_t size)
+            size_t PhysFS::read(void* const handle, Memory::byte_pointer const buffer, const size_t size)
             {
 #ifdef DEBUG
-                size_t bytesRead = PHYSFS_read(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
+                const size_t bytesRead = PHYSFS_read(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
                 
                 if(bytesRead < size)
                 {
@@ -138,10 +138,10 @@ namespace Utilities
 #endif
             }
             
-            size_t PhysFS::write(void* handle, Memory::const_byte_pointer buffer, size_t size)
+            size_t PhysFS::write(void* const handle, Memory::const_byte_pointer const buffer, const size_t size)
             {
 #ifdef DEBUG
-                size_t bytesWritten = PHYSFS_write(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
+                const size_t bytesWritten = PHYSFS_write(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
                 
                 if(bytesWritten < size)
                 {
@@ -154,7 +154,7 @@ namespace Utilities
 #endif
             }
             
-            void PhysFS::setWriteDirectory(const char* organization, const char* appName)
+            void PhysFS::setWriteDirectory(const char* const organization, const char* const appName)
             {
                 if(PHYSFS_setSaneConfig(organization, appName, 0, 0, 0) == 0)
                 {

@@ -46,7 +46,5 @@ namespace Platform
     void LibraryManager::unload(Library* const lib)
     {
         lib->close();
-        
-        //delete lib;
     }
 }

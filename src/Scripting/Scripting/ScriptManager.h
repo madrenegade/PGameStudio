@@ -68,7 +68,7 @@ namespace Scripting
         template<typename T>
         void registerFunction(const char* name, const boost::function<T>& fn)
         {
-            boost::shared_ptr < CommandT < T >> command(new CommandT<T > (name, fn));
+            boost::shared_ptr<CommandT<T>> command = memory->construct(CommandT<T > (name, fn), pool);
 
             engine->registerFunction(name, command.get(), &CommandT<T>::callback);
 
@@ -87,7 +87,9 @@ namespace Scripting
 
         std::string startupScriptName;
 
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        const Utilities::Memory::pool_id pool;
+        
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
 
         boost::shared_ptr<ScriptEngine> engine;

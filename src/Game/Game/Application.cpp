@@ -198,6 +198,7 @@ namespace Game
     {
         VLOG(1) << "Initializing task scheduler";
 
+        // cannot use memory manager because tbb task scheduler is copy protected
         taskScheduler.reset(new Core::TaskScheduler(properties));
     }
 
