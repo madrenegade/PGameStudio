@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Executor.h
  * Author: madrenegade
  *
@@ -21,10 +21,10 @@ namespace Scripting
     // 0 parameters
 
     template<class ParamTypes, class ResultType>
-    struct Executor<Int2Type < 0 >, ParamTypes, ResultType>
+    struct Executor<Int2Type<0>, ParamTypes, ResultType>
     {
 
-        template<class Fn >
+        template<class Fn>
         ResultType operator()(Fn& fn, const AnyVector& /*params*/)
         {
             return fn();
@@ -32,28 +32,26 @@ namespace Scripting
     };
 
     // 1 parameter
-
     template<class ParamTypes, typename ResultType>
-    struct Executor<Int2Type < 1 >, ParamTypes, ResultType>
+    struct Executor<Int2Type<1>, ParamTypes, ResultType>
     {
 
-        template<class Fn >
-        ResultType operator()(Fn& fn, const AnyVector & params)
+        template<class Fn>
+        ResultType operator()(Fn& fn, const AnyVector& params)
         {
             typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 0 > >::type typeOfParam0;
-            
+
             return fn(boost::any_cast<typeOfParam0 > (params[0]));
         }
     };
 
     // 2 parameters
-
     template<class ParamTypes, typename ResultType>
-    struct Executor<Int2Type < 2 >, ParamTypes, ResultType>
+    struct Executor<Int2Type<2>, ParamTypes, ResultType>
     {
 
-        template<class Fn >
-        ResultType operator()(Fn& fn, const AnyVector & params)
+        template<class Fn>
+        ResultType operator()(Fn& fn, const AnyVector& params)
         {
             typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 0 > >::type typeOfParam0;
             typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 1 > >::type typeOfParam1;
@@ -64,13 +62,12 @@ namespace Scripting
     };
 
     // 3 parameters
-
     template<class ParamTypes, typename ResultType>
     struct Executor< Int2Type < 3 >, ParamTypes, ResultType >
     {
 
         template<class Fn >
-        ResultType operator()(Fn& fn, const AnyVector & params)
+        ResultType operator()(Fn& fn, const AnyVector& params)
         {
             typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 0 > >::type typeOfParam0;
             typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 1 > >::type typeOfParam1;

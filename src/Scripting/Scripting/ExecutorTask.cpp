@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   ExecutorTask.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 27, 2011, 2:05 PM
  */
 
@@ -11,7 +11,7 @@
 namespace Scripting
 {
 
-    ExecutorTask::ExecutorTask(ScriptManager* scriptManager)
+    ExecutorTask::ExecutorTask(ScriptManager* const scriptManager)
     : scriptManager(scriptManager)
     {
     }
@@ -24,7 +24,7 @@ namespace Scripting
     {
         scriptManager->runScript("update");
         scriptManager->runGarbageCollection();
-        
+
         return 0;
     }
 }

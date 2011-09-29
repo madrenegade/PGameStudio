@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Extractor.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 15, 2011, 12:36 PM
  */
 
@@ -12,7 +12,7 @@ namespace Scripting
     namespace Lua
     {
 
-        Extractor::Extractor(AnyVector& params, lua_State* state)
+        Extractor::Extractor(AnyVector& params, lua_State* const state)
         : Scripting::Extractor(params), state(state), stackIndex(1)
         {
         }
@@ -20,7 +20,7 @@ namespace Scripting
         Extractor::~Extractor()
         {
         }
-        
+
         void Extractor::extract(const bool&)
         {
             if (!lua_isboolean(state, stackIndex))
@@ -42,7 +42,7 @@ namespace Scripting
             params.push_back(lua_tointeger(state, stackIndex));
             ++stackIndex;
         }
-        
+
         void Extractor::extract(const double&)
         {
             if (!lua_isnumber(state, stackIndex))
@@ -53,14 +53,14 @@ namespace Scripting
             params.push_back(lua_tonumber(state, stackIndex));
             ++stackIndex;
         }
-        
+
         void Extractor::extract(const char*)
         {
             if (!lua_isstring(state, stackIndex))
             {
                 LOG(FATAL) << "Expected parameter of type string as parameter " << stackIndex;
             }
-            
+
             params.push_back(lua_tostring(state, stackIndex));
             ++stackIndex;
         }
@@ -71,7 +71,7 @@ namespace Scripting
             {
                 LOG(FATAL) << "Expected parameter of type string as parameter " << stackIndex;
             }
-            
+
             params.push_back(String(lua_tostring(state, stackIndex)));
             ++stackIndex;
         }

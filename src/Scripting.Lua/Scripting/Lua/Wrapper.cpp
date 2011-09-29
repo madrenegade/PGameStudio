@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Wrapper.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 15, 2011, 1:44 PM
  */
 
@@ -12,7 +12,7 @@ namespace Scripting
     namespace Lua
     {
 
-        Wrapper::Wrapper(ScriptFunction fn, ScriptEngine* engine)
+        Wrapper::Wrapper(ScriptFunction fn, ScriptEngine* const engine)
         : fn(fn), engine(engine)
         {
         }

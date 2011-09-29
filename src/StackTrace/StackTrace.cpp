@@ -12,14 +12,14 @@
 #include <execinfo.h>
 #endif
 
-std::string demangle(const char* symbol)
+std::string demangle(const char* const symbol)
 {
 #ifdef GCC
     size_t size;
     int status;
     char temp[256];
     char* demangled;
-    
+
     //first, try to demangle a c++ name
     if (1 == sscanf(symbol, "%*[^(]%*[^_]%127[^)+]", temp))
     {
@@ -43,7 +43,7 @@ std::string demangle(const char* symbol)
 #endif
 }
 
-StackTrace::StackTrace(bool x)
+StackTrace::StackTrace(const bool x)
 {
     if (x)
     {
@@ -52,7 +52,7 @@ StackTrace::StackTrace(bool x)
 #if defined GCC && !defined(X64)
         // use backtrace because it is much faster
         void* data[25];
-        
+
         size_t size = backtrace(data, sizeof(data));
 
         char** symbols = backtrace_symbols(data, size);

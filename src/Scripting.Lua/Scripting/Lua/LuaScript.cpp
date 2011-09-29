@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   LuaScript.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 27, 2011, 1:08 PM
  */
 
@@ -14,19 +14,19 @@ namespace Scripting
     namespace Lua
     {
 
-        LuaScript::LuaScript(lua_State* state, const Utilities::IO::File::Handle& file, const char* name)
+        LuaScript::LuaScript(lua_State* const state, const Utilities::IO::File::Handle& file, const char* const name)
         : state(state), name(name)
         {
             int status = luaL_loadbuffer(state, file->getData(), file->getSize(), name);
             logErrors(status);
-            
+
             lua_setglobal(state, name);
         }
 
         LuaScript::~LuaScript()
         {
         }
-        
+
         void LuaScript::run()
         {
             lua_getglobal(state, name.c_str());
@@ -34,7 +34,7 @@ namespace Scripting
 
             logErrors(status);
         }
-        
+
         void LuaScript::logErrors(int status)
         {
             if (status != 0)

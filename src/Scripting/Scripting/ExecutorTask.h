@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   ExecutorTask.h
  * Author: madrenegade
  *
@@ -13,17 +13,17 @@
 namespace Scripting
 {
     class ScriptManager;
-    
+
     class ExecutorTask : public tbb::task
     {
     public:
-        ExecutorTask(ScriptManager* scriptManager);
+        ExecutorTask(ScriptManager* const scriptManager);
         virtual ~ExecutorTask();
-        
+
         virtual tbb::task* execute();
-        
+
     private:
-        ScriptManager* scriptManager;
+        ScriptManager* const scriptManager;
     };
 }
 

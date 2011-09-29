@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Command.h
  * Author: madrenegade
  *
@@ -27,15 +27,14 @@ namespace Scripting
     class Command
     {
     public:
-        Command(const char* name);
+        Command(const char* const name);
 
     private:
-        std::string name;
+        String name;
     };
 
     struct remove_ref
     {
-
         template <class T>
         struct apply
         {
@@ -47,8 +46,7 @@ namespace Scripting
     class CommandT : public Command
     {
     public:
-
-        CommandT(const char* name, const boost::function<T>& fn)
+        CommandT(const char* const name, const boost::function<T>& fn)
         : Command(name), function(fn)
         {
 
@@ -67,8 +65,7 @@ namespace Scripting
         typedef Executor<Int2Type<boost::function_types::function_arity<T>::value>, ParamTypes, ResultType > ExecutorType;
 
         // for void returns
-
-        int execute(ScriptEngine* engine, Int2Type < true >) const
+        int execute(ScriptEngine* engine, Int2Type<true>) const
         {
             AnyVector params;
 
@@ -82,8 +79,7 @@ namespace Scripting
         }
 
         // for non-void returns
-
-        int execute(ScriptEngine* engine, Int2Type < false >) const
+        int execute(ScriptEngine* engine, Int2Type<false>) const
         {
             AnyVector params;
 
@@ -105,7 +101,7 @@ namespace Scripting
         }
 
     private:
-        std::string name;
+        String name;
         boost::function<T> function;
     };
 }

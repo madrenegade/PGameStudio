@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   ScriptManager.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 14, 2011, 6:48 PM
  */
 
@@ -29,15 +29,15 @@ namespace Scripting
     void ScriptManager::addOptionsTo(const PropertyManager::Ptr& properties)
     {
         MemoryPoolSettings scriptPool(1 * KByte, 1 * KByte, 128 * Byte,
-            1 * KByte, 1 * KByte, 256 * Byte,
-            1 * KByte, 1 * KByte, 512 * Byte);
+                                      1 * KByte, 1 * KByte, 256 * Byte,
+                                      1 * KByte, 1 * KByte, 512 * Byte);
         scriptPool.addOptionsTo(properties, "Scripting");
 
         po::options_description options("Scripting options");
 
         options.add_options()
-            ("Scripting.engine", po::value<std::string > (), "The scripting engine to use")
-            ("Scripting.startup", po::value<std::string > (), "The script to run at startup");
+        ("Scripting.engine", po::value<std::string > (), "The scripting engine to use")
+        ("Scripting.startup", po::value<std::string > (), "The script to run at startup");
 
         properties->addOptions(options);
     }
@@ -49,8 +49,8 @@ namespace Scripting
                                  const boost::shared_ptr<PlatformManager>& platformManager,
                                  const boost::shared_ptr<FileSystem>& fileSystem,
                                  const PropertyManager::Ptr& properties)
-    : startupScriptName(properties->get<std::string>("Scripting.startup")),
-    memory(memoryManager), pool(pool), fileSystem(fileSystem)
+        : startupScriptName(properties->get<std::string>("Scripting.startup")),
+          memory(memoryManager), pool(pool), fileSystem(fileSystem)
     {
         std::string engineName("Scripting." + properties->get<std::string > ("Scripting.engine"));
 
@@ -71,7 +71,7 @@ namespace Scripting
         runScript(startupScriptName.c_str());
     }
 
-    void ScriptManager::runScript(const char* name)
+    void ScriptManager::runScript(const char* const name)
     {
         if (scripts.find(name) == scripts.end())
         {
@@ -127,7 +127,7 @@ namespace Scripting
             LOG(FATAL) << "setVariable does not support type " << data.type().name();
         }
     }
-    
+
     void ScriptManager::runGarbageCollection()
     {
         engine->runGarbageCollection();

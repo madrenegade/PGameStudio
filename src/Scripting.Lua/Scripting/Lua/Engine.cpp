@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Engine.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 14, 2011, 7:21 PM
  */
 
@@ -42,7 +42,7 @@ namespace Scripting
         {
             Allocator::memory = memory;
             Allocator::pool = poolID;
-            
+
             state.reset(lua_newstate(Allocator::allocate, 0), LuaStateDeleter());
 
             if (!state)
@@ -65,7 +65,7 @@ namespace Scripting
             return EXTENSION.c_str();
         }
 
-        boost::shared_ptr<Script> Engine::load(const Utilities::IO::File::Handle& file, const char* name)
+        boost::shared_ptr<Script> Engine::load(const Utilities::IO::File::Handle& file, const char* const name)
         {
             VLOG(2) << "Loading script " << name;
 
@@ -73,7 +73,7 @@ namespace Scripting
 
             return script;
         }
-        
+
         void Engine::runGarbageCollection()
         {
             VLOG_EVERY_N(3, 100) << "LUA mem: " << lua_getgccount(state.get()) << "kB";
@@ -98,7 +98,7 @@ namespace Scripting
             return (*wrapper)();
         }
 
-        void Engine::registerFunction(const char* name, Command* cmd, int (*fn)(ScriptEngine*))
+        void Engine::registerFunction(const char* const name, Command* const cmd, int (*fn)(ScriptEngine*))
         {
             boost::shared_ptr<Wrapper> wrapper = memory->construct(Wrapper(fn, this), pool);
             wrappers.push_back(wrapper);

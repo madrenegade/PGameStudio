@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Extractor.h
  * Author: madrenegade
  *
@@ -24,18 +24,18 @@ namespace Scripting
         class Extractor : public Scripting::Extractor
         {
         public:
-            Extractor(AnyVector& params, lua_State* state);
+            Extractor(AnyVector& params, lua_State* const state);
             virtual ~Extractor();
 
             virtual void extract(const bool& b);
             virtual void extract(const long& i);
             virtual void extract(const double& d);
-            
+
             virtual void extract(const char* s);
             virtual void extract(const String& s);
 
         private:
-            lua_State* state;
+            lua_State* const state;
             int stackIndex;
         };
     }

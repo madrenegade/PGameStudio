@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   MemoryPoolSettings.h
  * Author: madrenegade
  *
@@ -17,7 +17,7 @@ namespace Utilities
     {
         class PropertyManager;
     }
-    
+
     namespace Memory
     {
 
@@ -30,7 +30,7 @@ namespace Utilities
              * @param basename - the basename used for the property names
              */
             void addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const basename) const;
-            
+
             /**
              * Load memory pool settings from a property manager
              * @param properties
@@ -38,7 +38,7 @@ namespace Utilities
              * @return the loaded settings
              */
             static const MemoryPoolSettings loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char*const basename);
-        
+
             MemoryPoolSettings(const size_t smallObjectPoolSize = 16*KByte,
                                const size_t smallObjectPageSize = 4*KByte,
                                const size_t smallObjectBlockSize = 128*Byte,
@@ -48,17 +48,12 @@ namespace Utilities
                                const size_t largeObjectPoolSize = 16*MByte,
                                const size_t largeObjectPageSize = 4*KByte,
                                const size_t largeObjectBlockSize = 512*Byte)
-            : smallObjectPoolSize(smallObjectPoolSize),
-            smallObjectPageSize(smallObjectPageSize),
-            smallObjectBlockSize(smallObjectBlockSize),
-            mediumObjectPoolSize(mediumObjectPoolSize),
-            mediumObjectPageSize(mediumObjectPageSize),
-            mediumObjectBlockSize(mediumObjectBlockSize),
-            largeObjectPoolSize(largeObjectPoolSize),
-            largeObjectPageSize(largeObjectPageSize),
+            : smallObjectPoolSize(smallObjectPoolSize), smallObjectPageSize(smallObjectPageSize),
+            smallObjectBlockSize(smallObjectBlockSize), mediumObjectPoolSize(mediumObjectPoolSize),
+            mediumObjectPageSize(mediumObjectPageSize), mediumObjectBlockSize(mediumObjectBlockSize),
+            largeObjectPoolSize(largeObjectPoolSize), largeObjectPageSize(largeObjectPageSize),
             largeObjectBlockSize(largeObjectBlockSize)
-            {
-            }
+            {}
 
             const size_t smallObjectPoolSize;
             const size_t smallObjectPageSize;
@@ -70,8 +65,8 @@ namespace Utilities
             const size_t largeObjectPageSize;
             const size_t largeObjectBlockSize;
         };
-        
-        
+
+
     }
 }
 

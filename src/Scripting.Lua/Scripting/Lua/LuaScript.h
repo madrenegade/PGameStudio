@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   LuaScript.h
  * Author: madrenegade
  *
@@ -22,15 +22,15 @@ namespace Scripting
         class LuaScript : public Scripting::Script
         {
         public:
-            LuaScript(lua_State* state, const Utilities::IO::File::Handle& file, const char* name);
+            LuaScript(lua_State* const state, const Utilities::IO::File::Handle& file, const char* const name);
             virtual ~LuaScript();
-            
+
             virtual void run();
-            
+
         private:
             void logErrors(int status);
-            
-            lua_State* state;
+
+            lua_State* const state;
             String name;
         };
     }

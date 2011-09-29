@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   StackFrame.h
  * Author: madrenegade
  *
@@ -18,18 +18,18 @@ class StackFrame
 public:
     StackFrame();
     StackFrame(const std::string& function);
-    
+
     const std::string& getFunction() const;
-    
+
 private:
     friend class boost::serialization::access;
-    
+
     template<class Archive>
-    void serialize(Archive & ar, const unsigned int /*version*/)
+    void serialize(Archive& ar, const unsigned int /*version*/)
     {
-        ar & function;
+        ar& function;
     }
-    
+
     std::string function;
 };
 

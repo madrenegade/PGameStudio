@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Wrapper.h
  * Author: madrenegade
  *
@@ -16,21 +16,21 @@ extern "C"
 namespace Scripting
 {
     class ScriptEngine;
-    
+
     namespace Lua
     {
         typedef int (*ScriptFunction)(ScriptEngine*);
-        
+
         class Wrapper
         {
         public:
-            Wrapper(ScriptFunction fn, ScriptEngine* engine);
-            
+            Wrapper(ScriptFunction fn, ScriptEngine* const engine);
+
             int operator()();
-            
+
         private:
             ScriptFunction fn;
-            ScriptEngine* engine;
+            ScriptEngine* const engine;
         };
     }
 }

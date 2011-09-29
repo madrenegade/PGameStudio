@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   ScriptManager.h
  * Author: madrenegade
  *
@@ -58,15 +58,15 @@ namespace Scripting
 
         void runStartupScript();
 
-        void runScript(const char* name);
+        void runScript(const char* const name);
         void runScript(const Core::Events::EventID& id, const boost::any& data);
-        
+
         void setVariable(const Core::Events::EventID& id, const boost::any& data);
-        
+
         void runGarbageCollection();
 
         template<typename T>
-        void registerFunction(const char* name, const boost::function<T>& fn)
+        void registerFunction(const char* const name, const boost::function<T>& fn)
         {
             boost::shared_ptr<CommandT<T>> command = memory->construct(CommandT<T > (name, fn), pool);
 
@@ -76,6 +76,10 @@ namespace Scripting
         }
 
     private:
+        typedef boost::shared_ptr<Command> CommandPtr;
+        typedef boost::shared_ptr<Script> ScriptPtr;
+        typedef std::map<std::string, ScriptPtr> ScriptMap;
+
         friend class ScriptManagerFactory;
         ScriptManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                       Utilities::Memory::pool_id pool,
@@ -89,16 +93,12 @@ namespace Scripting
 
         const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
         const Utilities::Memory::pool_id pool;
-        
-        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
 
+        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
         boost::shared_ptr<ScriptEngine> engine;
 
-        typedef boost::shared_ptr<Command> CommandPtr;
         std::vector<CommandPtr, Utilities::Memory::STLAllocator<CommandPtr>> commands;
-        
-        typedef boost::shared_ptr<Script> ScriptPtr;
-        typedef std::map<std::string, ScriptPtr> ScriptMap;
+
         ScriptMap scripts;
     };
 }

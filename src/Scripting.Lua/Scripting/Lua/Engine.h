@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Engine.h
  * Author: madrenegade
  *
@@ -41,14 +41,14 @@ namespace Scripting
 
             virtual const char* getExtension() const;
 
-            virtual boost::shared_ptr<Script> load(const Utilities::IO::File::Handle& file, const char* name);
-            
+            virtual boost::shared_ptr<Script> load(const Utilities::IO::File::Handle& file, const char* const name);
+
             virtual void runGarbageCollection();
 
             virtual boost::shared_ptr<Extractor> createExtractor(AnyVector& params) const;
 
             virtual Command* getCommand() const;
-            virtual void registerFunction(const char* name, Command* cmd, int (*fn)(ScriptEngine*));
+            virtual void registerFunction(const char* const name, Command* const cmd, int (*fn)(ScriptEngine*));
 
             virtual void setReturnValue(const bool& b);
             virtual void setReturnValue(const long& i);
@@ -72,7 +72,7 @@ namespace Scripting
 
             typedef boost::shared_ptr<Wrapper> WrapperPtr;
             std::vector<WrapperPtr, Utilities::Memory::STLAllocator<WrapperPtr> > wrappers;
-            
+
             unsigned int frame;
         };
     }

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Command.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 15, 2011, 12:13 PM
  */
 
@@ -9,9 +9,9 @@
 
 namespace Scripting
 {
-    Command::Command(const char* name)
+    Command::Command(const char* const name)
         : name(name)
     {
-        
+
     }
 }

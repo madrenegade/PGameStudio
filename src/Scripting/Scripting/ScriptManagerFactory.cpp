@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   ScriptManagerFactory.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 15, 2011, 4:56 PM
  */
 
@@ -26,10 +26,10 @@ namespace Scripting
                                                                   const boost::shared_ptr<FileSystem>& fileSystem,
                                                                   const boost::shared_ptr<PropertyManager>& properties)
     {
-        boost::shared_ptr<Pool> pool = createMemoryPool(properties);
-        
-        pool_id poolID = memoryManager->registerMemoryPool(pool);
-        
+        const boost::shared_ptr<Pool> pool = createMemoryPool(properties);
+
+        const pool_id poolID = memoryManager->registerMemoryPool(pool);
+
         return memoryManager->construct(ScriptManager(memoryManager, poolID, platformManager, fileSystem, properties), poolID);
     }
 

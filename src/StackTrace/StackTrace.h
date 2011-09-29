@@ -9,20 +9,20 @@
 class StackTrace
 {
 public:
-    StackTrace(bool x = true);
-    
+    StackTrace(const bool x = true);
+
     typedef std::list<StackFrame> Frames;
     const Frames& getFrames() const;
-    
+
 private:
     friend class boost::serialization::access;
-    
+
     template<class Archive>
-    void serialize(Archive & ar, const unsigned int /*version*/)
+    void serialize(Archive& ar, const unsigned int /*version*/)
     {
-        ar & frames;
+        ar& frames;
     }
-    
+
     std::list<StackFrame> frames;
 };
 
