@@ -20,18 +20,19 @@ namespace Platform
     class LibraryManager
     {
     public:
-        LibraryManager();
+        LibraryManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
         ~LibraryManager();
         
-        boost::shared_ptr<Library> load(const char* name);
+        boost::shared_ptr<Library> load(const char* const name);
         
     private:
-        void unload(Library* lib);
+        void unload(Library* const lib);
+        
+        const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         
         typedef boost::shared_ptr<Library> LibPtr;
         
-        // FIXME: crashes with STLAllocator
-        typedef std::list<LibPtr /*, Utilities::Memory::STLAllocator<LibPtr>*/ > LibraryList;
+        typedef std::list<LibPtr, Utilities::Memory::STLAllocator<LibPtr>> LibraryList;
         LibraryList loadedLibraries;
     };
 }

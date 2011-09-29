@@ -10,12 +10,12 @@
 namespace Graphics
 {
 
-    VertexFormat::VertexFormat(size_t vertexSize,
-                               ptrdiff_t positionOffset, size_t positionSize,
-                               ptrdiff_t texCoordOffset, size_t texCoordSize,
-                               ptrdiff_t normalOffset, size_t normalSize,
-                               ptrdiff_t tangentOffset, size_t tangentSize,
-                               ptrdiff_t bitangentOffset, size_t bitangentSize)
+    VertexFormat::VertexFormat(const size_t vertexSize,
+                               const ptrdiff_t positionOffset, const size_t positionSize,
+                               const ptrdiff_t texCoordOffset, const size_t texCoordSize,
+                               const ptrdiff_t normalOffset, const size_t normalSize,
+                               const ptrdiff_t tangentOffset, const size_t tangentSize,
+                               const ptrdiff_t bitangentOffset, const size_t bitangentSize)
     : vertexSize(vertexSize), positionOffset(positionOffset), positionSize(positionSize),
     texCoordOffset(texCoordOffset), texCoordSize(texCoordSize),
     normalOffset(normalOffset), normalSize(normalSize),

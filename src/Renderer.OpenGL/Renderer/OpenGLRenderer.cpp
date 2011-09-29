@@ -82,7 +82,7 @@ namespace Renderer
     }
 
     unsigned long OpenGLRenderer::requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
-                                                            unsigned int numVertices, const Graphics::VertexFormat& fmt)
+                                                            const unsigned int numVertices, const Graphics::VertexFormat& fmt)
     {
         VertexBufferRequest request;
         request.data = data;
@@ -92,7 +92,7 @@ namespace Renderer
         return vertexBuffers->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes)
+    unsigned long OpenGLRenderer::requestIndexBuffer(const boost::shared_array<unsigned int>& data, const unsigned int numIndexes)
     {
         IndexBufferRequest request;
         request.data = data;
@@ -117,22 +117,22 @@ namespace Renderer
         return textures->queueRequest(request);
     }
 
-    bool OpenGLRenderer::isVertexBufferLoaded(unsigned long vbID) const
+    bool OpenGLRenderer::isVertexBufferLoaded(const unsigned long vbID) const
     {
         return vertexBuffers->isLoaded(vbID);
     }
 
-    bool OpenGLRenderer::isIndexBufferLoaded(unsigned long ibID) const
+    bool OpenGLRenderer::isIndexBufferLoaded(const unsigned long ibID) const
     {
         return indexBuffers->isLoaded(ibID);
     }
 
-    bool OpenGLRenderer::isEffectLoaded(unsigned long effectID) const
+    bool OpenGLRenderer::isEffectLoaded(const unsigned long effectID) const
     {
         return effects->isLoaded(effectID);
     }
 
-    bool OpenGLRenderer::isTextureLoaded(unsigned long textureID) const
+    bool OpenGLRenderer::isTextureLoaded(const unsigned long textureID) const
     {
         return textures->isLoaded(textureID);
     }

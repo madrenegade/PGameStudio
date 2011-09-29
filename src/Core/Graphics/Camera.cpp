@@ -24,7 +24,7 @@ namespace Graphics
         return 1;
     }
 
-    void Camera::activateView(unsigned int index)
+    void Camera::activateView(const unsigned int)
     {
 
     }

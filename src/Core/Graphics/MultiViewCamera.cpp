@@ -10,7 +10,7 @@
 namespace Graphics
 {
 
-    MultiViewCamera::MultiViewCamera(double fieldOfView, double aspectRatio, double zNear, double zFar)
+    MultiViewCamera::MultiViewCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar)
     : PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar)
     {
     }

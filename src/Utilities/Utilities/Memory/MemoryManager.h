@@ -10,6 +10,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/static_assert.hpp>
 
 #include <glog/logging.h>
@@ -37,6 +38,26 @@ namespace Utilities
 {
     namespace Memory
     {
+
+        template<typename T, typename DeleterT, typename MainDeleterT>
+        struct ComposedDeleter
+        {
+
+            ComposedDeleter(const DeleterT& pre, const MainDeleterT& main)
+            : preDeleter(pre), mainDeleter(main)
+            {
+            }
+
+            void operator()(T * obj)
+            {
+                preDeleter(obj);
+                mainDeleter(obj);
+            }
+
+        private:
+            const DeleterT preDeleter;
+            const MainDeleterT mainDeleter;
+        };
 
         class MemoryManager
         {
@@ -71,6 +92,29 @@ namespace Utilities
              * @return 
              */
             size_t getMemoryUsage() const;
+
+            template<typename T, typename Deleter>
+            boost::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, pool_id poolID = 0
+#ifdef DEBUG
+                , const StackTrace& stacktrace = StackTrace()
+#endif
+                )
+            {
+#ifdef DEBUG
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(stacktrace, sizeof (T), poolID);
+                }
+#endif
+
+                // combine deleter with deallocation function
+                typedef boost::function<void (T*)> MainDeleter;
+                MainDeleter mainDeleter = boost::bind(&MemoryManager::deallocate<T>, this, _1, 1);
+                ComposedDeleter<T, Deleter, MainDeleter> deleter(preDeleter, mainDeleter);
+
+                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID)) T(obj), deleter);
+                return ptr;
+            }
 
             /**
              * construct the given object in the given memory pool
@@ -175,7 +219,7 @@ namespace Utilities
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*>(ptr), n, demangle(typeid (T).name()).c_str());
+                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*> (ptr), n, demangle(typeid (T).name()).c_str());
 #endif
 
                 const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
@@ -260,7 +304,7 @@ namespace Utilities
 
                     ptr = reinterpret_cast<T*> (rawPtr);
 
-                    RAW_VLOG(4, "Allocated %lu bytes at address %p in pool %i (%p)", BYTES_TO_ALLOCATE, reinterpret_cast<void*>(ptr), poolID, reinterpret_cast<void*>(pools[poolID].get()));
+                    RAW_VLOG(4, "Allocated %lu bytes at address %p in pool %i (%p)", BYTES_TO_ALLOCATE, reinterpret_cast<void*> (ptr), poolID, reinterpret_cast<void*> (pools[poolID].get()));
 #else
                     ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
 #endif
@@ -285,7 +329,7 @@ namespace Utilities
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*>(ptr), n, demangle(typeid (T).name()).c_str());
+                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*> (ptr), n, demangle(typeid (T).name()).c_str());
 #endif
 
                 for (size_t i = 0; i < n; ++i)

@@ -16,12 +16,12 @@ namespace Graphics
     class VertexFormat
     {
     public:
-        VertexFormat(size_t vertexSize = 0,
-                     ptrdiff_t positionOffset = 0, size_t positionSize = 0,
-                     ptrdiff_t texCoordOffset = 0, size_t texCoordSize = 0,
-                     ptrdiff_t normalOffset = 0, size_t normalSize = 0,
-                     ptrdiff_t tangentOffset = 0, size_t tangentSize = 0,
-                     ptrdiff_t bitangentOffset = 0, size_t bitangentSize = 0);
+        VertexFormat(const size_t vertexSize = 0,
+                     const ptrdiff_t positionOffset = 0, const size_t positionSize = 0,
+                     const ptrdiff_t texCoordOffset = 0, const size_t texCoordSize = 0,
+                     const ptrdiff_t normalOffset = 0, const size_t normalSize = 0,
+                     const ptrdiff_t tangentOffset = 0, const size_t tangentSize = 0,
+                     const ptrdiff_t bitangentOffset = 0, const size_t bitangentSize = 0);
 
         ~VertexFormat();
 
@@ -75,6 +75,7 @@ namespace Graphics
         }
 
     private:
+        // NOTE: cannot make member variables constant because of assignment
         size_t vertexSize;
 
         ptrdiff_t positionOffset;

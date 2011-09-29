@@ -19,7 +19,7 @@ namespace Graphics
         virtual ~Camera();
 
         virtual unsigned int getViewCount() const;
-        virtual void activateView(unsigned int index);
+        virtual void activateView(const unsigned int index);
 
         const Math::Matrix4& getViewMatrix() const;
         virtual const Math::Matrix4& getProjectionMatrix() const = 0;

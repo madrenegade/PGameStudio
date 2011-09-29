@@ -24,7 +24,7 @@ namespace Platform
 
     }
 
-    void Library::open(const char* filename)
+    void Library::open(const char* const filename)
     {
         handle = dlopen(filename, RTLD_LAZY);
 
@@ -34,10 +34,10 @@ namespace Platform
         }
     }
 
-    void* Library::getFunction(const char* name)
+    const void* Library::getFunction(const char* const name)
     {
 #ifdef DEBUG
-        void* ptr = dlsym(handle, name);
+        const void* ptr = dlsym(handle, name);
 
         if (ptr == 0)
         {
@@ -65,7 +65,7 @@ namespace Platform
     
     void Library::check()
     {
-        const char* error = dlerror();
+        const char* const error = dlerror();
         
         if(error != 0)
         {

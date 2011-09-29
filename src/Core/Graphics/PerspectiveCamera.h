@@ -32,13 +32,13 @@ namespace Graphics
         virtual void update();
 
     protected:
-        PerspectiveCamera(double fieldOfView, double aspectRatio, double zNear, double zFar);
+        PerspectiveCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar);
 
     private:
         Math::Vector3 lookAt;
         Math::Vector3 up;
         
-        Math::Matrix4 projection;
+        const Math::Matrix4 projection;
     };
 }
 

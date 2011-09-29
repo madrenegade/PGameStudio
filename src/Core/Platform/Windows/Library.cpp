@@ -21,7 +21,7 @@ namespace Platform
 
     }
 
-    void Library::open(const char* filename)
+    void Library::open(const char* const filename)
     {
         handle = LoadLibrary(filename);
 
@@ -32,10 +32,10 @@ namespace Platform
         }
     }
 
-    void* Library::getFunction(const char* name)
+    void* Library::getFunction(const char* const name)
     {
 #ifdef DEBUG
-        void* ptr = GetProcAddress(handle, name);
+        const void* ptr = GetProcAddress(handle, name);
 
         if (ptr == 0)
         {

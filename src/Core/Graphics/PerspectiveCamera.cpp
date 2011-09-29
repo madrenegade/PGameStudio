@@ -10,7 +10,7 @@
 namespace Graphics
 {
 
-    PerspectiveCamera::PerspectiveCamera(double fieldOfView, double aspectRation, double zNear, double zFar)
+    PerspectiveCamera::PerspectiveCamera(const double fieldOfView, const double aspectRation, const double zNear, const double zFar)
     : lookAt(0, 0, -1), up(0, 1, 0),
     projection(Math::Matrix4(Math::Matrix4::CreatePerspectiveFieldOfView(Math::PI * fieldOfView / 180.0, aspectRation, zNear, zFar)))
     {

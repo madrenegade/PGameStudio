@@ -14,8 +14,8 @@ namespace Graphics
     const unsigned int StereoViewCamera::LEFT = 0;
     const unsigned int StereoViewCamera::RIGHT = 1;
 
-    StereoViewCamera::StereoViewCamera(double fieldOfView, double aspectRatio, double zNear, double zFar,
-                                       double eyeSeparation)
+    StereoViewCamera::StereoViewCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar,
+                                       const double eyeSeparation)
     : MultiViewCamera(fieldOfView, aspectRatio, zNear, zFar), OFFSET(eyeSeparation / 2.0)
     {
     }
@@ -29,7 +29,7 @@ namespace Graphics
         return 2;
     }
 
-    void StereoViewCamera::activateView(unsigned int index)
+    void StereoViewCamera::activateView(const unsigned int index)
     {    
         const Math::Vector3 dir(getLookAt() - getPosition());
         

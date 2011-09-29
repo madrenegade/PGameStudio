@@ -23,10 +23,10 @@ namespace Platform
         
         Library();
         
-        void open(const char* filename);
+        void open(const char* const filename);
         void close();
         
-        void* getFunction(const char* name);
+        const void* getFunction(const char* const name);
         
         
     private:

@@ -20,7 +20,7 @@ namespace Graphics
         virtual ~MultiViewCamera();
 
     protected:
-        MultiViewCamera(double fieldOfView, double aspectRatio, double zNear, double zFar);
+        MultiViewCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar);
     };
 }
 

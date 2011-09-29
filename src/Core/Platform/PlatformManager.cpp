@@ -41,7 +41,7 @@ namespace Platform
                                      const PropertyManager::Ptr& properties)
     : memoryManager(memory), eventManager(eventManager), properties(properties)
     {
-        libraryManager = memory->construct(LibraryManager());
+        libraryManager = memory->construct(LibraryManager(memory));
 
         String platformPlugin("Platform.");
         platformPlugin.append(properties->get<std::string > ("Platform.plugin").c_str());

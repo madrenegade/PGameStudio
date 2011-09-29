@@ -16,12 +16,12 @@ namespace Graphics
     class StereoViewCamera : public MultiViewCamera
     {
     public:
-        StereoViewCamera(double fieldOfView, double aspectRatio, double zNear, double zFar,
-                         double eyeSeparation);
+        StereoViewCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar,
+                         const double eyeSeparation);
         virtual ~StereoViewCamera();
         
         virtual unsigned int getViewCount() const;
-        virtual void activateView(unsigned int index);
+        virtual void activateView(const unsigned int index);
         
     private:
         static const unsigned int LEFT;
