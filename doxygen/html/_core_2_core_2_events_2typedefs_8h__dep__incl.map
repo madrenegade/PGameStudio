@@ -1,0 +1,21 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$_event_manager_8h.html" title="EventManager.h" alt="" coords="1156,83,1273,112"/>
+<area shape="rect" id="node21" href="$_game_2_game_2_application_8h.html" title="Application.h" alt="" coords="273,83,369,112"/>
+<area shape="rect" id="node26" href="$_input_task_8h.html" title="InputTask.h" alt="" coords="1540,83,1631,112"/>
+<area shape="rect" id="node30" href="$_input_2_input_2_system_scene_8h.html" title="SystemScene.h" alt="" coords="1668,83,1783,112"/>
+<area shape="rect" id="node35" href="$_x11_event_handler_8h.html" title="X11EventHandler.h" alt="" coords="1297,83,1431,112"/>
+<area shape="rect" id="node39" href="$_script_manager_8h.html" title="ScriptManager.h" alt="" coords="428,83,545,112"/>
+<area shape="rect" id="node5" href="$_event_manager_8cpp.html" title="EventManager.cpp" alt="" coords="749,160,880,189"/>
+<area shape="rect" id="node7" href="$_platform_manager_8cpp.html" title="PlatformManager.cpp" alt="" coords="904,160,1051,189"/>
+<area shape="rect" id="node9" href="$_game_2_game_2_application_8cpp.html" title="Application.cpp" alt="" coords="267,160,376,189"/>
+<area shape="rect" id="node11" href="$_input_task_8cpp.html" title="InputTask.cpp" alt="" coords="1533,160,1637,189"/>
+<area shape="rect" id="node13" href="$_input_2_input_2_system_scene_8cpp.html" title="SystemScene.cpp" alt="" coords="1661,160,1789,189"/>
+<area shape="rect" id="node15" href="$editorapplication_8cpp.html" title="editorapplication.cpp" alt="" coords="1075,160,1216,189"/>
+<area shape="rect" id="node17" href="$_platform_8cpp.html" title="Platform.cpp" alt="" coords="1240,160,1336,189"/>
+<area shape="rect" id="node19" href="$_x11_event_handler_8cpp.html" title="X11EventHandler.cpp" alt="" coords="1360,160,1509,189"/>
+<area shape="rect" id="node23" href="$_demo_8cpp.html" title="Demo.cpp" alt="" coords="5,160,88,189"/>
+<area shape="rect" id="node32" href="$_input_2_input_2main_8cpp.html" title="main.cpp" alt="" coords="1813,160,1888,189"/>
+<area shape="rect" id="node42" href="$_executor_task_8cpp.html" title="ExecutorTask.cpp" alt="" coords="597,160,725,189"/>
+<area shape="rect" id="node44" href="$_script_manager_8cpp.html" title="ScriptManager.cpp" alt="" coords="112,160,243,189"/>
+<area shape="rect" id="node46" href="$_script_manager_factory_8cpp.html" title="ScriptManagerFactory.cpp" alt="" coords="400,160,573,189"/>
+</map>

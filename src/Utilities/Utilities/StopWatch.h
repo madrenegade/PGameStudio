@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   StopWatch.h
  * Author: madrenegade
  *
@@ -13,23 +13,27 @@
 
 namespace Utilities
 {
-
+    /**
+    * A simple stopwatch class for measuring and printing time.
+    * The measurement starts in the constructor and ends with the lifetime of the
+    * object.
+    */
     class StopWatch
     {
     public:
         /**
          * Start measuring time.
          */
-        StopWatch(const char* name);
-        
+        StopWatch(const char* const name);
+
         /**
-         * Stop measurment output the elapsed time in milliseconds
+         * Stop measurment and output the elapsed time in milliseconds to the console.
          */
         ~StopWatch();
-        
+
     private:
         std::string name;
-        
+
         std::chrono::time_point<std::chrono::system_clock> start;
     };
 }

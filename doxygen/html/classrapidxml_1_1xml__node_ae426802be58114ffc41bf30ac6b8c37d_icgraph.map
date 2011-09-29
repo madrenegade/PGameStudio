@@ -1,0 +1,13 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classrapidxml_1_1xml__node.html#a33ce3386f8c42dd4db658b75cbb6e6c4" title="rapidxml::xml_node::append_attribute" alt="" coords="288,5,525,35"/>
+<area shape="rect" id="node7" href="$classrapidxml_1_1memory__pool.html#a0a10679fc17597d339a0dc107f8a94ac" title="rapidxml::memory_pool::clone_node" alt="" coords="292,59,521,88"/>
+<area shape="rect" id="node9" href="$namespacerapidxml.html#ab7d43f875181f4e06dbb8d21877378fc" title="rapidxml::count_attributes" alt="" coords="321,112,492,141"/>
+<area shape="rect" id="node11" href="$classrapidxml_1_1xml__node.html#a8b62ee76489faf8e2d1210869d547684" title="rapidxml::xml_node::prepend_attribute" alt="" coords="285,165,528,195"/>
+<area shape="rect" id="node14" href="$classrapidxml_1_1xml__node.html#aa8d5d9484aa1eb5ff1841a073c84c1aa" title="Removes all attributes of node." alt="" coords="273,219,540,248"/>
+<area shape="rect" id="node20" href="$classrapidxml_1_1xml__node.html#a6f97b1b4f46a94a4587915df3c0c6b57" title="rapidxml::xml_node::remove_attribute" alt="" coords="589,323,829,352"/>
+<area shape="rect" id="node22" href="$classrapidxml_1_1xml__node.html#aa95192d2a165cca16c551ed2a2a06aec" title="rapidxml::xml_node::remove_first_attribute" alt="" coords="272,323,541,352"/>
+<area shape="rect" id="node25" href="$classrapidxml_1_1xml__node.html#a1781a2cbedc9a51d609ad5b528125635" title="rapidxml::xml_node::remove_last_attribute" alt="" coords="273,376,540,405"/>
+<area shape="rect" id="node5" href="$classrapidxml_1_1xml__node.html#a9fe659cdf4a5b3bbf5e8ffc98db5a84f" title="rapidxml::xml_node::insert_attribute" alt="" coords="595,72,824,101"/>
+<area shape="rect" id="node16" href="$classrapidxml_1_1xml__document.html#a826929ff54242532198701f19ff5f83f" title="rapidxml::xml_document::clear" alt="" coords="609,191,809,220"/>
+<area shape="rect" id="node18" href="$classrapidxml_1_1xml__document.html#ad510b0c5fd8bf0180a55ffb2476e59e4" title="rapidxml::xml_document::parse" alt="" coords="608,244,811,273"/>
+</map>

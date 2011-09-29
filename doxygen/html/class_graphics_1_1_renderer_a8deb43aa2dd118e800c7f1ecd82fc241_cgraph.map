@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$class_graphics_1_1_renderer.html#ab1ae0394d197e556d9ee18eeba6d5cde" title="Graphics::Renderer::processEffectRequests" alt="" coords="319,5,599,35"/>
+<area shape="rect" id="node5" href="$class_graphics_1_1_renderer.html#afaa2ea534e4784f4d99a9e23f6bf3c5e" title="Graphics::Renderer::processIndexBufferRequests" alt="" coords="303,59,615,88"/>
+<area shape="rect" id="node7" href="$class_graphics_1_1_renderer.html#ac83b5667e0cb587468aef52a531ca45a" title="Graphics::Renderer::processTextureRequests" alt="" coords="315,112,603,141"/>
+<area shape="rect" id="node9" href="$class_graphics_1_1_renderer.html#a696584c9bed121702dfe236cf5ef2890" title="Graphics::Renderer::processVertexBufferRequests" alt="" coords="300,165,617,195"/>
+</map>

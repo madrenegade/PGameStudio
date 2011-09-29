@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PropertyManager.h
  * Author: madrenegade
  *
@@ -21,66 +21,70 @@ namespace Utilities
     namespace Properties
     {
         class PropertyChangeListener;
-        
+
+        /**
+         * A class for managing program options. This includes specifying which options are
+         * allowed and loading settings from the command line or from ini-Files.
+         */
         class PropertyManager
         {
         public:
             typedef boost::shared_ptr<PropertyManager> Ptr;
-            
+
             PropertyManager();
             ~PropertyManager();
-            
+
             /**
              * Add some options description. This merges the already added descriptions with this one.
-             * This method must be called before parse
-             * @param options - the options to add
+             * This method must be called before parse.
+             * @param options - The options to add.
              */
             void addOptions(const po::options_description& options);
-            
+
             /**
-             * Parses options from the command line.
-             * After parsing the properties "argv0" and "argc" 
-             * are automatically added. The types of the properties are 
+             * Parse options from the command line.
+             * After parsing the properties "argv0" and "argc"
+             * are automatically added. The types of the properties are
              * std::string and int.
-             * @param argc
-             * @param argv
+             * @param argc - The amount of arguments.
+             * @param argv - The argument values.
              */
-            void parse(int argc, char** argv);
-            
+            void parse(const int argc, char** argv);
+
             /**
-             * parse a config file
-             * @param filename - the name of the file to parse
+             * Parse a config file.
+             * @param filename - The name of the file to parse.
              */
-            void parse(const char* filename);
-            
+            void parse(const char* const filename);
+
             /**
-             * add a listener which is notified when a property is changed
-             * @param listener - the listener to notify
-             * @param property
+             * Add a listener which is notified when a property is changed.
+             * @param listener - The listener to notify.
+             * @param property - The name of the property to register the listener with.
              */
-            void addListener(PropertyChangeListener* listener, const char* property);
-            void removeListener(PropertyChangeListener* listener, const char* property);
-            
+            void addListener(PropertyChangeListener* const listener, const char* const property);
+            void removeListener(PropertyChangeListener* const listener, const char* const property);
+
             /**
-             * return a property casted to the specified type
-             * if casting fails an exception is thrown
-             * @param name
-             * @return the property value
+             * Return a property casted to the specified type.
+             * If casting fails an exception is thrown.
+             * @param name - The name of the property to retreive.
+             * @return The property value casted to type T.
              */
             template<typename T>
-            T get(const char* name) const
+            T get(const char* const name) const
             {
 #ifdef DEBUG
                 assertPropertyExists(name);
-                
+
                 try
                 {
                     return boost::any_cast<T>(properties.at(name));
                 }
                 catch(const boost::bad_any_cast& ex)
                 {
-                    LOG(ERROR) << "Could not cast property " 
-                        << name << " to type " 
+                    LOG(ERROR) << "Could not cast property "
+                        << name << " to type "
                         << Utilities::demangle(typeid(T).name()) << std::endl
                         << " (expected " << Utilities::demangle(properties.at(name).type().name()) << ")";
                     throw;
@@ -88,45 +92,44 @@ namespace Utilities
 #else
                 return boost::any_cast<T>(properties.at(name));
 #endif
-               
             }
-            
+
             /**
-             * set the value of an existing property
-             * throws an exception if the property does not exist or the type is invalid
-             * @param name
-             * @param value
+             * Set the value of an existing property.
+             * Throws an exception if the property does not exist or the type is invalid.
+             * @param name - The name of the property to set.
+             * @param value - The property value.
              */
-            void set(const char* name, const boost::any& value);
-            
+            void set(const char* const name, const boost::any& value);
+
         private:
             /**
-             * copies all properties from the variables map into the property map
-             * @param vm - the variables map to copy from
+             * Copy all properties from the variables map into the property map.
+             * @param vm - The variables map to copy from.
              */
             void addPropertiesFrom(const po::variables_map& vm);
-            
+
             /**
-             * add a property to the property map if it does not exist
-             * if the property already exists an exception is thrown
-             * @param name
-             * @param value
+             * Add a property to the property map if it does not exist.
+             * If the property already exists an exception is thrown.
+             * @param name - The name of the property.
+             * @param value - The property value.
              */
             void addProperty(const std::string& name, const boost::program_options::variable_value& value);
-            
+
             bool propertyExists(const std::string& name) const;
-            
+
 #ifdef DEBUG
             void assertPropertyExists(const std::string& name) const;
 #endif
-            
+
             void notifyListenersAboutChangeOf(const std::string& name);
-            
+
             po::options_description options;
-            
+
             typedef std::map<std::string, boost::any> PropertyMap;
             PropertyMap properties;
-            
+
             typedef std::map<std::string, std::list<PropertyChangeListener*> > ListenerMap;
             ListenerMap listeners;
         };

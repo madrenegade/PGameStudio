@@ -1,0 +1,17 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$class_controller.html" title="Controller" alt="" coords="279,207,356,236"/>
+<area shape="rect" id="node4" href="$class_new_scene_wizard.html" title="NewSceneWizard" alt="" coords="589,53,715,83"/>
+<area shape="rect" id="node11" href="$class_asset_import_wizard.html" title="AssetImportWizard" alt="" coords="585,219,719,248"/>
+<area shape="rect" id="node18" href="$class_main_window.html" title="MainWindow" alt="" coords="865,520,961,549"/>
+<area shape="rect" id="node31" href="$class_scene_dock_widget.html" title="SceneDockWidget" alt="" coords="587,439,717,468"/>
+<area shape="rect" id="node9" href="$class_ui___wizard.html" title="Ui_Wizard" alt="" coords="51,5,133,35"/>
+<area shape="rect" id="node16" href="$class_ui___asset_import_wizard.html" title="Ui_AssetImportWizard" alt="" coords="15,312,169,341"/>
+<area shape="rect" id="node20" href="$classmemprof_1_1change__listener.html" title="memprof::change_listener" alt="" coords="567,492,737,521"/>
+<area shape="rect" id="node22" href="$class_server_thread.html" title="ServerThread" alt="" coords="603,611,701,640"/>
+<area shape="rect" id="node24" href="$classmemprof_1_1server.html" title="memprof::server" alt="" coords="259,571,376,600"/>
+<area shape="rect" id="node28" href="$class_ui___main_window.html" title="Ui_MainWindow" alt="" coords="259,664,376,693"/>
+<area shape="rect" id="node35" href="$class_ui___scene_dock_widget.html" title="Ui_SceneDockWidget" alt="" coords="17,507,167,536"/>
+<area shape="rect" id="node38" href="$class_about_dialog.html" title="AboutDialog" alt="" coords="605,717,699,747"/>
+<area shape="rect" id="node42" href="$class_ui___about_dialog.html" title="Ui_AboutDialog" alt="" coords="36,717,148,747"/>
+<area shape="rect" id="node48" href="$class_ui___rendering_dock_widget.html" title="Ui_RenderingDockWidget" alt="" coords="5,453,179,483"/>
+</map>

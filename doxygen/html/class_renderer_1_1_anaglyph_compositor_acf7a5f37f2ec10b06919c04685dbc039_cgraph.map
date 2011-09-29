@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$class_renderer_1_1_effect.html#a77d14c1227f29a29d1d0dc959afe453d" title="Renderer::Effect::activate" alt="" coords="404,5,575,35"/>
+<area shape="rect" id="node5" href="$class_renderer_1_1_texture.html#aae97f464662892806e30f1fa437c379d" title="Renderer::Texture::bind" alt="" coords="411,59,568,88"/>
+<area shape="rect" id="node7" href="$class_renderer_1_1_frame_buffer.html#a5835f0a04b20cc6c81875efe774d9c2b" title="Renderer::FrameBuffer::getColorAttachment" alt="" coords="351,112,628,141"/>
+<area shape="rect" id="node9" href="$class_renderer_1_1_viewport.html#a24d44d49bb3e757b84b2e19333cbf473" title="Renderer::Viewport::getFrameBuffer" alt="" coords="373,165,605,195"/>
+<area shape="rect" id="node11" href="$class_renderer_1_1_effect.html#a56a4738864ea7b8853151fe6dd8ab298" title="Renderer::Effect::set" alt="" coords="417,219,561,248"/>
+</map>

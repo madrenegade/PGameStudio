@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classrapidxml_1_1xml__node.html#a8696d098ecc9c4d2a646b43e91d58e31" title="rapidxml::xml_node::append_node" alt="" coords="269,219,488,248"/>
+<area shape="rect" id="node9" href="$classrapidxml_1_1memory__pool.html#a0a10679fc17597d339a0dc107f8a94ac" title="rapidxml::memory_pool::clone_node" alt="" coords="264,59,493,88"/>
+<area shape="rect" id="node11" href="$namespacerapidxml.html#aa2de039eee246be25e248fe522317424" title="rapidxml::count_children" alt="" coords="297,112,460,141"/>
+<area shape="rect" id="node13" href="$class_input_1_1_system_scene.html#a381a55bbe406b7aacc4251d131b745c3" title="Input::SystemScene::load" alt="" coords="292,165,465,195"/>
+<area shape="rect" id="node15" href="$class_core_1_1_scene_loader.html#a3bae63c1686a340ee2b19dfebe344996" title="Core::SceneLoader::loadScene" alt="" coords="277,325,480,355"/>
+<area shape="rect" id="node19" href="$classrapidxml_1_1xml__node.html#ae86e92908c3eab40bbed8216e4f3f3cb" title="rapidxml::xml_node::prepend_node" alt="" coords="267,5,491,35"/>
+<area shape="rect" id="node22" href="$classrapidxml_1_1xml__node.html#a95735358b079ae0adcfbbac69aa1fbc3" title="Removes all child nodes (but not attributes)." alt="" coords="255,272,503,301"/>
+<area shape="rect" id="node27" href="$classrapidxml_1_1xml__node.html#a62bf7b276cf7a651a3337f5e0a0ef6ac" title="rapidxml::xml_node::remove_first_node" alt="" coords="253,432,504,461"/>
+<area shape="rect" id="node29" href="$classrapidxml_1_1xml__node.html#a98289923eb9e8889418a9eb0207ea35c" title="Removes specified child from the node." alt="" coords="552,432,773,461"/>
+<area shape="rect" id="node31" href="$classrapidxml_1_1xml__node.html#a9182512e948ec451a83f116cce7c7674" title="rapidxml::xml_node::remove_last_node" alt="" coords="255,379,503,408"/>
+<area shape="rect" id="node5" href="$classrapidxml_1_1xml__node.html#a666880f42a7e486d78cc45ed51c7c46d" title="rapidxml::xml_node::insert_node" alt="" coords="557,85,768,115"/>
+<area shape="rect" id="node7" href="$classrapidxml_1_1xml__document.html#ad510b0c5fd8bf0180a55ffb2476e59e4" title="rapidxml::xml_document::parse" alt="" coords="561,219,764,248"/>
+<area shape="rect" id="node17" href="$class_core_1_1_scene_manager.html#a59f27fdaf769dfbaaeaf95a708c405ba" title="Core::SceneManager::loadScene" alt="" coords="556,325,769,355"/>
+<area shape="rect" id="node24" href="$classrapidxml_1_1xml__document.html#a826929ff54242532198701f19ff5f83f" title="rapidxml::xml_document::clear" alt="" coords="563,272,763,301"/>
+</map>

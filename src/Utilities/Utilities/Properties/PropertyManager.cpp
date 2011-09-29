@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PropertyManager.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 7, 2011, 3:32 PM
  */
 
@@ -20,7 +20,7 @@ namespace Utilities
         {
 
         }
-        
+
         PropertyManager::~PropertyManager()
         {
         }
@@ -43,42 +43,42 @@ namespace Utilities
             po::notify(vm);
 
             addPropertiesFrom(vm);
-            
+
             set("argc", argc);
             set("argv0", std::string(argv[0]));
         }
 
-        void PropertyManager::parse(const char* filename)
+        void PropertyManager::parse(const char* const filename)
         {
             VLOG(1) << "Parsing config file " << filename;
-            
+
             po::variables_map vm;
 
             std::ifstream in(filename);
-            
+
             if(!in)
             {
                 LOG(WARNING) << "Could not open config file " << filename;
                 return;
             }
-            
+
             po::store(po::parse_config_file(in, options), vm);
             po::notify(vm);
 
             addPropertiesFrom(vm);
         }
 
-        void PropertyManager::addListener(PropertyChangeListener* listener, const char* property)
+        void PropertyManager::addListener(PropertyChangeListener* const listener, const char* const property)
         {
             listeners[property].push_front(listener);
         }
 
-        void PropertyManager::removeListener(PropertyChangeListener* listener, const char* property)
+        void PropertyManager::removeListener(PropertyChangeListener* const listener, const char* const property)
         {
             listeners[property].remove(listener);
         }
 
-        void PropertyManager::set(const char* name, const boost::any& value)
+        void PropertyManager::set(const char* const name, const boost::any& value)
         {
             DCHECK(propertyExists(name));
             DCHECK(properties[name].type() == value.type());
@@ -111,7 +111,7 @@ namespace Utilities
         {
             return properties.find(name) != properties.end();
         }
-        
+
 #ifdef DEBUG
         void PropertyManager::assertPropertyExists(const std::string& name) const
         {
@@ -127,7 +127,7 @@ namespace Utilities
             if (listeners.find(name) == listeners.end()) return;
 
             std::list<PropertyChangeListener*>& listeners = this->listeners.at(name);
-            
+
             auto fn = [&](PropertyChangeListener * listener) {
                 listener->onPropertyChanged(name, properties[name]);
             };

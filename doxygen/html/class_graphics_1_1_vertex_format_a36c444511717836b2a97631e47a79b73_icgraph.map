@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$class_graphics_1_1_vertex_format.html#a550714136503c96c2b11479e22b174b4" title="Graphics::VertexFormat::forTexturedVertex" alt="" coords="337,5,609,35"/>
+<area shape="rect" id="node5" href="$class_graphics_1_1_vertex_format.html#a62b6048346d45ab1776d6ff8cb745133" title="Graphics::VertexFormat::forTexturedVertexWithNormal" alt="" coords="303,59,644,88"/>
+<area shape="rect" id="node7" href="$class_graphics_1_1_vertex_format.html#a558ae57f044087734047ff39a351177a" title="Graphics::VertexFormat::forTNBT" alt="" coords="364,112,583,141"/>
+</map>

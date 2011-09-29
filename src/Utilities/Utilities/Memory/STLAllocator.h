@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   STLAllocator.h
  * Author: madrenegade
  *
@@ -23,7 +23,6 @@ namespace Utilities
         template <class T> class STLAllocator;
 
         // specialize for void:
-
         template <>
         class STLAllocator<void>
         {
@@ -36,12 +35,16 @@ namespace Utilities
             template <class U> struct rebind
             {
                 typedef STLAllocator<U>
-                    other;
+                other;
             };
 
             static MemoryManager::Ptr memory;
         };
 
+        /**
+         * An allocator template class for use in STL containers. Internally it uses
+         * \ref Utilities::Memory::MemoryManager to do allocations and deallocations.
+         */
         template<class T>
         class STLAllocator
         {
@@ -92,9 +95,9 @@ namespace Utilities
 
             pointer allocate(size_type n,
 #ifdef GCC
-                STLAllocator<void>::const_pointer hint __attribute__((unused)) = 0
+                             STLAllocator<void>::const_pointer hint __attribute__((unused)) = 0
 #endif
-                )
+                            )
             {
                 DCHECK(memory.get() != 0);
 

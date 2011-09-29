@@ -1,0 +1,23 @@
+<map id="G" name="G">
+<area shape="rect" id="node5" href="$_platform_manager_8h.html" title="Platform/PlatformManager.h" alt="" coords="484,83,668,112"/>
+<area shape="rect" id="node99" href="$_linux_2_library_8h.html" title="Platform/Linux/Library.h" alt="" coords="2576,83,2736,112"/>
+<area shape="rect" id="node101" href="$_platform_impl_8h.html" title="Platform/PlatformImpl.h" alt="" coords="5,237,165,267"/>
+<area shape="rect" id="node104" href="$_property_manager_8h.html" title="Utilities/Properties/PropertyManager.h" alt="" coords="2525,315,2768,344"/>
+<area shape="rect" id="node111" href="$_event_manager_8h.html" title="Core/Events/EventManager.h" alt="" coords="809,83,1004,112"/>
+<area shape="rect" id="node9" href="$_library_manager_8h.html" title="Platform/LibraryManager.h" alt="" coords="489,160,663,189"/>
+<area shape="rect" id="node14" href="$_s_t_l_allocator_8h.html" title="Utilities/Memory/STLAllocator.h" alt="" coords="631,237,836,267"/>
+<area shape="rect" id="node22" href="$_memory_manager_8h.html" title="Utilities/Memory/MemoryManager.h" alt="" coords="1133,315,1363,344"/>
+<area shape="rect" id="node35" href="$_utilities_2_utilities_2_memory_2typedefs_8h.html" title="Utilities/Memory/typedefs.h" alt="" coords="2061,701,2243,731"/>
+<area shape="rect" id="node37" href="$_pool_8h.html" title="Utilities/Memory/Pool.h" alt="" coords="1703,392,1860,421"/>
+<area shape="rect" id="node74" href="$_memory_tracker_8h.html" title="Utilities/Memory/Tracking/MemoryTracker.h" alt="" coords="1884,392,2161,421"/>
+<area shape="rect" id="node85" href="$functions_8h.html" title="Utilities/functions.h" alt="" coords="2580,392,2713,421"/>
+<area shape="rect" id="node43" href="$_memory_pool_settings_8h.html" title="Utilities/Memory/MemoryPoolSettings.h" alt="" coords="765,469,1019,499"/>
+<area shape="rect" id="node50" href="$_small_object_allocator_8h.html" title="Utilities/Memory/Allocators/SmallObjectAllocator.h" alt="" coords="1547,547,1861,576"/>
+<area shape="rect" id="node66" href="$_medium_object_allocator_8h.html" title="Utilities/Memory/Allocators/MediumObjectAllocator.h" alt="" coords="1195,547,1523,576"/>
+<area shape="rect" id="node71" href="$_large_object_allocator_8h.html" title="Utilities/Memory/Allocators/LargeObjectAllocator.h" alt="" coords="1144,469,1459,499"/>
+<area shape="rect" id="node45" href="$constants_8h.html" title="Utilities/Memory/constants.h" alt="" coords="816,547,1005,576"/>
+<area shape="rect" id="node52" href="$_utilities_2_utilities_2_memory_2_allocators_2_allocator_8h.html" title="Utilities/Memory/Allocators/Allocator.h" alt="" coords="1240,624,1485,653"/>
+<area shape="rect" id="node78" href="$_allocation_info_8h.html" title="Utilities/Memory/AllocationInfo.h" alt="" coords="1987,469,2197,499"/>
+<area shape="rect" id="node113" href="$_core_2_core_2_events_2typedefs_8h.html" title="Core/Events/typedefs.h" alt="" coords="305,160,465,189"/>
+<area shape="rect" id="node119" href="$string_8h.html" title="Utilities/string.h" alt="" coords="772,160,884,189"/>
+</map>

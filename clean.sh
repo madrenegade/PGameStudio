@@ -1,6 +1,7 @@
 #!/bin/sh
 rm -rf ./build
 mkdir ./build
+rm Project.layout
 find -name '*.cbp' -exec rm {} \;
 find -name 'cmake_install.cmake' -exec rm {} \;
 find -name 'Makefile' -exec rm {} \;

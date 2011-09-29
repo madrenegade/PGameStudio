@@ -1,0 +1,25 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$_script_manager_8h.html" title="Scripting/ScriptManager.h" alt="" coords="264,83,435,112"/>
+<area shape="rect" id="node36" href="$_script_engine_8h.html" title="Scripting/ScriptEngine.h" alt="" coords="1733,237,1896,267"/>
+<area shape="rect" id="node50" href="$_memory_manager_8h.html" title="Utilities/Memory/MemoryManager.h" alt="" coords="1459,469,1688,499"/>
+<area shape="rect" id="node113" href="$_script_8h.html" title="Scripting/Script.h" alt="" coords="2709,83,2832,112"/>
+<area shape="rect" id="node115" href="$_property_manager_8h.html" title="Utilities/Properties/PropertyManager.h" alt="" coords="2689,469,2932,499"/>
+<area shape="rect" id="node123" href="$_file_system_8h.html" title="Utilities/IO/FileSystem.h" alt="" coords="2667,392,2832,421"/>
+<area shape="rect" id="node128" href="$_platform_manager_8h.html" title="Platform/PlatformManager.h" alt="" coords="2957,237,3141,267"/>
+<area shape="rect" id="node131" href="$_library_manager_8h.html" title="Platform/LibraryManager.h" alt="" coords="3092,315,3265,344"/>
+<area shape="rect" id="node137" href="$_library_8h.html" title="Platform/Library.h" alt="" coords="3216,83,3341,112"/>
+<area shape="rect" id="node9" href="$_core_2_core_2_events_2typedefs_8h.html" title="Core/Events/typedefs.h" alt="" coords="101,160,261,189"/>
+<area shape="rect" id="node14" href="$_scripting_2_scripting_2typedefs_8h.html" title="Scripting/typedefs.h" alt="" coords="173,315,312,344"/>
+<area shape="rect" id="node20" href="$_command_8h.html" title="Scripting/Command.h" alt="" coords="1207,160,1353,189"/>
+<area shape="rect" id="node42" href="$_s_t_l_allocator_8h.html" title="Utilities/Memory/STLAllocator.h" alt="" coords="1529,392,1735,421"/>
+<area shape="rect" id="node63" href="$_utilities_2_utilities_2_memory_2typedefs_8h.html" title="Utilities/Memory/typedefs.h" alt="" coords="2272,624,2453,653"/>
+<area shape="rect" id="node103" href="$_executor_8h.html" title="Scripting/Executor.h" alt="" coords="1920,237,2059,267"/>
+<area shape="rect" id="node107" href="$_extractor_proxy_8h.html" title="Scripting/ExtractorProxy.h" alt="" coords="2083,237,2256,267"/>
+<area shape="rect" id="node40" href="$string_8h.html" title="Utilities/string.h" alt="" coords="1576,315,1688,344"/>
+<area shape="rect" id="node98" href="$_file_8h.html" title="Utilities/IO/File.h" alt="" coords="2484,469,2604,499"/>
+<area shape="rect" id="node65" href="$_pool_8h.html" title="Utilities/Memory/Pool.h" alt="" coords="1328,547,1485,576"/>
+<area shape="rect" id="node79" href="$_memory_tracker_8h.html" title="Utilities/Memory/Tracking/MemoryTracker.h" alt="" coords="1797,624,2075,653"/>
+<area shape="rect" id="node83" href="$functions_8h.html" title="Utilities/functions.h" alt="" coords="2371,547,2504,576"/>
+<area shape="rect" id="node71" href="$_memory_pool_settings_8h.html" title="Utilities/Memory/MemoryPoolSettings.h" alt="" coords="1181,624,1435,653"/>
+<area shape="rect" id="node74" href="$_small_object_allocator_8h.html" title="Utilities/Memory/Allocators/SmallObjectAllocator.h" alt="" coords="1459,624,1773,653"/>
+</map>

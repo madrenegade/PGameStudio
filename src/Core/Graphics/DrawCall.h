@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   DrawCall.h
  * Author: madrenegade
  *
@@ -16,7 +16,7 @@ namespace Graphics
     struct DrawCall
     {
         Math::Matrix4 transform;
-        
+
         unsigned long vertexBuffer;
         unsigned long indexBuffer;
         Material* material;
@@ -24,4 +24,3 @@ namespace Graphics
 }
 
 #endif	/* GRAPHICS_DRAWCALL_H */
-
