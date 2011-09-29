@@ -25,26 +25,26 @@ namespace Graphics
 
         ~VertexFormat();
 
-        const size_t getVertexSize() const;
+        size_t getVertexSize() const;
 
-        const ptrdiff_t getPositionOffset() const;
-        const size_t getPositionSize() const;
+        ptrdiff_t getPositionOffset() const;
+        size_t getPositionSize() const;
 
         bool hasTexCoords() const;
-        const ptrdiff_t getTexCoordOffset() const;
-        const size_t getTexCoordSize() const;
+        ptrdiff_t getTexCoordOffset() const;
+        size_t getTexCoordSize() const;
 
         bool hasNormal() const;
-        const ptrdiff_t getNormalOffset() const;
-        const size_t getNormalSize() const;
+        ptrdiff_t getNormalOffset() const;
+        size_t getNormalSize() const;
 
         bool hasTangent() const;
-        const ptrdiff_t getTangentOffset() const;
-        const size_t getTangentSize() const;
+        ptrdiff_t getTangentOffset() const;
+        size_t getTangentSize() const;
 
         bool hasBitangent() const;
-        const ptrdiff_t getBitangentOffset() const;
-        const size_t getBitangentSize() const;
+        ptrdiff_t getBitangentOffset() const;
+        size_t getBitangentSize() const;
 
         template<typename VertexType>
         static VertexFormat forTexturedVertex()

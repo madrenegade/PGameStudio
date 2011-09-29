@@ -28,17 +28,17 @@ namespace Graphics
     {
     }
 
-    const size_t VertexFormat::getVertexSize() const
+    size_t VertexFormat::getVertexSize() const
     {
         return vertexSize;
     }
 
-    const ptrdiff_t VertexFormat::getPositionOffset() const
+    ptrdiff_t VertexFormat::getPositionOffset() const
     {
         return positionOffset;
     }
 
-    const size_t VertexFormat::getPositionSize() const
+    size_t VertexFormat::getPositionSize() const
     {
         return positionSize;
     }
@@ -48,12 +48,12 @@ namespace Graphics
         return texCoordSize != 0;
     }
 
-    const ptrdiff_t VertexFormat::getTexCoordOffset() const
+    ptrdiff_t VertexFormat::getTexCoordOffset() const
     {
         return texCoordOffset;
     }
 
-    const size_t VertexFormat::getTexCoordSize() const
+    size_t VertexFormat::getTexCoordSize() const
     {
         return texCoordSize;
     }
@@ -63,12 +63,12 @@ namespace Graphics
         return normalSize != 0;
     }
 
-    const ptrdiff_t VertexFormat::getNormalOffset() const
+    ptrdiff_t VertexFormat::getNormalOffset() const
     {
         return normalOffset;
     }
 
-    const size_t VertexFormat::getNormalSize() const
+    size_t VertexFormat::getNormalSize() const
     {
         return normalSize;
     }
@@ -78,12 +78,12 @@ namespace Graphics
         return tangentSize != 0;
     }
 
-    const ptrdiff_t VertexFormat::getTangentOffset() const
+    ptrdiff_t VertexFormat::getTangentOffset() const
     {
         return tangentOffset;
     }
 
-    const size_t VertexFormat::getTangentSize() const
+    size_t VertexFormat::getTangentSize() const
     {
         return tangentSize;
     }
@@ -93,12 +93,12 @@ namespace Graphics
         return bitangentSize != 0;
     }
 
-    const ptrdiff_t VertexFormat::getBitangentOffset() const
+    ptrdiff_t VertexFormat::getBitangentOffset() const
     {
         return bitangentOffset;
     }
 
-    const size_t VertexFormat::getBitangentSize() const
+    size_t VertexFormat::getBitangentSize() const
     {
         return bitangentSize;
     }

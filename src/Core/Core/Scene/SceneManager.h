@@ -58,7 +58,7 @@ namespace Core
         void loadScene(const char* const name);
         void switchScene(const char* const name);
         
-        Scene* const getCurrentScene() const;
+        Scene* getCurrentScene() const;
 
     private:
         static const std::string SCENE_PATH;

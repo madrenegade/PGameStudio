@@ -31,10 +31,10 @@ namespace Input
         
         void setState(double x, double y);
         
-        const char* const getXVariableName() const;
-        const char* const getYVariableName() const;
-        const char* const getDeltaXVariableName() const;
-        const char* const getDeltaYVariableName() const;
+        const char* getXVariableName() const;
+        const char* getYVariableName() const;
+        const char* getDeltaXVariableName() const;
+        const char* getDeltaYVariableName() const;
         
     private:
         String xVar;

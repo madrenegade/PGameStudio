@@ -35,8 +35,8 @@ namespace Input
         
         void setState(double x);
         
-        const char* const getVariableName() const;
-        const char* const getDeltaVariableName() const;
+        const char* getVariableName() const;
+        const char* getDeltaVariableName() const;
         
     private:
         String var;

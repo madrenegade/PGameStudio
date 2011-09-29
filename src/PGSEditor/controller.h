@@ -10,12 +10,14 @@
 
 class SceneData;
 class Material;
+class EditorApplication;
 
 class Controller : public QWidget
 {
     Q_OBJECT
 public:
     explicit Controller(MainWindow* mainWindow);
+    virtual ~Controller();
 
     QStringList availableSystems() const;
     QStringList getAssetImportPostProcessingSteps() const;
@@ -45,6 +47,8 @@ private:
 
     NewSceneWizard* newSceneWizard;
     AssetImportWizard* assetImportWizard;
+
+    boost::shared_ptr<EditorApplication> editorApplication;
 
     boost::shared_ptr<SceneData> currentScene;
 };

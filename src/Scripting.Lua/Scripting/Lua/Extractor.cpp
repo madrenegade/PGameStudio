@@ -21,7 +21,7 @@ namespace Scripting
         {
         }
         
-        void Extractor::extract(const bool& b)
+        void Extractor::extract(const bool&)
         {
             if (!lua_isboolean(state, stackIndex))
             {
@@ -32,7 +32,7 @@ namespace Scripting
             ++stackIndex;
         }
 
-        void Extractor::extract(const long& i)
+        void Extractor::extract(const long&)
         {
             if (!lua_isnumber(state, stackIndex))
             {
@@ -43,7 +43,7 @@ namespace Scripting
             ++stackIndex;
         }
         
-        void Extractor::extract(const double& d)
+        void Extractor::extract(const double&)
         {
             if (!lua_isnumber(state, stackIndex))
             {
@@ -54,7 +54,7 @@ namespace Scripting
             ++stackIndex;
         }
         
-        void Extractor::extract(const char* s)
+        void Extractor::extract(const char*)
         {
             if (!lua_isstring(state, stackIndex))
             {
@@ -65,7 +65,7 @@ namespace Scripting
             ++stackIndex;
         }
 
-        void Extractor::extract(const String& s)
+        void Extractor::extract(const String&)
         {
             if (!lua_isstring(state, stackIndex))
             {

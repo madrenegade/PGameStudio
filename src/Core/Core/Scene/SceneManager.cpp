@@ -60,7 +60,7 @@ namespace Core
         currentScene = loadedScenes.at(name);
     }
     
-    Scene* const SceneManager::getCurrentScene() const
+    Scene* SceneManager::getCurrentScene() const
     {
         return currentScene.get();
     }

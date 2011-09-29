@@ -117,7 +117,7 @@ namespace Utilities
         {
             if(!propertyExists(name))
             {
-                throw std::logic_error("Property does not exists: " + name);
+                throw std::logic_error("Property does not exist: " + name);
             }
         }
 #endif

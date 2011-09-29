@@ -52,7 +52,7 @@ namespace memprof
                 boost::asio::placeholders::bytes_transferred));
         }
 
-        void connection::handle_read(const boost::system::error_code& error, size_t bytesTransferred)
+        void connection::handle_read(const boost::system::error_code& error, size_t /*bytesTransferred*/)
         {
             if (!error)
             {

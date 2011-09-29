@@ -29,13 +29,13 @@ namespace Core
              * @param name - the event name
              * @return the generated ID
              */
-            const EventID registerEvent(const char* const name);
+            EventID registerEvent(const char* const name);
             
             /**
              * Get the id of a registered event.
              * @param name - the name of the event
              */
-            const EventID getEventID(const char* const name) const;
+            EventID getEventID(const char* const name) const;
             
             /**
              * Register an event handler so that it is autmatically called.

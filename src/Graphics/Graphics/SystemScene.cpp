@@ -64,6 +64,7 @@ namespace Graphics
     {
         boost::shared_ptr<Platform::Library> lib = platformManager->libraries()->load("Renderer.OpenGL");
 
+        // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
         CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createRenderer"));
 
         renderer = create(memoryManager, properties, pool);
@@ -74,7 +75,7 @@ namespace Graphics
 
     }
 
-    const char* const SystemScene::getSceneFileExtension() const
+    const char* SystemScene::getSceneFileExtension() const
     {
         return SCENE_FILE_EXTENSION.c_str();
     }

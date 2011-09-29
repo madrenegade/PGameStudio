@@ -79,7 +79,7 @@ TEST(FunctionsTest, countsBitsFromRight)
     std::bitset<Memory::ULONG_BITS> bits(generateBitSet(-1));
     EXPECT_EQ(Memory::ULONG_BITS, countZeroBitsFromRight(bits.to_ulong()));
         
-    for (int i = 0; i < Memory::ULONG_BITS; ++i)
+    for (size_t i = 0; i < Memory::ULONG_BITS; ++i)
     {
         std::bitset<Memory::ULONG_BITS> bits(generateBitSet(i));
 

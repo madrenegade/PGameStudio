@@ -32,7 +32,7 @@ namespace Utilities
 
             options.add_options()
                 ("FileSystem.backend", po::value<unsigned char>()->default_value(0), "The backend to use")
-                ("FileSystem.mount", po::value<std::vector<std::string> >(), "Directories and their mount points")
+                ("FileSystem.mount", po::value<std::vector<std::string>>()->default_value(std::vector<std::string>(0), "")->composing(), "Directories and their mount points")
                 ("FileSystem.organization", po::value<std::string > (), "An organization named used to determine the writable directory")
                 ("FileSystem.appName", po::value<std::string > (), "The application name used to determine the writable directory");
 

@@ -25,7 +25,7 @@ namespace Graphics
         
         virtual void initialize();
         
-        virtual const char* const getSceneFileExtension() const;
+        virtual const char* getSceneFileExtension() const;
         
         virtual void load(const Utilities::IO::File& file);
         

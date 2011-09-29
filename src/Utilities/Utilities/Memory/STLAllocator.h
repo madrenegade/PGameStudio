@@ -65,13 +65,13 @@ namespace Utilities
                 setMemoryManager();
             }
 
-            STLAllocator(const STLAllocator& allocator) throw ()
+            STLAllocator(const STLAllocator& /*allocator*/) throw ()
             {
                 setMemoryManager();
             }
 
             template <class U>
-            STLAllocator(const STLAllocator<U>& allocator) throw ()
+            STLAllocator(const STLAllocator<U>& /*allocator*/) throw ()
             {
                 setMemoryManager();
             }
@@ -90,7 +90,11 @@ namespace Utilities
                 throw std::runtime_error("address not implemented");
             }
 
-            pointer allocate(size_type n, STLAllocator<void>::const_pointer hint = 0)
+            pointer allocate(size_type n,
+#ifdef GCC
+                STLAllocator<void>::const_pointer hint __attribute__((unused)) = 0
+#endif
+                )
             {
                 DCHECK(memory.get() != 0);
 

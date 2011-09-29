@@ -29,7 +29,7 @@ endif()
 
 if(${CMAKE_COMPILER_IS_GNUCXX})
         add_definitions(-DGCC)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fPIC -msse4.2")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fPIC -msse4.2 -Wall -Wextra -pedantic")
 
         if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
             add_definitions(-fprofile-arcs -ftest-coverage --coverage)

@@ -36,6 +36,7 @@ include_directories(${SRC_DIR}/StackTrace)
 target_link_libraries(${PROJECT_NAME}
     ${GLOG_LIBRARIES}
     ${Boost_LIBRARIES}
+    ${TBB_LIBRARIES}
     physfs
     memprof
     StackTrace

@@ -44,7 +44,7 @@ namespace Input
         inputPool.addOptionsTo(properties, "Input");
     }
 
-    const char* const SystemScene::getSceneFileExtension() const
+    const char* SystemScene::getSceneFileExtension() const
     {
         return EXTENSION.c_str();
     }
@@ -177,17 +177,17 @@ namespace Input
         return new(parent->allocate_child()) InputTask(eventManager.get(), setScriptVar, dirtyButtons, dirtyOneAxisControls, dirtyTwoAxisControls);
     }
 
-    void SystemScene::onButtonPressed(const Core::Events::EventID& event, const boost::any& data)
+    void SystemScene::onButtonPressed(const Core::Events::EventID& /*event*/, const boost::any& data)
     {
         updateButton(boost::any_cast<unsigned int>(data), true);
     }
 
-    void SystemScene::onButtonReleased(const Core::Events::EventID& event, const boost::any& data)
+    void SystemScene::onButtonReleased(const Core::Events::EventID& /*event*/, const boost::any& data)
     {
         updateButton(boost::any_cast<unsigned int>(data), false);
     }
     
-    void SystemScene::onMouseMoved(const Core::Events::EventID& event, const boost::any& data)
+    void SystemScene::onMouseMoved(const Core::Events::EventID& /*event*/, const boost::any& data)
     {
         typedef std::pair<int, int> MouseMove;
         MouseMove xy = boost::any_cast<MouseMove>(data);

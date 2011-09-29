@@ -29,7 +29,7 @@ namespace Input
         
         virtual void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const;
         
-        virtual const char* const getSceneFileExtension() const;
+        virtual const char* getSceneFileExtension() const;
         
         virtual void initialize();
         

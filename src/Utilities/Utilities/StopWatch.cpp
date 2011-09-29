@@ -24,7 +24,7 @@ namespace Utilities
     {
         auto end = std::chrono::system_clock::now();
         
-        RAW_LOG_INFO("%s: %i ms", name.c_str(), std::chrono::duration_cast<ms > (end - start).count());
+        RAW_LOG_INFO("%s: %li ms", name.c_str(), std::chrono::duration_cast<ms> (end - start).count());
     }
 }
 

@@ -175,7 +175,7 @@ namespace Utilities
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx, %i objects of type %s)", BYTES_TO_DEALLOCATE, ptr, n, demangle(typeid (T).name()).c_str());
+                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*>(ptr), n, demangle(typeid (T).name()).c_str());
 #endif
 
                 const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
@@ -239,7 +239,7 @@ namespace Utilities
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Allocating %i bytes for %i objects of type %s in pool %i",
+                RAW_VLOG(4, "Allocating %li bytes for %li objects of type %s in pool %i",
                          BYTES_TO_ALLOCATE, numObjects,
                          Utilities::demangle(typeid (T).name()).c_str(), poolID);
 #endif
@@ -260,7 +260,7 @@ namespace Utilities
 
                     ptr = reinterpret_cast<T*> (rawPtr);
 
-                    RAW_VLOG(4, "Allocated %i bytes at address 0x%lx in pool %i (0x%lx)", BYTES_TO_ALLOCATE, ptr, poolID, pools[poolID].get());
+                    RAW_VLOG(4, "Allocated %lu bytes at address %p in pool %i (%p)", BYTES_TO_ALLOCATE, reinterpret_cast<void*>(ptr), poolID, reinterpret_cast<void*>(pools[poolID].get()));
 #else
                     ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
 #endif
@@ -285,7 +285,7 @@ namespace Utilities
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %i bytes (address: 0x%lx, %i objects of type %s)", BYTES_TO_DEALLOCATE, ptr, n, demangle(typeid (T).name()).c_str());
+                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*>(ptr), n, demangle(typeid (T).name()).c_str());
 #endif
 
                 for (size_t i = 0; i < n; ++i)

@@ -32,6 +32,8 @@ namespace Utilities
 #endif
             
             allocations[ptr] = bytes;
+            
+            return ptr;
         }
 
         void XmlAllocator::deallocate(void* ptr)

@@ -31,7 +31,7 @@ namespace Input
          */
         void setState(bool pressed);
         
-        const char* const getVariableName() const;
+        const char* getVariableName() const;
         
     private:
         String var;

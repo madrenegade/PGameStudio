@@ -21,7 +21,7 @@ namespace Core
         {
         }
         
-        const EventID EventManager::registerEvent(const char* const name)
+        EventID EventManager::registerEvent(const char* const name)
         {
             RAW_VLOG(2, "Registering event %s", name);
             
@@ -36,7 +36,7 @@ namespace Core
             return id;
         }
         
-        const EventID EventManager::getEventID(const char* const name) const
+        EventID EventManager::getEventID(const char* const name) const
         {
             RAW_CHECK(events.find(name) != events.end(), (std::string("Event is not registered: ") + name).c_str());
             

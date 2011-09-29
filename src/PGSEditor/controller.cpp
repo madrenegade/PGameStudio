@@ -3,6 +3,10 @@
 #include "assetimporter.h"
 #include "scenedata.h"
 #include "material.h"
+#include "editorapplication.h"
+
+//#include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
+//#include "Utilities/Memory/MemoryManager.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -11,13 +15,22 @@
 Controller::Controller(MainWindow* mainWindow)
     : QWidget(mainWindow), mainWindow(mainWindow),
       newSceneWizard(new NewSceneWizard(this)),
-      assetImportWizard(new AssetImportWizard(this))
+      assetImportWizard(new AssetImportWizard(this)),
+      editorApplication(new EditorApplication(this))
 {
+    editorApplication->initialize();
+    editorApplication->onRun();
+
     connect(newSceneWizard, SIGNAL(accepted()), this, SLOT(onNewSceneConfigured()));
     connect(assetImportWizard, SIGNAL(accepted()), this, SLOT(onImportConfigured()));
 
     connect(this, SIGNAL(sceneDirectorySelected(const QString&)), this, SLOT(onSaveNewScene(const QString&)));
     connect(this, SIGNAL(sceneChanged()), mainWindow, SLOT(onSceneChanged()));
+}
+
+Controller::~Controller()
+{
+    editorApplication->onShutdown();
 }
 
 QStringList Controller::availableSystems() const

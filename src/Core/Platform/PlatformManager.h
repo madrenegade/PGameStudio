@@ -45,6 +45,8 @@ namespace Platform
     class PlatformManager
     {
     public:
+        static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        
         PlatformManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
                         const boost::shared_ptr<Core::Events::EventManager>& eventManager,
                         const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);

@@ -41,22 +41,22 @@ namespace Input
         this->y = y;
     }
     
-    const char* const TwoAxisControl::getXVariableName() const
+    const char* TwoAxisControl::getXVariableName() const
     {
         return xVar.c_str();
     }
     
-    const char* const TwoAxisControl::getYVariableName() const
+    const char* TwoAxisControl::getYVariableName() const
     {
         return yVar.c_str();
     }
     
-    const char* const TwoAxisControl::getDeltaXVariableName() const
+    const char* TwoAxisControl::getDeltaXVariableName() const
     {
         return xDeltaVar.c_str();
     }
     
-    const char* const TwoAxisControl::getDeltaYVariableName() const
+    const char* TwoAxisControl::getDeltaYVariableName() const
     {
         return yDeltaVar.c_str();
     }

@@ -53,7 +53,7 @@ void AssetImporter::processScene(const aiScene *scene)
     processNodes(scene->mRootNode);
 }
 
-void AssetImporter::processTextures(aiTexture** textures, unsigned int numTextures)
+void AssetImporter::processTextures(aiTexture** /*textures*/, unsigned int numTextures)
 {
     for(unsigned int i = 0; i < numTextures; ++i)
     {

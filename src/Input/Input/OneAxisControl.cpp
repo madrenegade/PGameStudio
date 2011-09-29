@@ -35,12 +35,12 @@ namespace Input
         state = x;
     }
     
-    const char* const OneAxisControl::getVariableName() const
+    const char* OneAxisControl::getVariableName() const
     {
         return var.c_str();
     }
     
-    const char* const OneAxisControl::getDeltaVariableName() const
+    const char* OneAxisControl::getDeltaVariableName() const
     {
         return deltaVar.c_str();
     }

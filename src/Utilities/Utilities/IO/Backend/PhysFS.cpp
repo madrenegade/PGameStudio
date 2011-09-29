@@ -156,7 +156,7 @@ namespace Utilities
             
             void PhysFS::setWriteDirectory(const char* organization, const char* appName)
             {
-                if(PHYSFS_setSaneConfig(organization, appName, 0, 0, 0) == 0);
+                if(PHYSFS_setSaneConfig(organization, appName, 0, 0, 0) == 0)
                 {
                     logError();
                 }

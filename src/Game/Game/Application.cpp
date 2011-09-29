@@ -55,7 +55,7 @@ namespace Game
 
     }
 
-    void Application::onQuit(const EventID& event, const boost::any& data)
+    void Application::onQuit(const EventID&, const boost::any&)
     {
         running = false;
     }
@@ -139,6 +139,7 @@ namespace Game
                                            1 * KByte, 1 * KByte, 512 * Byte);
         defaultSettings.addOptionsTo(properties, "Default");
 
+        PlatformManager::addOptionsTo(properties);
         FileSystem::addOptionsTo(properties);
         Graphics::Window::addOptionsTo(properties);
         Core::TaskScheduler::addOptionsTo(properties);

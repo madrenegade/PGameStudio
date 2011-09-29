@@ -10,7 +10,7 @@ SceneExporter::SceneExporter()
 {
 }
 
-void SceneExporter::createEmptyScene(const QString& dir, const QStringList& systems)
+void SceneExporter::createEmptyScene(const QString& /*dir*/, const QStringList& /*systems*/)
 {
 
 }

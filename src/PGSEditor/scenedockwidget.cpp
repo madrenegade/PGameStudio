@@ -42,7 +42,7 @@ void SceneDockWidget::onMaterialSelected(QListWidgetItem *item)
     materialPreviewScene->addRect(0, 0, 128, 128, QPen(QColor(r, g, b)));
 }
 
-void SceneDockWidget::onTextureSelected(QListWidgetItem *item)
+void SceneDockWidget::onTextureSelected(QListWidgetItem* /*item*/)
 {
 
 }
@@ -71,7 +71,7 @@ void SceneDockWidget::rebuildMeshList()
 
     for(unsigned int i = 0; i < data->meshes.size(); ++i)
     {
-        Mesh* mesh = data->meshes.at(i).get();
+        //Mesh* mesh = data->meshes.at(i).get();
 
         meshList->addItem(QString("Mesh%1").arg(i));
     }

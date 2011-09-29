@@ -21,17 +21,17 @@ namespace Scripting
     {
     }
 
-    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const
+    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& /*properties*/) const
     {
         
     }
 
-    const char* const SystemScene::getSceneFileExtension() const
+    const char* SystemScene::getSceneFileExtension() const
     {
         return EXTENSION.c_str();
     }
 
-    void SystemScene::load(const Utilities::IO::File& file)
+    void SystemScene::load(const Utilities::IO::File& /*file*/)
     {
         
     }

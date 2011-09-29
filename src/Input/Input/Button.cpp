@@ -29,7 +29,7 @@ namespace Input
         m_isPressed = pressed;
     }
 
-    const char* const Button::getVariableName() const
+    const char* Button::getVariableName() const
     {
         return var.c_str();
     }

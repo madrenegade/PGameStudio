@@ -60,7 +60,7 @@ namespace Core
          * Return the extension of the scene file which is handled by this system.
          * @return the extension
          */
-        virtual const char* const getSceneFileExtension() const = 0;
+        virtual const char* getSceneFileExtension() const = 0;
         
         /**
          * Initialize the system.

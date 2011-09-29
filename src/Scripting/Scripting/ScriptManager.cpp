@@ -56,6 +56,7 @@ namespace Scripting
 
         boost::shared_ptr<Library> engineLibrary = platformManager->libraries()->load(engineName.c_str());
 
+        // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
         CreateFn create = reinterpret_cast<CreateFn> (engineLibrary->getFunction("create"));
 
         engine = create(memoryManager, pool);
@@ -88,13 +89,13 @@ namespace Scripting
         scripts[name]->run();
     }
 
-    void ScriptManager::runScript(const Core::Events::EventID& id, const boost::any& data)
+    void ScriptManager::runScript(const Core::Events::EventID& /*id*/, const boost::any& data)
     {
         const char* scriptName = boost::any_cast<const char*>(data);
         runScript(scriptName);
     }
 
-    void ScriptManager::setVariable(const Core::Events::EventID& id, const boost::any& data)
+    void ScriptManager::setVariable(const Core::Events::EventID& /*id*/, const boost::any& data)
     {
         typedef std::pair<const char*, bool> DataTypeBool;
         typedef std::pair<const char*, long> DataTypeLong;
