@@ -29,9 +29,6 @@
 #include <tbb/task.h>
 #include <chrono>
 
-#include <luabind/luabind.hpp>
-using namespace luabind;
-
 using namespace Utilities::Memory;
 using namespace Utilities::Properties;
 using namespace Utilities::IO;
@@ -117,11 +114,12 @@ namespace Game
         auto end = std::chrono::system_clock::now();
 
         // maybe use EventManager for this
-        const double framerate = std::chrono::duration_cast<sec> (end - start).count();
+        const double frametime = std::chrono::duration_cast<sec> (end - start).count();
 
-        properties->set("Frametime", framerate);
+        properties->set("Frametime", frametime);
+        scriptManager->setVariable("FRAMETIME", frametime);
 
-        VLOG_EVERY_N(3, 1000) << "Framerate: " << (1.0 / framerate);
+        VLOG_EVERY_N(3, 1000) << "Framerate: " << (1.0 / frametime);
 
         VLOG_EVERY_N(3, 1000) << "Memory usage: " << memoryManager->getMemoryUsage();
 
@@ -221,11 +219,8 @@ namespace Game
         scriptManager = Scripting::ScriptManagerFactory::create(memoryManager, fileSystem, properties);
         properties->set("SCRIPT_MANAGER", scriptManager.get());
 
-        Core::Events::EventID runScript = eventManager->registerEvent("RUN_SCRIPT");
-        eventManager->registerEventHandler(runScript, boost::bind(&Scripting::ScriptManager::runScript, scriptManager.get(), _1, _2));
-
         Core::Events::EventID setVar = eventManager->registerEvent("SET_SCRIPT_VAR");
-        eventManager->registerEventHandler(setVar, boost::bind(&Scripting::ScriptManager::setVariable, scriptManager.get(), _1, _2));
+        eventManager->registerEventHandler(setVar, boost::bind(&Scripting::ScriptManager::onSetVariable, scriptManager.get(), _1, _2));
 
         registerFunctionsForScripting();
     }
@@ -233,14 +228,6 @@ namespace Game
     void Application::registerFunctionsForScripting()
     {
         Scripting::State state = scriptManager->getState();
-
-        luabind::open(state);
-
-        module(state)
-        [
-            class_<boost::any>("boost::any")
-                .def(constructor<const int&>())
-        ];
 
         module(state)
         [
@@ -251,7 +238,7 @@ namespace Game
                 .def("push", &EventManager::pushEvent<Math::Vector3>)
         ];
 
-        luabind::globals(state)["Event"] = eventManager.get();
+        scriptManager->setVariable("Event", eventManager.get());
 
         module(state)
         [
@@ -260,16 +247,19 @@ namespace Game
                 .def("switchTo", &Core::SceneManager::switchScene)
         ];
 
-        globals(state)["Scene"] = sceneManager.get();
-
+        scriptManager->setVariable("Scene", sceneManager.get());
 
         module(state)
         [
             class_<Math::Vector3>("Vector3")
                 .def(constructor<double, double, double>())
-                .def_readwrite("getX", &Math::Vector3::X)
-                .def_readwrite("getY", &Math::Vector3::Y)
-                .def_readwrite("getZ", &Math::Vector3::Z)
+                .def_readwrite("x", &Math::Vector3::X)
+                .def_readwrite("y", &Math::Vector3::Y)
+                .def_readwrite("z", &Math::Vector3::Z)
+                .def(self * double())
+                .def(self / double())
+                .def(self + self)
+                .def(self - self)
         ];
     }
 }

@@ -64,8 +64,8 @@ namespace Renderer
 
         glewInit();
 
-//        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar, 0.2), pool);
-        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+//      camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar, 0.2), pool);
+        camera = memory->construct(Graphics::MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
         camera->registerEvents(eventManager);
 
         camera->setPosition(Math::Vector3(4, 2, 4));
@@ -147,6 +147,8 @@ namespace Renderer
     {
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        camera->update();
     }
 
     void OpenGLRenderer::processDrawCalls()
@@ -177,10 +179,10 @@ namespace Renderer
     void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
                                              unsigned int firstAttachment)
     {
-
-
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0 + firstAttachment, GL_COLOR_ATTACHMENT1 + firstAttachment, GL_COLOR_ATTACHMENT2 + firstAttachment};
         glDrawBuffers(3, buffers);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         const Math::Matrix4 view(viewport->getCamera()->getViewMatrix());
 

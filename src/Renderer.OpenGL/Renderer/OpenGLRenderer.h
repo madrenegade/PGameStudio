@@ -114,6 +114,7 @@ namespace Renderer
         double zNear;
         double zFar;
 
+        boost::shared_ptr<Graphics::Camera> camera;
         boost::shared_ptr<Viewport> viewport;
     };
 }

@@ -18,8 +18,13 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/STLAllocator.h"
+#include "Utilities/string.h"
 
 #include <vector>
+
+#include <luabind/luabind.hpp>
+#include <luabind/operator.hpp>
+using namespace luabind;
 
 namespace Utilities
 {
@@ -42,27 +47,34 @@ namespace Utilities
 namespace Scripting
 {
     class Script;
-    class Engine;
 
     class ScriptManager
     {
     public:
         static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
-        ~ScriptManager();
-
         void runStartupScript();
-
         void runScript(const char* const name);
-        void runScript(const Core::Events::EventID& id, const boost::any& data);
 
-        void setVariable(const Core::Events::EventID& id, const boost::any& data);
+        void onSetVariable(const Core::Events::EventID& id, const boost::any& data);
+        void setVariable(const char* const name, const bool& value);
+        void setVariable(const char* const name, const long& value);
+        void setVariable(const char* const name, const double& value);
+        void setVariable(const char* const name, const String& value);
+
+        template<typename T>
+        void setVariable(const char* const name, const T& value)
+        {
+            luabind::globals(state.get())[name] = value;
+        }
 
         void runGarbageCollection();
 
         State getState() const;
 
     private:
+        void logErrors(int status);
+
         typedef boost::shared_ptr<Script> ScriptPtr;
         typedef std::map<std::string, ScriptPtr> ScriptMap;
 
@@ -80,7 +92,8 @@ namespace Scripting
         const Utilities::Memory::pool_id pool;
 
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
-        boost::shared_ptr<Engine> engine;
+
+        std::shared_ptr<lua_State> state;
 
         ScriptMap scripts;
     };

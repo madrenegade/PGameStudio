@@ -7,8 +7,7 @@
 
 #include "Scripting/ScriptManager.h"
 #include "Scripting/Script.h"
-
-#include "Scripting/Engine.h"
+#include "Scripting/Allocator.h"
 
 #include "Utilities/Properties/PropertyManager.h"
 #include "Utilities/Memory/MemoryManager.h"
@@ -45,11 +44,19 @@ namespace Scripting
         : startupScriptName(properties->get<std::string>("Scripting.startup")),
           memory(memoryManager), pool(pool), fileSystem(fileSystem)
     {
-        engine = memoryManager->construct(Engine(memoryManager, pool), pool);
-    }
+        Allocator::memory = memory;
+        Allocator::pool = pool;
 
-    ScriptManager::~ScriptManager()
-    {
+        state.reset(lua_newstate(Allocator::allocate, 0), lua_close);
+
+        if (!state)
+        {
+            LOG(FATAL) << "Could not initialize LUA";
+        }
+
+        luaL_openlibs(state.get());
+
+        luabind::open(state.get());
     }
 
     void ScriptManager::runStartupScript()
@@ -61,27 +68,23 @@ namespace Scripting
     {
         if (scripts.find(name) == scripts.end())
         {
+            VLOG(2) << "Loading script " << name;
+
             String filename(SCRIPT_BASE_PATH.c_str(), SCRIPT_BASE_PATH.size());
             filename.append("/");
             filename.append(name);
-            filename.append(engine->getExtension());
+            filename.append(".lua");
 
             File::Handle scriptFile = fileSystem->read(filename.c_str());
 
-            ScriptPtr script = engine->load(scriptFile, filename.c_str());
+            ScriptPtr script = memory->construct(Script(state.get(), scriptFile, name), pool);
             scripts[name] = script;
         }
 
         scripts[name]->run();
     }
 
-    void ScriptManager::runScript(const Core::Events::EventID& /*id*/, const boost::any& data)
-    {
-        const char* scriptName = boost::any_cast<const char*>(data);
-        runScript(scriptName);
-    }
-
-    void ScriptManager::setVariable(const Core::Events::EventID& /*id*/, const boost::any& data)
+    void ScriptManager::onSetVariable(const Core::Events::EventID& /*id*/, const boost::any& data)
     {
         typedef std::pair<const char*, bool> DataTypeBool;
         typedef std::pair<const char*, long> DataTypeLong;
@@ -91,22 +94,22 @@ namespace Scripting
         if (typeid (DataTypeBool) == data.type())
         {
             const DataTypeBool var = boost::any_cast<DataTypeBool> (data);
-            engine->setVariable(var.first, var.second);
+            setVariable(var.first, var.second);
         }
         else if (typeid (DataTypeLong) == data.type())
         {
             const DataTypeLong var = boost::any_cast<DataTypeLong> (data);
-            engine->setVariable(var.first, var.second);
+            setVariable(var.first, var.second);
         }
         else if (typeid (DataTypeDouble) == data.type())
         {
             const DataTypeDouble var = boost::any_cast<DataTypeDouble> (data);
-            engine->setVariable(var.first, var.second);
+            setVariable(var.first, var.second);
         }
         else if (typeid (DataTypeString) == data.type())
         {
             const DataTypeString var = boost::any_cast<DataTypeString> (data);
-            engine->setVariable(var.first, var.second);
+            setVariable(var.first, var.second);
         }
         else
         {
@@ -114,13 +117,47 @@ namespace Scripting
         }
     }
 
+    void ScriptManager::setVariable(const char* const name, const bool& value)
+    {
+        lua_pushboolean(state.get(), value);
+        lua_setglobal(state.get(), name);
+    }
+
+    void ScriptManager::setVariable(const char* const name, const long& value)
+    {
+        lua_pushinteger(state.get(), value);
+        lua_setglobal(state.get(), name);
+    }
+
+    void ScriptManager::setVariable(const char* const name, const double& value)
+    {
+        lua_pushnumber(state.get(), value);
+        lua_setglobal(state.get(), name);
+    }
+
+    void ScriptManager::setVariable(const char* const name, const String& value)
+    {
+        lua_pushstring(state.get(), value.c_str());
+        lua_setglobal(state.get(), name);
+    }
+
     void ScriptManager::runGarbageCollection()
     {
-        engine->runGarbageCollection();
+//        VLOG_EVERY_N(3, 100) << "LUA mem: " << lua_getgccount(state.get()) << "kB";
+//        LOG_EVERY_N(INFO, 100) << lua_gc(state.get(), LUA_GCCOLLECT, 0);
     }
 
     State ScriptManager::getState() const
     {
-        return engine->getState();
+        return state.get();
+    }
+
+    void ScriptManager::logErrors(int status)
+    {
+        if (status != 0)
+        {
+            LOG(FATAL) << "-- " << lua_tostring(state.get(), -1) << std::endl;
+            lua_pop(state.get(), 1); // remove error message
+        }
     }
 }

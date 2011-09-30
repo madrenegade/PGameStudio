@@ -23,6 +23,7 @@ namespace Math
         Vector3 operator-() const;
 
         Vector3 operator*(double value) const;
+        Vector3 operator/(double value) const;
 
         friend Vector3 operator*(double value, const Vector3& v);
 

@@ -17,13 +17,13 @@ namespace Math {
     Vector3::~Vector3()
     {
     }
-    
+
     Vector3& Vector3::operator*=(double value)
     {
         if(value == 0) {
             throw DivideByZeroException("value");
         }
-        
+
         this->X *= value;
         this->Y *= value;
         this->Z *= value;
@@ -36,7 +36,7 @@ namespace Math {
         if(value == 0) {
             throw DivideByZeroException("value");
         }
-        
+
         this->X /= value;
         this->Y /= value;
         this->Z /= value;
@@ -80,6 +80,11 @@ namespace Math {
     Vector3 Vector3::operator*(double value) const
     {
         return Vector3(this->X * value, this->Y * value, this->Z * value);
+    }
+
+    Vector3 Vector3::operator/(double value) const
+    {
+        return Vector3(this->X / value, this->Y / value, this->Z / value);
     }
 
     Vector3 operator*(double value, const Vector3& v)
