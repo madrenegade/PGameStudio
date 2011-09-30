@@ -64,21 +64,31 @@ namespace Scripting
         runScript(startupScriptName.c_str());
     }
 
+    void ScriptManager::load(const char* const name)
+    {
+        if (scripts.find(name) != scripts.end())
+        {
+            LOG(FATAL) << "Script already loaded: " << name;
+        }
+
+        VLOG(2) << "Loading script " << name;
+
+        String filename(SCRIPT_BASE_PATH.c_str(), SCRIPT_BASE_PATH.size());
+        filename.append("/");
+        filename.append(name);
+        filename.append(".lua");
+
+        File::Handle scriptFile = fileSystem->read(filename.c_str());
+
+        ScriptPtr script = memory->construct(Script(state.get(), scriptFile, name), pool);
+        scripts[name] = script;
+    }
+
     void ScriptManager::runScript(const char* const name)
     {
         if (scripts.find(name) == scripts.end())
         {
-            VLOG(2) << "Loading script " << name;
-
-            String filename(SCRIPT_BASE_PATH.c_str(), SCRIPT_BASE_PATH.size());
-            filename.append("/");
-            filename.append(name);
-            filename.append(".lua");
-
-            File::Handle scriptFile = fileSystem->read(filename.c_str());
-
-            ScriptPtr script = memory->construct(Script(state.get(), scriptFile, name), pool);
-            scripts[name] = script;
+            load(name);
         }
 
         scripts[name]->run();

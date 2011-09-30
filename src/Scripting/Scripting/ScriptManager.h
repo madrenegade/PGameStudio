@@ -54,6 +54,8 @@ namespace Scripting
         static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
         void runStartupScript();
+
+        void load(const char* const name);
         void runScript(const char* const name);
 
         void onSetVariable(const Core::Events::EventID& id, const boost::any& data);

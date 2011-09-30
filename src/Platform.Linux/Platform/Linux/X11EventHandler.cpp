@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   X11EventHandler.cpp
  * Author: madrenegade
- * 
+ *
  * Created on November 29, 2010, 6:24 PM
  */
 
@@ -56,7 +56,7 @@ namespace Platform
                     case KeyPress:
                     {
                         auto ks = XLookupKeysym(&event.xkey, event.xkey.state);
-                        LOG(INFO) << ks << ": " << XKeysymToString(ks);
+//                        LOG(INFO) << ks << ": " << XKeysymToString(ks);
                         eventManager->pushEvent(keyPressEvent, static_cast<unsigned int> (ks));
                     }
                         break;

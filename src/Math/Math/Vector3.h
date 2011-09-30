@@ -40,12 +40,6 @@ namespace Math
 
 } // namespace Math
 
-template<class T>
-std::ostream& operator <<(std::ostream& stream, const Math::Vector3& vector)
-{
-    stream << "v(" << vector.X() << " " << vector.Y() << " " << vector.Z() << ")";
-
-    return stream;
-}
+std::ostream& operator <<(std::ostream& stream, const Math::Vector3& vector);
 
 #endif // MATH_VECTOR3_H

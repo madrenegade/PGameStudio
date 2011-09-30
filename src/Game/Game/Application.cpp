@@ -231,6 +231,15 @@ namespace Game
 
         module(state)
         [
+            class_<Scripting::ScriptManager>("ScriptManager")
+                .def("load", &Scripting::ScriptManager::load)
+                .def("run", &Scripting::ScriptManager::runScript)
+        ];
+
+        scriptManager->setVariable("Script", scriptManager.get());
+
+        module(state)
+        [
             class_<EventManager>("EventManager")
                 .def("register", &EventManager::registerEvent)
                 .def("getID", &EventManager::getEventID)
@@ -260,6 +269,8 @@ namespace Game
                 .def(self / double())
                 .def(self + self)
                 .def(self - self)
+                .def(tostring(self))
+                .def("cross", &Math::Vector3::Cross)
         ];
     }
 }

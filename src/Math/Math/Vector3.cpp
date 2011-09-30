@@ -119,3 +119,10 @@ namespace Math {
         return this->X * this->X + this->Y * this->Y + this->Z * this->Z;
     }
 } // namespace Math
+
+std::ostream& operator <<(std::ostream& stream, const Math::Vector3& vector)
+{
+    stream << "v(" << vector.X << " " << vector.Y << " " << vector.Z << ")";
+
+    return stream;
+}
