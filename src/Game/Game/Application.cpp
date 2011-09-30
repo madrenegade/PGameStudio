@@ -15,6 +15,8 @@
 #include "Core/TaskScheduler.h"
 #include "Core/Scene/SceneManager.h"
 
+#include "Math/Vector3.h"
+
 #include "Platform/PlatformManager.h"
 
 #include "Graphics/Window.h"
@@ -27,9 +29,8 @@
 #include <tbb/task.h>
 #include <chrono>
 
-#include <boost/functional.hpp>
-#include <boost/functional/factory.hpp>
-#include <boost/functional/value_factory.hpp>
+#include <luabind/luabind.hpp>
+using namespace luabind;
 
 using namespace Utilities::Memory;
 using namespace Utilities::Properties;
@@ -41,7 +42,7 @@ namespace Game
 {
 
     Application::Application(int argc, char** argv)
-    : properties(new PropertyManager), running(true)
+        : properties(new PropertyManager), running(true)
     {
         properties->parse(argc, argv);
 
@@ -210,7 +211,7 @@ namespace Game
         VLOG(1) << "Initializing scene manager";
 
         sceneManager = memoryManager->construct(Core::SceneManager(memoryManager,
-            fileSystem, platformManager, eventManager, properties));
+                                                fileSystem, platformManager, eventManager, properties));
     }
 
     void Application::initializeScriptManager()
@@ -229,49 +230,46 @@ namespace Game
         registerFunctionsForScripting();
     }
 
-    struct TestClass
-    {
-        TestClass(double x, double y, double z)
-        : x(x), y(y), z(z)
-        {
-            LOG(INFO) << "Created testObject with " << x << ", " << y << ", " << z;
-        }
-
-        double getX() {
-            return x;
-        }
-
-        double getY() {
-            return y;
-        }
-
-        double getZ() {
-            return z;
-        }
-
-    private:
-        double x, y, z;
-    };
-
     void Application::registerFunctionsForScripting()
     {
-        boost::function<long (const char*)> registerEvent = boost::bind(&EventManager::registerEvent, eventManager.get(), _1);
-        boost::function<long (const char*)> getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
-        boost::function<void (long, const char* data)> pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, _2);
+        Scripting::State state = scriptManager->getState();
 
-        scriptManager->registerFunction("registerEvent", registerEvent);
-        scriptManager->registerFunction("getEventID", getEventID);
-        scriptManager->registerFunction("pushEvent", pushEvent);
+        luabind::open(state);
 
-        boost::function<void (const char*) > loadScene = boost::bind(&Core::SceneManager::loadScene, sceneManager.get(), _1);
-        boost::function<void (const char*) > switchScene = boost::bind(&Core::SceneManager::switchScene, sceneManager.get(), _1);
+        module(state)
+        [
+            class_<boost::any>("boost::any")
+                .def(constructor<const int&>())
+        ];
 
-        scriptManager->registerFunction("loadScene", loadScene);
-        scriptManager->registerFunction("switchScene", switchScene);
+        module(state)
+        [
+            class_<EventManager>("EventManager")
+                .def("register", &EventManager::registerEvent)
+                .def("getID", &EventManager::getEventID)
+                .def("push", &EventManager::pushEvent<int>)
+                .def("push", &EventManager::pushEvent<Math::Vector3>)
+        ];
 
-        boost::function<TestClass* (double, double, double)> ctor = boost::bind(boost::factory<TestClass*>(), _1, _2, _3);
-        boost::function<double (TestClass*)> getX = boost::bind(&TestClass::getX, _1);
-//        boost::function<double (TestClass*)> getY = boost::bind(&TestClass::getY, _1);
-//        boost::function<double (TestClass*)> getZ = boost::bind(&TestClass::getZ, _1);
+        luabind::globals(state)["Event"] = eventManager.get();
+
+        module(state)
+        [
+            class_<Core::SceneManager>("SceneManager")
+                .def("load", &Core::SceneManager::loadScene)
+                .def("switchTo", &Core::SceneManager::switchScene)
+        ];
+
+        globals(state)["Scene"] = sceneManager.get();
+
+
+        module(state)
+        [
+            class_<Math::Vector3>("Vector3")
+                .def(constructor<double, double, double>())
+                .def_readwrite("getX", &Math::Vector3::X)
+                .def_readwrite("getY", &Math::Vector3::Y)
+                .def_readwrite("getZ", &Math::Vector3::Z)
+        ];
     }
 }

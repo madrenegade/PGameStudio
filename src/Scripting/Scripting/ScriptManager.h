@@ -15,7 +15,6 @@
 #include "Core/Events/typedefs.h"
 
 #include "Scripting/typedefs.h"
-#include "Scripting/Command.h"
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/STLAllocator.h"
@@ -43,6 +42,7 @@ namespace Utilities
 namespace Scripting
 {
     class Script;
+    class Engine;
 
     class ScriptManager
     {
@@ -60,53 +60,7 @@ namespace Scripting
 
         void runGarbageCollection();
 
-        template<typename T>
-        void registerFunction(const char* const name, const boost::function<T>& fn)
-        {
-            boost::shared_ptr<CommandT<T>> command = memory->construct(CommandT<T> (name, fn), pool);
-            engine->registerFunction(name, command.get(), &CommandT<T>::callback);
-            commands.push_back(command);
-        }
-
-//        template<typename T, typename... MethodTypes>
-//        void registerClass(const char* const className, const boost::function<T>& ctor, const MethodTypes&... methods)
-//        {
-//            typedef typename boost::function_traits<T>::result_type ClassPointerType;
-//            typedef typename boost::remove_pointer<ClassPointerType>::type ClassType;
-//
-//            boost::shared_ptr<CommandT<T>> ctorCommand = memory->construct(CommandT<T> ("new", ctor), pool);
-//
-//            CommandCallbacks commands;
-//            commands.push_back(std::make_pair(ctorCommand, &CommandT<T>::callback));
-//
-//            getCommands(commands, methods...);
-//
-//            engine->registerClass(className, sizeof(ClassType), commands);
-//        }
-
-        template<typename MethodType, typename... MethodTypes>
-        void getCommands(CommandCallbacks& commands, const std::pair<const char*, boost::function<MethodType>>& method, const MethodTypes&... methods)
-        {
-            getCommand(commands, method.first, method.second);
-            getCommands(commands, methods...);
-        }
-
-        template<typename MethodType>
-        void getCommands(CommandCallbacks& commands, const std::pair<const char*, boost::function<MethodType>>& method)
-        {
-            getCommand(commands, method.first, method.second);
-        }
-
-        void getCommands(CommandCallbacks& commands)
-        {
-        }
-
-        template<typename MethodType>
-        void getCommand(CommandCallbacks& commands, const char* const methodName, const boost::function<MethodType>& method)
-        {
-            boost::shared_ptr<CommandT<MethodType>> command = memory->construct(CommandT<MethodType> (methodName, method), pool);
-            commands.push_back(std::make_pair(command, &CommandT<MethodType>::callback));
-        }
+        State getState() const;
 
     private:
         typedef boost::shared_ptr<Script> ScriptPtr;
@@ -127,8 +81,6 @@ namespace Scripting
 
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
         boost::shared_ptr<Engine> engine;
-
-        std::vector<CommandPtr, Utilities::Memory::STLAllocator<CommandPtr>> commands;
 
         ScriptMap scripts;
     };

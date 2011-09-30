@@ -1,5 +1,5 @@
 /*
- * File:   LuaScript.h
+ * File:   Script.h
  * Author: madrenegade
  *
  * Created on September 27, 2011, 1:08 PM

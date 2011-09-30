@@ -1,11 +1,11 @@
 /*
- * File:   LuaScript.cpp
+ * File:   Script.cpp
  * Author: madrenegade
  *
  * Created on September 27, 2011, 1:08 PM
  */
 
-#include "Scripting/LuaScript.h"
+#include "Scripting/Script.h"
 
 #include <glog/logging.h>
 

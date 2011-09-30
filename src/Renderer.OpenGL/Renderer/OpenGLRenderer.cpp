@@ -54,7 +54,7 @@ namespace Renderer
         Effect::deinitialize();
     }
 
-    void OpenGLRenderer::initialize()
+    void OpenGLRenderer::initialize(Core::Events::EventManager* eventManager)
     {
         width = properties->get<unsigned int>("Window.width");
         height = properties->get<unsigned int>("Window.height");
@@ -66,6 +66,8 @@ namespace Renderer
 
 //        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar, 0.2), pool);
         boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+        camera->registerEvents(eventManager);
+
         camera->setPosition(Math::Vector3(4, 2, 4));
         camera->update();
 

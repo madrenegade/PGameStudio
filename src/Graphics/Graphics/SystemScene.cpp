@@ -70,7 +70,7 @@ namespace Graphics
         renderer = create(memoryManager, properties, pool);
 
         platformManager->getWindow()->getGraphicsContext()->MakeCurrent();
-        renderer->initialize();
+        renderer->initialize(eventManager.get());
         platformManager->getWindow()->getGraphicsContext()->Release();
 
     }

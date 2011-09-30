@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   OpenGLRenderer.h
  * Author: madrenegade
  *
@@ -38,7 +38,7 @@ namespace Utilities
     {
         class PropertyManager;
     }
-    
+
     namespace Memory
     {
         class MemoryManager;
@@ -61,7 +61,7 @@ namespace Renderer
                        const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager);
         virtual ~OpenGLRenderer();
 
-        virtual void initialize();
+        virtual void initialize(Core::Events::EventManager* eventManager);
 
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
                                                   const unsigned int numVertices, const Graphics::VertexFormat& fmt);
@@ -100,7 +100,7 @@ namespace Renderer
 
         boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
         Utilities::Memory::pool_id pool;
-        
+
         boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
 
         boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;

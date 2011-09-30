@@ -21,6 +21,7 @@ include_directories("${SRC_DIR}/Core")
 
 target_link_libraries(${PROJECT_NAME}
     ${LUA_LIBRARIES}
+    luabind
     Utilities
     Core
 )

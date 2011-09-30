@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Renderer.h
  * Author: madrenegade
  *
@@ -10,6 +10,8 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/IO/File.h"
+
+#include "Core/Events/EventManager.h"
 
 #include <boost/shared_array.hpp>
 #include <tbb/concurrent_queue.h>
@@ -25,7 +27,7 @@ namespace Graphics
     public:
         virtual ~Renderer();
 
-        virtual void initialize() = 0;
+        virtual void initialize(Core::Events::EventManager* eventManager) = 0;
 
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data, const unsigned int numVertices, const VertexFormat& fmt) = 0;
 
@@ -40,7 +42,7 @@ namespace Graphics
         virtual bool isIndexBufferLoaded(const unsigned long ibID) const = 0;
         virtual bool isEffectLoaded(const unsigned long effectID) const = 0;
         virtual bool isTextureLoaded(const unsigned long textureID) const = 0;
-        
+
         virtual void beginScene() = 0;
 
         void processRequests();

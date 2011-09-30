@@ -13,8 +13,8 @@ namespace Core
 	namespace Events
 	{
         /**
-         * This event handler class is designed for systems that use threads. 
-         * It is meant to be used like this: different threads can push events and 
+         * This event handler class is designed for systems that use threads.
+         * It is meant to be used like this: different threads can push events and
          * after all sub systems have done their work the event handlers will be called in serial.
          */
 		class EventManager
@@ -22,7 +22,7 @@ namespace Core
         public:
             EventManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
             ~EventManager();
-            
+
             /**
              * Register an event and generate an ID for it.
              * NOT THREAD SAFE
@@ -30,13 +30,13 @@ namespace Core
              * @return the generated ID
              */
             EventID registerEvent(const char* const name);
-            
+
             /**
              * Get the id of a registered event.
              * @param name - the name of the event
              */
             EventID getEventID(const char* const name) const;
-            
+
             /**
              * Register an event handler so that it is autmatically called.
              * The event handling is done at the end of a frame in serial. So if your
@@ -47,38 +47,44 @@ namespace Core
              * @param fn - the event handler function to register
              */
             void registerEventHandler(const EventID& id, const EventHandlerFunction& fn);
-            
+
+            template<typename T>
+            void pushEvent(const EventID& id, const T& data)
+            {
+                pushEvent(id, boost::any(data));
+            }
+
             /**
              * Push an event into the event queue.
-             * This method is thread safe to allow pushing from the various 
+             * This method is thread safe to allow pushing from the various
              * sub systems which possibly run in different threads.
              * @param id - the event id
              * @param data - the data associated with this event
              */
             void pushEvent(const EventID& id, const boost::any& data);
-            
+
             /**
              * Process all events. This calls all registered event handler functions
              * for the events that where pushed until the last invocation of this function.
              * NOT THREAD SAFE
              */
             void handleEvents();
-            
+
         private:
 #ifdef DEBUG
             String getEventName(const EventID& id) const;
 #endif
-            
+
             const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
-           
+
             typedef std::map<String, EventID> EventMap;
             EventMap events;
-            
+
             typedef std::map<EventID, boost::shared_ptr<EventSignal>> SignalMap;
             SignalMap signals;
-            
+
             tbb::atomic<EventID> serial;
-            
+
             typedef std::pair<EventID, boost::any> EventData;
             tbb::concurrent_queue<EventData> eventQueue;
 		};

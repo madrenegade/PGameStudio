@@ -118,4 +118,9 @@ namespace Scripting
     {
         engine->runGarbageCollection();
     }
+
+    State ScriptManager::getState() const
+    {
+        return engine->getState();
+    }
 }

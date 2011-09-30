@@ -8,22 +8,11 @@
 #ifndef SCRIPTING_TYPEDEFS__H
 #define	SCRIPTING_TYPEDEFS__H
 
-#include <vector>
-#include <boost/any.hpp>
-#include "Utilities/Memory/STLAllocator.h"
+#include <lua.hpp>
 
 namespace Scripting
 {
-    class Command;
-    class ScriptEngine;
-
-    typedef std::vector<boost::any> AnyVector;
-
-    template<int T> struct Int2Type {};
-
-    typedef boost::shared_ptr<Command> CommandPtr;
-    typedef std::pair<CommandPtr, int (*)(ScriptEngine*)> CommandCallback;
-    typedef std::vector<CommandCallback, Utilities::Memory::STLAllocator<CommandCallback>> CommandCallbacks;
+    typedef lua_State* State;
 }
 
 #endif	/* SCRIPTING_TYPEDEFS__H */

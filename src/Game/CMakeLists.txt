@@ -9,6 +9,7 @@ file(GLOB Project_Sources
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
 
 add_dependencies(${PROJECT_NAME} Math Core Utilities StackTrace Scripting)
+include_directories(${SRC_DIR}/Math)
 include_directories(${SRC_DIR}/Core)
 include_directories(${SRC_DIR}/Utilities)
 include_directories(${SRC_DIR}/StackTrace)
