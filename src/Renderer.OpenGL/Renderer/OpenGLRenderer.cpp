@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   OpenGLRenderer.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 16, 2011, 9:22 PM
  */
 
@@ -14,7 +14,9 @@
 #include "Renderer/ErrorHandler.h"
 #include "Renderer/Viewport.h"
 #include "Renderer/AnaglyphCompositor.h"
+#include "Renderer/DefaultCompositor.h"
 
+#include "Graphics/MonoViewCamera.h"
 #include "Graphics/StereoViewCamera.h"
 
 #include "Math/Matrix4.h"
@@ -62,7 +64,8 @@ namespace Renderer
 
         glewInit();
 
-        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar, 0.2), pool);
+//        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar, 0.2), pool);
+        boost::shared_ptr<Graphics::Camera> camera = memory->construct(Graphics::MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
         camera->setPosition(Math::Vector3(4, 2, 4));
         camera->update();
 
@@ -73,7 +76,8 @@ namespace Renderer
         boost::shared_ptr<FrameBuffer> frameBuffer = memory->construct(FrameBuffer(memory, pool, 4 * camera->getViewCount(), width, height), pool);
         viewport->attachFrameBuffer(frameBuffer);
 
-        boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);
+//        boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);
+        boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(DefaultCompositor(viewport.get(), effects, 3), pool);
         viewport->setCompositor(compositor);
 
         Effect::initialize();
@@ -154,7 +158,7 @@ namespace Renderer
 
         for (unsigned int i = 0; i < viewport->getCamera()->getViewCount(); ++i)
         {
-            unsigned int firstAttachment = 4 * i;
+            const unsigned int firstAttachment = 4 * i;
             viewport->getCamera()->activateView(i);
 
             renderToFrameBuffer(drawCallList, firstAttachment);

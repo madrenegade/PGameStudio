@@ -27,6 +27,10 @@
 #include <tbb/task.h>
 #include <chrono>
 
+#include <boost/functional.hpp>
+#include <boost/functional/factory.hpp>
+#include <boost/functional/value_factory.hpp>
+
 using namespace Utilities::Memory;
 using namespace Utilities::Properties;
 using namespace Utilities::IO;
@@ -98,12 +102,12 @@ namespace Game
         auto start = std::chrono::system_clock::now();
 
         BEGIN_NEW_FRAME(memoryManager);
-        
+
         platformManager->handleOSEvents();
         eventManager->handleEvents();
 
         auto scene = sceneManager->getCurrentScene();
-        
+
         if(scene != 0)
         {
             taskScheduler->executeTasks(scene);
@@ -113,11 +117,11 @@ namespace Game
 
         // maybe use EventManager for this
         const double framerate = std::chrono::duration_cast<sec> (end - start).count();
-        
+
         properties->set("Frametime", framerate);
-        
+
         VLOG_EVERY_N(3, 1000) << "Framerate: " << (1.0 / framerate);
-        
+
         VLOG_EVERY_N(3, 1000) << "Memory usage: " << memoryManager->getMemoryUsage();
 
         return running;
@@ -171,7 +175,7 @@ namespace Game
 
         EventID quitEvent = eventManager->registerEvent("QUIT");
         eventManager->registerEventHandler(quitEvent, boost::bind(&Application::onQuit, this, _1, _2));
-        
+
         eventManager->registerEvent("KEY_PRESSED");
         eventManager->registerEvent("KEY_RELEASED");
         eventManager->registerEvent("MOUSE_BUTTON_PRESSED");
@@ -213,25 +217,48 @@ namespace Game
     {
         VLOG(1) << "Initializing script manager";
 
-        scriptManager = Scripting::ScriptManagerFactory::create(memoryManager,
-            platformManager, fileSystem, properties);
+        scriptManager = Scripting::ScriptManagerFactory::create(memoryManager, fileSystem, properties);
         properties->set("SCRIPT_MANAGER", scriptManager.get());
-        
+
         Core::Events::EventID runScript = eventManager->registerEvent("RUN_SCRIPT");
         eventManager->registerEventHandler(runScript, boost::bind(&Scripting::ScriptManager::runScript, scriptManager.get(), _1, _2));
-        
+
         Core::Events::EventID setVar = eventManager->registerEvent("SET_SCRIPT_VAR");
         eventManager->registerEventHandler(setVar, boost::bind(&Scripting::ScriptManager::setVariable, scriptManager.get(), _1, _2));
-        
+
         registerFunctionsForScripting();
     }
+
+    struct TestClass
+    {
+        TestClass(double x, double y, double z)
+        : x(x), y(y), z(z)
+        {
+            LOG(INFO) << "Created testObject with " << x << ", " << y << ", " << z;
+        }
+
+        double getX() {
+            return x;
+        }
+
+        double getY() {
+            return y;
+        }
+
+        double getZ() {
+            return z;
+        }
+
+    private:
+        double x, y, z;
+    };
 
     void Application::registerFunctionsForScripting()
     {
         boost::function<long (const char*)> registerEvent = boost::bind(&EventManager::registerEvent, eventManager.get(), _1);
         boost::function<long (const char*)> getEventID = boost::bind(&EventManager::getEventID, eventManager.get(), _1);
         boost::function<void (long, const char* data)> pushEvent = boost::bind(&EventManager::pushEvent, eventManager.get(), _1, _2);
-        
+
         scriptManager->registerFunction("registerEvent", registerEvent);
         scriptManager->registerFunction("getEventID", getEventID);
         scriptManager->registerFunction("pushEvent", pushEvent);
@@ -241,6 +268,10 @@ namespace Game
 
         scriptManager->registerFunction("loadScene", loadScene);
         scriptManager->registerFunction("switchScene", switchScene);
-        
+
+        boost::function<TestClass* (double, double, double)> ctor = boost::bind(boost::factory<TestClass*>(), _1, _2, _3);
+        boost::function<double (TestClass*)> getX = boost::bind(&TestClass::getX, _1);
+//        boost::function<double (TestClass*)> getY = boost::bind(&TestClass::getY, _1);
+//        boost::function<double (TestClass*)> getZ = boost::bind(&TestClass::getZ, _1);
     }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PerspectiveCamera.h
  * Author: madrenegade
  *
@@ -26,10 +26,15 @@ namespace Graphics
 
         const Math::Vector3& getLookAt() const;
         const Math::Vector3& getUp() const;
-        
+
         virtual const Math::Matrix4& getProjectionMatrix() const;
-        
+
         virtual void update();
+
+        virtual void registerEvents(Core::Events::EventManager* const eventManager);
+
+        void onLookAtChanged(const Core::Events::EventID& event, const boost::any& data);
+        void onUpChanged(const Core::Events::EventID& event, const boost::any& data);
 
     protected:
         PerspectiveCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar);
@@ -37,7 +42,7 @@ namespace Graphics
     private:
         Math::Vector3 lookAt;
         Math::Vector3 up;
-        
+
         const Math::Matrix4 projection;
     };
 }

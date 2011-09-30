@@ -6,21 +6,17 @@
  */
 
 #include "Scripting/ScriptManager.h"
-#include "Scripting/ScriptEngine.h"
 #include "Scripting/Script.h"
+
+#include "Scripting/Engine.h"
 
 #include "Utilities/Properties/PropertyManager.h"
 #include "Utilities/Memory/MemoryManager.h"
 #include "Utilities/IO/FileSystem.h"
 
-#include "Platform/PlatformManager.h"
-#include "Platform/LibraryManager.h"
-#include "Platform/Library.h"
-
 using namespace Utilities::Properties;
 using namespace Utilities::Memory;
 using namespace Utilities::IO;
-using namespace Platform;
 
 namespace Scripting
 {
@@ -42,24 +38,14 @@ namespace Scripting
         properties->addOptions(options);
     }
 
-    typedef boost::shared_ptr<ScriptEngine> (*CreateFn)(const MemoryManager::Ptr&, pool_id pool);
-
     ScriptManager::ScriptManager(const MemoryManager::Ptr& memoryManager,
                                  Utilities::Memory::pool_id pool,
-                                 const boost::shared_ptr<PlatformManager>& platformManager,
                                  const boost::shared_ptr<FileSystem>& fileSystem,
                                  const PropertyManager::Ptr& properties)
         : startupScriptName(properties->get<std::string>("Scripting.startup")),
           memory(memoryManager), pool(pool), fileSystem(fileSystem)
     {
-        std::string engineName("Scripting." + properties->get<std::string > ("Scripting.engine"));
-
-        boost::shared_ptr<Library> engineLibrary = platformManager->libraries()->load(engineName.c_str());
-
-        // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
-        CreateFn create = reinterpret_cast<CreateFn> (engineLibrary->getFunction("create"));
-
-        engine = create(memoryManager, pool);
+        engine = memoryManager->construct(Engine(memoryManager, pool), pool);
     }
 
     ScriptManager::~ScriptManager()

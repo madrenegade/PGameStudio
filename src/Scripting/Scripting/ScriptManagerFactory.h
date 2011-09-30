@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   ScriptManagerFactory.h
  * Author: madrenegade
  *
@@ -29,27 +29,21 @@ namespace Utilities
     }
 }
 
-namespace Platform
-{
-    class PlatformManager;
-}
-
 namespace Scripting
 {
     class ScriptManager;
-    
+
     class ScriptManagerFactory
     {
     public:
         static boost::shared_ptr<ScriptManager> create(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                                                       const boost::shared_ptr<Platform::PlatformManager>& platformManager,
                                                        const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
                                                        const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
     private:
         ScriptManagerFactory();
         ~ScriptManagerFactory();
-        
+
         static boost::shared_ptr<Utilities::Memory::Pool> createMemoryPool(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
     };
 }

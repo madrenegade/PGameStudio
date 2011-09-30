@@ -19,16 +19,21 @@ namespace Scripting
     struct Executor;
 
     // 0 parameters
-
     template<class ParamTypes, class ResultType>
     struct Executor<Int2Type<0>, ParamTypes, ResultType>
     {
 
         template<class Fn>
-        ResultType operator()(Fn& fn, const AnyVector& /*params*/)
+        ResultType operator()(Fn& fn, const AnyVector&)
         {
             return fn();
         }
+
+//        template<class ObjType, class MemFn>
+//        ResultType operator()(Obj& obj, MemFn& mem_fn, const AnyParams&)
+//        {
+//            return (obj->*mem_fn)();
+//        }
     };
 
     // 1 parameter
@@ -76,6 +81,26 @@ namespace Scripting
             return fn(boost::any_cast< typeOfParam0 > (params[0]),
                       boost::any_cast< typeOfParam1 > (params[1]),
                       boost::any_cast< typeOfParam2 > (params[2]));
+        }
+    };
+
+    // 4 parameters
+    template<class ParamTypes, typename ResultType>
+    struct Executor< Int2Type < 4 >, ParamTypes, ResultType >
+    {
+
+        template<class Fn >
+        ResultType operator()(Fn& fn, const AnyVector& params)
+        {
+            typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 0 > >::type typeOfParam0;
+            typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 1 > >::type typeOfParam1;
+            typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 2 > >::type typeOfParam2;
+            typedef typename boost::mpl::at<ParamTypes, boost::mpl::int_ < 3 > >::type typeOfParam3;
+
+            return fn(boost::any_cast< typeOfParam0 > (params[0]),
+                      boost::any_cast< typeOfParam1 > (params[1]),
+                      boost::any_cast< typeOfParam2 > (params[2]),
+                      boost::any_cast< typeOfParam2 > (params[3]));
         }
     };
 }

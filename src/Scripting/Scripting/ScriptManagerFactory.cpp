@@ -16,13 +16,11 @@
 using namespace Utilities::Memory;
 using namespace Utilities::Properties;
 using namespace Utilities::IO;
-using namespace Platform;
 
 namespace Scripting
 {
 
     boost::shared_ptr<ScriptManager> ScriptManagerFactory::create(const boost::shared_ptr<MemoryManager>& memoryManager,
-                                                                  const boost::shared_ptr<PlatformManager>& platformManager,
                                                                   const boost::shared_ptr<FileSystem>& fileSystem,
                                                                   const boost::shared_ptr<PropertyManager>& properties)
     {
@@ -30,7 +28,7 @@ namespace Scripting
 
         const pool_id poolID = memoryManager->registerMemoryPool(pool);
 
-        return memoryManager->construct(ScriptManager(memoryManager, poolID, platformManager, fileSystem, properties), poolID);
+        return memoryManager->construct(ScriptManager(memoryManager, poolID, fileSystem, properties), poolID);
     }
 
     ScriptManagerFactory::ScriptManagerFactory()

@@ -2,7 +2,7 @@
  * File:   Extractor.h
  * Author: madrenegade
  *
- * Created on September 15, 2011, 12:24 PM
+ * Created on September 15, 2011, 12:36 PM
  */
 
 #ifndef SCRIPTING_EXTRACTOR_H
@@ -11,26 +11,34 @@
 #include "Scripting/typedefs.h"
 #include "Utilities/string.h"
 
+extern "C"
+{
+#include <lua.h>
+}
+
 namespace Scripting
 {
-    class Extractor
-    {
-    public:
-        virtual ~Extractor();
+        class Extractor
+        {
+        public:
+            Extractor(AnyVector& params, lua_State* const state);
+            ~Extractor();
 
-        virtual void extract(const bool& b) = 0;
-        virtual void extract(const long& i) = 0;
-        virtual void extract(const double& d) = 0;
+            void operator()(const bool& b);
+            void operator()(const long& i);
+            void operator()(const double& d);
 
-        virtual void extract(const char* s) = 0;
-        virtual void extract(const String& s) = 0;
+            void operator()(const char* s);
+            void operator()(const String& s);
 
-    protected:
-        Extractor(AnyVector& params);
+        private:
+            AnyVector& params;
 
-        AnyVector& params;
-    };
+            lua_State* const state;
+            int stackIndex;
+        };
 }
+
 
 #endif	/* SCRIPTING_EXTRACTOR_H */
 

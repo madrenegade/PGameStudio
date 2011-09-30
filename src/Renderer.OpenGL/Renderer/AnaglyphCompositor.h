@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   AnaglyphCompositor.h
  * Author: madrenegade
  *
@@ -23,17 +23,17 @@ namespace Renderer
     {
     public:
         AnaglyphCompositor(const Viewport* vp, const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
-                           unsigned int fx);
+                           const unsigned int fx);
         virtual ~AnaglyphCompositor();
-        
+
         virtual void startCompose() const;
         virtual void endCompose() const;
-        
+
     private:
         const Viewport* const viewport;
-        
+
         boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>> effects;
-        
+
         const unsigned int composeEffect;
     };
 }

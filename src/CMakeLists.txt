@@ -17,7 +17,7 @@ SUBDIRS(Graphics)
 #SUBDIRS(GUI)
 
 SUBDIRS(Scripting)
-SUBDIRS(Scripting.Lua)
+#SUBDIRS(Scripting.Lua)
 #SUBDIRS(Scripting.Angelscript)
 
 #SUBDIRS(Sound)

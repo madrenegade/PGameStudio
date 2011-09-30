@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   MonoViewCamera.h
  * Author: madrenegade
  *
@@ -13,10 +13,10 @@
 namespace Graphics
 {
 
-    class MonoViewCamera
+    class MonoViewCamera : public MultiViewCamera
     {
     public:
-        MonoViewCamera();
+        MonoViewCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar);
         virtual ~MonoViewCamera();
     };
 }

@@ -17,17 +17,26 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include "Scripting/ScriptEngine.h"
+#include "Scripting/Engine.h"
 #include "Scripting/Executor.h"
-#include "Scripting/ExtractorProxy.h"
+#include "Scripting/Extractor.h"
 
 namespace Scripting
 {
+    void setReturnValue(lua_State* const state, const bool& b);
+    void setReturnValue(lua_State* const state, const long& i);
+    void setReturnValue(lua_State* const state, const double& d);
+    void setReturnValue(lua_State* const state, const String& s);
 
     class Command
     {
     public:
         Command(const char* const name);
+
+        const char* getName() const
+        {
+            return name.c_str();
+        }
 
     private:
         String name;
@@ -47,7 +56,7 @@ namespace Scripting
     {
     public:
         CommandT(const char* const name, const boost::function<T>& fn)
-        : Command(name), function(fn)
+            : Command(name), function(fn)
         {
 
         }
@@ -65,35 +74,32 @@ namespace Scripting
         typedef Executor<Int2Type<boost::function_types::function_arity<T>::value>, ParamTypes, ResultType > ExecutorType;
 
         // for void returns
-        int execute(ScriptEngine* engine, Int2Type<true>) const
+        int execute(lua_State* state, Int2Type<true>) const
         {
             AnyVector params;
 
-            boost::shared_ptr<Extractor> extractor = engine->createExtractor(params);
-            boost::mpl::for_each<ParamTypes > (ExtractorProxy(extractor.get()));
+            boost::mpl::for_each<ParamTypes > (Extractor(params, state));
 
-            ExecutorType f;
-            f(function, params);
+            ExecutorType executor;
+            executor(function, params);
 
             return 0;
         }
 
         // for non-void returns
-        int execute(ScriptEngine* engine, Int2Type<false>) const
+        int execute(lua_State* state, Int2Type<false>) const
         {
             AnyVector params;
 
-            boost::shared_ptr<Extractor> extractor = engine->createExtractor(params);
-            boost::mpl::for_each<ParamTypes > (ExtractorProxy(extractor.get()));
+            boost::mpl::for_each<ParamTypes > (Extractor(params, state));
 
-            ExecutorType f;
-
-            engine->setReturnValue(f(function, params));
+            ExecutorType executor;
+            setReturnValue(state, executor(function, params));
 
             return 1;
         }
 
-        static int callback(ScriptEngine* engine)
+        static int callback(Engine* engine)
         {
             const CommandT<T>* this_ptr = reinterpret_cast<CommandT<T>*> (engine->getCommand());
 
@@ -101,7 +107,6 @@ namespace Scripting
         }
 
     private:
-        String name;
         boost::function<T> function;
     };
 }

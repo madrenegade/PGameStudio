@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Camera.h
  * Author: madrenegade
  *
@@ -9,6 +9,15 @@
 #define	GRAPHICS_CAMERA_H
 
 #include "Math/Matrix4.h"
+#include "Core/Events/typedefs.h"
+
+namespace Core
+{
+    namespace Events
+    {
+        class EventManager;
+    }
+}
 
 namespace Graphics
 {
@@ -26,19 +35,23 @@ namespace Graphics
 
         void setPosition(const Math::Vector3& position);
         const Math::Vector3& getPosition() const;
-        
+
         virtual void update();
+
+        virtual void registerEvents(Core::Events::EventManager* const eventManager);
+
+        void onPositionChanged(const Core::Events::EventID& event, const boost::any& data);
 
     protected:
         Camera();
-        
+
         void updateViewMatrix(const Math::Matrix4& m);
-        
+
         bool viewMatrixDirty;
 
     private:
         Math::Vector3 position;
-        
+
         Math::Matrix4 view;
     };
 }

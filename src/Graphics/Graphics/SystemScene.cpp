@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SystemScene.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 16, 2011, 2:35 PM
  */
 
@@ -84,10 +84,12 @@ namespace Graphics
     {
         Utilities::IO::File::Handle effectFile = fileSystem->read("fx/default.cgfx");
         Utilities::IO::File::Handle finalEffectFile = fileSystem->read("fx/final.cgfx");
-        Utilities::IO::File::Handle anaglyphEffectFile = fileSystem->read("fx/anaglyph.cgfx");
+        Utilities::IO::File::Handle anaglyphCompositorEffectFile = fileSystem->read("fx/anaglyph_compositor.cgfx");
+        Utilities::IO::File::Handle defaultCompositorEffectFile = fileSystem->read("fx/default_compositor.cgfx");
         renderer->requestEffect(effectFile);
         renderer->requestEffect(finalEffectFile);
-        renderer->requestEffect(anaglyphEffectFile);
+        renderer->requestEffect(anaglyphCompositorEffectFile);
+        renderer->requestEffect(defaultCompositorEffectFile);
 
         SceneLoader loader(fileSystem, memoryManager, pool, renderer.get());
         scene = loader.loadFrom(file);
