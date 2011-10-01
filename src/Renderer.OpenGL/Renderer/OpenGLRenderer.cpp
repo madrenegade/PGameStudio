@@ -66,6 +66,8 @@ namespace Renderer
 
         Effect::initialize();
 
+        optimizedDrawCalls.reserve(10);
+
         ErrorHandler::checkForErrors();
     }
 
@@ -162,8 +164,10 @@ namespace Renderer
 
     void OpenGLRenderer::processDrawCalls()
     {
-        DrawCallList drawCallList;
-        popDrawCallsTo(drawCallList);
+        //DrawCallList drawCallList;
+
+        popDrawCallsTo(optimizedDrawCalls);
+        //RAW_VLOG(3, "Draw calls: %i", drawCallList.size());
 
         const FrameBuffer* fb = viewport->getFrameBuffer();
         fb->bind();
@@ -174,13 +178,15 @@ namespace Renderer
             const unsigned int firstAttachment = 4 * i;
             viewport->getCamera()->activateView(i);
 
-            renderToFrameBuffer(drawCallList, firstAttachment);
+            renderToFrameBuffer(optimizedDrawCalls, firstAttachment);
             renderToTexture(i, firstAttachment);
         }
 
         fb->unbind();
 
         renderToScreen();
+
+        optimizedDrawCalls.clear();
 
         ErrorHandler::checkForErrors();
     }

@@ -139,17 +139,20 @@ namespace Utilities
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
             unsigned long tailPart = 0;
 
-            unsigned long currentFreeBits = 0;
+            unsigned int currentFreeBits = 0;
+            unsigned int currentBitInPart = 0;
+            unsigned int zeroBits = 0;
+            unsigned int oneBits = 0;
 
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
                 tailPart = tailParts[i];
 
-                unsigned int currentBitInPart = 0;
+                currentBitInPart = 0;
 
                 while(currentBitInPart < ULONG_BITS)
                 {
-                    unsigned int zeroBits = countZeroBitsFromRight(tailPart);
+                    zeroBits = countZeroBitsFromRight(tailPart);
 
                     if(zeroBits != 0)
                     {
@@ -158,14 +161,13 @@ namespace Utilities
                         currentBitInPart += zeroBits;
                     }
 
-                    unsigned int oneBits = countOneBitsFromRight(tailPart);
+                    oneBits = countOneBitsFromRight(tailPart);
                     currentFreeBits += oneBits;
                     currentBitInPart += oneBits;
 
                     if(currentFreeBits >= neededBlocks)
                     {
-                        const int block = (i * ULONG_BITS) + currentBitInPart - currentFreeBits;
-                        return block;
+                        return (i * ULONG_BITS) + currentBitInPart - currentFreeBits;
                     }
 
                     tailPart >>= oneBits;

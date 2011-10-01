@@ -91,7 +91,9 @@ namespace Renderer
         virtual void processTextureRequests();
 
     private:
-        typedef std::list<Graphics::DrawCall, Utilities::Memory::STLAllocator<Graphics::DrawCall>> DrawCallList;
+        typedef std::vector<Graphics::DrawCall, Utilities::Memory::STLAllocator<Graphics::DrawCall>> DrawCallList;
+        DrawCallList optimizedDrawCalls;
+
         void popDrawCallsTo(DrawCallList& drawCallList);
 
         void renderToFrameBuffer(const DrawCallList& drawCallList, unsigned int firstAttachment);

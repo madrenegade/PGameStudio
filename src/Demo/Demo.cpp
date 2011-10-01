@@ -8,7 +8,7 @@ using namespace Game;
 
 int main(int argc, char** argv)
 {
-    //ProfilerStart("Demo.profile");
+//    ProfilerStart("Demo.profile");
 #ifdef DEBUG
     //LOG(INFO) << "Running in debug mode...";
 #endif
@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     app.initialize();
     app.run();
 
-    //ProfilerStop();
+//    ProfilerStop();
 
     return 0;
 }
