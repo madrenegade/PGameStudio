@@ -16,6 +16,7 @@
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/string.h"
 #include "Utilities/IO/File.h"
+#include "Utilities/Memory/STLAllocator.h"
 
 namespace Utilities
 {
@@ -50,7 +51,8 @@ namespace Graphics
     class SceneLoader
     {
     public:
-        typedef std::vector<boost::shared_ptr<Camera>> Cameras;
+        typedef boost::shared_ptr<Camera> CameraPtr;
+        typedef std::vector<CameraPtr, Utilities::Memory::STLAllocator<CameraPtr>> Cameras;
 
         SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
                     const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
@@ -68,8 +70,8 @@ namespace Graphics
         void readMaterials();
         void readMeshes();
         void readCameras();
-        boost::shared_ptr<SceneNode> readSceneGraph();
 
+        boost::shared_ptr<SceneNode> readSceneGraph();
         boost::shared_ptr<SceneNode> readNode();
 
         template<typename T>
@@ -88,8 +90,11 @@ namespace Graphics
         const char* data;
         unsigned char numberSize;
 
-        std::vector<boost::shared_ptr<Material> > materials;
-        std::vector<boost::shared_ptr<Mesh> > meshes;
+        typedef boost::shared_ptr<Material> MaterialPtr;
+        typedef boost::shared_ptr<Mesh> MeshPtr;
+
+        std::vector<MaterialPtr, Utilities::Memory::STLAllocator<MaterialPtr>> materials;
+        std::vector<MeshPtr, Utilities::Memory::STLAllocator<MeshPtr>> meshes;
         Cameras cameras;
     };
 

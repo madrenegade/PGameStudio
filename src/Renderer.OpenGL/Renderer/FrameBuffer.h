@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   FrameBuffer.h
  * Author: madrenegade
  *
@@ -42,7 +42,7 @@ namespace Renderer
     private:
         void createColorAttachment();
         void createDepthAttachment();
-        
+
         const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         const Utilities::Memory::pool_id pool;
 
@@ -52,7 +52,7 @@ namespace Renderer
         unsigned int id;
 
         typedef boost::shared_ptr<Texture> TexturePtr;
-        std::vector<TexturePtr, Utilities::Memory::STLAllocator<TexturePtr >> colorAttachments;
+        std::vector<TexturePtr, Utilities::Memory::STLAllocator<TexturePtr>> colorAttachments;
 
         boost::shared_ptr<Texture> depthTexture;
     };

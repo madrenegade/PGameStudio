@@ -20,10 +20,6 @@ namespace Math {
 
     Vector3& Vector3::operator*=(double value)
     {
-        if(value == 0) {
-            throw DivideByZeroException("value");
-        }
-
         this->X *= value;
         this->Y *= value;
         this->Z *= value;

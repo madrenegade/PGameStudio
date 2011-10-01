@@ -151,7 +151,7 @@ namespace Renderer
 
     void OpenGLRenderer::processDrawCalls()
     {
-        std::list<Graphics::DrawCall> drawCallList;
+        DrawCallList drawCallList;
         popDrawCallsTo(drawCallList);
 
         const FrameBuffer* fb = viewport->getFrameBuffer();
@@ -174,7 +174,7 @@ namespace Renderer
         ErrorHandler::checkForErrors();
     }
 
-    void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
+    void OpenGLRenderer::renderToFrameBuffer(const DrawCallList& drawCallList,
             unsigned int firstAttachment)
     {
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0 + firstAttachment, GL_COLOR_ATTACHMENT1 + firstAttachment, GL_COLOR_ATTACHMENT2 + firstAttachment};
@@ -277,7 +277,7 @@ namespace Renderer
         viewport->getCompositor()->endCompose();
     }
 
-    void OpenGLRenderer::renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect,
+    void OpenGLRenderer::renderGeometry(const DrawCallList& drawCallList, Effect* effect,
                                         const Math::Matrix4& viewMatrix)
     {
         Texture* texture = 0;
@@ -363,7 +363,7 @@ namespace Renderer
         textures->processRequests();
     }
 
-    void OpenGLRenderer::popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList)
+    void OpenGLRenderer::popDrawCallsTo(DrawCallList& drawCallList)
     {
         Graphics::DrawCall drawCall;
         while (!drawCalls.empty())

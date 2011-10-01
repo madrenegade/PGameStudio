@@ -77,10 +77,16 @@ namespace Core
 
             const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
 
-            typedef std::map<String, EventID> EventMap;
-            EventMap events;
+            typedef std::pair<const String, EventID> EventMapEntry;
+            typedef std::pair<const EventID, boost::shared_ptr<EventSignal>> SignalMapEntry;
 
-            typedef std::map<EventID, boost::shared_ptr<EventSignal>> SignalMap;
+            typedef Utilities::Memory::STLAllocator<EventMapEntry> EventMapAllocator;
+            typedef Utilities::Memory::STLAllocator<SignalMapEntry> SignalMapAllocator;
+
+            typedef std::map<String, EventID, std::less<String>, EventMapAllocator> EventMap;
+            typedef std::map<EventID, boost::shared_ptr<EventSignal>, std::less<EventID>, SignalMapAllocator> SignalMap;
+
+            EventMap events;
             SignalMap signals;
 
             tbb::atomic<EventID> serial;

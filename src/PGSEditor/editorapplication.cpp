@@ -71,7 +71,7 @@ void EditorApplication::initializeOptions()
 {
     VLOG(1) << "Initializing program settings";
 
-    MemoryPoolSettings defaultSettings(1 * KByte, 1 * KByte, 64 * Byte,
+    MemoryPoolSettings defaultSettings(8 * KByte, 8 * KByte, 64 * Byte,
                                        1 * KByte, 1 * KByte, 256 * Byte,
                                        1 * KByte, 1 * KByte, 512 * Byte);
     defaultSettings.addOptionsTo(properties, "Default");
@@ -89,7 +89,7 @@ void EditorApplication::initializeDefaultMemoryPool()
 {
     VLOG(1) << "Initializing default memory pool";
 
-    boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, "Default"));
+    boost::shared_ptr<Pool> pool = Pool::create("Default", MemoryPoolSettings::loadFrom(properties, "Default"));
     memoryManager->registerMemoryPool(pool);
 }
 
@@ -113,6 +113,7 @@ void  EditorApplication::initializeEventManager()
     eventManager->registerEvent("MOUSE_BUTTON_PRESSED");
     eventManager->registerEvent("MOUSE_BUTTON_RELEASED");
     eventManager->registerEvent("MOUSE_MOVED");
+    eventManager->registerEvent("CENTER_MOUSE");
 }
 
 void  EditorApplication::initializePlatformManager()

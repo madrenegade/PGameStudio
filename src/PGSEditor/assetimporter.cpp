@@ -240,9 +240,11 @@ boost::shared_ptr<SceneNode> AssetImporter::processNode(const aiNode *node)
     aiVector3D position;
     node->mTransformation.Decompose(scaling, rotation, position);
 
-    sceneNode->transform.reset(new Math::Matrix4(Math::Matrix4::CreateTransform(Math::Vector3(position.x, position.y, position.z),
-                                                                                Math::Quaternion(rotation.x, rotation.y, rotation.z, rotation.w),
-                                                                                Math::Vector3(scaling.x, scaling.y, scaling.z))));
+    Math::Matrix4 S(Math::Matrix4::Scale(Math::Vector3(scaling.x, scaling.y, scaling.z)));
+    Math::Matrix4 T(Math::Matrix4::CreateTranslation(Math::Vector3(position.x, position.y, position.z)));
+    Math::Matrix4 R(Math::Matrix4::CreateRotation(Math::Quaternion(rotation.x, rotation.y, rotation.z, rotation.w)));
+
+    sceneNode->transform.reset(new Math::Matrix4(S * T.Transpose() * R));
 
     for(unsigned int i = 0; i < node->mNumMeshes; ++i)
     {

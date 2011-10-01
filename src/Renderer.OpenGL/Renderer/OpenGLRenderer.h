@@ -89,13 +89,14 @@ namespace Renderer
         virtual void processTextureRequests();
 
     private:
-        void popDrawCallsTo(std::list<Graphics::DrawCall>& drawCallList);
+        typedef std::list<Graphics::DrawCall, Utilities::Memory::STLAllocator<Graphics::DrawCall>> DrawCallList;
+        void popDrawCallsTo(DrawCallList& drawCallList);
 
-        void renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList, unsigned int firstAttachment);
+        void renderToFrameBuffer(const DrawCallList& drawCallList, unsigned int firstAttachment);
         void renderToTexture(unsigned int viewIndex, unsigned int firstAttachment);
         void renderToScreen();
 
-        void renderGeometry(const std::list<Graphics::DrawCall>& drawCallList, Effect* effect,
+        void renderGeometry(const DrawCallList& drawCallList, Effect* effect,
                             const Math::Matrix4& viewMatrix);
 
         void getViewVectors(Math::Vector4* v, const Graphics::Camera* camera);

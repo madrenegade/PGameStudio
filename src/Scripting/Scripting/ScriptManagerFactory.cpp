@@ -58,7 +58,7 @@ namespace Scripting
             moMax, moPage, moBlock,
             loMax, loPage, loBlock);
 
-        boost::shared_ptr<Pool> pool = Pool::create(scriptingPoolSettings);
+        boost::shared_ptr<Pool> pool = Pool::create("ScriptingPool", scriptingPoolSettings);
 
         return pool;
     }

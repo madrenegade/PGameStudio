@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   FileSystemFactory.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 12, 2011, 2:01 PM
  */
 
@@ -23,9 +23,9 @@ namespace Utilities
                                                                 const boost::shared_ptr<PropertyManager>& properties)
         {
             const FileSystemBackend backend = valueOf<FileSystemBackend>(properties->get<unsigned char>("FileSystem.backend"));
-            
+
             const pool_id pool = memory->registerMemoryPool(createMemoryPool(properties));
-            
+
             boost::shared_ptr<FileSystem> fileSystem;
 
             switch (backend)
@@ -61,8 +61,8 @@ namespace Utilities
                 soMax, soPage, soBlock,
                 moMax, moPage, moBlock,
                 loMax, loPage, loBlock);
-            
-            boost::shared_ptr<Pool> pool = Pool::create(fsPoolSettings);
+
+            boost::shared_ptr<Pool> pool = Pool::create("FileSystemPool", fsPoolSettings);
 
             return pool;
         }

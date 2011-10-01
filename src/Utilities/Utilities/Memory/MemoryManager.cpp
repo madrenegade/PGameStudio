@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   MemoryManager.cpp
  * Author: madrenegade
- * 
+ *
  * Created on August 31, 2011, 3:34 PM
  */
 #include <stdexcept>
@@ -17,7 +17,7 @@ namespace Utilities
         MemoryManager::Ptr MemoryManager::create(const MemoryTracker::Ptr& memoryTracker)
         {
             // check platform details about type sizes
-            
+
             BOOST_STATIC_ASSERT(sizeof(char) == 1);
             BOOST_STATIC_ASSERT(sizeof(short) == 2);
             BOOST_STATIC_ASSERT(sizeof(int) == 4);
@@ -25,7 +25,7 @@ namespace Utilities
             BOOST_STATIC_ASSERT(sizeof(float) == 4);
             BOOST_STATIC_ASSERT(sizeof(double) == 8);
             BOOST_STATIC_ASSERT(sizeof(void*) == 8);
-            
+
             Ptr ptr(new MemoryManager(memoryTracker));
 
             STLAllocator<void>::memory = ptr;
@@ -42,6 +42,12 @@ namespace Utilities
 #ifdef DEBUG
             profilerClient->connect();
 #endif
+        }
+
+        MemoryManager::~MemoryManager()
+        {
+            memoryTracker->logMemoryLeaks();
+            LOG(INFO) << "Maximum memory used: " << memoryTracker->getMaxMemoryUsage() << " bytes";
         }
 
         pool_id MemoryManager::registerMemoryPool(const boost::shared_ptr<Pool>& pool)
@@ -74,16 +80,16 @@ namespace Utilities
 
             pools.erase(poolID);
         }
-        
+
         size_t  MemoryManager::getMemoryUsage() const
         {
             size_t memory = 0;
-            
+
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
                 memory += i->second->getMemoryUsage();
             }
-            
+
             return memory;
         }
 

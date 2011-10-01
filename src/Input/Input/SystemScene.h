@@ -79,8 +79,15 @@ namespace Input
         Core::Events::EventID centerMouse;
 
         typedef boost::shared_ptr<Controller> ControllerPtr;
-        typedef std::map<String, ControllerPtr> ControllerMap;
-        typedef std::map<unsigned int, Controller*> ControlIDMap;
+
+        typedef std::pair<const String, ControllerPtr> ControllerMapEntry;
+        typedef std::pair<const unsigned int, Controller*> ControlIDMapEntry;
+
+        typedef Utilities::Memory::STLAllocator<ControllerMapEntry> ControllerMapAllocator;
+        typedef Utilities::Memory::STLAllocator<ControlIDMapEntry> ControlIDMapAllocator;
+
+        typedef std::map<String, ControllerPtr, std::less<String>, ControllerMapAllocator> ControllerMap;
+        typedef std::map<unsigned int, Controller*, std::less<String>, ControlIDMapAllocator> ControlIDMap;
 
         ControllerMap controllers;
 

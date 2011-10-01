@@ -30,6 +30,11 @@ namespace Utilities
             {
                 trackAllocation(reinterpret_cast<const_byte_pointer>(ptr), bytes, typeid(T));
                 memoryUsage += bytes;
+
+                if(memoryUsage > maxMemoryUsage)
+                {
+                    maxMemoryUsage = memoryUsage;
+                }
             }
 
             /**
@@ -45,6 +50,7 @@ namespace Utilities
             }
 
             size_t getMemoryUsage() const;
+            size_t getMaxMemoryUsage() const;
 
             /**
              * Log memory leaks to the console. This prints out all allocations where no
@@ -67,6 +73,7 @@ namespace Utilities
 
         private:
             size_t memoryUsage;
+            size_t maxMemoryUsage;
 		};
 	}
 }

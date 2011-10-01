@@ -31,10 +31,13 @@ namespace Utilities
 
             /**
              * Create a new memory pool using the specified settings.
+             * @param name - A name for the memory pool.
              * @param settings - The settings used to create the memory pool.
              * @return A smart pointer to the newly created memory pool.
              */
-            static Ptr create(const MemoryPoolSettings& settings = MemoryPoolSettings());
+            static Ptr create(const char* const name, const MemoryPoolSettings& settings = MemoryPoolSettings());
+
+            const char* getName() const;
 
             /**
              * Allocate the given amount of bytes.
@@ -65,8 +68,9 @@ namespace Utilities
             bool contains(const_byte_pointer ptr) const;
 
         private:
-            Pool(const MemoryPoolSettings& settings);
+            Pool(const char* const name, const MemoryPoolSettings& settings);
 
+            const std::string name;
             const MemoryPoolSettings settings;
 
             SmallObjectAllocator smallObjects;

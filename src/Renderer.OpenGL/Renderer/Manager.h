@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Manager.h
  * Author: madrenegade
  *
@@ -16,6 +16,7 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/MemoryManager.h"
+#include "Utilities/Memory/STLAllocator.h"
 
 namespace Renderer
 {
@@ -30,7 +31,7 @@ namespace Renderer
         : currentID(), memory(memoryManager), pool(pool)
         {
         }
-        
+
         void clear()
         {
             data.clear();
@@ -80,7 +81,12 @@ namespace Renderer
         boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
         Utilities::Memory::pool_id pool;
 
-        typedef std::map<unsigned long, boost::shared_ptr<T> > DataMap;
+        typedef boost::shared_ptr<T> pointer;
+
+        typedef std::pair<const unsigned long, pointer> DataMapEntry;
+        typedef Utilities::Memory::STLAllocator<DataMapEntry> DataMapEntryAllocator;
+        typedef std::map<unsigned long, pointer, std::less<unsigned long>, DataMapEntryAllocator> DataMap;
+
         DataMap data;
 
         tbb::concurrent_queue<RequestType> requests;

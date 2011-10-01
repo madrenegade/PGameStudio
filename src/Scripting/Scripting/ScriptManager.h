@@ -78,7 +78,9 @@ namespace Scripting
         void logErrors(int status);
 
         typedef boost::shared_ptr<Script> ScriptPtr;
-        typedef std::map<std::string, ScriptPtr> ScriptMap;
+        typedef std::pair<const String, ScriptPtr> ScriptMapEntry;
+        typedef Utilities::Memory::STLAllocator<ScriptMapEntry> ScriptMapEntryAllocator;
+        typedef std::map<String, ScriptPtr, std::less<String>, ScriptMapEntryAllocator> ScriptMap;
 
         friend class ScriptManagerFactory;
         ScriptManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,

@@ -14,18 +14,23 @@ namespace Utilities
 {
     namespace Memory
     {
-        Pool::Ptr Pool::create(const MemoryPoolSettings& settings)
+        Pool::Ptr Pool::create(const char* const name, const MemoryPoolSettings& settings)
         {
-            return Ptr(new Pool(settings));
+            return Ptr(new Pool(name, settings));
         }
 
-        Pool::Pool(const MemoryPoolSettings& settings)
-            : settings(settings),
+        Pool::Pool(const char* const name, const MemoryPoolSettings& settings)
+            : name(name), settings(settings),
               smallObjects(PageManager::create(settings.smallObjectPoolSize, settings.smallObjectPageSize), settings.smallObjectBlockSize),
               mediumObjects(PageManager::create(settings.mediumObjectPoolSize, settings.mediumObjectPageSize), settings.mediumObjectBlockSize),
               largeObjects(PageManager::create(settings.largeObjectPoolSize, settings.largeObjectPageSize), settings.largeObjectBlockSize)
         {
 
+        }
+
+        const char* Pool::getName() const
+        {
+            return name.c_str();
         }
 
         byte_pointer Pool::allocate(const size_t bytes)

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PageManager.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 10, 2011, 9:31 AM
  */
 
@@ -53,8 +53,7 @@ namespace Utilities
         {
             if (getPagesInUse() == MAX_PAGE_COUNT)
             {
-                RAW_LOG_ERROR("Max amount of pages exceeded: %i", MAX_PAGE_COUNT);
-                throw OutOfMemoryException("requestNewPage fail - amount of pages exceeded");
+                RAW_LOG_FATAL("Max amount of pages exceeded: %i", MAX_PAGE_COUNT);
             }
 
             return allocatePage();

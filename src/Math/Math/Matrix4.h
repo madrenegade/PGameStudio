@@ -33,13 +33,8 @@ namespace Math
         Matrix4 operator*(const Matrix4& rhs) const;
 
         operator const double*() const;
-        
+
         Matrix4& Transpose();
-
-
-#ifdef DEBUG
-        operator std::string() const;
-#endif
 
         static Matrix4 CreatePerspectiveFieldOfView(double fieldOfView, double aspect, double near, double far);
         static Matrix4 LookAt(const Vector3& position, const Vector3& lookAt, const Vector3& up);
@@ -50,24 +45,24 @@ namespace Math
         static Matrix4 CreateTransform(const Vector3& translation = Vector3(0, 0, 0),
                                        const Quaternion& rotation = Quaternion(),
                                        const Vector3& scale = Vector3(1, 1, 1));
-        
+
         static Matrix4 CreateShearing(double s);
 
         double m11;
         double m12;
         double m13;
         double m14;
-        
+
         double m21;
         double m22;
         double m23;
         double m24;
-        
+
         double m31;
         double m32;
         double m33;
         double m34;
-        
+
         double m41;
         double m42;
         double m43;
@@ -75,5 +70,7 @@ namespace Math
     };
 
 } // namespace Math
+
+std::ostream& operator <<(std::ostream& stream, const Math::Matrix4& m);
 
 #endif // MATH_MATRIX4_H

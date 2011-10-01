@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   TaskScheduler.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 14, 2011, 5:16 PM
  */
 
@@ -35,16 +35,16 @@ namespace Core
     {
         const unsigned int numThreadsFromConfig = properties->get<unsigned int>("Scheduler.numThreads");
 
-        const unsigned int numThreads = numThreadsFromConfig == 0 ? 
+        const unsigned int numThreads = numThreadsFromConfig == 0 ?
             tbb::task_scheduler_init::default_num_threads() : numThreadsFromConfig;
-        
+
         VLOG(1) << "Task scheduler uses " << numThreads << " threads";
 
         tbbTaskScheduler.reset(new tbb::task_scheduler_init(numThreads));
-        
+
         backgroundTaskContext.set_priority(tbb::priority_low);
         taskContext.set_priority(tbb::priority_normal);
-        
+
         startBackgroundTask();
     }
 
@@ -56,11 +56,11 @@ namespace Core
     void TaskScheduler::executeTasks(const Scene* const scene)
     {
         rootTask = new(tbb::task::allocate_root(taskContext)) tbb::empty_task;
-        
+
         auto& systemScenes = scene->getSystemScenes();
-        
+
         tbb::task_list tasks;
-        
+
         for(auto i = systemScenes.begin(); i != systemScenes.end(); ++i)
         {
             tbb::task* pTask = (*i)->getTask(rootTask);
@@ -71,20 +71,20 @@ namespace Core
         rootTask->spawn_and_wait_for_all(tasks);
         rootTask->destroy(*rootTask);
     }
-    
+
     void TaskScheduler::startBackgroundTask()
     {
         backgroundTask = new(tbb::task::allocate_root(backgroundTaskContext)) tbb::empty_task;
         backgroundTask->set_ref_count(1);
     }
-    
+
     void TaskScheduler::waitForBackgroundTask()
     {
         VLOG(1) << "Waiting for background tasks to finish...";
-        
+
         backgroundTask->wait_for_all();
         backgroundTask->destroy(*backgroundTask);
-        
+
         VLOG(1) << "Background tasks finished";
     }
 }

@@ -1,2 +1,2 @@
 #!/bin/sh
-cmake -G "CodeBlocks - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug .
+cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" .

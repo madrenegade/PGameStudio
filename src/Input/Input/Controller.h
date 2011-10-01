@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Controller.h
  * Author: madrenegade
  *
@@ -44,9 +44,17 @@ namespace Input
         typedef std::shared_ptr<OneAxisControl> OneAxisControlPtr;
         typedef std::shared_ptr<TwoAxisControl> TwoAxisControlPtr;
 
-        typedef std::map<unsigned int, ButtonPtr> ButtonMap;
-        typedef std::map<unsigned int, OneAxisControlPtr> OneAxisControlMap;
-        typedef std::map<unsigned int, TwoAxisControlPtr> TwoAxisControlMap;
+        typedef std::pair<const unsigned int, ButtonPtr> ButtonMapEntry;
+        typedef std::pair<const unsigned int, OneAxisControlPtr> OneAxisControlMapEntry;
+        typedef std::pair<const unsigned int, TwoAxisControlPtr> TwoAxisControlMapEntry;
+
+        typedef Utilities::Memory::STLAllocator<ButtonMapEntry> ButtonMapAllocator;
+        typedef Utilities::Memory::STLAllocator<OneAxisControlMapEntry> OneAxisControlMapAllocator;
+        typedef Utilities::Memory::STLAllocator<TwoAxisControlMapEntry> TwoAxisControlMapAllocator;
+
+        typedef std::map<unsigned int, ButtonPtr, std::less<unsigned int>, ButtonMapAllocator> ButtonMap;
+        typedef std::map<unsigned int, OneAxisControlPtr, std::less<unsigned int>, OneAxisControlMapAllocator> OneAxisControlMap;
+        typedef std::map<unsigned int, TwoAxisControlPtr, std::less<unsigned int>, TwoAxisControlMapAllocator> TwoAxisControlMap;
 
         ButtonMap buttons;
         OneAxisControlMap oneAxisControls;

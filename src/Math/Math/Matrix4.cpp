@@ -184,7 +184,11 @@ namespace Math
         Vector4 axisAngle = rotation.ToAxisAngle();
 
         Vector3 axis(axisAngle.X, axisAngle.Y, axisAngle.Z);
-        axis.Normalize();
+
+        if(axis.LengthSquared() != 0)
+        {
+            axis.Normalize();
+        }
 
         double angle = axisAngle.W;
 
@@ -224,46 +228,15 @@ namespace Math
             0, 0, 0, 1
             );
     }
-
-#ifdef DEBUG
-
-    Matrix4::operator std::string() const
-    {
-        std::stringstream s;
-        s << m11;
-        s << " ";
-        s << m12;
-        s << " ";
-        s << m13;
-        s << " ";
-        s << m14;
-        s << std::endl;
-        s << m21;
-        s << " ";
-        s << m22;
-        s << " ";
-        s << m23;
-        s << " ";
-        s << m24;
-        s << std::endl;
-        s << m31;
-        s << " ";
-        s << m32;
-        s << " ";
-        s << m33;
-        s << " ";
-        s << m34;
-        s << std::endl;
-        s << m41;
-        s << " ";
-        s << m42;
-        s << " ";
-        s << m43;
-        s << " ";
-        s << m44;
-        s << std::endl;
-
-        return s.str();
-    }
-#endif
 } // namespace Math
+
+std::ostream& operator <<(std::ostream& stream, const Math::Matrix4& m)
+{
+    stream << "M(" << std::endl
+    << m.m11 << " \t" << m.m12 << " \t" << m.m13 << " \t" << m.m14 << std::endl
+    << m.m21 << " \t" << m.m22 << " \t" << m.m23 << " \t" << m.m24 << std::endl
+    << m.m31 << " \t" << m.m32 << " \t" << m.m33 << " \t" << m.m34 << std::endl
+    << m.m41 << " \t" << m.m42 << " \t" << m.m43 << " \t" << m.m44 << ")";
+
+    return stream;
+}

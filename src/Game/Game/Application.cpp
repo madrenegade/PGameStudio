@@ -1,5 +1,5 @@
 #include "Game/Application.h"
-
+#include "Game/StateManager.h"
 // TODO: Release memory tracker
 //#ifdef DEBUG
 #include "Utilities/Memory/Tracking/DebugMemoryTracker.h"
@@ -45,8 +45,8 @@ namespace Game
     {
         properties->parse(argc, argv);
 
-        // FIXME: prevents logging (seems to ignore env vars and command line options)
-        //google::InitGoogleLogging(argv[0]);
+        google::InitGoogleLogging(argv[0]);
+        google::InstallFailureSignalHandler();
 
         MemoryTracker::Ptr memoryTracker(new DebugMemoryTracker());
         memoryManager = MemoryManager::create(memoryTracker);
@@ -76,6 +76,7 @@ namespace Game
         initializePlatformManager();
         initializeWindow();
         initializeTaskScheduler();
+        initializeStateManager();
         initializeSceneManager();
         initializeScriptManager();
     }
@@ -157,7 +158,7 @@ namespace Game
     {
         VLOG(1) << "Initializing default memory pool";
 
-        boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, "Default"));
+        boost::shared_ptr<Pool> pool = Pool::create("DefaultPool", MemoryPoolSettings::loadFrom(properties, "Default"));
         memoryManager->registerMemoryPool(pool);
     }
 
@@ -205,6 +206,12 @@ namespace Game
 
         // cannot use memory manager because tbb task scheduler is copy protected
         taskScheduler.reset(new Core::TaskScheduler(properties));
+    }
+
+    void Application::initializeStateManager()
+    {
+        VLOG(1) << "Initializing state manager";
+        stateManager = memoryManager->construct(StateManager());
     }
 
     void Application::initializeSceneManager()
@@ -260,6 +267,17 @@ namespace Game
         ];
 
         scriptManager->setVariable("Scene", sceneManager.get());
+
+        module(state, "Game")
+        [
+            class_<StateManager>("StateManager")
+                .def("register", &StateManager::registerState)
+                .def("switchTo", &StateManager::switchState)
+                .def("current", &StateManager::getCurrentState)
+                .def("hasChanged", &StateManager::hasStateChanged)
+        ];
+
+        scriptManager->setVariable("State", stateManager.get());
 
         module(state)
         [

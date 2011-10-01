@@ -28,12 +28,10 @@ namespace Platform
 
         Platform::Platform()
         {
-            LOG(INFO) << "Platform created";
         }
 
         Platform::~Platform()
         {
-            LOG(INFO) << "Platform destroyed";
         }
 
         void Platform::handleOSEvents()

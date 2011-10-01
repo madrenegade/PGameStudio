@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   FileSystem.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 12, 2011, 1:59 PM
  */
 #include "Utilities/IO/FileSystem.h"
@@ -28,7 +28,7 @@ namespace Utilities
                 1 * KByte, 1 * KByte, 128 * Byte,
                 1 * KByte, 1 * KByte, 128 * Byte);
             fileSystemPool.addOptionsTo(properties, "FileSystem");
-            
+
             po::options_description options("Filesystem options");
 
             options.add_options()
@@ -50,7 +50,7 @@ namespace Utilities
         {
 
         }
-        
+
         Memory::pool_id FileSystem::getMemoryPool() const
         {
             return memoryPool;
@@ -59,7 +59,7 @@ namespace Utilities
         void FileSystem::initialize(const Memory::pool_id fsPool)
         {
             memoryPool = fsPool;
-            
+
             mountDirectories();
 
             RAW_LOG_INFO("Setting write directory");
@@ -88,12 +88,12 @@ namespace Utilities
 
             return memory->construct(File(data, fileSize));
         }
-        
+
         boost::shared_ptr<XmlReader> FileSystem::readXml(const char* const path)
         {
             return readXml(read(path));
         }
-        
+
         boost::shared_ptr<XmlReader> FileSystem::readXml(const File::Handle& file)
         {
             boost::shared_ptr<XmlReader> reader = memory->construct(XmlReader(memory, memoryPool, file));
@@ -121,7 +121,7 @@ namespace Utilities
         {
             const std::vector<std::string> mounts(properties->get<std::vector<std::string> >("FileSystem.mount"));
 
-            std::vector<std::string> parts;
+            std::vector<std::string, Utilities::Memory::STLAllocator<std::string>> parts;
 
             for (size_t i = 0; i < mounts.size(); ++i)
             {

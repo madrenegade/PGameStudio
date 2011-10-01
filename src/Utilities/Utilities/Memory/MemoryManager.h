@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   MemoryManager.h
  * Author: madrenegade
  *
@@ -44,11 +44,11 @@ namespace Utilities
         {
 
             ComposedDeleter(const DeleterT& pre, const MainDeleterT& main)
-            : preDeleter(pre), mainDeleter(main)
+                : preDeleter(pre), mainDeleter(main)
             {
             }
 
-            void operator()(T * obj)
+            void operator()(T* obj)
             {
                 preDeleter(obj);
                 mainDeleter(obj);
@@ -74,7 +74,7 @@ namespace Utilities
             /**
              * registers a new memory pool and returns an id to access it
              * the first registration always returns 0 as the id
-             * 
+             *
              * @param pool - the pool to register
              * @return the id the pool is registered to
              */
@@ -89,14 +89,14 @@ namespace Utilities
 
             /**
              * Get the amount of memory in bytes used at the moment.
-             * @return 
+             * @return
              */
             size_t getMemoryUsage() const;
 
             /**
              * Construct the given object in the given memory pool using a custom pre-deleter.
              * The pre-deleter is called right before deallocation and may be used for clean up.
-             * 
+             *
              * @param obj - the object to place in the pool
              * @param preDeleter - the pre-deleter
              * @param poolID - the pool to place the object in
@@ -105,9 +105,9 @@ namespace Utilities
             template<typename T, typename Deleter>
             boost::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, const pool_id poolID = 0
 #ifdef DEBUG
-                , const StackTrace& stacktrace = StackTrace()
+                                           , const StackTrace& stacktrace = StackTrace()
 #endif
-                )
+                                          )
             {
 #ifdef DEBUG
                 {
@@ -128,7 +128,7 @@ namespace Utilities
             /**
              * Construct the given object in the given memory pool.
              * Make sure that the memory manager instance exists when the ptr gets deleted.
-             * 
+             *
              * @param obj - the object to place in the pool
              * @param poolID - the pool to place the object in
              * @return a pointer to the constructed object
@@ -136,9 +136,9 @@ namespace Utilities
             template<typename T>
             boost::shared_ptr<T> construct(const T& obj, const pool_id poolID = 0
 #ifdef DEBUG
-                , const StackTrace& stacktrace = StackTrace()
+                                           , const StackTrace& stacktrace = StackTrace()
 #endif
-                )
+                                          )
             {
 #ifdef DEBUG
                 {
@@ -155,9 +155,9 @@ namespace Utilities
             template<typename T, size_t numObjects>
             boost::shared_array<T> allocate(const pool_id poolID = 0
 #ifdef DEBUG
-                , const StackTrace& stacktrace = StackTrace()
+                                            , const StackTrace& stacktrace = StackTrace()
 #endif
-                )
+                                           )
             {
 #ifdef DEBUG
                 BOOST_STATIC_ASSERT(numObjects > 1);
@@ -176,9 +176,9 @@ namespace Utilities
             template<typename T>
             boost::shared_array<T> allocate(const size_t numObjects, const pool_id poolID = 0
 #ifdef DEBUG
-                , const StackTrace& stacktrace = StackTrace()
+                                            , const StackTrace& stacktrace = StackTrace()
 #endif
-                )
+                                           )
             {
 #ifdef DEBUG
                 assert(numObjects > 1);
@@ -203,19 +203,19 @@ namespace Utilities
              * @param numObjects
              * @param poolID
              * @param stacktrace
-             * @return 
+             * @return
              */
             template<typename T>
             T* rawAllocate(const size_t numObjects
 #ifdef DEBUG
-                , const StackTrace& stacktrace
+                           , const StackTrace& stacktrace
 #endif
-                , const pool_id poolID = 0)
+                           , const pool_id poolID = 0)
             {
 #ifdef DEBUG
                 {
                     ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
+                    profilerClient->send_allocation_info(stacktrace, numObjects* sizeof (T), poolID);
                 }
 #endif
 
@@ -256,6 +256,8 @@ namespace Utilities
             }
 #endif
 
+            ~MemoryManager();
+
         private:
             MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker);
 
@@ -292,9 +294,14 @@ namespace Utilities
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Allocating %li bytes for %li objects of type %s in pool %i",
+                if (pools.find(poolID) == pools.end())
+                {
+                    throw std::logic_error("Invalid pool id");
+                }
+
+                RAW_VLOG(4, "Allocating %li bytes for %li objects of type %s in pool '%s'",
                          BYTES_TO_ALLOCATE, numObjects,
-                         Utilities::demangle(typeid (T).name()).c_str(), poolID);
+                         Utilities::demangle(typeid (T).name()).c_str(), pools[poolID]->getName());
 #endif
 
                 T* ptr = 0;
@@ -302,11 +309,6 @@ namespace Utilities
                     PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
 
 #ifdef DEBUG
-                    if (pools.find(poolID) == pools.end())
-                    {
-                        throw std::logic_error("Invalid pool id");
-                    }
-
                     byte_pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
 
                     fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);

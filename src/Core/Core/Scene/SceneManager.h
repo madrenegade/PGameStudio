@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   SceneManager.h
  * Author: madrenegade
  *
@@ -24,7 +24,7 @@ namespace Utilities
     {
         class PropertyManager;
     }
-    
+
     namespace Memory
     {
         class MemoryManager;
@@ -42,7 +42,7 @@ namespace Core
     {
         class EventManager;
     }
-    
+
     class Scene;
 
     class SceneManager
@@ -57,23 +57,24 @@ namespace Core
 
         void loadScene(const char* const name);
         void switchScene(const char* const name);
-        
+
         Scene* getCurrentScene() const;
 
     private:
         static const std::string SCENE_PATH;
-        
+
         const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         const boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
         const boost::shared_ptr<Platform::PlatformManager> platform;
         const boost::shared_ptr<Events::EventManager> eventManager;
         const boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
-        
+
         typedef boost::shared_ptr<Scene> ScenePtr;
-        
-        typedef std::map<String, ScenePtr> SceneMap;
+        typedef std::pair<const String, ScenePtr> SceneMapEntry;
+        typedef Utilities::Memory::STLAllocator<SceneMapEntry> SceneMapAllocator;
+        typedef std::map<String, ScenePtr, std::less<String>, SceneMapAllocator> SceneMap;
         SceneMap loadedScenes;
-        
+
         ScenePtr currentScene;
     };
 }

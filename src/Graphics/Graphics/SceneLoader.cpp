@@ -199,7 +199,6 @@ namespace Graphics
 
             const unsigned int bytes = numVertices * vertexSize;
 
-
             boost::shared_array<char> vertexData = memoryManager->allocate<char>(bytes, pool);
             Utilities::copy(data, vertexData.get(), bytes);
             data += bytes;

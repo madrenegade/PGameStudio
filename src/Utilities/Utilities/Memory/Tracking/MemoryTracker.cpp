@@ -9,7 +9,7 @@ namespace Utilities
     {
 
         MemoryTracker::MemoryTracker()
-        : memoryUsage(0)
+        : memoryUsage(0), maxMemoryUsage(0)
         {
         }
 
@@ -20,6 +20,11 @@ namespace Utilities
         size_t MemoryTracker::getMemoryUsage() const
         {
             return memoryUsage;
+        }
+
+        size_t MemoryTracker::getMaxMemoryUsage() const
+        {
+            return maxMemoryUsage;
         }
 
         void MemoryTracker::logMemoryLeaks() const
@@ -40,13 +45,13 @@ namespace Utilities
                 }
             }
         }
-        
+
         void MemoryTracker::printMemoryDump() const
         {
             RAW_VLOG(1, "Memory dump");
-                
+
             const std::vector<AllocationInfo> dump(getMemoryDump());
-            
+
             for (unsigned int i = 0; i < dump.size(); ++i)
             {
                 const AllocationInfo& allocationInfo = dump.at(i);
