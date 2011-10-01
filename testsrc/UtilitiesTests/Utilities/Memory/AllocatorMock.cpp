@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   AllocatorMock.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 5, 2011, 2:40 PM
  */
 
@@ -13,9 +13,9 @@ namespace Utilities
     namespace Memory
     {
         AllocatorMock::AllocatorMock(const size_t maxSize, const size_t pageSize, const size_t blockSize)
-        : Allocator(PageManager::create(maxSize, pageSize), blockSize)
+            : Allocator(PageManager::create(maxSize, pageSize), blockSize)
         {
-            
+
         }
 
         byte_pointer AllocatorMock::allocate(const size_t /*bytes*/)

@@ -13,10 +13,12 @@
 
 #include <tbb/atomic.h>
 #include <tbb/concurrent_queue.h>
+#include <tbb/concurrent_hash_map.h>
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/MemoryManager.h"
 #include "Utilities/Memory/STLAllocator.h"
+#include "Utilities/string.h"
 
 namespace Renderer
 {
@@ -28,7 +30,7 @@ namespace Renderer
 
         Manager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                 Utilities::Memory::pool_id pool)
-        : currentID(), memory(memoryManager), pool(pool)
+            : currentID(), memory(memoryManager), pool(pool)
         {
         }
 
@@ -44,7 +46,19 @@ namespace Renderer
             request.id = id;
             requests.push(request);
 
+            {
+                tbb::concurrent_hash_map<String, unsigned long>::accessor a;
+                dataNames.insert(a, request.name);
+                a->second = id;
+            }
+
             return id;
+        }
+
+        bool isRequested(const char* const name)
+        {
+            tbb::concurrent_hash_map<String, unsigned long>::const_accessor a;
+            return dataNames.find(a, name);
         }
 
         void processRequests()
@@ -75,6 +89,18 @@ namespace Renderer
             return data.at(id).get();
         }
 
+        unsigned long getID(const char* const name) const
+        {
+            tbb::concurrent_hash_map<String, unsigned long>::const_accessor a;
+
+            if(!dataNames.find(a, name))
+            {
+                LOG(FATAL) << "Resource not found: " << name;
+            }
+
+            return a->second;
+        }
+
     private:
         tbb::atomic<unsigned long> currentID;
 
@@ -90,6 +116,7 @@ namespace Renderer
         DataMap data;
 
         tbb::concurrent_queue<RequestType> requests;
+        tbb::concurrent_hash_map<String, unsigned long> dataNames;
     };
 }
 

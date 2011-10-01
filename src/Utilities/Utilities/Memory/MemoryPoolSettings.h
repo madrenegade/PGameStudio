@@ -37,7 +37,7 @@ namespace Utilities
              * @param basename
              * @return the loaded settings
              */
-            static const MemoryPoolSettings loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char*const basename);
+            static const MemoryPoolSettings loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const basename);
 
             MemoryPoolSettings(const size_t smallObjectPoolSize = 16*KByte,
                                const size_t smallObjectPageSize = 4*KByte,
@@ -48,11 +48,11 @@ namespace Utilities
                                const size_t largeObjectPoolSize = 16*MByte,
                                const size_t largeObjectPageSize = 4*KByte,
                                const size_t largeObjectBlockSize = 512*Byte)
-            : smallObjectPoolSize(smallObjectPoolSize), smallObjectPageSize(smallObjectPageSize),
-            smallObjectBlockSize(smallObjectBlockSize), mediumObjectPoolSize(mediumObjectPoolSize),
-            mediumObjectPageSize(mediumObjectPageSize), mediumObjectBlockSize(mediumObjectBlockSize),
-            largeObjectPoolSize(largeObjectPoolSize), largeObjectPageSize(largeObjectPageSize),
-            largeObjectBlockSize(largeObjectBlockSize)
+                : smallObjectPoolSize(smallObjectPoolSize), smallObjectPageSize(smallObjectPageSize),
+                  smallObjectBlockSize(smallObjectBlockSize), mediumObjectPoolSize(mediumObjectPoolSize),
+                  mediumObjectPageSize(mediumObjectPageSize), mediumObjectBlockSize(mediumObjectBlockSize),
+                  largeObjectPoolSize(largeObjectPoolSize), largeObjectPageSize(largeObjectPageSize),
+                  largeObjectBlockSize(largeObjectBlockSize)
             {}
 
             const size_t smallObjectPoolSize;

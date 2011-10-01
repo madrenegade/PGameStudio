@@ -87,7 +87,7 @@ namespace Input
         typedef Utilities::Memory::STLAllocator<ControlIDMapEntry> ControlIDMapAllocator;
 
         typedef std::map<String, ControllerPtr, std::less<String>, ControllerMapAllocator> ControllerMap;
-        typedef std::map<unsigned int, Controller*, std::less<String>, ControlIDMapAllocator> ControlIDMap;
+        typedef std::map<unsigned int, Controller*, std::less<unsigned int>, ControlIDMapAllocator> ControlIDMap;
 
         ControllerMap controllers;
 

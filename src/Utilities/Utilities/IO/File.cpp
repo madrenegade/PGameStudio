@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   File.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 12, 2011, 5:32 PM
  */
 
@@ -12,13 +12,13 @@ namespace Utilities
     namespace IO
     {
         File::File()
-        : size(0)
+            : size(0)
         {
-            
+
         }
 
         File::File(const boost::shared_array<Memory::byte>& data, const size_t size)
-        : data(data), size(size)
+            : data(data), size(size)
         {
 
         }
@@ -27,7 +27,7 @@ namespace Utilities
         {
             return data.get();
         }
-        
+
         size_t File::getSize() const
         {
             return size;

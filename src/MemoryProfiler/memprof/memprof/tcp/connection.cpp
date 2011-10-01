@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   connection.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 7, 2011, 7:55 AM
  */
 
@@ -30,11 +30,11 @@ namespace memprof
 
         connection::connection(boost::asio::io_service& io_service,
                                const std::list<change_listener*>& listeners)
-        : socket(io_service), listeners(listeners)
+            : socket(io_service), listeners(listeners)
         {
 
         }
-        
+
         connection::~connection()
         {
         }
@@ -47,9 +47,9 @@ namespace memprof
         void connection::start()
         {
             boost::asio::async_read(socket, boost::asio::buffer(buffer),
-                boost::bind(&connection::handle_read, shared_from_this(),
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred));
+                                    boost::bind(&connection::handle_read, shared_from_this(),
+                                                boost::asio::placeholders::error,
+                                                boost::asio::placeholders::bytes_transferred));
         }
 
         void connection::handle_read(const boost::system::error_code& error, size_t /*bytesTransferred*/)
@@ -63,9 +63,9 @@ namespace memprof
 
                 boost::archive::binary_iarchive ia(s);
                 ia >> sample;
-                
+
                 notify_listeners(sample);
-                
+
                 start();
             }
         }
@@ -74,27 +74,27 @@ namespace memprof
         {
             switch(sample.getType())
             {
-                case sample_type::new_frame:
-                    notify_listeners_about_new_frame();
-                    break;
-                    
-                case sample_type::allocation:
-                    notify_listeners_about_allocation(sample);
-                    break;
+            case sample_type::new_frame:
+                notify_listeners_about_new_frame();
+                break;
+
+            case sample_type::allocation:
+                notify_listeners_about_allocation(sample);
+                break;
             }
         }
 
         void connection::notify_listeners_about_new_frame()
         {
-            std::for_each(listeners.begin(), listeners.end(), [](change_listener* listener) { 
-                listener->on_new_frame(); 
+            std::for_each(listeners.begin(), listeners.end(), [](change_listener* listener) {
+                listener->on_new_frame();
             });
         }
 
         void connection::notify_listeners_about_allocation(const sample& sample)
         {
-            std::for_each(listeners.begin(), listeners.end(), [&sample](change_listener* listener) { 
-                listener->on_allocation(sample); 
+            std::for_each(listeners.begin(), listeners.end(), [&sample](change_listener* listener) {
+                listener->on_allocation(sample);
             });
         }
     }

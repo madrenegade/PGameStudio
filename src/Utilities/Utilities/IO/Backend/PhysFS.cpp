@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PhysFS.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 12, 2011, 2:07 PM
  */
 
@@ -17,7 +17,7 @@ namespace Utilities
         {
 
             PhysFS::PhysFS(const Memory::MemoryManager::Ptr& memory, const boost::shared_ptr<Properties::PropertyManager>& properties)
-            : FileSystem(memory, properties)
+                : FileSystem(memory, properties)
             {
             }
 
@@ -51,7 +51,7 @@ namespace Utilities
                 mount(".", 0);
 
                 FileSystem::initialize(id);
-                
+
                 RAW_VLOG(1, "User dir: %s", PHYSFS_getUserDir());
                 RAW_VLOG(1, "Write dir: %s", PHYSFS_getWriteDir());
             }
@@ -80,7 +80,7 @@ namespace Utilities
             {
 #ifdef DEBUG
                 RAW_LOG_INFO("Opening %s", path);
-                
+
                 void* handle = PHYSFS_openRead(path);
 
                 if (handle == 0)
@@ -93,29 +93,29 @@ namespace Utilities
                 return PHYSFS_openRead(path);
 #endif
             }
-            
+
             void* PhysFS::openForWriting(const char* const filename)
-            { 
+            {
 #ifdef DEBUG
                 RAW_LOG_INFO("Opening %s for writing", filename);
-                
+
                 void* handle = PHYSFS_openWrite(filename);
-                
+
                 if(handle == 0)
                 {
                     logError();
                 }
-                
+
                 return handle;
 #else
                 return PHYSFS_openWrite(filename);
 #endif
             }
-            
+
             void PhysFS::close(void* const handle)
             {
                 DCHECK(handle != 0);
-                
+
                 if(PHYSFS_close(static_cast<PHYSFS_File*>(handle)) == 0)
                 {
                     logError();
@@ -126,41 +126,41 @@ namespace Utilities
             {
 #ifdef DEBUG
                 const size_t bytesRead = PHYSFS_read(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
-                
+
                 if(bytesRead < size)
                 {
                     logError();
                 }
-                
+
                 return bytesRead;
 #else
                 return PHYSFS_read(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
 #endif
             }
-            
+
             size_t PhysFS::write(void* const handle, Memory::const_byte_pointer const buffer, const size_t size)
             {
 #ifdef DEBUG
                 const size_t bytesWritten = PHYSFS_write(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
-                
+
                 if(bytesWritten < size)
                 {
                     logError();
                 }
-                
+
                 return bytesWritten;
 #else
                 return PHYSFS_write(static_cast<PHYSFS_File*>(handle), buffer, 1, size);
 #endif
             }
-            
+
             void PhysFS::setWriteDirectory(const char* const organization, const char* const appName)
             {
                 if(PHYSFS_setSaneConfig(organization, appName, 0, 0, 0) == 0)
                 {
                     logError();
                 }
-                
+
                 RAW_LOG_INFO("Write directory set to %s", PHYSFS_getWriteDir());
             }
 
@@ -173,12 +173,12 @@ namespace Utilities
                 PHYSFS_getLinkedVersion(&linked);
 
                 if (compiled.major != linked.major ||
-                    compiled.minor != linked.minor ||
-                    compiled.patch != linked.patch)
+                        compiled.minor != linked.minor ||
+                        compiled.patch != linked.patch)
                 {
                     RAW_LOG_WARNING("Using PhysFS v%i.%i.%i but compiled against v%i.%i.%i",
-                        linked.major, linked.minor, linked.patch,
-                        compiled.major, compiled.minor, compiled.patch);
+                                    linked.major, linked.minor, linked.patch,
+                                    compiled.major, compiled.minor, compiled.patch);
                 }
             }
 

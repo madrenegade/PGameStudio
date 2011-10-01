@@ -12,7 +12,7 @@ namespace Scripting
 {
 
     ExecutorTask::ExecutorTask(ScriptManager* const scriptManager)
-    : scriptManager(scriptManager)
+        : scriptManager(scriptManager)
     {
     }
 

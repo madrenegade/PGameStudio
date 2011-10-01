@@ -32,7 +32,7 @@ namespace Math
 
         Matrix4 operator*(const Matrix4& rhs) const;
 
-        operator const double*() const;
+        operator const double* () const;
 
         Matrix4& Transpose();
 

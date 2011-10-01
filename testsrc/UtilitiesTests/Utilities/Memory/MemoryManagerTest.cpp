@@ -21,7 +21,7 @@ protected:
 
     virtual void SetUp()
     {
-        pool = Pool::create();
+        pool = Pool::create("Test");
         tracker.reset(new MemoryTrackerMock());
 
         memory = MemoryManager::create(tracker);
@@ -32,9 +32,9 @@ TEST_F(MemoryManagerTest, construct)
 {
     memory->registerMemoryPool(pool);
     int i = 5;
-    
+
     boost::shared_ptr<int> ptr = memory->construct(i, DEFAULT_POOL);
-    
+
     EXPECT_EQ(i, *ptr);
 }
 
@@ -65,7 +65,7 @@ TEST_F(MemoryManagerTest, registerPoolShouldCreateUniqueIDs)
 
     for (int i = 0; i < 100; ++i)
     {
-        boost::shared_ptr<Pool> pool = Pool::create();
+        boost::shared_ptr<Pool> pool = Pool::create("Test");
         pool_id id = memory->registerMemoryPool(pool);
 
         EXPECT_TRUE(ids.find(id) == ids.end());

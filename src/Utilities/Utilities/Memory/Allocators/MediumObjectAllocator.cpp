@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   MediumObjectAllocator.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 2, 2011, 10:59 PM
  */
 
@@ -25,7 +25,7 @@ namespace Utilities
     {
 
         MediumObjectAllocator::MediumObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, size_t blockSize)
-        : Allocator(pageManager, blockSize), USABLE_BLOCKS_PER_PAGE(pageManager->getPageSize() / blockSize - 1)
+            : Allocator(pageManager, blockSize), USABLE_BLOCKS_PER_PAGE(pageManager->getPageSize() / blockSize - 1)
         {
             // the tail block can handle this amount of blocks
             const size_t BLOCK_SIZE_IN_BITS = blockSize * BITS_PER_BYTE;
@@ -36,8 +36,8 @@ namespace Utilities
             const size_t NEEDED_BITS_IN_TAIL_FOR_LARGEST_FREE_BLOCK_RANGE = sizeof (unsigned short) * BITS_PER_BYTE;
 
             const size_t NEEDED_BITS_IN_TAIL = NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS +
-                NEEDED_BITS_IN_TAIL_FOR_LARGEST_FREE_BLOCK_RANGE +
-                NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS;
+                                               NEEDED_BITS_IN_TAIL_FOR_LARGEST_FREE_BLOCK_RANGE +
+                                               NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS;
 
             if (NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS > std::numeric_limits<unsigned short>::max())
             {
@@ -71,9 +71,9 @@ namespace Utilities
                 for (PagesWithFreeBlocksList::const_iterator i = pagesWithFreeBlocks.begin(); i != pagesWithFreeBlocks.end(); ++i)
                 {
                     byte_pointer page = pagesWithFreeBlocks.front();
-                    
+
                     size_t largestBlockRange = *getPointerToLargestFreeBlockRangeFor(page) * BLOCK_SIZE;
-                    
+
                     if (largestBlockRange >= bytes)
                     {
                         startOfPage = page;
@@ -90,13 +90,14 @@ namespace Utilities
 
             const size_t neededBlocks = std::ceil(static_cast<double> (bytes) / static_cast<double> (BLOCK_SIZE));
 
-            RAW_VLOG(4, "Needing %li blocks for %li bytes with blockSize=%li", neededBlocks, bytes, BLOCK_SIZE);
+            RAW_VLOG(4, "Needing %li blocks for %li bytes with blockSize=%li\nUsing page: %p", neededBlocks, bytes, BLOCK_SIZE, reinterpret_cast<const void*>(startOfPage));
             return allocateBlocksIn(startOfPage, neededBlocks);
         }
 
         byte_pointer MediumObjectAllocator::allocateBlocksIn(byte_pointer startOfPage, const size_t neededBlocks)
         {
             const int startOfFreeBlocks = findFreeBlocksIn(startOfPage, neededBlocks);
+            RAW_VLOG(4, "Range: %i to %li", startOfFreeBlocks, (startOfFreeBlocks+neededBlocks-1));
 
             if (startOfFreeBlocks != -1)
             {
@@ -136,28 +137,38 @@ namespace Utilities
             byte_pointer tail = getTailFor(page);
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
-
-            unsigned long blockRangeBitmap = std::numeric_limits<unsigned long>().max();
-            blockRangeBitmap >>= (ULONG_BITS - neededBlocks);
-
-            const size_t possibleLeftShifts = ULONG_BITS - neededBlocks;
-            
             unsigned long tailPart = 0;
-            unsigned long bitmap = 0;
 
-            // split tail block in parts of 8 bytes
+            unsigned long currentFreeBits = 0;
+
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
                 tailPart = tailParts[i];
 
-                for (unsigned int j = 0; j <= possibleLeftShifts; ++j)
-                {
-                    bitmap = blockRangeBitmap << j;
+                unsigned int currentBitInPart = 0;
 
-                    if ((tailPart & bitmap) == bitmap)
+                while(currentBitInPart < ULONG_BITS)
+                {
+                    unsigned int zeroBits = countZeroBitsFromRight(tailPart);
+
+                    if(zeroBits != 0)
                     {
-                        return (i * ULONG_BITS) + countZeroBitsFromRight(bitmap);
+                        currentFreeBits = 0;
+                        tailPart >>= zeroBits;
+                        currentBitInPart += zeroBits;
                     }
+
+                    unsigned int oneBits = countOneBitsFromRight(tailPart);
+                    currentFreeBits += oneBits;
+                    currentBitInPart += oneBits;
+
+                    if(currentFreeBits >= neededBlocks)
+                    {
+                        const int block = (i * ULONG_BITS) + currentBitInPart - currentFreeBits;
+                        return block;
+                    }
+
+                    tailPart >>= oneBits;
                 }
             }
 
@@ -186,33 +197,41 @@ namespace Utilities
             }
 
             byte_pointer tail = getTailFor(startOfPage);
-
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
+            unsigned int partNum = block / ULONG_BITS;
 
-            unsigned long* tailPart = &tailParts[block / ULONG_BITS];
-            
-            const unsigned long relativeBlock = block % ULONG_BITS;
+            size_t blocksLeft = numBlocks;
+            size_t currentBlock = block;
 
-            unsigned long x = ~(~0UL << (relativeBlock + numBlocks));
-            
-            if(relativeBlock + numBlocks == ULONG_BITS)
+            while(blocksLeft > 0)
             {
-                x = ~0UL;
-            }
-            
-            x >>= relativeBlock;
-            
-            x <<= relativeBlock;
+                unsigned long* tailPart = &tailParts[partNum];
 
-            *tailPart ^= x;
-            
-//            unsigned short before = *getPointerToLargestFreeBlockRangeFor(startOfPage);
-//            RAW_LOG_INFO("ALLOC_BEFORE: %i", before);
-            
+                const unsigned long relativeBlock = currentBlock % ULONG_BITS;
+
+                unsigned long x = ~(~0UL << (relativeBlock + numBlocks));
+
+                if(relativeBlock + blocksLeft >= ULONG_BITS)
+                {
+                    blocksLeft -= (ULONG_BITS - relativeBlock);
+                    currentBlock += ULONG_BITS - relativeBlock;
+                    x = ~0UL;
+                }
+                else
+                {
+                    blocksLeft = 0;
+                }
+
+                x >>= relativeBlock;
+
+                x <<= relativeBlock;
+
+                *tailPart ^= x;
+
+                ++partNum;
+            }
+
             updateLargestBlockRangeFor(startOfPage);
-            
-//            unsigned short after = *getPointerToLargestFreeBlockRangeFor(startOfPage);
-//            RAW_LOG_INFO("ALLOC_After: %i", after);
 
             memoryUsage += numBlocks * BLOCK_SIZE;
         }
@@ -228,28 +247,46 @@ namespace Utilities
                 pagesWithFreeBlocks.push_front(startOfPage);
             }
 
-            const unsigned long relativeBlock = block % ULONG_BITS;
-            
-            unsigned long x = ~(~0UL << (relativeBlock + numBlocks));
-            
-            if(relativeBlock + numBlocks == ULONG_BITS)
+            byte_pointer tail = getTailFor(startOfPage);
+            unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
+            unsigned int partNum = block / ULONG_BITS;
+
+            size_t blocksLeft = numBlocks;
+            size_t currentBlock = block;
+
+            while(blocksLeft > 0)
             {
-                x = ~0UL;
+                unsigned long* tailPart = &tailParts[partNum];
+
+                const unsigned long relativeBlock = currentBlock % ULONG_BITS;
+
+                unsigned long x = ~(~0UL << (relativeBlock + numBlocks));
+
+                if(relativeBlock + blocksLeft >= ULONG_BITS)
+                {
+                    blocksLeft -= (ULONG_BITS - relativeBlock);
+                    currentBlock += ULONG_BITS - relativeBlock;
+                    x = ~0UL;
+                }
+                else
+                {
+                    blocksLeft = 0;
+                }
+
+                x >>= relativeBlock;
+
+                x <<= relativeBlock;
+
+                *tailPart |= x;
+
+                ++partNum;
             }
-            
-            x >>= relativeBlock;
-            x <<= relativeBlock;
 
-            unsigned long* tailParts = reinterpret_cast<unsigned long*> (getTailFor(startOfPage));
-            unsigned long* tailPart = &tailParts[block / ULONG_BITS];
-
-            *tailPart |= x;
-            
 //            unsigned short before = *getPointerToLargestFreeBlockRangeFor(startOfPage);
 //            RAW_LOG_INFO("DEALLOC_BEFORE: %i", before);
-            
+
             updateLargestBlockRangeFor(startOfPage);
-            
+
 //            unsigned short after = *getPointerToLargestFreeBlockRangeFor(startOfPage);
 //            RAW_LOG_INFO("DEALLOC_AFTER: %i", after);
 
@@ -277,48 +314,48 @@ namespace Utilities
         {
             return page + pageManager->getPageSize() - BLOCK_SIZE;
         }
-        
+
         void MediumObjectAllocator::updateLargestBlockRangeFor(byte_pointer page)
         {
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (getTailFor(page));
-            
+
             unsigned short* largestBlockRange = getPointerToLargestFreeBlockRangeFor(page);
 
             unsigned int totalShifts = 0;
-            
+
             unsigned short currentMax = 0;
             unsigned short temp = 0;
-            
+
             int zeroBits = 0;
-            
+
             unsigned long tailPart = 0;
             unsigned int j = 0;
-            
+
             for (unsigned int i = 0; i  < std::ceil(static_cast<double>(USABLE_BLOCKS_PER_PAGE) / static_cast<double>(ULONG_BITS)); ++i)
             {
                 tailPart = tailParts[i];
 
                 j = 0;
-                
+
                 while(totalShifts < USABLE_BLOCKS_PER_PAGE && j < ULONG_BITS)
                 {
                     zeroBits = countZeroBitsFromRight(tailPart);
-                    
+
                     if(zeroBits == 0)
                     {
                         ++temp;
                     }
-                    
+
                     if(temp > currentMax)
                     {
                         currentMax = temp;
                     }
-                    
+
                     if(zeroBits > 0)
                     {
                         temp = 0;
                         tailPart >>= zeroBits;
-                        totalShifts += zeroBits;   
+                        totalShifts += zeroBits;
                         j += zeroBits;
                     }
                     else
@@ -329,7 +366,7 @@ namespace Utilities
                     }
                 }
             }
-            
+
             *largestBlockRange = currentMax;
         }
     }

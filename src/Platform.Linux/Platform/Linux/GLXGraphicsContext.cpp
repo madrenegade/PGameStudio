@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   GlxGraphicsContext.cpp
  * Author: madrenegade
- * 
+ *
  * Created on November 29, 2010, 4:36 PM
  */
 
@@ -21,11 +21,11 @@ namespace Platform
     namespace Linux
     {
 
-        static bool isExtensionSupported(const char *extList, const char *extension)
+        static bool isExtensionSupported(const char* extList, const char* extension)
         {
 
-            const char *start;
-            const char *where, *terminator;
+            const char* start;
+            const char* where, *terminator;
 
             /* Extension names should not have spaces. */
             where = strchr(extension, ' ');
@@ -56,15 +56,15 @@ namespace Platform
 
         static bool ctxErrorOccurred = false;
 
-        static int ctxErrorHandler(Display *dpy, XErrorEvent *ev)
+        static int ctxErrorHandler(Display* dpy, XErrorEvent* ev)
         {
             ctxErrorOccurred = true;
             return 0;
         }
 
         GLXGraphicsContext* GLXGraphicsContext::Create(Display* pDisplay,
-                                                       Window window,
-                                                       GLXFBConfig fbConfig)
+                Window window,
+                GLXFBConfig fbConfig)
         {
             return CreateInternalContext(pDisplay, window, fbConfig);
         }
@@ -78,7 +78,7 @@ namespace Platform
             // calling glXGetProcAddressARB
             glXCreateContextAttribsARBProc glXCreateContextAttribsARB = 0;
             glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)
-                glXGetProcAddressARB((const GLubyte *) "glXCreateContextAttribsARB");
+                                         glXGetProcAddressARB((const GLubyte*) "glXCreateContextAttribsARB");
 
             GLXContext ctx = 0;
 
@@ -94,7 +94,7 @@ namespace Platform
             // Check for the GLX_ARB_create_context extension string and the function.
             // If either is not present, use GLX 1.3 context creation method.
             if (!isExtensionSupported(glxExts, "GLX_ARB_create_context") ||
-                !glXCreateContextAttribsARB)
+                    !glXCreateContextAttribsARB)
             {
                 ctx = glXCreateNewContext(pDisplay, fbConfig, GLX_RGBA_TYPE, 0, True);
             }
@@ -142,7 +142,7 @@ namespace Platform
         GLXGraphicsContext::GLXGraphicsContext(Display* pDisplay,
                                                Window window,
                                                GLXContext context)
-        : m_pDisplay(pDisplay), m_windowHandle(window), m_context(context)
+            : m_pDisplay(pDisplay), m_windowHandle(window), m_context(context)
         {
         }
 

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Button.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 28, 2011, 9:16 AM
  */
 
@@ -11,7 +11,7 @@ namespace Input
 {
 
     Button::Button(const char* const var)
-    : var(var), m_isPressed(false)
+        : var(var), m_isPressed(false)
     {
     }
 

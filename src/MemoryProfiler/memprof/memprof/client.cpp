@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   client.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 6, 2011, 7:27 PM
  */
 
@@ -26,18 +26,18 @@ namespace memprof
 {
 
     client::client(const char* host)
-    : host(host), connected(false)
+        : host(host), connected(false)
     {
 
     }
 
     client::~client()
     {
-        if(connected) 
+        if(connected)
         {
             socket->shutdown(socket->shutdown_both);
             socket->close();
-        } 
+        }
     }
 
     void client::connect()
@@ -56,7 +56,7 @@ namespace memprof
             socket.reset(new tcp::socket(io_service));
 
             boost::system::error_code error = boost::asio::error::host_not_found;
-            
+
             while (error && endpoint_iterator != end)
             {
                 socket->close();
@@ -69,7 +69,7 @@ namespace memprof
             }
 
             connected = true;
-            
+
             RAW_LOG(INFO, "Connected to memprof server at %s", host.c_str());
         }
         catch (const std::exception& ex)
@@ -78,17 +78,17 @@ namespace memprof
             RAW_LOG(WARNING, "Memory profiling is not available");
         }
     }
-    
+
     void client::begin_new_frame()
     {
         if(!connected) return;
-        
+
         const sample sample;
-        
+
         char buffer[4096];
         boost::iostreams::basic_array_sink<char> sr(buffer);
         boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > source(sr);
-        
+
         boost::archive::binary_oarchive oa(source);
         oa << sample;
 
@@ -98,11 +98,11 @@ namespace memprof
     void client::send_allocation_info(const StackTrace& stacktrace, size_t bytes, size_t poolID)
     {
         if(!connected) return;
-           
+
         char buffer[4096];
         boost::iostreams::basic_array_sink<char> sr(buffer);
         boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > source(sr);
-        
+
         const sample sample(stacktrace, bytes, poolID);
 
         boost::archive::binary_oarchive oa(source);

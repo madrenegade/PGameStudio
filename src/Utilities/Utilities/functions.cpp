@@ -20,9 +20,9 @@ namespace Utilities
         int status;
 
         boost::shared_ptr<char> res(abi::__cxa_demangle(name,
-            0,
-            0,
-            &status), free);
+                                    0,
+                                    0,
+                                    &status), free);
 
         if(status != 0)
         {
@@ -65,8 +65,8 @@ namespace Utilities
         return v == 0 ? Memory::ULONG_BITS : __builtin_ctzl(v);
 #elif MSVC
         unsigned long c = 0;
-		_BitScanForward64(&c, v);
-		return c;
+        _BitScanForward64(&c, v);
+        return c;
 #endif
     }
 

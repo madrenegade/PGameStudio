@@ -37,8 +37,8 @@ namespace Scripting
     {
     public:
         static boost::shared_ptr<ScriptManager> create(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                                                       const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                                                       const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+                const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
+                const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
     private:
         ScriptManagerFactory();

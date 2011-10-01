@@ -30,7 +30,7 @@ namespace Input
     const std::string SystemScene::EXTENSION("input");
 
     SystemScene::SystemScene()
-    : MOUSE(0)
+        : MOUSE(0)
     {
     }
 
@@ -41,8 +41,8 @@ namespace Input
     void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const
     {
         const MemoryPoolSettings inputPool(1 * KByte, 1 * KByte, 128 * Byte,
-            1 * KByte, 1 * KByte, 128 * Byte,
-            1 * KByte, 1 * KByte, 128 * Byte);
+                                           1 * KByte, 1 * KByte, 128 * Byte,
+                                           1 * KByte, 1 * KByte, 128 * Byte);
         inputPool.addOptionsTo(properties, "Input");
     }
 

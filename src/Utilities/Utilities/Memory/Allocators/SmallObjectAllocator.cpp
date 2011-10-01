@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SmallObjectAllocator.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 2, 2011, 10:55 PM
  */
 
@@ -25,22 +25,22 @@ namespace Utilities
     {
 
         SmallObjectAllocator::SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize)
-        : Allocator(pageManager, blockSize), USABLE_BLOCKS_PER_PAGE(pageManager->getPageSize() / blockSize - 1)
+            : Allocator(pageManager, blockSize), USABLE_BLOCKS_PER_PAGE(pageManager->getPageSize() / blockSize - 1)
         {
             // the tail block can handle this amount of blocks
             const size_t BLOCK_SIZE_IN_BITS = blockSize * BITS_PER_BYTE;
-            
+
             // this amount of bits is needed to handle all blocks in the page except the tail block
             const size_t NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS = (pageManager->getPageSize() / blockSize) - 1;
             const size_t NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS = sizeof(unsigned short) * BITS_PER_BYTE;
-            
+
             const size_t NEEDED_BITS_IN_TAIL = NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS + NEEDED_BITS_IN_TAIL_FOR_AMOUNT_OF_FREE_BLOCKS;
-            
+
             if(NEEDED_BITS_IN_TAIL_FOR_ALLOCATIONS > std::numeric_limits<unsigned short>::max())
             {
                 throw std::logic_error("SOA: At most 65535 blocks are allowed (increase blocksize or decrease page size)");
             }
-            
+
             if (BLOCK_SIZE_IN_BITS < NEEDED_BITS_IN_TAIL)
             {
                 throw std::logic_error("SOA: Blocksize too small for this page size");
@@ -78,7 +78,7 @@ namespace Utilities
             if (firstFreeBlock != -1)
             {
                 markBlockAsUsed(firstFreeBlock, startOfPage);
-                
+
                 return startOfPage + (BLOCK_SIZE * firstFreeBlock);
             }
 
@@ -111,10 +111,10 @@ namespace Utilities
             pagesWithFreeBlocks.push_front(page);
 
             byte_pointer tail = getTailFor(page);
-            
+
             const unsigned char ONE = 0xFF;
             fillMemory(tail, BLOCK_SIZE - 2, ONE);
-            
+
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(page);
             *amountOfFreeBlocks = USABLE_BLOCKS_PER_PAGE;
         }
@@ -123,7 +123,7 @@ namespace Utilities
         {
             return page + pageManager->getPageSize() - BLOCK_SIZE;
         }
-        
+
         unsigned short* SmallObjectAllocator::getPointerToAmountOfFreeBlocksFor(byte_pointer page) const
         {
             return reinterpret_cast<unsigned short*>(page + pageManager->getPageSize() - 2);
@@ -134,7 +134,7 @@ namespace Utilities
             byte_pointer tail = getTailFor(page);
 
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
-            
+
             unsigned int realBlock = 0;
             unsigned int zeroBitsFromRight = 0;
 
@@ -142,9 +142,9 @@ namespace Utilities
             for (unsigned int i = 0; i < BLOCK_SIZE / sizeof (unsigned long); ++i)
             {
                 zeroBitsFromRight = countZeroBitsFromRight(tailParts[i]);
-                
+
                 realBlock = (i * ULONG_BITS) + zeroBitsFromRight;
-                
+
                 if (realBlock > USABLE_BLOCKS_PER_PAGE || zeroBitsFromRight == ULONG_BITS) continue;
                 else return realBlock;
             }
@@ -156,9 +156,9 @@ namespace Utilities
         {
             // fetch amount of free blocks
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(startOfPage);
-            
+
             *amountOfFreeBlocks -= 1;
-            
+
             if(*amountOfFreeBlocks == 0)
             {
                 pagesWithFreeBlocks.remove(startOfPage);
@@ -169,7 +169,7 @@ namespace Utilities
             unsigned long* tailParts = reinterpret_cast<unsigned long*> (tail);
 
             unsigned long* tailPart = &tailParts[block / ULONG_BITS];
-            
+
             // 1 << block creates a bitmask where the given block is 1 and the rest zero
             // with ~ this is negated so that all bits are one except the given block
             *tailPart ^= (1L << (block % ULONG_BITS));
@@ -180,9 +180,9 @@ namespace Utilities
         void SmallObjectAllocator::markBlockAsFree(unsigned int block, byte_pointer startOfPage)
         {
             unsigned short* amountOfFreeBlocks = getPointerToAmountOfFreeBlocksFor(startOfPage);
-            
+
             *amountOfFreeBlocks += 1;
-            
+
             if(*amountOfFreeBlocks == 1)
             {
                 pagesWithFreeBlocks.push_front(startOfPage);

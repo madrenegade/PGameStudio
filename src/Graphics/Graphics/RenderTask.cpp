@@ -9,7 +9,7 @@ namespace Graphics
 {
 
     RenderTask::RenderTask(Renderer* renderer, GraphicsContext* context, SceneNode* scene)
-    : renderer(renderer), context(context), scene(scene)
+        : renderer(renderer), context(context), scene(scene)
     {
     }
 
@@ -20,15 +20,15 @@ namespace Graphics
     tbb::task* RenderTask::execute()
     {
         context->MakeCurrent();
-        
+
         renderer->processRequests();
-        
+
         renderer->beginScene();
-        
+
         scene->prepare(renderer);
-        
+
         renderer->processDrawCalls();
-        
+
         context->SwapBuffers();
         context->Release();
 

@@ -84,9 +84,9 @@ namespace Utilities
                 catch(const boost::bad_any_cast& ex)
                 {
                     LOG(ERROR) << "Could not cast property "
-                        << name << " to type "
-                        << Utilities::demangle(typeid(T).name()) << std::endl
-                        << " (expected " << Utilities::demangle(properties.at(name).type().name()) << ")";
+                               << name << " to type "
+                               << Utilities::demangle(typeid(T).name()) << std::endl
+                               << " (expected " << Utilities::demangle(properties.at(name).type().name()) << ")";
                     throw;
                 }
 #else

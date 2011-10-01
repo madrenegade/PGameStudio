@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   FileSystemFactory.h
  * Author: madrenegade
  *
@@ -18,21 +18,21 @@ namespace Utilities
     {
         class PropertyManager;
     }
-    
+
     namespace IO
     {
         class FileSystem;
-        
+
         class FileSystemFactory
         {
         public:
-            static boost::shared_ptr<FileSystem> create(const Memory::MemoryManager::Ptr& memory, 
-                                                        const boost::shared_ptr<Properties::PropertyManager>& properties);
-            
+            static boost::shared_ptr<FileSystem> create(const Memory::MemoryManager::Ptr& memory,
+                    const boost::shared_ptr<Properties::PropertyManager>& properties);
+
         private:
             FileSystemFactory();
             ~FileSystemFactory();
-            
+
             static boost::shared_ptr<Memory::Pool> createMemoryPool(const boost::shared_ptr<Properties::PropertyManager>& properties);
         };
     }

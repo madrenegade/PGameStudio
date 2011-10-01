@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   TextureRequest.h
  * Author: madrenegade
  *
@@ -9,11 +9,13 @@
 #define	RENDERER_TEXTUREREQUEST_H
 
 #include "Utilities/IO/File.h"
+#include "Utilities/string.h"
 
 namespace Renderer
 {
     struct TextureRequest
     {
+        String name;
         unsigned long id;
         Utilities::IO::File::Handle file;
     };

@@ -11,7 +11,7 @@ namespace Graphics
 {
 
     MonoViewCamera::MonoViewCamera(const double fieldOfView, const double aspectRatio, const double zNear, const double zFar)
-    : MultiViewCamera(fieldOfView, aspectRatio, zNear, zFar)
+        : MultiViewCamera(fieldOfView, aspectRatio, zNear, zFar)
     {
     }
 

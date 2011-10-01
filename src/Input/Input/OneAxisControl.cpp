@@ -11,7 +11,7 @@ namespace Input
 {
 
     OneAxisControl::OneAxisControl(const char* const var, const char* const deltaVar)
-    : var(var), deltaVar(deltaVar), state(0), delta(0)
+        : var(var), deltaVar(deltaVar), state(0), delta(0)
     {
     }
 

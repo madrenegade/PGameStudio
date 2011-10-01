@@ -12,7 +12,7 @@ namespace Input
 
     TwoAxisControl::TwoAxisControl(const char* const xVar, const char* const yVar,
                                    const char* const xDeltaVar, const char* const yDeltaVar)
-    : xVar(xVar), yVar(yVar), xDeltaVar(xDeltaVar), yDeltaVar(yDeltaVar), x(0), y(0), deltaX(0), deltaY(0)
+        : xVar(xVar), yVar(yVar), xDeltaVar(xDeltaVar), yDeltaVar(yDeltaVar), x(0), y(0), deltaX(0), deltaY(0)
     {
     }
 

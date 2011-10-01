@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Effect.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 17, 2011, 9:51 AM
  */
 
@@ -19,7 +19,7 @@
 namespace Renderer
 {
     CGcontext Effect::context = 0;
-    
+
     struct EffectDeleter
     {
         void operator()(CGeffect effect)
@@ -27,12 +27,12 @@ namespace Renderer
             cgDestroyEffect(effect);
         }
     };
-    
+
     Effect::Effect()
     {
 
     }
-    
+
     Effect::~Effect()
     {
     }
@@ -121,19 +121,19 @@ namespace Renderer
     {
         switch (error)
         {
-            case CG_COMPILER_ERROR:
-                LOG(FATAL) << cgGetErrorString(error) << std::endl << cgGetLastListing(context);
-                break;
+        case CG_COMPILER_ERROR:
+            LOG(FATAL) << cgGetErrorString(error) << std::endl << cgGetLastListing(context);
+            break;
 
-            default:
-                LOG(FATAL) << cgGetErrorString(error);
-                break;
+        default:
+            LOG(FATAL) << cgGetErrorString(error);
+            break;
         }
 
         throw std::runtime_error("CG ERROR");
     }
 
-    
+
 
     void Effect::activate()
     {

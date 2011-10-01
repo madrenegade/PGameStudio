@@ -66,12 +66,14 @@ namespace Renderer
         virtual void setCamera(const boost::shared_ptr<Graphics::Camera>& camera);
 
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
-                                                  const unsigned int numVertices, const Graphics::VertexFormat& fmt);
+                const unsigned int numVertices, const Graphics::VertexFormat& fmt);
 
         virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, const unsigned int numIndexes);
 
         virtual unsigned long requestEffect(const Utilities::IO::File::Handle& file);
-        virtual unsigned long requestTexture(const Utilities::IO::File::Handle& file);
+        virtual unsigned long requestTexture(const char* const name, Utilities::IO::File::Handle& file);
+        virtual bool isTextureRequested(const char* const name);
+        virtual unsigned long getTexture(const char* const name);
 
         virtual bool isVertexBufferLoaded(const unsigned long vbID) const;
         virtual bool isIndexBufferLoaded(const unsigned long ibID) const;

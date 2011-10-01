@@ -36,8 +36,8 @@ namespace Core
                              const boost::shared_ptr<Platform::PlatformManager>& platform,
                              const boost::shared_ptr<Events::EventManager>& eventManager,
                              const boost::shared_ptr<PropertyManager>& properties)
-    : fileSystem(fileSystem), memoryManager(memoryManager), platform(platform), eventManager(eventManager),
-        properties(properties)
+        : fileSystem(fileSystem), memoryManager(memoryManager), platform(platform), eventManager(eventManager),
+          properties(properties)
     {
     }
 

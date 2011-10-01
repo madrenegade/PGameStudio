@@ -11,7 +11,7 @@
 namespace Graphics
 {
     Camera::Camera()
-    : viewMatrixDirty(false)
+        : viewMatrixDirty(false)
     {
 
     }

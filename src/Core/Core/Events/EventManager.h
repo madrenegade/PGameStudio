@@ -10,15 +10,15 @@
 
 namespace Core
 {
-	namespace Events
-	{
+    namespace Events
+    {
         /**
          * This event handler class is designed for systems that use threads.
          * It is meant to be used like this: different threads can push events and
          * after all sub systems have done their work the event handlers will be called in serial.
          */
-		class EventManager
-		{
+        class EventManager
+        {
         public:
             EventManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
             ~EventManager();
@@ -93,8 +93,8 @@ namespace Core
 
             typedef std::pair<EventID, boost::any> EventData;
             tbb::concurrent_queue<EventData> eventQueue;
-		};
-	}
+        };
+    }
 }
 
 #endif // CORE_EVENTS_EVENTHANDLER_H

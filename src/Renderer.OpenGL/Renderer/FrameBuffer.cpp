@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   FrameBuffer.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 19, 2011, 7:30 PM
  */
 
@@ -16,12 +16,12 @@ namespace Renderer
     FrameBuffer::FrameBuffer(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                              Utilities::Memory::pool_id pool,
                              const unsigned int numColorAttachments, const unsigned int width, const unsigned int height)
-    : memoryManager(memoryManager), pool(pool), width(width), height(height)
+        : memoryManager(memoryManager), pool(pool), width(width), height(height)
     {
         VLOG(2) << "creating framebuffer with size " << width << "x" << height;
         //        GLint maxbuffers;
         //        glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxbuffers);
-        //        
+        //
         //        if(numRenderTargets > maxbuffers)
         //        {
         //            LOG(FATAL) << "Max available render targets: " << maxbuffers;

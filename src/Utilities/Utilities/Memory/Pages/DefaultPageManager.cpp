@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PageManager.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 10, 2011, 9:26 AM
  */
 
@@ -16,7 +16,7 @@ namespace Utilities
     {
 
         DefaultPageManager::DefaultPageManager(const size_t maxSize, const size_t pageSize)
-        : PageManager(maxSize, pageSize), pageCount(0), dirty(false), lastPageSearchResult(0)
+            : PageManager(maxSize, pageSize), pageCount(0), dirty(false), lastPageSearchResult(0)
         {
             pages.reserve(MAX_PAGE_COUNT);
         }
@@ -35,28 +35,28 @@ namespace Utilities
             {
                 return lastPageSearchResult;
             }
-                
+
             if(dirty)
             {
                 std::sort(pages.begin(), pages.end());
                 dirty = false;
             }
-            
+
             lastPageSearchResult = binaryPageSearch(ptr);
-            
+
             return lastPageSearchResult;
         }
-        
+
         byte_pointer DefaultPageManager::binaryPageSearch(const_byte_pointer ptr) const
         {
             int first = 0;
             int last = pageCount - 1;
             int mid = 0;
-            
+
             while(first <= last)
             {
                 mid = (first + last) / 2;
-                
+
                 if(ptr < pages[mid].get()) // pointer is before that page
                 {
                     last = mid - 1;
@@ -70,10 +70,10 @@ namespace Utilities
                     return pages[mid].get();
                 }
             }
-            
+
             throw std::logic_error("Pointer not found in any page");
         }
-        
+
         byte_pointer DefaultPageManager::getPage(const size_t i) const
         {
             return pages[i].get();
@@ -82,9 +82,9 @@ namespace Utilities
         byte_pointer DefaultPageManager::allocatePage()
         {
             const Page page(new byte[PAGE_SIZE]);
-            
+
             pages.push_back(page);
-            
+
             dirty = true;
 
             ++pageCount;

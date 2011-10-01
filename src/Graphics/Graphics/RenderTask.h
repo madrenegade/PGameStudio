@@ -3,25 +3,25 @@
 
 #include <tbb/task.h>
 
-    namespace Graphics
-    {
-        class GraphicsContext;
-        class Renderer;
-        class SceneNode;
-        
-        class RenderTask : public tbb::task
-        {
-        public:
-            RenderTask(Renderer* renderer, GraphicsContext* context, SceneNode* scene);
-            virtual ~RenderTask();
+namespace Graphics
+{
+    class GraphicsContext;
+    class Renderer;
+    class SceneNode;
 
-            virtual tbb::task* execute();
-            
-        private:
-            Renderer* renderer;
-            GraphicsContext* context;
-            SceneNode* scene;
-        };
-    }
+    class RenderTask : public tbb::task
+    {
+    public:
+        RenderTask(Renderer* renderer, GraphicsContext* context, SceneNode* scene);
+        virtual ~RenderTask();
+
+        virtual tbb::task* execute();
+
+    private:
+        Renderer* renderer;
+        GraphicsContext* context;
+        SceneNode* scene;
+    };
+}
 
 #endif // GRAPHICS_RENDERTASK_H

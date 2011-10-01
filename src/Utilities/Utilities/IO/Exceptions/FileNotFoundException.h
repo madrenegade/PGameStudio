@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   FileNotFoundException.h
  * Author: madrenegade
  *
@@ -18,7 +18,7 @@ namespace Utilities
         class FileNotFoundException : public std::logic_error
         {
         public:
-           explicit FileNotFoundException(const std::string& path);
+            explicit FileNotFoundException(const std::string& path);
         };
     }
 }

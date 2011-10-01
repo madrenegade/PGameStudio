@@ -44,16 +44,16 @@ namespace Graphics
     void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const
     {
         const MemoryPoolSettings graphicsPool(1 * KByte, 1 * KByte, 128 * Byte,
-            1 * KByte, 1 * KByte, 128 * Byte,
-            1 * KByte, 1 * KByte, 128 * Byte);
+                                              1 * KByte, 1 * KByte, 128 * Byte,
+                                              1 * KByte, 1 * KByte, 128 * Byte);
         graphicsPool.addOptionsTo(properties, "Graphics");
 
         po::options_description options("Graphics options");
 
         options.add_options()
-            ("Graphics.fieldOfView", po::value<double>()->default_value(60.0), "The field of view")
-            ("Graphics.zNear", po::value<double>()->default_value(0.1), "The near clipping plane")
-            ("Graphics.zFar", po::value<double>()->default_value(100.0), "The far clipping plane");
+        ("Graphics.fieldOfView", po::value<double>()->default_value(60.0), "The field of view")
+        ("Graphics.zNear", po::value<double>()->default_value(0.1), "The near clipping plane")
+        ("Graphics.zFar", po::value<double>()->default_value(100.0), "The far clipping plane");
 
         properties->addOptions(options);
     }
@@ -111,8 +111,8 @@ namespace Graphics
     tbb::task* SystemScene::getTask(tbb::task* parent)
     {
         return new(parent->allocate_child()) RenderTask(
-            renderer.get(),
-            platformManager->getWindow()->getGraphicsContext(),
-            scene.get());
+                   renderer.get(),
+                   platformManager->getWindow()->getGraphicsContext(),
+                   scene.get());
     }
 }

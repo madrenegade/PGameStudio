@@ -21,8 +21,8 @@ namespace Scripting
 {
 
     boost::shared_ptr<ScriptManager> ScriptManagerFactory::create(const boost::shared_ptr<MemoryManager>& memoryManager,
-                                                                  const boost::shared_ptr<FileSystem>& fileSystem,
-                                                                  const boost::shared_ptr<PropertyManager>& properties)
+            const boost::shared_ptr<FileSystem>& fileSystem,
+            const boost::shared_ptr<PropertyManager>& properties)
     {
         const boost::shared_ptr<Pool> pool = createMemoryPool(properties);
 

@@ -14,17 +14,19 @@ namespace Utilities
         {
         public:
             AllocationInfo();
-            
-            AllocationInfo(const_byte_pointer ptr, const size_t bytes, const std::type_info& type);
-            
+
+            AllocationInfo(const char* const pool, const_byte_pointer ptr, const size_t bytes, const std::type_info& type);
+
+            const char* getPool() const;
             const_byte_pointer getPointer() const;
             size_t getSize() const;
-            
+
             std::string getType() const;
-            
+
         private:
+            const char* pool;
             const_byte_pointer ptr;
-            
+
             size_t bytes;
 
             std::string type;

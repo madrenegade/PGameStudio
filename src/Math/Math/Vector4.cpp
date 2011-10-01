@@ -12,7 +12,7 @@ namespace Math
     }
 
     Vector4::Vector4(double x, double y, double z, double w)
-    : X(x), Y(y), Z(z), W(w)
+        : X(x), Y(y), Z(z), W(w)
     {
         //ctor
     }

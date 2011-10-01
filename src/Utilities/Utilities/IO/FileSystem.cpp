@@ -25,23 +25,23 @@ namespace Utilities
         void FileSystem::addOptionsTo(const PropertyManager::Ptr& properties)
         {
             MemoryPoolSettings fileSystemPool(1 * KByte, 1 * KByte, 128 * Byte,
-                1 * KByte, 1 * KByte, 128 * Byte,
-                1 * KByte, 1 * KByte, 128 * Byte);
+                                              1 * KByte, 1 * KByte, 128 * Byte,
+                                              1 * KByte, 1 * KByte, 128 * Byte);
             fileSystemPool.addOptionsTo(properties, "FileSystem");
 
             po::options_description options("Filesystem options");
 
             options.add_options()
-                ("FileSystem.backend", po::value<unsigned char>()->default_value(0), "The backend to use")
-                ("FileSystem.mount", po::value<std::vector<std::string>>()->default_value(std::vector<std::string>(0), "")->composing(), "Directories and their mount points")
-                ("FileSystem.organization", po::value<std::string > (), "An organization named used to determine the writable directory")
-                ("FileSystem.appName", po::value<std::string > (), "The application name used to determine the writable directory");
+            ("FileSystem.backend", po::value<unsigned char>()->default_value(0), "The backend to use")
+            ("FileSystem.mount", po::value<std::vector<std::string>>()->default_value(std::vector<std::string>(0), "")->composing(), "Directories and their mount points")
+            ("FileSystem.organization", po::value<std::string > (), "An organization named used to determine the writable directory")
+            ("FileSystem.appName", po::value<std::string > (), "The application name used to determine the writable directory");
 
             properties->addOptions(options);
         }
 
         FileSystem::FileSystem(const Memory::MemoryManager::Ptr& memory, const PropertyManager::Ptr& properties)
-        : memory(memory), properties(properties), memoryPool(0)
+            : memory(memory), properties(properties), memoryPool(0)
         {
 
         }
@@ -64,7 +64,7 @@ namespace Utilities
 
             RAW_LOG_INFO("Setting write directory");
             setWriteDirectory(properties->get<std::string > ("FileSystem.organization").c_str(),
-                properties->get<std::string > ("FileSystem.appName").c_str());
+                              properties->get<std::string > ("FileSystem.appName").c_str());
         }
 
         File::Handle FileSystem::read(const char* const path)

@@ -21,21 +21,21 @@ protected:
 #ifdef DEBUG
 TEST_F(AllocatorTest, assertPoolSizeIsMultipleOfPageSize)
 {
-    EXPECT_THROW({
+    EXPECT_THROW( {
         boost::scoped_ptr<Allocator> ptr(new AllocatorMock(1 * KByte, 333 * Byte, 111 * Byte));
     }, std::invalid_argument);
 }
 
 TEST_F(AllocatorTest, assertPageSizeIsMultipleOfBlockSize)
 {
-    EXPECT_THROW({
+    EXPECT_THROW( {
         boost::scoped_ptr<Allocator> ptr(new AllocatorMock(1000 * Byte, 10 * Byte, 8 * Byte));
     }, std::invalid_argument);
 }
 
 TEST_F(AllocatorTest, assertPageSizeIsMultipleOfBitsPerByte)
 {
-    EXPECT_THROW({
+    EXPECT_THROW( {
         boost::scoped_ptr<Allocator> ptr(new AllocatorMock(1000 * KByte, 10 * Byte, 5 * Byte));
     }, std::invalid_argument);
 }

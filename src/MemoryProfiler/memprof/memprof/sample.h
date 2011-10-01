@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   sample.h
  * Author: madrenegade
  *
@@ -13,7 +13,7 @@
 
 namespace memprof
 {
-    enum class sample_type : unsigned char
+enum class sample_type : unsigned char
     {
         new_frame,
         allocation
@@ -26,9 +26,9 @@ namespace memprof
         sample(const StackTrace& stacktrace, size_t bytes, size_t poolID);
 
         sample_type getType() const;
-        
+
         const StackTrace& getStackTrace() const;
-        
+
         size_t getAllocatedBytes() const;
         size_t getPoolID() const;
 
@@ -36,16 +36,16 @@ namespace memprof
         friend class boost::serialization::access;
 
         template<class Archive>
-        void serialize(Archive & ar, const unsigned int /*version*/)
+        void serialize(Archive& ar, const unsigned int /*version*/)
         {
-            ar & type;
-            ar & stacktrace;
-            ar & allocatedBytes;
-            ar & poolID;
+            ar& type;
+            ar& stacktrace;
+            ar& allocatedBytes;
+            ar& poolID;
         }
-        
+
         sample_type type;
-        
+
         StackTrace stacktrace;
         size_t allocatedBytes;
         size_t poolID;

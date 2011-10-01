@@ -32,6 +32,7 @@
 #include "../MemoryProfiler/memprof/memprof/client.h"
 #include <boost/scoped_ptr.hpp>
 #include "StackTrace.h"
+#include "Utilities/Memory/Exceptions/AllocationException.h"
 #endif
 
 namespace Utilities
@@ -228,21 +229,22 @@ namespace Utilities
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*> (ptr), n, demangle(typeid (T).name()).c_str());
+//                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*> (ptr), n, demangle(typeid (T).name()).c_str());
 #endif
 
                 const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
 
+                pool_id poolID = 0;
                 {
                     PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
-                    pool_id poolID = findPoolContaining(rawPtr);
+                    poolID = findPoolContaining(rawPtr);
 
                     pools[poolID]->deallocate(rawPtr, sizeof (T), n);
                 }
 
                 {
                     MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
-                    memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
+                    memoryTracker->trackDeallocation(pools[poolID]->getName(), ptr, BYTES_TO_DEALLOCATE);
                 }
             }
 
@@ -299,9 +301,9 @@ namespace Utilities
                     throw std::logic_error("Invalid pool id");
                 }
 
-                RAW_VLOG(4, "Allocating %li bytes for %li objects of type %s in pool '%s'",
-                         BYTES_TO_ALLOCATE, numObjects,
-                         Utilities::demangle(typeid (T).name()).c_str(), pools[poolID]->getName());
+//                RAW_VLOG(4, "Allocating %li bytes for %li objects of type %s in pool '%s'",
+//                         BYTES_TO_ALLOCATE, numObjects,
+//                         Utilities::demangle(typeid (T).name()).c_str(), pools[poolID]->getName());
 #endif
 
                 T* ptr = 0;
@@ -309,21 +311,49 @@ namespace Utilities
                     PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
 
 #ifdef DEBUG
-                    byte_pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
+                    try
+                    {
+                        byte_pointer rawPtr = pools[poolID]->allocate(BYTES_TO_ALLOCATE);
 
-                    fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
+                        fillMemory(rawPtr, BYTES_TO_ALLOCATE, ALLOCATED);
 
-                    ptr = reinterpret_cast<T*> (rawPtr);
+                        ptr = reinterpret_cast<T*> (rawPtr);
 
-                    RAW_VLOG(4, "Allocated %lu bytes at address %p in pool %i (%p)", BYTES_TO_ALLOCATE, reinterpret_cast<void*> (ptr), poolID, reinterpret_cast<void*> (pools[poolID].get()));
+                        //RAW_VLOG(4, "Allocated %lu bytes at address %p in pool %i (%p)", BYTES_TO_ALLOCATE, reinterpret_cast<void*> (ptr), poolID, reinterpret_cast<void*> (pools[poolID].get()));
+                    }
+                    catch(const std::exception& e)
+                    {
+                        RAW_LOG_FATAL("Allocation of %lu bytes for %li objects of type %s in pool '%s' failed\n%s",
+                                      BYTES_TO_ALLOCATE, numObjects,
+                                      Utilities::demangle(typeid (T).name()).c_str(),
+                                      pools[poolID]->getName(), e.what());
+                    }
 #else
                     ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
 #endif
                 }
 
                 {
-                    MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
-                    memoryTracker->trackAllocation(ptr, BYTES_TO_ALLOCATE);
+#ifdef DEBUG
+                    try
+                    {
+#endif
+                        MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
+                        memoryTracker->trackAllocation(pools[poolID]->getName(), ptr, BYTES_TO_ALLOCATE);
+#ifdef DEBUG
+                    }
+                    catch(const AllocationException& e)
+                    {
+                        RAW_LOG_WARNING("The memory tracker found a problem while tracking allocation\nBytes: %lu\nObjects: %li\nType: %s\nAddress: %p\nPool: '%s'\n%s",
+                                        BYTES_TO_ALLOCATE, numObjects,
+                                        Utilities::demangle(typeid (T).name()).c_str(),
+                                        reinterpret_cast<const void*> (ptr),
+                                        pools[poolID]->getName(), e.what());
+                        memoryTracker->printMemoryDump();
+
+                        throw;
+                    }
+#endif
                 }
 
                 return ptr;
@@ -340,7 +370,7 @@ namespace Utilities
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
 
 #ifdef DEBUG
-                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*> (ptr), n, demangle(typeid (T).name()).c_str());
+//                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*> (ptr), n, demangle(typeid (T).name()).c_str());
 #endif
 
                 for (size_t i = 0; i < n; ++i)
@@ -350,16 +380,17 @@ namespace Utilities
 
                 const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
 
+                pool_id poolID = 0;
                 {
                     PoolMapMutexType::scoped_lock lock(poolMapMutex, true);
-                    pool_id poolID = findPoolContaining(rawPtr);
+                    poolID = findPoolContaining(rawPtr);
 
                     pools[poolID]->deallocate(rawPtr, sizeof (T), n);
                 }
 
                 {
                     MemoryTrackerMutexType::scoped_lock lock(memoryTrackerMutex);
-                    memoryTracker->trackDeallocation(ptr, BYTES_TO_DEALLOCATE);
+                    memoryTracker->trackDeallocation(pools[poolID]->getName(), ptr, BYTES_TO_DEALLOCATE);
                 }
             }
 

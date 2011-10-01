@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   MemoryTrackerMock.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 2, 2011, 12:38 PM
  */
 
@@ -12,9 +12,9 @@ namespace Utilities
     namespace Memory
     {
         MemoryTrackerMock::MemoryTrackerMock()
-        : allocations(0), deallocations(0)
+            : allocations(0), deallocations(0)
         {
-            
+
         }
 
         MemoryTrackerMock::~MemoryTrackerMock()
@@ -32,12 +32,12 @@ namespace Utilities
             return deallocations;
         }
 
-        void MemoryTrackerMock::trackAllocation(const_byte_pointer /*ptr*/, size_t /*bytes*/, const std::type_info& /*type*/)
+        void MemoryTrackerMock::trackAllocation(const char* const, const_byte_pointer /*ptr*/, size_t /*bytes*/, const std::type_info& /*type*/)
         {
             ++allocations;
         }
 
-        void MemoryTrackerMock::trackDeallocation(const_byte_pointer /*ptr*/, size_t /*bytes*/, const std::type_info& /*type*/)
+        void MemoryTrackerMock::trackDeallocation(const char* const, const_byte_pointer /*ptr*/, size_t /*bytes*/, const std::type_info& /*type*/)
         {
             ++deallocations;
         }

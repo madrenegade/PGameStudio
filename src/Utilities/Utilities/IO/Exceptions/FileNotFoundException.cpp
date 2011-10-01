@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   FileNotFoundException.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 12, 2011, 4:48 PM
  */
 
@@ -13,7 +13,7 @@ namespace Utilities
     {
 
         FileNotFoundException::FileNotFoundException(const std::string& path)
-        : std::logic_error(path)
+            : std::logic_error(path)
         {
 
         }

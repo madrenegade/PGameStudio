@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Library.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 13, 2011, 11:23 AM
  */
 
@@ -19,7 +19,7 @@ namespace Platform
     std::string Library::SUFFIX("so");
 
     Library::Library()
-    : handle(0)
+        : handle(0)
     {
 
     }
@@ -58,15 +58,15 @@ namespace Platform
             {
                 check();
             }
-            
+
             handle = 0;
         }
     }
-    
+
     void Library::check()
     {
         const char* const error = dlerror();
-        
+
         if(error != 0)
         {
             LOG(FATAL) << "Dynamic library error: " << error;

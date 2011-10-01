@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   IndexBufferRequest.h
  * Author: madrenegade
  *
@@ -9,12 +9,15 @@
 #define	RENDERER_INDEXBUFFERREQUEST_H
 
 #include <boost/shared_array.hpp>
+#include "Utilities/string.h"
 
 namespace Renderer
 {
     struct IndexBufferRequest
     {
         unsigned long id;
+
+        String name;
         boost::shared_array<unsigned int> data;
         unsigned int numIndexes;
     };

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   VertexFormat.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 16, 2011, 9:42 PM
  */
 
@@ -16,11 +16,11 @@ namespace Graphics
                                const ptrdiff_t normalOffset, const size_t normalSize,
                                const ptrdiff_t tangentOffset, const size_t tangentSize,
                                const ptrdiff_t bitangentOffset, const size_t bitangentSize)
-    : vertexSize(vertexSize), positionOffset(positionOffset), positionSize(positionSize),
-    texCoordOffset(texCoordOffset), texCoordSize(texCoordSize),
-    normalOffset(normalOffset), normalSize(normalSize),
-    tangentOffset(tangentOffset), tangentSize(tangentSize),
-    bitangentOffset(bitangentOffset), bitangentSize(bitangentSize)
+        : vertexSize(vertexSize), positionOffset(positionOffset), positionSize(positionSize),
+          texCoordOffset(texCoordOffset), texCoordSize(texCoordSize),
+          normalOffset(normalOffset), normalSize(normalSize),
+          tangentOffset(tangentOffset), tangentSize(tangentSize),
+          bitangentOffset(bitangentOffset), bitangentSize(bitangentSize)
     {
     }
 
@@ -72,7 +72,7 @@ namespace Graphics
     {
         return normalSize;
     }
-    
+
     bool VertexFormat::hasTangent() const
     {
         return tangentSize != 0;
@@ -87,7 +87,7 @@ namespace Graphics
     {
         return tangentSize;
     }
-    
+
     bool VertexFormat::hasBitangent() const
     {
         return bitangentSize != 0;

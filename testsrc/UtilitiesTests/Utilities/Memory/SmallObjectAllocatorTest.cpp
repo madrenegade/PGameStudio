@@ -31,7 +31,7 @@ protected:
         const size_t usableBlocksPerPage = (pageSize / blockSize) - 1;
         const size_t availablePages = maxSize / pageSize;
         allocations = availablePages * usableBlocksPerPage;
-        
+
         allocator.reset(new SmallObjectAllocator(PageManager::create(maxSize, pageSize), blockSize));
     }
 };
@@ -39,8 +39,8 @@ protected:
 TEST_F(SmallObjectAllocatorTest, assertBlockSizeIsBigEnough)
 {
     PageManager::Ptr pageManager = PageManager::create(4 * KByte, 4 * KByte);
-    
-    EXPECT_THROW({
+
+    EXPECT_THROW( {
         boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 16 * Byte));
     }, std::logic_error);
 }
@@ -56,7 +56,7 @@ TEST_F(SmallObjectAllocatorTest, allocateShouldCheckThatRequestedSizeFitsInOneBl
 TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
 {
     PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
-    
+
     boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 32 * Byte));
 
     for (unsigned int i = 0; i < (1 * KByte / 32 * Byte) - 1; ++i)
@@ -70,7 +70,7 @@ TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
 TEST_F(SmallObjectAllocatorTest, getFreeMemory)
 {
     PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
-    
+
     boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 32 * Byte));
 
     const size_t maxMemory = 1 * KByte - 32 * Byte;
@@ -93,7 +93,7 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
 
     {
         boost::scoped_array<byte_pointer> ptrs(new byte_pointer[allocations]);
-        
+
         Utilities::StopWatch sw("Time (default new)");
 
         for (size_t i = 0; i < allocations; ++i)
@@ -109,7 +109,7 @@ TEST_F(SmallObjectAllocatorTest, testAllocationPerformance)
 
     {
         boost::scoped_array<byte_pointer> ptrs(new byte_pointer[allocations]);
-        
+
         Utilities::StopWatch sw("Time (allocate)");
 
         for (size_t i = 0; i < allocations; ++i)

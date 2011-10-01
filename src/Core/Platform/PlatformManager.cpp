@@ -30,7 +30,7 @@ namespace Platform
 
         options.add_options()
 #ifdef LINUX
-            ("Platform.plugin", po::value<std::string>()->default_value("Linux"), "The platform plugin to use");
+        ("Platform.plugin", po::value<std::string>()->default_value("Linux"), "The platform plugin to use");
 #endif
 
         properties->addOptions(options);
@@ -39,7 +39,7 @@ namespace Platform
     PlatformManager::PlatformManager(const MemoryManager::Ptr& memory,
                                      const boost::shared_ptr<EventManager>& eventManager,
                                      const PropertyManager::Ptr& properties)
-    : memoryManager(memory), eventManager(eventManager), properties(properties)
+        : memoryManager(memory), eventManager(eventManager), properties(properties)
     {
         libraryManager = memory->construct(LibraryManager(memory));
 

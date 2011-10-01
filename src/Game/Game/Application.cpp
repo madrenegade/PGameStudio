@@ -242,8 +242,8 @@ namespace Game
         module(state)
         [
             class_<Scripting::ScriptManager>("ScriptManager")
-                .def("load", &Scripting::ScriptManager::load)
-                .def("run", &Scripting::ScriptManager::runScript)
+            .def("load", &Scripting::ScriptManager::load)
+            .def("run", &Scripting::ScriptManager::runScript)
         ];
 
         scriptManager->setVariable("Script", scriptManager.get());
@@ -251,10 +251,10 @@ namespace Game
         module(state)
         [
             class_<EventManager>("EventManager")
-                .def("register", &EventManager::registerEvent)
-                .def("getID", &EventManager::getEventID)
-                .def("push", &EventManager::pushEvent<int>)
-                .def("push", &EventManager::pushEvent<Math::Vector3>)
+            .def("register", &EventManager::registerEvent)
+            .def("getID", &EventManager::getEventID)
+            .def("push", &EventManager::pushEvent<int>)
+            .def("push", &EventManager::pushEvent<Math::Vector3>)
         ];
 
         scriptManager->setVariable("Event", eventManager.get());
@@ -262,8 +262,8 @@ namespace Game
         module(state)
         [
             class_<Core::SceneManager>("SceneManager")
-                .def("load", &Core::SceneManager::loadScene)
-                .def("switchTo", &Core::SceneManager::switchScene)
+            .def("load", &Core::SceneManager::loadScene)
+            .def("switchTo", &Core::SceneManager::switchScene)
         ];
 
         scriptManager->setVariable("Scene", sceneManager.get());
@@ -271,10 +271,10 @@ namespace Game
         module(state, "Game")
         [
             class_<StateManager>("StateManager")
-                .def("register", &StateManager::registerState)
-                .def("switchTo", &StateManager::switchState)
-                .def("current", &StateManager::getCurrentState)
-                .def("hasChanged", &StateManager::hasStateChanged)
+            .def("register", &StateManager::registerState)
+            .def("switchTo", &StateManager::switchState)
+            .def("current", &StateManager::getCurrentState)
+            .def("hasChanged", &StateManager::hasStateChanged)
         ];
 
         scriptManager->setVariable("State", stateManager.get());
@@ -282,17 +282,17 @@ namespace Game
         module(state)
         [
             class_<Math::Vector3>("Vector3")
-                .def(constructor<double, double, double>())
-                .def_readwrite("x", &Math::Vector3::X)
-                .def_readwrite("y", &Math::Vector3::Y)
-                .def_readwrite("z", &Math::Vector3::Z)
-                .def(self * double())
-                .def(self / double())
-                .def(self + self)
-                .def(self - self)
-                .def(tostring(self))
-                .def("cross", &Math::Vector3::Cross)
-                .def("normalize", &Math::Vector3::Normalize)
+            .def(constructor<double, double, double>())
+            .def_readwrite("x", &Math::Vector3::X)
+            .def_readwrite("y", &Math::Vector3::Y)
+            .def_readwrite("z", &Math::Vector3::Z)
+            .def(self * double())
+            .def(self / double())
+            .def(self + self)
+            .def(self - self)
+            .def(tostring(self))
+            .def("cross", &Math::Vector3::Cross)
+            .def("normalize", &Math::Vector3::Normalize)
         ];
 
         module(state, "Math")
@@ -303,16 +303,16 @@ namespace Game
         module(state)
         [
             class_<Math::Quaternion>("Quaternion")
-                .def(constructor<const Math::Vector3&, double>())
-                .def(constructor<const Math::Quaternion&>())
-                .def(tostring(self))
-                .def("conjugate", &Math::Quaternion::Conjugate)
-                .def(self * self)
-                .def("getAxis", &Math::Quaternion::GetAxis)
-                .scope
-                [
-                  def("fromAxisAngle", &Math::Quaternion::FromAxisAngle)
-                ]
+            .def(constructor<const Math::Vector3&, double>())
+            .def(constructor<const Math::Quaternion&>())
+            .def(tostring(self))
+            .def("conjugate", &Math::Quaternion::Conjugate)
+            .def(self * self)
+            .def("getAxis", &Math::Quaternion::GetAxis)
+            .scope
+            [
+                def("fromAxisAngle", &Math::Quaternion::FromAxisAngle)
+            ]
         ];
     }
 }

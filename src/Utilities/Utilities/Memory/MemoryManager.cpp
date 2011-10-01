@@ -34,9 +34,9 @@ namespace Utilities
         }
 
         MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
-        : memoryTracker(memoryTracker), latestPoolID()
+            : memoryTracker(memoryTracker), latestPoolID()
 #ifdef DEBUG
-        , profilerClient(new memprof::client("127.0.0.1"))
+            , profilerClient(new memprof::client("127.0.0.1"))
 #endif
         {
 #ifdef DEBUG

@@ -28,8 +28,8 @@ namespace Platform
             virtual unsigned int getKeysym(const char* const name) const;
 
             virtual boost::shared_ptr<Graphics::Window> createWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                                                                     const boost::shared_ptr<Core::Events::EventManager>& eventManager,
-                                                                     const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+                    const boost::shared_ptr<Core::Events::EventManager>& eventManager,
+                    const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
             virtual void centerMouse(const Core::Events::EventID& id, const boost::any& data);
 

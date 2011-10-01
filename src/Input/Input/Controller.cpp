@@ -14,7 +14,7 @@ namespace Input
 {
 
     Controller::Controller(const String& id)
-    : id(id)
+        : id(id)
     {
     }
 

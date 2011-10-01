@@ -74,7 +74,7 @@ namespace Graphics
                              const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                              const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
                              Utilities::Memory::pool_id pool, Renderer* renderer)
-    : fileSystem(fileSystem), memoryManager(memoryManager), properties(properties), pool(pool), renderer(renderer)
+        : fileSystem(fileSystem), memoryManager(memoryManager), properties(properties), pool(pool), renderer(renderer)
     {
     }
 
@@ -141,11 +141,19 @@ namespace Graphics
 
             for (unsigned int j = 0; j < numTextures; ++j)
             {
-                String textureName("textures/" + read<String > ());
-                VLOG(2) << "texture: " << textureName;
+                const String textureName(read<String>());
+                const String textureFilename("textures/" + textureName);
 
-                Utilities::IO::File::Handle texture = fileSystem->read(textureName.c_str());
-                material->textures.push_back(renderer->requestTexture(texture));
+                if(!renderer->isTextureRequested(textureName.c_str()))
+                {
+                    Utilities::IO::File::Handle texture = fileSystem->read(textureFilename.c_str());
+                    material->textures.push_back(renderer->requestTexture(textureName.c_str(), texture));
+                }
+                else
+                {
+                    material->textures.push_back(renderer->getTexture(textureName.c_str()));
+                }
+
             }
 
             materials[i] = material;

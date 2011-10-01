@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SceneManager.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 16, 2011, 1:40 PM
  */
 
@@ -19,8 +19,8 @@ namespace Core
                                const boost::shared_ptr<Platform::PlatformManager>& platform,
                                const boost::shared_ptr<Events::EventManager>& eventManager,
                                const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
-    : memoryManager(memoryManager), fileSystem(fileSystem),
-    platform(platform), eventManager(eventManager), properties(properties)
+        : memoryManager(memoryManager), fileSystem(fileSystem),
+          platform(platform), eventManager(eventManager), properties(properties)
     {
     }
 
@@ -38,19 +38,19 @@ namespace Core
         const SceneLoader loader(fileSystem, memoryManager, platform, eventManager, properties);
 
         const ScenePtr scene = loader.loadScene(sceneFile.c_str());
-        
+
         const auto& systemScenes = scene->getSystemScenes();
-        
+
         std::for_each(systemScenes.begin(), systemScenes.end(), [name, &loader](const boost::shared_ptr<SystemScene>& systemScene) {
             String systemSceneFile(SCENE_PATH.c_str(), SCENE_PATH.size());
             systemSceneFile.append("/");
             systemSceneFile.append(name);
             systemSceneFile.append(".");
             systemSceneFile.append(systemScene->getSceneFileExtension());
-            
+
             loader.loadSystemScene(systemScene.get(), systemSceneFile.c_str());
         });
-        
+
         loadedScenes[name] = scene;
     }
 
@@ -59,7 +59,7 @@ namespace Core
         LOG(INFO) << "Switching to scene " << name;
         currentScene = loadedScenes.at(name);
     }
-    
+
     Scene* SceneManager::getCurrentScene() const
     {
         return currentScene.get();

@@ -7,14 +7,14 @@
 
 namespace Utilities
 {
-	namespace Memory
-	{
-	    /**
-	     * A helper class for tracking memory allocations and deallocations.
-	     */
-		class MemoryTracker
-		{
-		public:
+    namespace Memory
+    {
+        /**
+         * A helper class for tracking memory allocations and deallocations.
+         */
+        class MemoryTracker
+        {
+        public:
             typedef boost::shared_ptr<MemoryTracker> Ptr;
             typedef std::vector<AllocationInfo> MemoryDump;
 
@@ -26,9 +26,9 @@ namespace Utilities
              * @param bytes - The number of bytes allocated.
              */
             template<typename T>
-            void trackAllocation(const T* ptr, const size_t bytes)
+            void trackAllocation(const char* const pool, T* ptr, const size_t bytes)
             {
-                trackAllocation(reinterpret_cast<const_byte_pointer>(ptr), bytes, typeid(T));
+                trackAllocation(pool, reinterpret_cast<const_byte_pointer>(ptr), bytes, typeid(T));
                 memoryUsage += bytes;
 
                 if(memoryUsage > maxMemoryUsage)
@@ -43,9 +43,9 @@ namespace Utilities
              * @param bytes - The number of bytes deallocated.
              */
             template<typename T>
-            void trackDeallocation(const T* ptr, const size_t bytes)
+            void trackDeallocation(const char* const pool, const T* ptr, const size_t bytes)
             {
-                trackDeallocation(reinterpret_cast<const_byte_pointer>(ptr), bytes, typeid(T));
+                trackDeallocation(pool, reinterpret_cast<const_byte_pointer>(ptr), bytes, typeid(T));
                 memoryUsage -= bytes;
             }
 
@@ -68,14 +68,14 @@ namespace Utilities
         protected:
             MemoryTracker();
 
-            virtual void trackAllocation(const_byte_pointer ptr, const size_t bytes, const std::type_info& type) = 0;
-            virtual void trackDeallocation(const_byte_pointer ptr, const size_t bytes, const std::type_info& type) = 0;
+            virtual void trackAllocation(const char* const pool, const_byte_pointer ptr, const size_t bytes, const std::type_info& type) = 0;
+            virtual void trackDeallocation(const char* const pool, const_byte_pointer ptr, const size_t bytes, const std::type_info& type) = 0;
 
         private:
             size_t memoryUsage;
             size_t maxMemoryUsage;
-		};
-	}
+        };
+    }
 }
 
 #endif // UTILITIES_MEMORY_MEMORYTRACKER_H

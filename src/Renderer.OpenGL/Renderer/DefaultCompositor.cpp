@@ -8,7 +8,7 @@ namespace Renderer
 {
 
     DefaultCompositor::DefaultCompositor(const Viewport* const viewport, const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
-                           const unsigned int fx)
+                                         const unsigned int fx)
         : viewport(viewport), effects(effects), composeEffect(fx)
     {
         //ctor

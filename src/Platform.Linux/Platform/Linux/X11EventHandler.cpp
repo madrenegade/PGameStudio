@@ -17,7 +17,7 @@ namespace Platform
 
         X11EventHandler::X11EventHandler(const boost::shared_ptr<Core::Events::EventManager>& eventManager, Display* display,
                                          ::Window window)
-        : eventManager(eventManager), display(display), window(window), pointerWarped(false)
+            : eventManager(eventManager), display(display), window(window), pointerWarped(false)
         {
             quitEvent = eventManager->getEventID("QUIT");
             keyPressEvent = eventManager->getEventID("KEY_PRESSED");
@@ -60,97 +60,97 @@ namespace Platform
 
                 switch (event.type)
                 {
-                    case KeyPress:
+                case KeyPress:
                     {
                         auto ks = XLookupKeysym(&event.xkey, event.xkey.state);
 //                        LOG(INFO) << ks << ": " << XKeysymToString(ks);
                         eventManager->pushEvent(keyPressEvent, static_cast<unsigned int> (ks));
                     }
-                        break;
+                    break;
 
-                    case KeyRelease:
-                        eventManager->pushEvent(keyReleaseEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, event.xkey.state)));
-                        break;
+                case KeyRelease:
+                    eventManager->pushEvent(keyReleaseEvent, static_cast<unsigned int> (XLookupKeysym(&event.xkey, event.xkey.state)));
+                    break;
 
-                    case ButtonPress:
-                        eventManager->pushEvent(buttonPressEvent, event.xbutton.button);
-                        break;
+                case ButtonPress:
+                    eventManager->pushEvent(buttonPressEvent, event.xbutton.button);
+                    break;
 
-                    case ButtonRelease:
-                        eventManager->pushEvent(buttonReleaseEvent, event.xbutton.button);
-                        break;
+                case ButtonRelease:
+                    eventManager->pushEvent(buttonReleaseEvent, event.xbutton.button);
+                    break;
 
-                    case MotionNotify:
-                        // this prevents mouse motion events when the mouse has been warped
-                        if(!pointerWarped)
-                        {
-                            eventManager->pushEvent(mouseMoveEvent, std::make_pair(event.xmotion.x, event.xmotion.y));
-                        }
+                case MotionNotify:
+                    // this prevents mouse motion events when the mouse has been warped
+                    if(!pointerWarped)
+                    {
+                        eventManager->pushEvent(mouseMoveEvent, std::make_pair(event.xmotion.x, event.xmotion.y));
+                    }
 
-                        pointerWarped = false;
-                        break;
+                    pointerWarped = false;
+                    break;
 
-                    case EnterNotify:
-                        //                        this->m_pEventHandler->PushEvent(this->m_activeEvent, true);
-                        break;
+                case EnterNotify:
+                    //                        this->m_pEventHandler->PushEvent(this->m_activeEvent, true);
+                    break;
 
-                    case LeaveNotify:
-                        //                        this->m_pEventHandler->PushEvent(this->m_activeEvent, false);
-                        break;
+                case LeaveNotify:
+                    //                        this->m_pEventHandler->PushEvent(this->m_activeEvent, false);
+                    break;
 
-                    case FocusIn:
-                        //                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, false);
-                        break;
+                case FocusIn:
+                    //                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, false);
+                    break;
 
-                    case FocusOut:
-                        //                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, true);
-                        break;
+                case FocusOut:
+                    //                        this->m_pEventHandler->PushEvent(this->m_minimizeEvent, true);
+                    break;
 
-                    case Expose:
-                        //                        Logger::Warning("Unhandled event: Expose");
-                        break;
+                case Expose:
+                    //                        Logger::Warning("Unhandled event: Expose");
+                    break;
 
-                    case GraphicsExpose:
-                        //                        Logger::Warning("Unhandled event: GraphicsExpose");
-                        break;
+                case GraphicsExpose:
+                    //                        Logger::Warning("Unhandled event: GraphicsExpose");
+                    break;
 
-                    case NoExpose:
-                        //                        Logger::Warning("Unhandled event: NoExpose");
-                        break;
+                case NoExpose:
+                    //                        Logger::Warning("Unhandled event: NoExpose");
+                    break;
 
-                    case VisibilityNotify:
-                        //                        Logger::Warning("Unhandled event: Visibility");
-                        break;
+                case VisibilityNotify:
+                    //                        Logger::Warning("Unhandled event: Visibility");
+                    break;
 
-                    case CreateNotify:
-                        //                        Logger::Warning("Unhandled event: Create");
-                        break;
+                case CreateNotify:
+                    //                        Logger::Warning("Unhandled event: Create");
+                    break;
 
-                    case DestroyNotify:
-                        //                        Logger::Warning("Unhandled event: Destroy");
-                        break;
+                case DestroyNotify:
+                    //                        Logger::Warning("Unhandled event: Destroy");
+                    break;
 
-                    case ConfigureNotify:
-                        //                        Logger::Warning("Unhandled event: Configure");
-                        break;
+                case ConfigureNotify:
+                    //                        Logger::Warning("Unhandled event: Configure");
+                    break;
 
-                    case ConfigureRequest:
-                        //                        Logger::Warning("Unhandled event: ConfigureRequest");
-                        break;
+                case ConfigureRequest:
+                    //                        Logger::Warning("Unhandled event: ConfigureRequest");
+                    break;
 
-                    case ResizeRequest:
-                        //                        this->m_pEventHandler->PushEvent(this->m_resizeEvent,
-                        //                                                         Core::ResizeEvent(event.xresizerequest.width,
-                        //                                                                           event.xresizerequest.height));
-                        break;
+                case ResizeRequest:
+                    //                        this->m_pEventHandler->PushEvent(this->m_resizeEvent,
+                    //                                                         Core::ResizeEvent(event.xresizerequest.width,
+                    //                                                                           event.xresizerequest.height));
+                    break;
 
-                    case ClientMessage:
-                        eventManager->pushEvent(quitEvent, 0);
-                        return;
+                case ClientMessage:
+                    eventManager->pushEvent(quitEvent, 0);
+                    return;
 
-                    default:
-                        //                        Logger::Warning("Unhandled unknown event");
-                        break;
+                default:
+                    //                        Logger::Warning("Unhandled unknown event");
+                    break;
                 }
             }
         }

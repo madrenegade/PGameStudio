@@ -24,7 +24,7 @@ namespace Utilities
         }
 
         PageManager::PageManager(const size_t maxSize, const size_t pageSize)
-        : MAX_SIZE(maxSize), PAGE_SIZE(pageSize), MAX_PAGE_COUNT(maxSize / pageSize)
+            : MAX_SIZE(maxSize), PAGE_SIZE(pageSize), MAX_PAGE_COUNT(maxSize / pageSize)
         {
             if (maxSize % pageSize != 0)
             {
@@ -53,7 +53,7 @@ namespace Utilities
         {
             if (getPagesInUse() == MAX_PAGE_COUNT)
             {
-                RAW_LOG_FATAL("Max amount of pages exceeded: %i", MAX_PAGE_COUNT);
+                throw std::runtime_error("Max amount of pages exceeded");
             }
 
             return allocatePage();

@@ -113,12 +113,23 @@ namespace Renderer
         return effects->queueRequest(request);
     }
 
-    unsigned long OpenGLRenderer::requestTexture(const Utilities::IO::File::Handle& file)
+    unsigned long OpenGLRenderer::requestTexture(const char* const name, Utilities::IO::File::Handle& file)
     {
         TextureRequest request;
+        request.name = name;
         request.file = file;
 
         return textures->queueRequest(request);
+    }
+
+    bool OpenGLRenderer::isTextureRequested(const char* const name)
+    {
+        return textures->isRequested(name);
+    }
+
+    unsigned long OpenGLRenderer::getTexture(const char* const name)
+    {
+        return textures->getID(name);
     }
 
     bool OpenGLRenderer::isVertexBufferLoaded(const unsigned long vbID) const
@@ -284,7 +295,7 @@ namespace Renderer
 
         for (auto i = drawCallList.begin(); i != drawCallList.end(); ++i)
         {
-            for (auto t = 0u; t != i->material->textures.size(); ++t)
+            for (auto t = 0u; t < 1; /*i->material->textures.size();*/ ++t)
             {
                 texture = textures->get(i->material->textures[t]);
                 texture->bind(t);

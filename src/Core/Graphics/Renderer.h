@@ -37,7 +37,9 @@ namespace Graphics
         //        virtual unsigned long requestIndexBuffer(const boost::shared_array<unsigned int>& data, unsigned int numIndexes) = 0;
 
         virtual unsigned long requestEffect(const Utilities::IO::File::Handle& file) = 0;
-        virtual unsigned long requestTexture(const Utilities::IO::File::Handle& file) = 0;
+        virtual unsigned long requestTexture(const char* const name, Utilities::IO::File::Handle& file) = 0;
+        virtual bool isTextureRequested(const char* const name) = 0;
+        virtual unsigned long getTexture(const char* const name) = 0;
 
         virtual bool isVertexBufferLoaded(const unsigned long vbID) const = 0;
         virtual bool isIndexBufferLoaded(const unsigned long ibID) const = 0;

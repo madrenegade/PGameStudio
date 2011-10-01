@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   EffectRequest.h
  * Author: madrenegade
  *
@@ -9,12 +9,15 @@
 #define	RENDERER_EFFECTREQUEST_H
 
 #include "Utilities/IO/File.h"
+#include "Utilities/string.h"
 
 namespace Renderer
 {
     struct EffectRequest
     {
         unsigned long id;
+
+        String name;
         Utilities::IO::File::Handle file;
     };
 }

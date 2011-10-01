@@ -19,7 +19,7 @@ namespace Platform
 
         XWindow::XWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory, unsigned int w, unsigned int h,
                          unsigned int bpp, bool fullscreen)
-        : fbConfig(0), window(0)
+            : fbConfig(0), window(0)
         {
             openDisplay();
             findFrameBufferConfiguration();
@@ -70,14 +70,14 @@ namespace Platform
 
             // FBConfigs were added in GLX version 1.3.
             if (!glXQueryVersion(display, &glx_major, &glx_minor) ||
-                ((glx_major == 1) && (glx_minor < 3)) || (glx_major < 1))
+                    ((glx_major == 1) && (glx_minor < 3)) || (glx_major < 1))
             {
                 throw std::runtime_error("Invalid GLX version");
             }
 
             int fbcount;
-            GLXFBConfig *fbc = glXChooseFBConfig(display, DefaultScreen(display),
-                visual_attribs, &fbcount);
+            GLXFBConfig* fbc = glXChooseFBConfig(display, DefaultScreen(display),
+                                                 visual_attribs, &fbcount);
             if (!fbc)
             {
                 throw std::runtime_error("Could not retreive framebuffer config");
@@ -127,8 +127,8 @@ namespace Platform
 
             XSetWindowAttributes windowAttributes;
             windowAttributes.colormap = cmap = XCreateColormap(display,
-                RootWindow(display, vi->screen),
-                vi->visual, AllocNone);
+                                               RootWindow(display, vi->screen),
+                                               vi->visual, AllocNone);
 
             windowAttributes.background_pixmap = None;
             windowAttributes.border_pixel = 0;
@@ -146,9 +146,9 @@ namespace Platform
             else
             {
                 window = XCreateWindow(display, RootWindow(display, vi->screen),
-                    0, 0, width, height, 0, vi->depth, InputOutput,
-                    vi->visual,
-                    CWBorderPixel | CWColormap | CWEventMask, &windowAttributes);
+                                       0, 0, width, height, 0, vi->depth, InputOutput,
+                                       vi->visual,
+                                       CWBorderPixel | CWColormap | CWEventMask, &windowAttributes);
 
                 Atom wmDelete = XInternAtom(display, "WM_DELETE_WINDOW", true);
                 XSetWMProtocols(display, window, &wmDelete, 1);

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   MemoryTrackerMock.h
  * Author: madrenegade
  *
@@ -20,15 +20,15 @@ namespace Utilities
         public:
             MemoryTrackerMock();
             virtual ~MemoryTrackerMock();
-            
+
             unsigned int getAllocations() const;
             unsigned int getDeallocations() const;
-            
+
         protected:
-            virtual void trackAllocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type);
-            virtual void trackDeallocation(const_byte_pointer ptr, size_t bytes, const std::type_info& type);
+            virtual void trackAllocation(const char* const pool, const_byte_pointer ptr, size_t bytes, const std::type_info& type);
+            virtual void trackDeallocation(const char* const pool, const_byte_pointer ptr, size_t bytes, const std::type_info& type);
             virtual MemoryDump getMemoryDump() const;
-            
+
         private:
             unsigned int allocations;
             unsigned int deallocations;

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Library.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 14, 2011, 13:30 AM
  */
 
@@ -16,7 +16,7 @@ namespace Platform
     std::string Library::SUFFIX("dll");
 
     Library::Library()
-		: handle(0)
+        : handle(0)
     {
 
     }
@@ -27,7 +27,7 @@ namespace Platform
 
         if (handle == 0)
         {
-			DWORD error = GetLastError();
+            DWORD error = GetLastError();
             throw std::runtime_error("Could not load DLL");
         }
     }
@@ -53,9 +53,9 @@ namespace Platform
         if (handle != 0)
         {
             if(!FreeLibrary(handle))
-			{
-				LOG(WARNING) << "Could not free dll: " << GetLastError();
-			}
+            {
+                LOG(WARNING) << "Could not free dll: " << GetLastError();
+            }
 
             handle = 0;
         }

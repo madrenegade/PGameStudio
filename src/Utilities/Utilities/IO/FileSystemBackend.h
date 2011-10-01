@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   FileSystemBackend.h
  * Author: madrenegade
  *
@@ -12,7 +12,7 @@ namespace Utilities
 {
     namespace IO
     {
-        enum class FileSystemBackend : unsigned char
+enum class FileSystemBackend : unsigned char
         {
             PhysFS = 0
         };

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   VertexBufferRequest.h
  * Author: madrenegade
  *
@@ -11,12 +11,15 @@
 #include "Graphics/VertexFormat.h"
 #include <boost/shared_array.hpp>
 #include "Utilities/Memory/typedefs.h"
+#include "Utilities/string.h"
 
 namespace Renderer
 {
     struct VertexBufferRequest
     {
         unsigned long id;
+
+        String name;
         boost::shared_array<Utilities::Memory::byte> data;
         unsigned int numVertices;
         Graphics::VertexFormat format;

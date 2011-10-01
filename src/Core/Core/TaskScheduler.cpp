@@ -25,18 +25,18 @@ namespace Core
         po::options_description options("Task scheduler options");
 
         options.add_options()
-            ("Scheduler.numThreads", po::value<unsigned int>()->default_value(0), "The number of threads to use");
+        ("Scheduler.numThreads", po::value<unsigned int>()->default_value(0), "The number of threads to use");
 
         properties->addOptions(options);
     }
 
     TaskScheduler::TaskScheduler(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
-    : backgroundTask(0), rootTask(0)
+        : backgroundTask(0), rootTask(0)
     {
         const unsigned int numThreadsFromConfig = properties->get<unsigned int>("Scheduler.numThreads");
 
         const unsigned int numThreads = numThreadsFromConfig == 0 ?
-            tbb::task_scheduler_init::default_num_threads() : numThreadsFromConfig;
+                                        tbb::task_scheduler_init::default_num_threads() : numThreadsFromConfig;
 
         VLOG(1) << "Task scheduler uses " << numThreads << " threads";
 

@@ -2,6 +2,7 @@
 
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
+#include <fstream>
 
 namespace Utilities
 {
@@ -9,7 +10,7 @@ namespace Utilities
     {
 
         MemoryTracker::MemoryTracker()
-        : memoryUsage(0), maxMemoryUsage(0)
+            : memoryUsage(0), maxMemoryUsage(0)
         {
         }
 
@@ -39,26 +40,36 @@ namespace Utilities
                 {
                     const AllocationInfo& allocationInfo = dump.at(i);
 
-                    RAW_VLOG(2, "Block information:\nAddress: %p\nSize: %li\nType: %s",
-                        allocationInfo.getPointer(),
-                        allocationInfo.getSize(), allocationInfo.getType().c_str());
+                    RAW_VLOG(2, "Block information:\nAddress: %p\nSize: %li\nType: %s\nPool: %s",
+                             allocationInfo.getPointer(),
+                             allocationInfo.getSize(),
+                             allocationInfo.getType().c_str(),
+                             allocationInfo.getPool());
                 }
             }
         }
 
         void MemoryTracker::printMemoryDump() const
         {
-            RAW_VLOG(1, "Memory dump");
-
             const std::vector<AllocationInfo> dump(getMemoryDump());
+
+            std::ofstream out("memorydump.txt");
 
             for (unsigned int i = 0; i < dump.size(); ++i)
             {
                 const AllocationInfo& allocationInfo = dump.at(i);
 
-                RAW_VLOG(1, "Block information:\nAddress: %p\nSize: %li\nType: %s",
-                    allocationInfo.getPointer(),
-                    allocationInfo.getSize(), allocationInfo.getType().c_str());
+//                RAW_LOG_INFO("Block information:\nAddress: %p\nSize: %li\nType: %s\nPool: %s",
+//                             allocationInfo.getPointer(),
+//                             allocationInfo.getSize(),
+//                             allocationInfo.getType().c_str(),
+//                             allocationInfo.getPool());
+
+                out << "Block information:" << std::endl
+                << "Address: " << reinterpret_cast<const void*>(allocationInfo.getPointer()) << std::endl
+                << "Size: " << allocationInfo.getSize() << std::endl
+                << "Type: " << allocationInfo.getType().c_str() << std::endl
+                << "Pool: " << allocationInfo.getPool() << std::endl;
             }
         }
     }

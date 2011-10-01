@@ -20,7 +20,7 @@ namespace Utilities
     {
 
         boost::shared_ptr<FileSystem> FileSystemFactory::create(const MemoryManager::Ptr& memory,
-                                                                const boost::shared_ptr<PropertyManager>& properties)
+                const boost::shared_ptr<PropertyManager>& properties)
         {
             const FileSystemBackend backend = valueOf<FileSystemBackend>(properties->get<unsigned char>("FileSystem.backend"));
 
@@ -30,12 +30,12 @@ namespace Utilities
 
             switch (backend)
             {
-                case FileSystemBackend::PhysFS:
-                    fileSystem = memory->construct<Backend::PhysFS > (Backend::PhysFS(memory, properties), pool);
-                    break;
+            case FileSystemBackend::PhysFS:
+                fileSystem = memory->construct<Backend::PhysFS > (Backend::PhysFS(memory, properties), pool);
+                break;
 
-                default:
-                    throw std::invalid_argument("unknown file system backend");
+            default:
+                throw std::invalid_argument("unknown file system backend");
             }
 
             fileSystem->initialize(pool);

@@ -16,7 +16,7 @@ namespace Utilities
     {
 
         PropertyManager::PropertyManager()
-        : options("Allowed options")
+            : options("Allowed options")
         {
 
         }

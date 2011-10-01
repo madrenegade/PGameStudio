@@ -10,54 +10,54 @@ using namespace Utilities::Memory;
 
 namespace Core
 {
-	namespace Events
-	{
+    namespace Events
+    {
         EventManager::EventManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
-        : memory(memoryManager), serial()
+            : memory(memoryManager), serial()
         {
         }
-        
+
         EventManager::~EventManager()
         {
         }
-        
+
         EventID EventManager::registerEvent(const char* const name)
         {
             RAW_VLOG(2, "Registering event %s", name);
-            
+
             RAW_CHECK(events.find(name) == events.end(), "Event is already registered");
-            
+
             const EventID id = serial.fetch_and_add(1);
-            
+
             events[name] = id;
-            
+
             // cannot use memory manager because signal is copy protected
             signals[id].reset(new EventSignal());
-            
+
             return id;
         }
-        
+
         EventID EventManager::getEventID(const char* const name) const
         {
             RAW_CHECK(events.find(name) != events.end(), (std::string("Event is not registered: ") + name).c_str());
-            
+
             return events.at(name);
         }
-        
+
         void EventManager::registerEventHandler(const EventID& id, const EventHandlerFunction& fn)
         {
             signals[id]->connect(fn);
         }
-        
+
         void EventManager::pushEvent(const EventID& id, const boost::any& data)
         {
             eventQueue.push(std::make_pair(id, data));
         }
-        
+
         void EventManager::handleEvents()
         {
             EventData eventData;
-            
+
             while(!eventQueue.empty())
             {
                 if(eventQueue.try_pop(eventData))
@@ -72,7 +72,7 @@ namespace Core
                 }
             }
         }
-        
+
 #ifdef DEBUG
         String EventManager::getEventName(const EventID& id) const
         {
@@ -83,9 +83,9 @@ namespace Core
                     return i->first;
                 }
             }
-            
+
             return "UNKNOWN";
         }
 #endif
-	}
+    }
 }

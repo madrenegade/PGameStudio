@@ -17,12 +17,12 @@ protected:
 
     virtual void SetUp()
     {
-        pool = Pool::create();
+        pool = Pool::create("Test");
         tracker.reset(new DebugMemoryTracker());
 
         memory = MemoryManager::create(tracker);
         memory->registerMemoryPool(pool);
-        
+
         STLAllocator<void>::memory = memory;
     }
 };
@@ -31,7 +31,6 @@ TEST_F(STLAllocatorTest, construct)
 {
     std::vector<String, STLAllocator<String> > v;
     v.push_back("abcd");
-    
+
     ASSERT_EQ("abcd", v.at(0));
 }
- 
