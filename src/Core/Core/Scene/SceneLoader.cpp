@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SceneLoader.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 16, 2011, 1:23 PM
  */
 
@@ -50,11 +50,11 @@ namespace Core
         LOG(INFO) << "Loading scene " << filename;
 
         boost::shared_ptr<XmlReader> reader = fileSystem->readXml(filename);
-        const XmlReader::Document* doc = reader->getDocument(); 
-        
+        const XmlReader::Document* doc = reader->getDocument();
+
         SystemVector neededSystems;
         XmlReader::Node* systemNode = doc->first_node("scene")->first_node("systems")->first_node("system");
-        
+
         for(XmlReader::Node* node = systemNode; node; node = node->next_sibling("system"))
         {
             neededSystems.push_back(node->first_attribute("name")->value());
@@ -86,9 +86,8 @@ namespace Core
             // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
             CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createSystemScene"));
 
-            // TODO: seperate pools for each system
             const auto systemScene = create(memoryManager);
-            
+
             // get option descriptions
             String iniFile(i->c_str(), i->size());
             iniFile.append(".ini");
@@ -96,19 +95,19 @@ namespace Core
             systemScene->addOptionsTo(properties);
             properties->parse(iniFile.c_str());
             // parse system ini file
-            
+
             systemScene->setMemoryManager(memoryManager);
             systemScene->setPlatformManager(platform);
             systemScene->setEventManager(eventManager);
             systemScene->setFileSystem(fileSystem);
             systemScene->setProperties(properties);
-            
+
             // create memory pool for this system
             const boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, i->c_str()));
             const pool_id systemPool = memoryManager->registerMemoryPool(pool);
-            
+
             systemScene->setMemoryPool(systemPool);
-            
+
             systemScene->initialize();
 
             scene->addSystemScene(systemScene);

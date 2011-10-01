@@ -88,7 +88,11 @@ namespace Input
 
             ControllerPtr controller = memoryManager->construct(Controller(id), pool);
 
-            // TODO: check that controller does not exist
+            if(controllers.find(id) != controllers.end())
+            {
+                LOG(FATAL) << "A controller with id " << id << " is already registered";
+            }
+
             controllers[id] = controller;
 
             XmlReader::Node* controlsNode = controllerNode->first_node("controls");
@@ -141,7 +145,11 @@ namespace Input
             LOG(FATAL) << "Control '" << button << "' must have var attribute";
         }
 
-        // TODO: check that key is not already bind to another controller
+        if(keysymControllerMapping.find(button) != keysymControllerMapping.end())
+        {
+            LOG(FATAL) << "The button " << button << " is already registered for another controller";
+        }
+
         keysymControllerMapping[button] = controller;
     }
 
