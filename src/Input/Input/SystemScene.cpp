@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SystemScene.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 23, 2011, 8:08 AM
  */
 
@@ -67,6 +67,9 @@ namespace Input
         eventManager->registerEventHandler(mouseButtonPressed, boost::bind(&SystemScene::onButtonPressed, this, _1, _2));
         eventManager->registerEventHandler(mouseButtonReleased, boost::bind(&SystemScene::onButtonReleased, this, _1, _2));
         eventManager->registerEventHandler(mouseMoved, boost::bind(&SystemScene::onMouseMoved, this, _1, _2));
+
+        screenWidth = properties->get<unsigned int>("Window.width");
+        screenHeight = properties->get<unsigned int>("Window.height");
     }
 
     void SystemScene::load(const Utilities::IO::File::Handle& file)
@@ -116,11 +119,11 @@ namespace Input
             processButtonControl(controller, button, buttonNode);
         }
     }
-    
+
     void SystemScene::processMouseAxisControl(Controller* controller, Utilities::IO::XmlReader::Node* mouseAxisNode)
     {
         if(!mouseAxisNode) return;
-        
+
         const unsigned int axisControl = 0; // mouse is axis control 0
         processTwoAxisControl(controller, axisControl, mouseAxisNode);
     }
@@ -141,34 +144,34 @@ namespace Input
         // TODO: check that key is not already bind to another controller
         keysymControllerMapping[button] = controller;
     }
-    
+
     void SystemScene::processOneAxisControl(Controller* controller, unsigned int axisControl, Utilities::IO::XmlReader::Node* axisControlNode)
     {
         XmlReader::Attribute* varAttribute = axisControlNode->first_attribute("var");
         XmlReader::Attribute* deltaVarAttribute = axisControlNode->first_attribute("deltaVar");
-        
+
         if(!varAttribute || !deltaVarAttribute)
         {
             LOG(FATAL) << "Axis control needs var and deltaVar attributes";
         }
-        
+
         controller->registerOneAxisControl(axisControl, varAttribute->value(), deltaVarAttribute->value());
         idOneAxisControlMapping[axisControl] = controller;
     }
-    
+
     void SystemScene::processTwoAxisControl(Controller* controller, unsigned int axisControl, Utilities::IO::XmlReader::Node* axisControlNode)
     {
         XmlReader::Attribute* xVarAttribute = axisControlNode->first_attribute("xVar");
         XmlReader::Attribute* yVarAttribute = axisControlNode->first_attribute("yVar");
         XmlReader::Attribute* xDeltaVarAttribute = axisControlNode->first_attribute("xDeltaVar");
         XmlReader::Attribute* yDeltaVarAttribute = axisControlNode->first_attribute("yDeltaVar");
-        
+
         if(!xVarAttribute || !yVarAttribute || !xDeltaVarAttribute || !yDeltaVarAttribute)
         {
             LOG(FATAL) << "Axis control needs xVar, yVar, xDeltaVar and yDeltaVar attributes";
         }
-        
-        controller->registerTwoAxisControl(axisControl, xVarAttribute->value(), yVarAttribute->value(), 
+
+        controller->registerTwoAxisControl(axisControl, xVarAttribute->value(), yVarAttribute->value(),
                                            xDeltaVarAttribute->value(), yDeltaVarAttribute->value());
         idTwoAxisControlMapping[axisControl] = controller;
     }
@@ -187,13 +190,20 @@ namespace Input
     {
         updateButton(boost::any_cast<unsigned int>(data), false);
     }
-    
+
     void SystemScene::onMouseMoved(const Core::Events::EventID& /*event*/, const boost::any& data)
     {
         typedef std::pair<int, int> MouseMove;
         MouseMove xy = boost::any_cast<MouseMove>(data);
-        
-        updateTwoAxisControl(0, xy.first, xy.second);
+
+        // convert from screen coordinates to [-1,1]
+        const double halfScreenWidth = screenWidth * 0.5;
+        const double halfScreenHeight = screenHeight * 0.5;
+
+        const double x = (xy.first / halfScreenWidth) - 1.0;
+        const double y = (xy.second / halfScreenHeight) - 1.0;
+
+        updateTwoAxisControl(0, x, y);
     }
 
     void SystemScene::updateButton(unsigned int keysym, bool state)
@@ -210,33 +220,33 @@ namespace Input
 
         dirtyButtons.push_back(button);
     }
-    
+
     void SystemScene::updateOneAxisControl(unsigned int controlID, double x)
     {
         if (idOneAxisControlMapping.find(controlID) == idOneAxisControlMapping.end())
         {
             return;
         }
-        
+
         Controller* controller = idOneAxisControlMapping[controlID];
         OneAxisControl* control = controller->getOneAxisControl(controlID);
         control->setState(x);
-        
+
         dirtyOneAxisControls.push_back(control);
     }
-    
+
     void SystemScene::updateTwoAxisControl(unsigned int controlID, double x, double y)
     {
         if (idTwoAxisControlMapping.find(controlID) == idTwoAxisControlMapping.end())
         {
             return;
         }
-        
+
         Controller* controller = idTwoAxisControlMapping[controlID];
-        
+
         TwoAxisControl* control = controller->getTwoAxisControl(controlID);
         control->setState(x, y);
-        
+
         dirtyTwoAxisControls.push_back(control);
     }
 }
