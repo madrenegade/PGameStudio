@@ -88,13 +88,11 @@ namespace Core
 
             const auto systemScene = create(memoryManager);
 
-            // get option descriptions
             String iniFile(i->c_str(), i->size());
             iniFile.append(".ini");
 
             systemScene->addOptionsTo(properties);
             properties->parse(iniFile.c_str());
-            // parse system ini file
 
             systemScene->setMemoryManager(memoryManager);
             systemScene->setPlatformManager(platform);
@@ -102,7 +100,6 @@ namespace Core
             systemScene->setFileSystem(fileSystem);
             systemScene->setProperties(properties);
 
-            // create memory pool for this system
             const boost::shared_ptr<Pool> pool = Pool::create(MemoryPoolSettings::loadFrom(properties, i->c_str()));
             const pool_id systemPool = memoryManager->registerMemoryPool(pool);
 
