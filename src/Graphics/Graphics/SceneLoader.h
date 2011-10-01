@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   SceneLoader.h
  * Author: madrenegade
  *
@@ -36,6 +36,7 @@ namespace Graphics
     class SceneNode;
     class Material;
     class Mesh;
+    class Camera;
 
     template<typename T>
     const T read(const char** from)
@@ -49,12 +50,17 @@ namespace Graphics
     class SceneLoader
     {
     public:
+        typedef std::vector<boost::shared_ptr<Camera>> Cameras;
+
         SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
                     const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                    const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
                     Utilities::Memory::pool_id pool, Renderer* renderer);
         ~SceneLoader();
 
         boost::shared_ptr<SceneNode> loadFrom(const Utilities::IO::File::Handle& file);
+
+        const Cameras& getCameras() const;
 
     private:
         void readHeader();
@@ -63,7 +69,7 @@ namespace Graphics
         void readMeshes();
         void readCameras();
         boost::shared_ptr<SceneNode> readSceneGraph();
-        
+
         boost::shared_ptr<SceneNode> readNode();
 
         template<typename T>
@@ -74,6 +80,7 @@ namespace Graphics
 
         boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
         boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        const boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
         Utilities::Memory::pool_id pool;
 
         Renderer* renderer;
@@ -83,17 +90,18 @@ namespace Graphics
 
         std::vector<boost::shared_ptr<Material> > materials;
         std::vector<boost::shared_ptr<Mesh> > meshes;
+        Cameras cameras;
     };
 
     template<>
     const String read(const char** from);
-    
-//    template<>
-//    const std::string read(const char** from);
+
+    template<>
+    const Math::Vector3 read(const char** from);
 
     template<>
     const Math::Vector4 read(const char** from);
-    
+
     template<>
     const Math::Matrix4 read(const char** from);
 }

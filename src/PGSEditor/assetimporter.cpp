@@ -3,6 +3,7 @@
 #include "mesh.h"
 #include "material.h"
 #include "scenenode.h"
+#include "camera.h"
 
 #include "Math/Vector4.h"
 #include "Math/Matrix4.h"
@@ -12,6 +13,7 @@
 #include <assimp/aiPostProcess.h>
 
 #include <iostream>
+#include <glog/logging.h>
 
 AssetImporter::AssetImporter()
     : importer(new Assimp::Importer)
@@ -49,7 +51,7 @@ void AssetImporter::processScene(const aiScene *scene)
     processTextures(scene->mTextures, scene->mNumTextures);
     processMaterials(scene->mMaterials, scene->mNumMaterials);
     processMeshes(scene->mMeshes, scene->mNumMeshes);
-    processCameras();
+    processCameras(scene->mCameras, scene->mNumCameras);
     processNodes(scene->mRootNode);
 }
 
@@ -202,9 +204,22 @@ void AssetImporter::processMeshes(aiMesh** meshes, unsigned int numMeshes)
     }
 }
 
-void AssetImporter::processCameras()
+void AssetImporter::processCameras(aiCamera** cameras, unsigned int numCameras)
 {
+    LOG(INFO) << "Importing " << numCameras << " cameras";
 
+    for(unsigned int i = 0; i < numCameras; ++i)
+    {
+        const aiCamera* camera = cameras[i];
+
+        boost::shared_ptr<Camera> cam(new Camera);
+        cam->name = std::string(camera->mName.data, camera->mName.length);
+        cam->position = Math::Vector3(camera->mPosition.x, camera->mPosition.y, camera->mPosition.z);
+        cam->lookAt = Math::Vector3(camera->mLookAt.x, camera->mLookAt.y, camera->mLookAt.z);
+        cam->up = Math::Vector3(camera->mUp.x, camera->mUp.y, camera->mUp.z);
+
+        importedData->cameras.push_back(cam);
+    }
 }
 
 void AssetImporter::processNodes(const aiNode* rootNode)

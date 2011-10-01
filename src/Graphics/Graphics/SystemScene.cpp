@@ -10,7 +10,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/VertexFormat.h"
 #include "Graphics/Window.h"
-
+#include "Graphics/Camera.h"
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/Vertex.h"
 
@@ -70,7 +70,7 @@ namespace Graphics
         renderer = create(memoryManager, properties, pool);
 
         platformManager->getWindow()->getGraphicsContext()->MakeCurrent();
-        renderer->initialize(eventManager.get());
+        renderer->initialize();
         platformManager->getWindow()->getGraphicsContext()->Release();
 
     }
@@ -91,8 +91,21 @@ namespace Graphics
         renderer->requestEffect(anaglyphCompositorEffectFile);
         renderer->requestEffect(defaultCompositorEffectFile);
 
-        SceneLoader loader(fileSystem, memoryManager, pool, renderer.get());
+        SceneLoader loader(fileSystem, memoryManager, properties, pool, renderer.get());
         scene = loader.loadFrom(file);
+
+        const SceneLoader::Cameras& cameras(loader.getCameras());
+
+        if(cameras.size() != 1)
+        {
+            LOG(FATAL) << "Only one camera is supported, found " << cameras.size();
+        }
+
+        cameras.at(0)->registerEvents(eventManager.get());
+
+        platformManager->getWindow()->getGraphicsContext()->MakeCurrent();
+        renderer->setCamera(cameras.at(0));
+        platformManager->getWindow()->getGraphicsContext()->Release();
     }
 
     tbb::task* SystemScene::getTask(tbb::task* parent)

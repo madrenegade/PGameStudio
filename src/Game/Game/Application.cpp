@@ -16,6 +16,8 @@
 #include "Core/Scene/SceneManager.h"
 
 #include "Math/Vector3.h"
+#include "Math/Quaternion.h"
+#include "Math/helpers.h"
 
 #include "Platform/PlatformManager.h"
 
@@ -271,6 +273,27 @@ namespace Game
                 .def(self - self)
                 .def(tostring(self))
                 .def("cross", &Math::Vector3::Cross)
+                .def("normalize", &Math::Vector3::Normalize)
+        ];
+
+        module(state, "Math")
+        [
+            def("degreesToRadians", &Math::DegreesToRadians)
+        ];
+
+        module(state)
+        [
+            class_<Math::Quaternion>("Quaternion")
+                .def(constructor<const Math::Vector3&, double>())
+                .def(constructor<const Math::Quaternion&>())
+                .def(tostring(self))
+                .def("conjugate", &Math::Quaternion::Conjugate)
+                .def(self * self)
+                .def("getAxis", &Math::Quaternion::GetAxis)
+                .scope
+                [
+                  def("fromAxisAngle", &Math::Quaternion::FromAxisAngle)
+                ]
         ];
     }
 }

@@ -6,6 +6,7 @@
 
 class Material;
 class Mesh;
+class Camera;
 
 class SceneNode;
 
@@ -15,6 +16,7 @@ struct SceneData
 
     std::vector<boost::shared_ptr<Material> > materials;
     std::vector<boost::shared_ptr<Mesh> > meshes;
+    std::vector<boost::shared_ptr<Camera> > cameras;
 
     boost::shared_ptr<SceneNode> rootNode;
 };

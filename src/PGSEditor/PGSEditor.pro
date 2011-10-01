@@ -45,7 +45,8 @@ HEADERS  += mainwindow.h \
     mesh.h \
     scenenode.h \
     material.h \
-    editorapplication.h
+    editorapplication.h \
+    camera.h
 
 FORMS    += mainwindow.ui \
     newscenewizard.ui \

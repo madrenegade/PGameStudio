@@ -130,3 +130,9 @@ namespace Math
     }
 
 } // namespace Math
+
+std::ostream& operator <<(std::ostream& stream, const Math::Quaternion& q)
+{
+    stream << "q(" << q.GetAxis() << ", " << q.Angle() << ")";
+    return stream;
+}

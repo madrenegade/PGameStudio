@@ -15,6 +15,7 @@ class aiScene;
 class aiMesh;
 class aiNode;
 class aiTexture;
+class aiCamera;
 
 class SceneData;
 class SceneNode;
@@ -37,7 +38,7 @@ private:
     void processTextures(aiTexture** textures, unsigned int numTextures);
     void processMaterials(aiMaterial** materials, unsigned int numMaterials);
     void processMeshes(aiMesh** meshes, unsigned int numMeshes);
-    void processCameras();
+    void processCameras(aiCamera** cameras, unsigned int numCameras);
     void processNodes(const aiNode* rootNode);
 
     void addTextureToMaterial(Material* material, aiMaterial* aiMat, aiTextureType type);

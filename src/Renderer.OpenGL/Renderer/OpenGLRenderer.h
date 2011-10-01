@@ -61,7 +61,9 @@ namespace Renderer
                        const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager);
         virtual ~OpenGLRenderer();
 
-        virtual void initialize(Core::Events::EventManager* eventManager);
+        virtual void initialize();
+
+        virtual void setCamera(const boost::shared_ptr<Graphics::Camera>& camera);
 
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
                                                   const unsigned int numVertices, const Graphics::VertexFormat& fmt);

@@ -44,7 +44,7 @@ namespace Renderer
                                    const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
                                    const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
                                    const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager)
-    : memory(memory), pool(pool), properties(properties), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
+        : memory(memory), pool(pool), properties(properties), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
     {
     }
 
@@ -54,7 +54,7 @@ namespace Renderer
         Effect::deinitialize();
     }
 
-    void OpenGLRenderer::initialize(Core::Events::EventManager* eventManager)
+    void OpenGLRenderer::initialize()
     {
         width = properties->get<unsigned int>("Window.width");
         height = properties->get<unsigned int>("Window.height");
@@ -64,12 +64,14 @@ namespace Renderer
 
         glewInit();
 
-//      camera = memory->construct(Graphics::StereoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar, 0.2), pool);
-        camera = memory->construct(Graphics::MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
-        camera->registerEvents(eventManager);
+        Effect::initialize();
 
-        camera->setPosition(Math::Vector3(4, 2, 4));
-        camera->update();
+        ErrorHandler::checkForErrors();
+    }
+
+    void OpenGLRenderer::setCamera(const boost::shared_ptr<Graphics::Camera>& camera)
+    {
+        this->camera = camera;
 
         viewport = memory->construct(Viewport(0, 0, width, height), pool);
         viewport->setCamera(camera);
@@ -81,14 +83,10 @@ namespace Renderer
 //        boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);
         boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(DefaultCompositor(viewport.get(), effects, 3), pool);
         viewport->setCompositor(compositor);
-
-        Effect::initialize();
-
-        ErrorHandler::checkForErrors();
     }
 
     unsigned long OpenGLRenderer::requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
-                                                            const unsigned int numVertices, const Graphics::VertexFormat& fmt)
+            const unsigned int numVertices, const Graphics::VertexFormat& fmt)
     {
         VertexBufferRequest request;
         request.data = data;
@@ -177,7 +175,7 @@ namespace Renderer
     }
 
     void OpenGLRenderer::renderToFrameBuffer(const std::list<Graphics::DrawCall>& drawCallList,
-                                             unsigned int firstAttachment)
+            unsigned int firstAttachment)
     {
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0 + firstAttachment, GL_COLOR_ATTACHMENT1 + firstAttachment, GL_COLOR_ATTACHMENT2 + firstAttachment};
         glDrawBuffers(3, buffers);

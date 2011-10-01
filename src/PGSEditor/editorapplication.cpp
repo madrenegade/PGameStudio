@@ -98,7 +98,6 @@ void EditorApplication::initializeFileSystem()
     VLOG(1) << "Initializing filesystem";
 
     fileSystem = FileSystemFactory::create(memoryManager, properties);
-    File f(fileSystem->read("settings.ini"));
 }
 
 void  EditorApplication::initializeEventManager()

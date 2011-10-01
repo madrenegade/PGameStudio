@@ -37,4 +37,6 @@ namespace Math
 
 } // namespace Math
 
+std::ostream& operator <<(std::ostream& stream, const Math::Quaternion& q);
+
 #endif // MATH_QUATERNION_H

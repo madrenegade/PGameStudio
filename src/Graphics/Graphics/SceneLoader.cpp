@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SceneLoader.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 21, 2011, 9:58 AM
  */
 
@@ -12,10 +12,12 @@
 #include "Graphics/VertexFormat.h"
 #include "Graphics/Vertex.h"
 #include "Graphics/SceneNode.h"
+#include "Graphics/MonoViewCamera.h"
 
 #include "Utilities/IO/File.h"
 #include "Utilities/IO/FileSystem.h"
 #include "Utilities/Memory/MemoryManager.h"
+
 #include "Math/Matrix4.h"
 
 #include <stdexcept>
@@ -34,17 +36,16 @@ namespace Graphics
 
         return s;
     }
-    
-//    template<>
-//    const std::string read(const char** from)
-//    {
-//        const unsigned int length = read<unsigned int>(from);
-//
-//        std::string s(*from, length);
-//        *from += length;
-//
-//        return s;
-//    }
+
+    template<>
+    const Math::Vector3 read(const char** from)
+    {
+        double x = read<double>(from);
+        double y = read<double>(from);
+        double z = read<double>(from);
+
+        return Math::Vector3(x, y, z);
+    }
 
     template<>
     const Math::Vector4 read(const char** from)
@@ -53,10 +54,10 @@ namespace Graphics
         double g = read<double>(from);
         double b = read<double>(from);
         double a = read<double>(from);
-        
+
         return Math::Vector4(r, g, b, a);
     }
-    
+
     template<>
     const Math::Matrix4 read(const char** from)
     {
@@ -65,14 +66,15 @@ namespace Graphics
         {
             d[i] = read<double>(from);
         }
-        
+
         return Math::Matrix4(d);
     }
 
     SceneLoader::SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
                              const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                             const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
                              Utilities::Memory::pool_id pool, Renderer* renderer)
-    : fileSystem(fileSystem), memoryManager(memoryManager), pool(pool), renderer(renderer)
+    : fileSystem(fileSystem), memoryManager(memoryManager), properties(properties), pool(pool), renderer(renderer)
     {
     }
 
@@ -91,6 +93,11 @@ namespace Graphics
         readCameras();
 
         return readSceneGraph();
+    }
+
+    const SceneLoader::Cameras& SceneLoader::getCameras() const
+    {
+        return cameras;
     }
 
     void SceneLoader::readHeader()
@@ -189,9 +196,9 @@ namespace Graphics
                 VLOG(2) << "TexCoords: " << hasTexCoords;
                 LOG(FATAL) << "Scene file contains vertex structure of size " << vertexSize << " instead of " << sizeof(VertexTNBT);
             }
-            
+
             const unsigned int bytes = numVertices * vertexSize;
-            
+
 
             boost::shared_array<char> vertexData = memoryManager->allocate<char>(bytes, pool);
             Utilities::copy(data, vertexData.get(), bytes);
@@ -227,39 +234,74 @@ namespace Graphics
     void SceneLoader::readCameras()
     {
         VLOG(2) << "Reading cameras";
+
+        unsigned int numCameras = read<unsigned int>();
+        VLOG(2) << "numCameras: " << numCameras;
+
+        const unsigned int width = properties->get<unsigned int>("Window.width");
+        const unsigned int height = properties->get<unsigned int>("Window.height");
+        const double fieldOfView = properties->get<double>("Graphics.fieldOfView");
+        const double zNear = properties->get<double>("Graphics.zNear");
+        const double zFar = properties->get<double>("Graphics.zFar");
+
+        cameras.resize(numCameras);
+
+        for(unsigned int i = 0; i < numCameras; ++i)
+        {
+            String name(read<String>());
+
+            boost::shared_ptr<MonoViewCamera> camera = memoryManager->construct(MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+            camera->setPosition(read<Math::Vector3>());
+            camera->setLookAt(read<Math::Vector3>());
+            camera->setUp(read<Math::Vector3>());
+
+            cameras[i] = camera;
+        }
+
+        if(numCameras == 0)
+        {
+            VLOG(2) << "No cameras found in scene file, using default camera";
+
+            boost::shared_ptr<MonoViewCamera> camera = memoryManager->construct(MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+            camera->setPosition(Math::Vector3(0, 0, 0));
+            camera->setLookAt(Math::Vector3(0, 0, -1));
+            camera->setUp(Math::Vector3(0, 1, 0));
+
+            cameras.push_back(camera);
+        }
     }
 
     boost::shared_ptr<SceneNode> SceneLoader::readSceneGraph()
     {
         VLOG(2) << "Reading scene graph";
-        
+
         return readNode();
     }
-    
+
     boost::shared_ptr<SceneNode> SceneLoader::readNode()
     {
         boost::shared_ptr<SceneNode> node = memoryManager->construct(SceneNode(), pool);
-        
+
         String name(read<String>());
         VLOG(2) << "Reading scene node " << name;
-        
+
         node->setTransform(read<Math::Matrix4>());
-        
+
         const unsigned int numMeshes = read<unsigned int>();
-        
+
         for(unsigned int i = 0; i < numMeshes; ++i)
         {
             const unsigned int meshIndex = read<unsigned int>();
             node->addMesh(meshes.at(meshIndex));
         }
-        
+
         const unsigned int numChildren = read<unsigned int>();
-        
+
         for(unsigned int i = 0; i < numChildren; ++i)
         {
             node->addChild(readNode());
         }
-        
+
         return node;
     }
 }

@@ -2,6 +2,7 @@
 #include "scenedata.h"
 #include "scenenode.h"
 #include "mesh.h"
+#include "camera.h"
 #include "Math/Matrix4.h"
 
 #include <iostream>
@@ -135,6 +136,19 @@ bool SceneExporter::save(const boost::shared_ptr<SceneData> &scene, const QStrin
     }
 
     // cameras
+    const unsigned int numCameras = scene->cameras.size();
+    write(numCameras);
+
+    for(unsigned int i = 0; i < numCameras; ++i)
+    {
+        Camera* cam = scene->cameras.at(i).get();
+
+        writeString(cam->name);
+        write(cam->position);
+        write(cam->lookAt);
+        write(cam->up);
+    }
+
     // scene graph
     writeNode(scene->rootNode.get());
 
