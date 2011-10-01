@@ -301,7 +301,7 @@ namespace Renderer
 
         for (auto i = drawCallList.begin(); i != drawCallList.end(); ++i)
         {
-            for (auto t = 0u; t < 1; /*i->material->textures.size();*/ ++t)
+            for (auto t = 0u; t < i->material->textures.size(); ++t)
             {
                 texture = textures->get(i->material->textures[t]);
                 texture->bind(t);
