@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   TwoAxisController.h
  * Author: madrenegade
  *
@@ -19,7 +19,7 @@ namespace Input
         TwoAxisControl(const char* const xVar, const char* const yVar,
                        const char* const xDeltaVar, const char* const yDeltaVar);
         ~TwoAxisControl();
-        
+
         /**
          * Retreive the state of the controller. The values are in the range
          * [-1...1] with 0 representing the "center".
@@ -28,23 +28,24 @@ namespace Input
          */
         void getState(double& x, double& y) const;
         void getDelta(double& x, double& y) const;
-        
+
         void setState(double x, double y);
-        
+        void center();
+
         const char* getXVariableName() const;
         const char* getYVariableName() const;
         const char* getDeltaXVariableName() const;
         const char* getDeltaYVariableName() const;
-        
+
     private:
         String xVar;
         String yVar;
         String xDeltaVar;
         String yDeltaVar;
-        
+
         double x;
         double y;
-        
+
         double deltaX;
         double deltaY;
     };

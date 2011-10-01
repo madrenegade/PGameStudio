@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   X11Window.cpp
  * Author: madrenegade
- * 
+ *
  * Created on November 29, 2010, 4:36 PM
  */
 
@@ -177,6 +177,11 @@ namespace Platform
         Display* XWindow::getDisplay() const
         {
             return display;
+        }
+
+        ::Window XWindow::getHandle() const
+        {
+            return window;
         }
     }
 }

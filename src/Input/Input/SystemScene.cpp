@@ -30,6 +30,7 @@ namespace Input
     const std::string SystemScene::EXTENSION("input");
 
     SystemScene::SystemScene()
+    : MOUSE(0)
     {
     }
 
@@ -61,12 +62,17 @@ namespace Input
         mouseButtonPressed = eventManager->getEventID("MOUSE_BUTTON_PRESSED");
         mouseButtonReleased = eventManager->getEventID("MOUSE_BUTTON_RELEASED");
         mouseMoved = eventManager->getEventID("MOUSE_MOVED");
+        centerOnAxis = eventManager->registerEvent("CENTER_ON_AXIS");
+        centerOnAxes = eventManager->registerEvent("CENTER_ON_AXES");
+        centerMouse = eventManager->getEventID("CENTER_MOUSE");
 
         eventManager->registerEventHandler(keyPressed, boost::bind(&SystemScene::onButtonPressed, this, _1, _2));
         eventManager->registerEventHandler(keyReleased, boost::bind(&SystemScene::onButtonReleased, this, _1, _2));
         eventManager->registerEventHandler(mouseButtonPressed, boost::bind(&SystemScene::onButtonPressed, this, _1, _2));
         eventManager->registerEventHandler(mouseButtonReleased, boost::bind(&SystemScene::onButtonReleased, this, _1, _2));
         eventManager->registerEventHandler(mouseMoved, boost::bind(&SystemScene::onMouseMoved, this, _1, _2));
+        eventManager->registerEventHandler(centerOnAxis, boost::bind(&SystemScene::onCenterOnAxis, this, _1, _2));
+        eventManager->registerEventHandler(centerOnAxes, boost::bind(&SystemScene::onCenterOnAxes, this, _1, _2));
 
         screenWidth = properties->get<unsigned int>("Window.width");
         screenHeight = properties->get<unsigned int>("Window.height");
@@ -128,7 +134,7 @@ namespace Input
     {
         if(!mouseAxisNode) return;
 
-        const unsigned int axisControl = 0; // mouse is axis control 0
+        const unsigned int axisControl = MOUSE; // mouse is axis control 0
         processTwoAxisControl(controller, axisControl, mouseAxisNode);
     }
 
@@ -211,7 +217,44 @@ namespace Input
         const double x = (xy.first / halfScreenWidth) - 1.0;
         const double y = (xy.second / halfScreenHeight) - 1.0;
 
-        updateTwoAxisControl(0, x, y);
+        updateTwoAxisControl(MOUSE, x, y);
+    }
+
+    void SystemScene::onCenterOnAxis(const Core::Events::EventID& /*event*/, const boost::any& data)
+    {
+        const unsigned int axisControlID = boost::any_cast<int>(data);
+
+        if(idOneAxisControlMapping.find(axisControlID) == idOneAxisControlMapping.end())
+        {
+            LOG(FATAL) << "Centering failed because one-axis-control " << axisControlID << " does not exist";
+        }
+
+        Controller* controller = idOneAxisControlMapping.at(axisControlID);
+        OneAxisControl* control = controller->getOneAxisControl(axisControlID);
+        control->center();
+
+        dirtyOneAxisControls.push_back(control);
+    }
+
+    void SystemScene::onCenterOnAxes(const Core::Events::EventID& /*event*/, const boost::any& data)
+    {
+        const unsigned int axisControlID = boost::any_cast<int>(data);
+
+        if(idTwoAxisControlMapping.find(axisControlID) == idTwoAxisControlMapping.end())
+        {
+            LOG(FATAL) << "Centering failed because two-axis-control " << axisControlID << " does not exist";
+        }
+
+        Controller* controller = idTwoAxisControlMapping.at(axisControlID);
+        TwoAxisControl* control = controller->getTwoAxisControl(axisControlID);
+        control->center();
+
+        dirtyTwoAxisControls.push_back(control);
+
+        if(axisControlID == MOUSE)
+        {
+            eventManager->pushEvent(centerMouse, 0);
+        }
     }
 
     void SystemScene::updateButton(unsigned int keysym, bool state)

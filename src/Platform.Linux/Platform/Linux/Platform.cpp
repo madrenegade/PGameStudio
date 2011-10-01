@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Platform.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 13, 2011, 12:09 PM
  */
 
@@ -40,7 +40,7 @@ namespace Platform
         {
             eventHandler->handleEvents();
         }
-        
+
         unsigned int Platform::getKeysym(const char* name) const
         {
             return eventHandler->GetKeysym(name);
@@ -50,8 +50,8 @@ namespace Platform
                                                                    const boost::shared_ptr<EventManager>& eventManager,
                                                                    const PropertyManager::Ptr& properties)
         {
-            unsigned int width = properties->get<unsigned int>("Window.width");
-            unsigned int height = properties->get<unsigned int>("Window.height");
+            windowWidth = properties->get<unsigned int>("Window.width");
+            windowHeight = properties->get<unsigned int>("Window.height");
             unsigned int bpp = properties->get<unsigned int>("Window.bitsPerPixel");
 
             bool fullscreen = properties->get<bool>("Window.fullscreen");
@@ -63,14 +63,24 @@ namespace Platform
             {
                 throw std::logic_error("Under Linux only OpenGL is supported");
             }
-            
-            XWindow* x11Window = new XWindow(memoryManager, width, height, bpp, fullscreen);
-            
-            eventHandler.reset(new X11EventHandler(eventManager, x11Window->getDisplay()));
+
+            XWindow* x11Window = new XWindow(memoryManager, windowWidth, windowHeight, bpp, fullscreen);
+            display = x11Window->getDisplay();
+            window = x11Window->getHandle();
+
+            eventHandler.reset(new X11EventHandler(eventManager, x11Window->getDisplay(), x11Window->getHandle()));
 
             boost::shared_ptr<Graphics::Window> window(x11Window);
-            
+
             return window;
+        }
+
+        void Platform::centerMouse(const Core::Events::EventID& id, const boost::any& data)
+        {
+            const unsigned int centerX = (windowWidth / 2);
+            const unsigned int centerY = (windowHeight / 2);
+
+            eventHandler->warpPointer(centerX, centerY);
         }
     }
 }

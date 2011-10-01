@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PlatformImpl.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 13, 2011, 12:06 PM
  */
 
@@ -16,6 +16,11 @@ namespace Platform
 
     PlatformImpl::~PlatformImpl()
     {
+    }
+
+    void PlatformImpl::centerMouse(const Core::Events::EventID& id, const boost::any& data)
+    {
+
     }
 }
 

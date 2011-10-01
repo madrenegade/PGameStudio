@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   X11EventHandler.h
  * Author: madrenegade
  *
@@ -24,19 +24,22 @@ namespace Platform
     namespace Linux
     {
         class X11Window;
-        
+
         class X11EventHandler
         {
         public:
-            X11EventHandler(const boost::shared_ptr<Core::Events::EventManager>& eventManager, Display* display);
+            X11EventHandler(const boost::shared_ptr<Core::Events::EventManager>& eventManager, Display* display, ::Window window);
             virtual ~X11EventHandler();
 
             virtual void handleEvents();
             virtual unsigned int GetKeysym(const char* const name) const;
 
+            void warpPointer(const unsigned int x, const unsigned int y);
+
         private:
             boost::shared_ptr<Core::Events::EventManager> eventManager;
             Display* display;
+            ::Window window;
 
             Core::Events::EventID quitEvent;
             Core::Events::EventID keyPressEvent;
@@ -44,6 +47,8 @@ namespace Platform
             Core::Events::EventID buttonPressEvent;
             Core::Events::EventID buttonReleaseEvent;
             Core::Events::EventID mouseMoveEvent;
+
+            bool pointerWarped;
         };
     }
 }

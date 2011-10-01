@@ -182,6 +182,7 @@ namespace Game
         eventManager->registerEvent("MOUSE_BUTTON_PRESSED");
         eventManager->registerEvent("MOUSE_BUTTON_RELEASED");
         eventManager->registerEvent("MOUSE_MOVED");
+        eventManager->registerEvent("CENTER_MOUSE");
     }
 
     void Application::initializePlatformManager()

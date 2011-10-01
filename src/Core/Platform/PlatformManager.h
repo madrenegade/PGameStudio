@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PlatformManager.h
  * Author: madrenegade
  *
@@ -46,7 +46,7 @@ namespace Platform
     {
     public:
         static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
-        
+
         PlatformManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
                         const boost::shared_ptr<Core::Events::EventManager>& eventManager,
                         const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
@@ -56,7 +56,7 @@ namespace Platform
          * Handle all operating system events.
          */
         void handleOSEvents();
-        
+
         /**
          * Get the id of the key with the specified name.
          * @param name - the name of the key
@@ -70,7 +70,7 @@ namespace Platform
          */
         boost::shared_ptr<Graphics::Window> createWindow();
         Graphics::Window* getWindow();
-        
+
         /**
          * Get the manager object for dynamic libraries.
          * @return the manager object
@@ -84,7 +84,7 @@ namespace Platform
         boost::shared_ptr<LibraryManager> libraryManager;
 
         boost::shared_ptr<PlatformImpl> impl;
-        
+
         Graphics::Window* window;
     };
 }

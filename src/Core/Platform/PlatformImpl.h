@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PlatformImpl.h
  * Author: madrenegade
  *
@@ -9,6 +9,7 @@
 #define	PLATFORM_PLATFORMIMPL_H
 
 #include <boost/shared_ptr.hpp>
+#include "Core/Events/typedefs.h"
 
 namespace Graphics
 {
@@ -51,6 +52,8 @@ namespace Platform
         virtual boost::shared_ptr<Graphics::Window> createWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                                                                  const boost::shared_ptr<Core::Events::EventManager>& eventManager,
                                                                  const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) = 0;
+
+        virtual void centerMouse(const Core::Events::EventID& id, const boost::any& data);
 
     protected:
         PlatformImpl();

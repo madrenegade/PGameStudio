@@ -321,10 +321,10 @@ namespace Renderer
 
         const Math::Matrix4 view(camera->getViewMatrix());
 
-        //        Math::Matrix4 view_rotation(view);
-        //        view_rotation.M14(0);
-        //        view_rotation.M24(0);
-        //        view_rotation.M34(0);
+        Math::Matrix4 view_rotation(view);
+        view_rotation.m14 = 0;
+        view_rotation.m24 = 0;
+        view_rotation.m34 = 0;
 
         double d[3];
 
@@ -337,7 +337,7 @@ namespace Renderer
             v[i] = Math::Vector4(d[0], d[1], d[2], 0);
             v[i] -= Math::Vector4(camera->getPosition(), 0);
             v[i].Normalize();
-            //            v[i] *= view_rotation;
+            v[i] *= view_rotation;
 
             //            LOG(INFO) << "v[" << i << "] " << v[i].X << ", " << v[i].Y << ", " << v[i].Z;
         }

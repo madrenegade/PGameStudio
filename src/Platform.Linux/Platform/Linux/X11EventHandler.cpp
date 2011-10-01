@@ -15,8 +15,9 @@ namespace Platform
     namespace Linux
     {
 
-        X11EventHandler::X11EventHandler(const boost::shared_ptr<Core::Events::EventManager>& eventManager, Display* display)
-        : eventManager(eventManager), display(display)
+        X11EventHandler::X11EventHandler(const boost::shared_ptr<Core::Events::EventManager>& eventManager, Display* display,
+                                         ::Window window)
+        : eventManager(eventManager), display(display), window(window), pointerWarped(false)
         {
             quitEvent = eventManager->getEventID("QUIT");
             keyPressEvent = eventManager->getEventID("KEY_PRESSED");
@@ -41,6 +42,12 @@ namespace Platform
             }
 
             return keysym;
+        }
+
+        void X11EventHandler::warpPointer(const unsigned int x, const unsigned int y)
+        {
+            XWarpPointer(display, None, window, 0, 0, 0, 0, x, y);
+            pointerWarped = true;
         }
 
         void X11EventHandler::handleEvents()
@@ -74,7 +81,13 @@ namespace Platform
                         break;
 
                     case MotionNotify:
-                        eventManager->pushEvent(mouseMoveEvent, std::make_pair(event.xmotion.x, event.xmotion.y));
+                        // this prevents mouse motion events when the mouse has been warped
+                        if(!pointerWarped)
+                        {
+                            eventManager->pushEvent(mouseMoveEvent, std::make_pair(event.xmotion.x, event.xmotion.y));
+                        }
+
+                        pointerWarped = false;
                         break;
 
                     case EnterNotify:

@@ -50,11 +50,16 @@ namespace Input
         void onButtonReleased(const Core::Events::EventID& event, const boost::any& data);
         void onMouseMoved(const Core::Events::EventID& event, const boost::any& data);
 
+        void onCenterOnAxis(const Core::Events::EventID& event, const boost::any& data);
+        void onCenterOnAxes(const Core::Events::EventID& event, const boost::any& data);
+
         void updateButton(unsigned int keysym, bool state);
         void updateOneAxisControl(unsigned int controlID, double x);
         void updateTwoAxisControl(unsigned int controlID, double x, double y);
 
         static const std::string EXTENSION;
+
+        const unsigned int MOUSE;
 
         unsigned int screenWidth;
         unsigned int screenHeight;
@@ -68,6 +73,10 @@ namespace Input
         Core::Events::EventID mouseButtonPressed;
         Core::Events::EventID mouseButtonReleased;
         Core::Events::EventID mouseMoved;
+
+        Core::Events::EventID centerOnAxis;
+        Core::Events::EventID centerOnAxes;
+        Core::Events::EventID centerMouse;
 
         typedef boost::shared_ptr<Controller> ControllerPtr;
         typedef std::map<String, ControllerPtr> ControllerMap;

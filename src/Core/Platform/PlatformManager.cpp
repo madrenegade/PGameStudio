@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PlatformManager.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 13, 2011, 11:20 AM
  */
 
@@ -52,6 +52,9 @@ namespace Platform
         CreateFn create = reinterpret_cast<CreateFn> (platformLib->getFunction("create"));
 
         impl = create(memory);
+
+        const Core::Events::EventID centerMouse = eventManager->getEventID("CENTER_MOUSE");
+        eventManager->registerEventHandler(centerMouse, boost::bind(&PlatformImpl::centerMouse, impl.get(), _1, _2));
     }
 
     PlatformManager::~PlatformManager()
