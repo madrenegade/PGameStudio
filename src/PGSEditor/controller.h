@@ -19,6 +19,8 @@ public:
     explicit Controller(MainWindow* mainWindow);
     virtual ~Controller();
 
+    EditorApplication* getEditorApplication();
+
     QStringList availableSystems() const;
     QStringList getAssetImportPostProcessingSteps() const;
 

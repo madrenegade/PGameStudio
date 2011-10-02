@@ -7,12 +7,14 @@ namespace Ui {
     class MultiViewWidget;
 }
 
+class EditorApplication;
+
 class MultiViewWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MultiViewWidget(QWidget *parent = 0);
+    explicit MultiViewWidget(EditorApplication* app, QWidget *parent = 0);
     ~MultiViewWidget();
 
 private:

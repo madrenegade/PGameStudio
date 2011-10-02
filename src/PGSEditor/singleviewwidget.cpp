@@ -3,13 +3,13 @@
 
 #include "renderingviewwidget.h"
 
-SingleViewWidget::SingleViewWidget(QWidget *parent) :
+SingleViewWidget::SingleViewWidget(EditorApplication* app, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SingleViewWidget)
 {
     ui->setupUi(this);
 
-    ui->horizontalLayout->addWidget(new RenderingViewWidget(this));
+    ui->horizontalLayout->addWidget(new RenderingViewWidget(app, this));
 }
 
 SingleViewWidget::~SingleViewWidget()

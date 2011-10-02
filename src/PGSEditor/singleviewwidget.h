@@ -7,12 +7,14 @@ namespace Ui {
     class SingleViewWidget;
 }
 
+class EditorApplication;
+
 class SingleViewWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleViewWidget(QWidget *parent = 0);
+    explicit SingleViewWidget(EditorApplication* app, QWidget* parent);
     ~SingleViewWidget();
 
 private:

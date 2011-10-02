@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    viewWidget = new SingleViewWidget(this);
+    viewWidget = new SingleViewWidget(controller->getEditorApplication(), this);
     ui->centralWidget->layout()->addWidget(viewWidget);
 
     sceneDock = new SceneDockWidget(controller, this);
@@ -47,7 +47,7 @@ void MainWindow::onSetSingleView()
 {
     ui->centralWidget->layout()->removeWidget(viewWidget);
 
-    viewWidget = new SingleViewWidget(this);
+    viewWidget = new SingleViewWidget(controller->getEditorApplication(), this);
     ui->centralWidget->layout()->addWidget(viewWidget);
 }
 
@@ -55,6 +55,6 @@ void MainWindow::onSetMultiView()
 {
     ui->centralWidget->layout()->removeWidget(viewWidget);
 
-    viewWidget = new MultiViewWidget(this);
+    viewWidget = new MultiViewWidget(controller->getEditorApplication(), this);
     ui->centralWidget->layout()->addWidget(viewWidget);
 }

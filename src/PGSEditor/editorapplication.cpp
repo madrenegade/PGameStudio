@@ -7,6 +7,7 @@
 #include "Utilities/IO/FileSystemFactory.h"
 
 #include "Core/Events/EventManager.h"
+#include "Graphics/Window.h"
 #include "Platform/PlatformManager.h"
 
 #include <QApplication>
@@ -41,7 +42,7 @@ void EditorApplication::onInitialize()
     initializeFileSystem();
     initializeEventManager();
     initializePlatformManager();
-//    initializeWindow();
+    initializeWindow();
 //    initializeTaskScheduler();
 //    initializeSceneManager();
 //    initializeScriptManager();
@@ -54,11 +55,11 @@ void EditorApplication::onInitialized()
 
 void EditorApplication::onRun()
 {
-
 }
 
 bool EditorApplication::onUpdate()
 {
+    LOG(INFO) << "UPDATE";
     return true;
 }
 
@@ -78,7 +79,7 @@ void EditorApplication::initializeOptions()
 
     PlatformManager::addOptionsTo(properties);
     FileSystem::addOptionsTo(properties);
-//    Graphics::Window::addOptionsTo(properties);
+    Graphics::Window::addOptionsTo(properties);
 //    Core::TaskScheduler::addOptionsTo(properties);
 //    Scripting::ScriptManager::addOptionsTo(properties);
 
@@ -121,4 +122,11 @@ void  EditorApplication::initializePlatformManager()
     VLOG(1) << "Initializing platform manager";
 
     platformManager = memoryManager->construct(PlatformManager(memoryManager, eventManager, properties));
+}
+
+void EditorApplication::initializeWindow()
+{
+    VLOG(1) << "Creating window";
+
+    window = platformManager->createWindow();
 }

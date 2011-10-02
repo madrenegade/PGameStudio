@@ -24,6 +24,11 @@ namespace Utilities
     }
 }
 
+namespace Graphics
+{
+    class Window;
+}
+
 namespace Core
 {
     namespace Events
@@ -57,6 +62,7 @@ private:
     void initializeFileSystem();
     void initializeEventManager();
     void initializePlatformManager();
+    void initializeWindow();
 
     Controller* controller;
 
@@ -65,6 +71,7 @@ private:
     boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
     boost::shared_ptr<Core::Events::EventManager> eventManager;
     boost::shared_ptr<Platform::PlatformManager> platformManager;
+    boost::shared_ptr<Graphics::Window> window;
 };
 
 #endif // EDITORAPPLICATION_H

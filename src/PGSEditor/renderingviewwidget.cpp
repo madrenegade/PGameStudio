@@ -6,14 +6,14 @@
 #include <QGraphicsProxyWidget>
 #include <QDialog>
 
-RenderingViewWidget::RenderingViewWidget(QWidget *parent) :
+RenderingViewWidget::RenderingViewWidget(EditorApplication* app, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::RenderingViewWidget)
+    ui(new Ui::RenderingViewWidget), app(app)
 {
     ui->setupUi(this);
 
 
-    auto scene = new Scene();
+    auto scene = new Scene(app);
     ui->graphicsView->setScene(scene);
 
     auto glWidget = new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::Rgba));

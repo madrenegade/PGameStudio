@@ -8,6 +8,7 @@ SUBDIRS(Utilities)
 SUBDIRS(Core)
 
 SUBDIRS(Platform.Linux)
+SUBDIRS(Platform.Editor)
 
 SUBDIRS(Renderer.OpenGL)
 SUBDIRS(Input)

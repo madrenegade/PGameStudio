@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QTimer>
 
 Controller::Controller(MainWindow* mainWindow)
     : QWidget(mainWindow), mainWindow(mainWindow),
@@ -31,6 +32,11 @@ Controller::Controller(MainWindow* mainWindow)
 Controller::~Controller()
 {
     editorApplication->onShutdown();
+}
+
+EditorApplication* Controller::getEditorApplication()
+{
+    return editorApplication.get();
 }
 
 QStringList Controller::availableSystems() const
