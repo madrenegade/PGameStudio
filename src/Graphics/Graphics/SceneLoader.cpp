@@ -70,10 +70,10 @@ namespace Graphics
         return Math::Matrix4(d);
     }
 
-    SceneLoader::SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                             const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                             const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
-                             Utilities::Memory::pool_id pool, Renderer* renderer)
+    SceneLoader::SceneLoader(Utilities::IO::FileSystem* const fileSystem,
+                             Utilities::Memory::MemoryManager* const memoryManager,
+                             const Utilities::Properties::PropertyManager* const properties,
+                             Utilities::Memory::pool_id pool, Renderer* const renderer)
         : fileSystem(fileSystem), memoryManager(memoryManager), properties(properties), pool(pool), renderer(renderer)
     {
     }

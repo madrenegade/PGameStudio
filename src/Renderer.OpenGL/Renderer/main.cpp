@@ -19,8 +19,8 @@ using namespace Renderer;
 
 extern "C"
 {
-    boost::shared_ptr<Graphics::Renderer> createRenderer(const MemoryManager::Ptr& memory,
-            const PropertyManager::Ptr& properties,
+    boost::shared_ptr<Graphics::Renderer> createRenderer(MemoryManager* const memory,
+            const PropertyManager* const properties,
             pool_id pool)
     {
         auto vbManager = memory->construct(Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer>(memory, pool));

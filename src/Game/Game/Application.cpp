@@ -173,7 +173,7 @@ namespace Game
     {
         VLOG(1) << "Initializing event management";
 
-        eventManager = memoryManager->construct(EventManager(memoryManager));
+        eventManager = memoryManager->construct(EventManager(memoryManager.get()));
 
         EventID quitEvent = eventManager->registerEvent("QUIT");
         eventManager->registerEventHandler(quitEvent, boost::bind(&Application::onQuit, this, _1, _2));

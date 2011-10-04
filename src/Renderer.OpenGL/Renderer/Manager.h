@@ -28,7 +28,7 @@ namespace Renderer
     {
     public:
 
-        Manager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+        Manager(Utilities::Memory::MemoryManager* const memoryManager,
                 Utilities::Memory::pool_id pool)
             : currentID(), memory(memoryManager), pool(pool)
         {
@@ -104,7 +104,7 @@ namespace Renderer
     private:
         tbb::atomic<unsigned long> currentID;
 
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        Utilities::Memory::MemoryManager* const memory;
         Utilities::Memory::pool_id pool;
 
         typedef boost::shared_ptr<T> pointer;

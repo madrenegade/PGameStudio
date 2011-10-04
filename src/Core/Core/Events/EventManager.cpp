@@ -12,7 +12,7 @@ namespace Core
 {
     namespace Events
     {
-        EventManager::EventManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
+        EventManager::EventManager(const Utilities::Memory::MemoryManager* const memoryManager)
             : memory(memoryManager), serial()
         {
         }

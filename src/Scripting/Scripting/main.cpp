@@ -3,7 +3,7 @@
 
 extern "C"
 {
-    boost::shared_ptr<Core::SystemScene> createSystemScene(const Utilities::Memory::MemoryManager::Ptr& memory)
+    boost::shared_ptr<Core::SystemScene> createSystemScene(Utilities::Memory::MemoryManager* const memory)
     {
         return memory->construct(Scripting::SystemScene());
     }

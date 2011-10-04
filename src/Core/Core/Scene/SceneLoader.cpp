@@ -25,17 +25,11 @@ using namespace Utilities::Properties;
 
 namespace Core
 {
-
-    SceneLoader::SceneLoader()
-    {
-
-    }
-
-    SceneLoader::SceneLoader(const boost::shared_ptr<FileSystem>& fileSystem,
-                             const boost::shared_ptr<MemoryManager>& memoryManager,
-                             const boost::shared_ptr<Platform::PlatformManager>& platform,
-                             const boost::shared_ptr<Events::EventManager>& eventManager,
-                             const boost::shared_ptr<PropertyManager>& properties)
+    SceneLoader::SceneLoader(Utilities::IO::FileSystem* const fileSystem,
+                             Utilities::Memory::MemoryManager* const memoryManager,
+                             Platform::PlatformManager* const platform,
+                             Events::EventManager* const eventManager,
+                             Utilities::Properties::PropertyManager* const properties)
         : fileSystem(fileSystem), memoryManager(memoryManager), platform(platform), eventManager(eventManager),
           properties(properties)
     {
@@ -75,7 +69,7 @@ namespace Core
         systemScene->load(f);
     }
 
-    typedef boost::shared_ptr<SystemScene> (*CreateFn)(const MemoryManager::Ptr&);
+    typedef boost::shared_ptr<SystemScene> (*CreateFn)(MemoryManager* const);
 
     void SceneLoader::loadSystemLibraries(const SystemVector& systems, Scene* const scene) const
     {
@@ -100,7 +94,7 @@ namespace Core
             systemScene->setFileSystem(fileSystem);
             systemScene->setProperties(properties);
 
-            const boost::shared_ptr<Pool> pool = Pool::create(i->c_str(), MemoryPoolSettings::loadFrom(properties.get(), i->c_str()));
+            const boost::shared_ptr<Pool> pool = Pool::create(i->c_str(), MemoryPoolSettings::loadFrom(properties, i->c_str()));
             const pool_id systemPool = memoryManager->registerMemoryPool(pool);
 
             systemScene->setMemoryPool(systemPool);

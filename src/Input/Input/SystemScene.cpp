@@ -38,12 +38,12 @@ namespace Input
     {
     }
 
-    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const
+    void SystemScene::addOptionsTo(Utilities::Properties::PropertyManager* const properties) const
     {
         const MemoryPoolSettings inputPool(1 * KByte, 1 * KByte, 128 * Byte,
                                            1 * KByte, 1 * KByte, 128 * Byte,
                                            1 * KByte, 1 * KByte, 128 * Byte);
-        inputPool.addOptionsTo(properties.get(), "Input");
+        inputPool.addOptionsTo(properties, "Input");
     }
 
     const char* SystemScene::getSceneFileExtension() const
@@ -192,7 +192,7 @@ namespace Input
 
     tbb::task* SystemScene::getTask(tbb::task* parent)
     {
-        return new(parent->allocate_child()) InputTask(eventManager.get(), setScriptVar, dirtyButtons, dirtyOneAxisControls, dirtyTwoAxisControls);
+        return new(parent->allocate_child()) InputTask(eventManager, setScriptVar, dirtyButtons, dirtyOneAxisControls, dirtyTwoAxisControls);
     }
 
     void SystemScene::onButtonPressed(const Core::Events::EventID& /*event*/, const boost::any& data)

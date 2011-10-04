@@ -20,7 +20,7 @@ namespace Core
         class EventManager
         {
         public:
-            EventManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
+            EventManager(const Utilities::Memory::MemoryManager* const memoryManager);
             ~EventManager();
 
             /**
@@ -75,7 +75,7 @@ namespace Core
             String getEventName(const EventID& id) const;
 #endif
 
-            const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+            const Utilities::Memory::MemoryManager* const memory;
 
             typedef std::pair<const String, EventID> EventMapEntry;
             typedef std::pair<const EventID, boost::shared_ptr<EventSignal>> SignalMapEntry;

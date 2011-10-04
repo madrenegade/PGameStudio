@@ -35,7 +35,7 @@ namespace Core
         sceneFile.append(name);
         sceneFile.append(".scene");
 
-        const SceneLoader loader(fileSystem, memoryManager, platform, eventManager, properties);
+        const SceneLoader loader(fileSystem.get(), memoryManager.get(), platform.get(), eventManager.get(), properties.get());
 
         const ScenePtr scene = loader.loadScene(sceneFile.c_str());
 

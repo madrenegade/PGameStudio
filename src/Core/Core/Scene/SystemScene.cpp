@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SystemScene.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 16, 2011, 2:28 PM
  */
 
@@ -19,33 +19,33 @@ namespace Core
     SystemScene::~SystemScene()
     {
     }
-    
-    void SystemScene::setMemoryManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
+
+    void SystemScene::setMemoryManager(Utilities::Memory::MemoryManager* const memoryManager)
     {
         this->memoryManager = memoryManager;
     }
-    
+
     void SystemScene::setMemoryPool(const Utilities::Memory::pool_id& pool)
     {
         this->pool = pool;
     }
-    
-    void SystemScene::setPlatformManager(const boost::shared_ptr<Platform::PlatformManager>& platformManager)
+
+    void SystemScene::setPlatformManager(const Platform::PlatformManager* const platformManager)
     {
         this->platformManager = platformManager;
     }
-    
-    void SystemScene::setEventManager(const boost::shared_ptr<Events::EventManager>& eventManager)
+
+    void SystemScene::setEventManager(Events::EventManager* const eventManager)
     {
         this->eventManager = eventManager;
     }
-    
-    void SystemScene::setFileSystem(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem)
+
+    void SystemScene::setFileSystem(Utilities::IO::FileSystem* const fileSystem)
     {
         this->fileSystem = fileSystem;
     }
-    
-    void SystemScene::setProperties(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+
+    void SystemScene::setProperties(const Utilities::Properties::PropertyManager* const properties)
     {
         this->properties = properties;
     }

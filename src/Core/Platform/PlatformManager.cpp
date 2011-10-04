@@ -87,7 +87,7 @@ namespace Platform
         return window;
     }
 
-    Graphics::Window* PlatformManager::getWindow()
+    Graphics::Window* PlatformManager::getWindow() const
     {
         return window;
     }

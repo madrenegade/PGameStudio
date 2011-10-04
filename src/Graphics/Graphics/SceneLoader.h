@@ -54,10 +54,10 @@ namespace Graphics
         typedef boost::shared_ptr<Camera> CameraPtr;
         typedef std::vector<CameraPtr, Utilities::Memory::STLAllocator<CameraPtr>> Cameras;
 
-        SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                    const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                    const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
-                    Utilities::Memory::pool_id pool, Renderer* renderer);
+        SceneLoader(Utilities::IO::FileSystem* const fileSystem,
+                    Utilities::Memory::MemoryManager* const memoryManager,
+                    const Utilities::Properties::PropertyManager* const properties,
+                    Utilities::Memory::pool_id pool, Renderer* const renderer);
         ~SceneLoader();
 
         boost::shared_ptr<SceneNode> loadFrom(const Utilities::IO::File::Handle& file);
@@ -80,12 +80,12 @@ namespace Graphics
             return Graphics::read<T > (&data);
         }
 
-        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        const boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        Utilities::IO::FileSystem* const fileSystem;
+        Utilities::Memory::MemoryManager* const memoryManager;
+        const Utilities::Properties::PropertyManager* const properties;
         Utilities::Memory::pool_id pool;
 
-        Renderer* renderer;
+        Renderer* const renderer;
 
         const char* data;
         unsigned char numberSize;

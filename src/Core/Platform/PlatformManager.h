@@ -69,7 +69,7 @@ namespace Platform
          * @return the created window
          */
         boost::shared_ptr<Graphics::Window> createWindow();
-        Graphics::Window* getWindow();
+        Graphics::Window* getWindow() const;
 
         /**
          * Get the manager object for dynamic libraries.

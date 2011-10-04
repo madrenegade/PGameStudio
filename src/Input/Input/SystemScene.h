@@ -27,7 +27,7 @@ namespace Input
         SystemScene();
         virtual ~SystemScene();
 
-        virtual void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const;
+        virtual void addOptionsTo(Utilities::Properties::PropertyManager* const properties) const;
 
         virtual const char* getSceneFileExtension() const;
 

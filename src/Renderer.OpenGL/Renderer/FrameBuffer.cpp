@@ -13,7 +13,7 @@
 namespace Renderer
 {
 
-    FrameBuffer::FrameBuffer(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+    FrameBuffer::FrameBuffer(Utilities::Memory::MemoryManager* const memoryManager,
                              Utilities::Memory::pool_id pool,
                              const unsigned int numColorAttachments, const unsigned int width, const unsigned int height)
         : memoryManager(memoryManager), pool(pool), width(width), height(height)

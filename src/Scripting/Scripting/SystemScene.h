@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   SystemScene.h
  * Author: madrenegade
  *
@@ -13,14 +13,14 @@
 namespace Scripting
 {
     class ScriptManager;
-    
+
     class SystemScene : public Core::SystemScene
     {
     public:
         SystemScene();
         virtual ~SystemScene();
 
-        virtual void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const;
+        virtual void addOptionsTo(Utilities::Properties::PropertyManager* const properties) const;
 
         virtual const char* getSceneFileExtension() const;
 
@@ -29,10 +29,10 @@ namespace Scripting
         virtual void initialize();
 
         virtual tbb::task* getTask(tbb::task* parent);
-        
+
     private:
         static const std::string EXTENSION;
-        
+
         ScriptManager* scriptManager;
     };
 }

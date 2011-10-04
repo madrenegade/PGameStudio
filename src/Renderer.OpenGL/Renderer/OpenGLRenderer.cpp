@@ -33,13 +33,14 @@
 #include <chrono>
 
 using namespace Utilities::Memory;
+using namespace Utilities::Properties;
 
 namespace Renderer
 {
 
-    OpenGLRenderer::OpenGLRenderer(const boost::shared_ptr<MemoryManager>& memory,
+    OpenGLRenderer::OpenGLRenderer(MemoryManager* const memory,
                                    pool_id pool,
-                                   const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
+                                   const PropertyManager* const properties,
                                    const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
                                    const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
                                    const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,

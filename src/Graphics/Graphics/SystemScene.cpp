@@ -41,12 +41,12 @@ namespace Graphics
     {
     }
 
-    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties) const
+    void SystemScene::addOptionsTo(Utilities::Properties::PropertyManager* const properties) const
     {
         const MemoryPoolSettings graphicsPool(1 * KByte, 1 * KByte, 128 * Byte,
                                               1 * KByte, 1 * KByte, 128 * Byte,
                                               1 * KByte, 1 * KByte, 128 * Byte);
-        graphicsPool.addOptionsTo(properties.get(), "Graphics");
+        graphicsPool.addOptionsTo(properties, "Graphics");
 
         po::options_description options("Graphics options");
 
@@ -58,7 +58,7 @@ namespace Graphics
         properties->addOptions(options);
     }
 
-    typedef boost::shared_ptr<Renderer> (*CreateFn)(const MemoryManager::Ptr&, const PropertyManager::Ptr&, pool_id pool);
+    typedef boost::shared_ptr<Renderer> (*CreateFn)(MemoryManager* const, const PropertyManager* const, pool_id pool);
 
     void SystemScene::initialize()
     {
@@ -101,7 +101,7 @@ namespace Graphics
             LOG(FATAL) << "Only one camera is supported, found " << cameras.size();
         }
 
-        cameras.at(0)->registerEvents(eventManager.get());
+        cameras.at(0)->registerEvents(eventManager);
 
         platformManager->getWindow()->getGraphicsContext()->MakeCurrent();
         renderer->setCamera(cameras.at(0));

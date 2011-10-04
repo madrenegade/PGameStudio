@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SystemScene.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 27, 2011, 2:00 PM
  */
 
@@ -12,7 +12,7 @@
 namespace Scripting
 {
     const std::string SystemScene::EXTENSION("scripting");
-    
+
     SystemScene::SystemScene()
     {
     }
@@ -21,9 +21,9 @@ namespace Scripting
     {
     }
 
-    void SystemScene::addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& /*properties*/) const
+    void SystemScene::addOptionsTo(Utilities::Properties::PropertyManager* const /*properties*/) const
     {
-        
+
     }
 
     const char* SystemScene::getSceneFileExtension() const
@@ -33,7 +33,7 @@ namespace Scripting
 
     void SystemScene::load(const Utilities::IO::File::Handle& /*file*/)
     {
-        
+
     }
 
     void SystemScene::initialize()

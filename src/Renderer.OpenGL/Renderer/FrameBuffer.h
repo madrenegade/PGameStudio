@@ -21,7 +21,7 @@ namespace Renderer
     class FrameBuffer
     {
     public:
-        FrameBuffer(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+        FrameBuffer(Utilities::Memory::MemoryManager* const memoryManager,
                     Utilities::Memory::pool_id pool,
                     const unsigned int numColorAttachments, const unsigned int width, const unsigned int height);
         ~FrameBuffer();
@@ -43,7 +43,7 @@ namespace Renderer
         void createColorAttachment();
         void createDepthAttachment();
 
-        const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        Utilities::Memory::MemoryManager* const memoryManager;
         const Utilities::Memory::pool_id pool;
 
         const unsigned int width;

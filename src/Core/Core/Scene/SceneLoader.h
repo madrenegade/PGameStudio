@@ -50,11 +50,11 @@ namespace Core
     class SceneLoader
     {
     public:
-        SceneLoader(const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                    const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                    const boost::shared_ptr<Platform::PlatformManager>& platform,
-                    const boost::shared_ptr<Events::EventManager>& eventManager,
-                    const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        SceneLoader(Utilities::IO::FileSystem* const fileSystem,
+                    Utilities::Memory::MemoryManager* const memoryManager,
+                    Platform::PlatformManager* const platform,
+                    Events::EventManager* const eventManager,
+                    Utilities::Properties::PropertyManager* const properties);
         ~SceneLoader();
 
         /**
@@ -66,17 +66,15 @@ namespace Core
         void loadSystemScene(SystemScene* const systemScene, const char* const filename) const;
 
     private:
-        SceneLoader();
-
         typedef std::vector<String, Utilities::Memory::STLAllocator<String>> SystemVector;
 
         void loadSystemLibraries(const SystemVector& systems, Scene* const scene) const;
 
-        const boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
-        const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        const boost::shared_ptr<Platform::PlatformManager> platform;
-        const boost::shared_ptr<Events::EventManager> eventManager;
-        const boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        Utilities::IO::FileSystem* const fileSystem;
+        Utilities::Memory::MemoryManager* const memoryManager;
+        Platform::PlatformManager* const platform;
+        Events::EventManager* const eventManager;
+        Utilities::Properties::PropertyManager* const properties;
     };
 }
 

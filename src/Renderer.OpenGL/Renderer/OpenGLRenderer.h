@@ -53,9 +53,9 @@ namespace Renderer
     class OpenGLRenderer : public Graphics::Renderer
     {
     public:
-        OpenGLRenderer(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
+        OpenGLRenderer(Utilities::Memory::MemoryManager* const memory,
                        Utilities::Memory::pool_id pool,
-                       const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties,
+                       const Utilities::Properties::PropertyManager* const properties,
                        const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer> >& vbManager,
                        const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer> >& ibManager,
                        const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
@@ -101,10 +101,10 @@ namespace Renderer
 
         void getViewVectors(Math::Vector4* v, const Graphics::Camera* camera);
 
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        Utilities::Memory::MemoryManager* const memory;
         Utilities::Memory::pool_id pool;
 
-        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        const Utilities::Properties::PropertyManager* const properties;
 
         boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
         boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
