@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   XmlAllocator.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 22, 2011, 9:47 PM
  */
 
@@ -12,7 +12,7 @@ namespace Utilities
 {
     namespace IO
     {
-        boost::shared_ptr<Memory::MemoryManager> XmlAllocator::memory;
+        Memory::MemoryManager* XmlAllocator::memory;
         std::map<void*, size_t> XmlAllocator::allocations;
 
         XmlAllocator::XmlAllocator()
@@ -30,9 +30,9 @@ namespace Utilities
 #else
             void* ptr = memory->rawAllocate<Memory::byte>(bytes);
 #endif
-            
+
             allocations[ptr] = bytes;
-            
+
             return ptr;
         }
 

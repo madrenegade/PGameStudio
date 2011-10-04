@@ -19,9 +19,12 @@ namespace Utilities
     namespace IO
     {
 
-        boost::shared_ptr<FileSystem> FileSystemFactory::create(const MemoryManager::Ptr& memory,
-                const boost::shared_ptr<PropertyManager>& properties)
+        boost::shared_ptr<FileSystem> FileSystemFactory::create(Memory::MemoryManager* const memory,
+                const Properties::PropertyManager* const properties)
         {
+            DCHECK_NOTNULL(memory);
+            DCHECK_NOTNULL(properties);
+
             const FileSystemBackend backend = valueOf<FileSystemBackend>(properties->get<unsigned char>("FileSystem.backend"));
 
             const pool_id pool = memory->registerMemoryPool(createMemoryPool(properties));
@@ -43,24 +46,9 @@ namespace Utilities
             return fileSystem;
         }
 
-        boost::shared_ptr<Memory::Pool> FileSystemFactory::createMemoryPool(const boost::shared_ptr<Properties::PropertyManager>& properties)
+        boost::shared_ptr<Memory::Pool> FileSystemFactory::createMemoryPool(const Properties::PropertyManager* const properties)
         {
-            size_t soMax = properties->get<size_t > ("FileSystem.memory.smallObjects.maxSize");
-            size_t soPage = properties->get<size_t > ("FileSystem.memory.smallObjects.pageSize");
-            size_t soBlock = properties->get<size_t > ("FileSystem.memory.smallObjects.blockSize");
-
-            size_t moMax = properties->get<size_t > ("FileSystem.memory.mediumObjects.maxSize");
-            size_t moPage = properties->get<size_t > ("FileSystem.memory.mediumObjects.pageSize");
-            size_t moBlock = properties->get<size_t > ("FileSystem.memory.mediumObjects.blockSize");
-
-            size_t loMax = properties->get<size_t > ("FileSystem.memory.largeObjects.maxSize");
-            size_t loPage = properties->get<size_t > ("FileSystem.memory.largeObjects.pageSize");
-            size_t loBlock = properties->get<size_t > ("FileSystem.memory.largeObjects.blockSize");
-
-            MemoryPoolSettings fsPoolSettings(
-                soMax, soPage, soBlock,
-                moMax, moPage, moBlock,
-                loMax, loPage, loBlock);
+            MemoryPoolSettings fsPoolSettings(MemoryPoolSettings::loadFrom(properties, "FileSystem"));
 
             boost::shared_ptr<Pool> pool = Pool::create("FileSystemPool", fsPoolSettings);
 

@@ -6,7 +6,8 @@ namespace Platform
     namespace Editor
     {
 
-        Window::Window()
+        Window::Window(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+        : context(new GraphicsContext(properties))
         {
             //ctor
         }

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PhysFS.h
  * Author: madrenegade
  *
@@ -20,12 +20,12 @@ namespace Utilities
             class PhysFS : public FileSystem
             {
             public:
-                PhysFS(const Memory::MemoryManager::Ptr& memory, const boost::shared_ptr<Properties::PropertyManager>& properties);
+                PhysFS(Memory::MemoryManager* const memory, const Properties::PropertyManager* const properties);
                 virtual ~PhysFS();
 
             protected:
                 virtual void initialize(const Memory::pool_id id);
-                
+
                 virtual void mount(const char* const path, const char* const mountPoint);
 
                 virtual bool exists(const char* const path) const;
@@ -34,12 +34,12 @@ namespace Utilities
 
                 virtual void* openForReading(const char* const path);
                 virtual void* openForWriting(const char* const filename);
-                
+
                 virtual void close(void* const handle);
-                
+
                 virtual size_t read(void* const handle, Memory::byte_pointer const buffer, const size_t size);
                 virtual size_t write(void* const handle, Memory::const_byte_pointer const buffer, const size_t size);
-                
+
                 virtual void setWriteDirectory(const char* const organization, const char* const appName);
 
                 void checkVersion() const;

@@ -46,7 +46,7 @@ namespace Graphics
         const MemoryPoolSettings graphicsPool(1 * KByte, 1 * KByte, 128 * Byte,
                                               1 * KByte, 1 * KByte, 128 * Byte,
                                               1 * KByte, 1 * KByte, 128 * Byte);
-        graphicsPool.addOptionsTo(properties, "Graphics");
+        graphicsPool.addOptionsTo(properties.get(), "Graphics");
 
         po::options_description options("Graphics options");
 

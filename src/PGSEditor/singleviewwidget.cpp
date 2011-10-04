@@ -9,7 +9,10 @@ SingleViewWidget::SingleViewWidget(EditorApplication* app, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->horizontalLayout->addWidget(new RenderingViewWidget(app, this));
+    auto renderingWidget = new RenderingViewWidget(app, this);
+    glWidget = renderingWidget->getGLWidget();
+
+    ui->horizontalLayout->addWidget(renderingWidget);
 }
 
 SingleViewWidget::~SingleViewWidget()

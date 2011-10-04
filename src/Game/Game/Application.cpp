@@ -143,10 +143,10 @@ namespace Game
         MemoryPoolSettings defaultSettings(1 * KByte, 1 * KByte, 128 * Byte,
                                            1 * KByte, 1 * KByte, 256 * Byte,
                                            1 * KByte, 1 * KByte, 512 * Byte);
-        defaultSettings.addOptionsTo(properties, "Default");
+        defaultSettings.addOptionsTo(properties.get(), "Default");
 
         PlatformManager::addOptionsTo(properties);
-        FileSystem::addOptionsTo(properties);
+        FileSystem::addOptionsTo(properties.get());
         Graphics::Window::addOptionsTo(properties);
         Core::TaskScheduler::addOptionsTo(properties);
         Scripting::ScriptManager::addOptionsTo(properties);
@@ -158,7 +158,7 @@ namespace Game
     {
         VLOG(1) << "Initializing default memory pool";
 
-        boost::shared_ptr<Pool> pool = Pool::create("DefaultPool", MemoryPoolSettings::loadFrom(properties, "Default"));
+        boost::shared_ptr<Pool> pool = Pool::create("DefaultPool", MemoryPoolSettings::loadFrom(properties.get(), "Default"));
         memoryManager->registerMemoryPool(pool);
     }
 
@@ -166,7 +166,7 @@ namespace Game
     {
         VLOG(1) << "Initializing filesystem";
 
-        fileSystem = FileSystemFactory::create(memoryManager, properties);
+        fileSystem = FileSystemFactory::create(memoryManager.get(), properties.get());
     }
 
     void Application::initializeEventManager()

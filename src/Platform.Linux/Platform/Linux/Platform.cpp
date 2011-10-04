@@ -73,7 +73,7 @@ namespace Platform
             return window;
         }
 
-        void Platform::centerMouse(const Core::Events::EventID& id, const boost::any& data)
+        void Platform::centerMouse(const Core::Events::EventID&, const boost::any&)
         {
             const unsigned int centerX = (windowWidth / 2);
             const unsigned int centerY = (windowHeight / 2);

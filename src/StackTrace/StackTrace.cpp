@@ -43,9 +43,9 @@ std::string demangle(const char* const symbol)
 #endif
 }
 
-StackTrace::StackTrace(const bool x)
+StackTrace::StackTrace(const bool createStackFrames)
 {
-    if (x)
+    if (createStackFrames)
     {
         // this code crashes sometimes at heavy load when the google profiler is used
         // this happens with libunwind and also with backtrace

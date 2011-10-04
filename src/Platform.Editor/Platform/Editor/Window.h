@@ -13,7 +13,7 @@ namespace Platform
         class Window : public Graphics::Window
         {
         public:
-            Window();
+            Window(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
             virtual ~Window();
 
             virtual Graphics::GraphicsContext* getGraphicsContext() const;

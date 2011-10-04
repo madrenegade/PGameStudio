@@ -41,14 +41,14 @@ TEST_F(MemoryManagerTest, construct)
 #ifdef DEBUG
 TEST_F(MemoryManagerTest, allocateShouldFailIfPoolDoesNotExists)
 {
-    EXPECT_THROW((memory->allocate<short, 2>(DEFAULT_POOL)), std::logic_error);
+    EXPECT_THROW((memory->allocate<short>(2, DEFAULT_POOL)), std::logic_error);
 }
 #endif
 
 TEST_F(MemoryManagerTest, allocateShouldSucceedWithMockPool)
 {
     memory->registerMemoryPool(pool);
-    ASSERT_NO_THROW((memory->allocate<short, 2>(DEFAULT_POOL)));
+    ASSERT_NO_THROW((memory->allocate<short>(2, DEFAULT_POOL)));
 }
 
 #ifdef DEBUG
@@ -79,7 +79,7 @@ TEST_F(MemoryManagerTest, allocateShouldTrackAllocation)
     EXPECT_EQ(0, tracker->getAllocations());
 
     memory->registerMemoryPool(pool);
-    memory->allocate<short, 2>(DEFAULT_POOL);
+    memory->allocate<short>(2, DEFAULT_POOL);
 
     EXPECT_EQ(1, tracker->getAllocations());
 }
@@ -91,7 +91,7 @@ TEST_F(MemoryManagerTest, deallocateShouldTrackDeallocation)
     memory->registerMemoryPool(pool);
 
     {
-        boost::shared_array<int> i = memory->allocate<int, 2>(DEFAULT_POOL);
+        boost::shared_array<int> i = memory->allocate<int>(2, DEFAULT_POOL);
     }
 
     EXPECT_EQ(1, tracker->getDeallocations());

@@ -21,6 +21,7 @@
 #include "Renderer/EffectInitializer.h"
 #include "Renderer/TextureRequest.h"
 #include "Renderer/TextureInitializer.h"
+#include "Renderer/DrawCallOptimizer.h"
 
 #include "Utilities/IO/File.h"
 
@@ -91,16 +92,11 @@ namespace Renderer
         virtual void processTextureRequests();
 
     private:
-        typedef std::vector<Graphics::DrawCall, Utilities::Memory::STLAllocator<Graphics::DrawCall>> DrawCallList;
-        DrawCallList optimizedDrawCalls;
-
-        void popDrawCallsTo(DrawCallList& drawCallList);
-
-        void renderToFrameBuffer(const DrawCallList& drawCallList, unsigned int firstAttachment);
+        void renderToFrameBuffer(const DrawCallOptimizer::DrawCalls& drawCallList, unsigned int firstAttachment);
         void renderToTexture(unsigned int viewIndex, unsigned int firstAttachment);
         void renderToScreen();
 
-        void renderGeometry(const DrawCallList& drawCallList, Effect* effect,
+        void renderGeometry(const DrawCallOptimizer::DrawCalls& drawCallList, Effect* effect,
                             const Math::Matrix4& viewMatrix);
 
         void getViewVectors(Math::Vector4* v, const Graphics::Camera* camera);
@@ -114,6 +110,8 @@ namespace Renderer
         boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
         boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;
         boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> > textures;
+
+        DrawCallOptimizer drawCallOptimizer;
 
         unsigned int width;
         unsigned int height;

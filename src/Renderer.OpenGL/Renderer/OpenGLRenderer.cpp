@@ -66,8 +66,6 @@ namespace Renderer
 
         Effect::initialize();
 
-        optimizedDrawCalls.reserve(10);
-
         ErrorHandler::checkForErrors();
     }
 
@@ -156,29 +154,26 @@ namespace Renderer
 
     void OpenGLRenderer::beginScene()
     {
-        glClearColor(0.0, 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        glClearColor(0.0, 0.0, 0.0, 1.0);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         camera->update();
     }
 
     void OpenGLRenderer::processDrawCalls()
     {
-        //DrawCallList drawCallList;
-
-        popDrawCallsTo(optimizedDrawCalls);
-        //RAW_VLOG(3, "Draw calls: %i", drawCallList.size());
+        drawCallOptimizer.optimize(drawCalls);
 
         const FrameBuffer* fb = viewport->getFrameBuffer();
         fb->bind();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (unsigned int i = 0; i < viewport->getCamera()->getViewCount(); ++i)
         {
             const unsigned int firstAttachment = 4 * i;
             viewport->getCamera()->activateView(i);
 
-            renderToFrameBuffer(optimizedDrawCalls, firstAttachment);
+            renderToFrameBuffer(drawCallOptimizer.getDrawCalls(), firstAttachment);
             renderToTexture(i, firstAttachment);
         }
 
@@ -186,12 +181,10 @@ namespace Renderer
 
         renderToScreen();
 
-        optimizedDrawCalls.clear();
-
         ErrorHandler::checkForErrors();
     }
 
-    void OpenGLRenderer::renderToFrameBuffer(const DrawCallList& drawCallList,
+    void OpenGLRenderer::renderToFrameBuffer(const DrawCallOptimizer::DrawCalls& drawCallList,
             unsigned int firstAttachment)
     {
         GLenum buffers[] = {GL_COLOR_ATTACHMENT0 + firstAttachment, GL_COLOR_ATTACHMENT1 + firstAttachment, GL_COLOR_ATTACHMENT2 + firstAttachment};
@@ -294,7 +287,7 @@ namespace Renderer
         viewport->getCompositor()->endCompose();
     }
 
-    void OpenGLRenderer::renderGeometry(const DrawCallList& drawCallList, Effect* effect,
+    void OpenGLRenderer::renderGeometry(const DrawCallOptimizer::DrawCalls& drawCallList, Effect* effect,
                                         const Math::Matrix4& viewMatrix)
     {
         Texture* texture = 0;
@@ -378,17 +371,5 @@ namespace Renderer
     void OpenGLRenderer::processTextureRequests()
     {
         textures->processRequests();
-    }
-
-    void OpenGLRenderer::popDrawCallsTo(DrawCallList& drawCallList)
-    {
-        Graphics::DrawCall drawCall;
-        while (!drawCalls.empty())
-        {
-            if (drawCalls.try_pop(drawCall))
-            {
-                drawCallList.push_back(drawCall);
-            }
-        }
     }
 }

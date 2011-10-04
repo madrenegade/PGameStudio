@@ -56,7 +56,7 @@ namespace Platform
 
         static bool ctxErrorOccurred = false;
 
-        static int ctxErrorHandler(Display* dpy, XErrorEvent* ev)
+        static int ctxErrorHandler(Display*, XErrorEvent*)
         {
             ctxErrorOccurred = true;
             return 0;

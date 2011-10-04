@@ -7,10 +7,13 @@
 #include "Utilities/IO/FileSystemFactory.h"
 
 #include "Core/Events/EventManager.h"
+#include "Core/Scene/SceneManager.h"
+#include "Core/TaskScheduler.h"
 #include "Graphics/Window.h"
 #include "Platform/PlatformManager.h"
 
 #include <QApplication>
+#include <chrono>
 
 using namespace Utilities::Memory;
 using namespace Utilities::Properties;
@@ -43,8 +46,8 @@ void EditorApplication::onInitialize()
     initializeEventManager();
     initializePlatformManager();
     initializeWindow();
-//    initializeTaskScheduler();
-//    initializeSceneManager();
+    initializeTaskScheduler();
+    initializeSceneManager();
 //    initializeScriptManager();
 }
 
@@ -57,9 +60,30 @@ void EditorApplication::onRun()
 {
 }
 
+typedef std::chrono::duration<double, std::ratio < 1, 1 >> sec;
+
 bool EditorApplication::onUpdate()
 {
-    LOG(INFO) << "UPDATE";
+    auto start = std::chrono::system_clock::now();
+
+//    BEGIN_NEW_FRAME(memoryManager);
+
+//    platformManager->handleOSEvents();
+//    eventManager->handleEvents();
+
+    auto scene = sceneManager->getCurrentScene();
+
+    if(scene != 0)
+    {
+        taskScheduler->executeTasks(scene);
+    }
+
+    auto end = std::chrono::system_clock::now();
+
+    const double frametime = std::chrono::duration_cast<sec> (end - start).count();
+
+    properties->set("Frametime", frametime);
+
     return true;
 }
 
@@ -68,19 +92,32 @@ void EditorApplication::onShutdown()
 
 }
 
+void EditorApplication::setGLWidget(QGLWidget* glWidget)
+{
+    assert(glWidget != 0);
+    this->glWidget = glWidget;
+    properties->set("GL_WIDGET", glWidget);
+}
+
+void EditorApplication::loadScene(const char *const name)
+{
+    sceneManager->loadScene(name);
+    sceneManager->switchScene(name);
+}
+
 void EditorApplication::initializeOptions()
 {
     VLOG(1) << "Initializing program settings";
 
     MemoryPoolSettings defaultSettings(8 * KByte, 8 * KByte, 64 * Byte,
-                                       1 * KByte, 1 * KByte, 256 * Byte,
-                                       1 * KByte, 1 * KByte, 512 * Byte);
+                                       8 * KByte, 8 * KByte, 256 * Byte,
+                                       8 * KByte, 8 * KByte, 512 * Byte);
     defaultSettings.addOptionsTo(properties, "Default");
 
     PlatformManager::addOptionsTo(properties);
     FileSystem::addOptionsTo(properties);
     Graphics::Window::addOptionsTo(properties);
-//    Core::TaskScheduler::addOptionsTo(properties);
+    Core::TaskScheduler::addOptionsTo(properties);
 //    Scripting::ScriptManager::addOptionsTo(properties);
 
     properties->parse("settings.ini");
@@ -129,4 +166,19 @@ void EditorApplication::initializeWindow()
     VLOG(1) << "Creating window";
 
     window = platformManager->createWindow();
+}
+
+void EditorApplication::initializeTaskScheduler()
+{
+    VLOG(1) << "Initializing task scheduler";
+
+    taskScheduler.reset(new Core::TaskScheduler(properties));
+}
+
+void EditorApplication::initializeSceneManager()
+{
+    VLOG(1) << "Initializing scene manager";
+
+    sceneManager = memoryManager->construct(Core::SceneManager(memoryManager,
+                                                               fileSystem, platformManager, eventManager, properties));
 }

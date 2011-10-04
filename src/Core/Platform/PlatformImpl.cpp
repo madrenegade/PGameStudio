@@ -18,7 +18,7 @@ namespace Platform
     {
     }
 
-    void PlatformImpl::centerMouse(const Core::Events::EventID& id, const boost::any& data)
+    void PlatformImpl::centerMouse(const Core::Events::EventID&, const boost::any&)
     {
 
     }

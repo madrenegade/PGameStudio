@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   XmlReader.h
  * Author: madrenegade
  *
@@ -28,7 +28,7 @@ namespace Utilities
             typedef rapidxml::xml_node<> Node;
             typedef rapidxml::xml_attribute<> Attribute;
 
-            XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory,
+            XmlReader(Memory::MemoryManager* const memory,
                       const Utilities::Memory::pool_id pool, const File::Handle& file);
             ~XmlReader();
 

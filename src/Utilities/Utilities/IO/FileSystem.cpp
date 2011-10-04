@@ -22,8 +22,10 @@ namespace Utilities
     namespace IO
     {
 
-        void FileSystem::addOptionsTo(const PropertyManager::Ptr& properties)
+        void FileSystem::addOptionsTo(PropertyManager* const properties)
         {
+            DCHECK_NOTNULL(properties);
+
             MemoryPoolSettings fileSystemPool(1 * KByte, 1 * KByte, 128 * Byte,
                                               1 * KByte, 1 * KByte, 128 * Byte,
                                               1 * KByte, 1 * KByte, 128 * Byte);
@@ -40,8 +42,9 @@ namespace Utilities
             properties->addOptions(options);
         }
 
-        FileSystem::FileSystem(const Memory::MemoryManager::Ptr& memory, const PropertyManager::Ptr& properties)
-            : memory(memory), properties(properties), memoryPool(0)
+        FileSystem::FileSystem(Memory::MemoryManager* const memory, const Properties::PropertyManager* const properties)
+            : memory(DCHECK_NOTNULL(memory)),
+            properties(DCHECK_NOTNULL(properties)), memoryPool(0)
         {
 
         }
@@ -69,15 +72,15 @@ namespace Utilities
 
         File::Handle FileSystem::read(const char* const path)
         {
-            boost::shared_ptr<void> handle(openForReading(path), boost::bind(&FileSystem::close, this, _1));
+            DCHECK_NOTNULL(path);
 
-            DCHECK(handle != 0);
+            boost::shared_ptr<void> handle(DCHECK_NOTNULL(openForReading(path)), boost::bind(&FileSystem::close, this, _1));
 
             const size_t fileSize = getFileSize(handle.get());
 
-            assert(fileSize > 0);
+            CHECK_GT(fileSize, 0) << "Attemp to read empty file: " << path;
 
-            const boost::shared_array<Memory::byte> data = memory->allocate<Memory::byte > (fileSize, memoryPool);
+            const boost::shared_array<Memory::byte> data = memory->allocate<Memory::byte>(fileSize, memoryPool);
 
             const size_t bytesRead = read(handle.get(), data.get(), fileSize);
 
@@ -91,7 +94,7 @@ namespace Utilities
 
         boost::shared_ptr<XmlReader> FileSystem::readXml(const char* const path)
         {
-            return readXml(read(path));
+            return readXml(read(DCHECK_NOTNULL(path)));
         }
 
         boost::shared_ptr<XmlReader> FileSystem::readXml(const File::Handle& file)
@@ -102,12 +105,11 @@ namespace Utilities
 
         void FileSystem::write(const char* const filename, const File& file)
         {
-            DCHECK(file.getSize() > 0);
-            DCHECK(file.getData() != 0);
+            DCHECK_NOTNULL(filename);
+            DCHECK_NOTNULL(file.getData());
+            DCHECK_GT(file.getSize(), 0);
 
-            const boost::shared_ptr<void> handle(openForWriting(filename), boost::bind(&FileSystem::close, this, _1));
-
-            DCHECK(handle != 0);
+            const boost::shared_ptr<void> handle(DCHECK_NOTNULL(openForWriting(filename)), boost::bind(&FileSystem::close, this, _1));
 
             const size_t bytesWritten = write(handle.get(), file.getData(), file.getSize());
 
@@ -137,6 +139,8 @@ namespace Utilities
 
         void FileSystem::assertPathExists(const char* const path) const
         {
+            DCHECK_NOTNULL(path);
+
             if (!exists(path))
             {
                 throw FileNotFoundException(path);

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   string.h
  * Author: madrenegade
  *
@@ -19,7 +19,8 @@ namespace Utilities
     }
 }
 
-typedef std::basic_string<char, std::char_traits<char>, Utilities::Memory::STLAllocator<char> > String;
+typedef std::basic_string<char, std::char_traits<char>, Utilities::Memory::STLAllocator<char>> String;
+typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, Utilities::Memory::STLAllocator<wchar_t>> WString;
 
 #endif	/* UTILITIES_STRING_H */
 

@@ -17,7 +17,7 @@ namespace Utilities
     namespace IO
     {
 
-        XmlReader::XmlReader(const boost::shared_ptr<Memory::MemoryManager>& memory,
+        XmlReader::XmlReader(Memory::MemoryManager* const memory,
                              const Utilities::Memory::pool_id pool,
                              const File::Handle& file)
             : data(memory->allocate<Memory::byte>(file->getSize() + 1, pool))

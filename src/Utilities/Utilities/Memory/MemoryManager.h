@@ -21,6 +21,7 @@
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/Pool.h"
 #include "Utilities/Memory/Tracking/MemoryTracker.h"
+#include "Utilities/Memory/ComposedDeleter.h"
 #include "Utilities/functions.h"
 
 #include <tbb/concurrent_hash_map.h>
@@ -39,26 +40,13 @@ namespace Utilities
 {
     namespace Memory
     {
-
-        template<typename T, typename DeleterT, typename MainDeleterT>
-        struct ComposedDeleter
-        {
-
-            ComposedDeleter(const DeleterT& pre, const MainDeleterT& main)
-                : preDeleter(pre), mainDeleter(main)
-            {
-            }
-
-            void operator()(T* obj)
-            {
-                preDeleter(obj);
-                mainDeleter(obj);
-            }
-
-        private:
-            const DeleterT preDeleter;
-            const MainDeleterT mainDeleter;
-        };
+#ifdef DEBUG
+#define STACKTRACE_PARAM , const StackTrace& stacktrace = StackTrace()
+#define STACKTRACE , stacktrace
+#else
+#define STACKTRACE_PARAM
+#define STACKTRACE
+#endif
 
         class MemoryManager
         {
@@ -105,24 +93,15 @@ namespace Utilities
              */
             template<typename T, typename Deleter>
             boost::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, const pool_id poolID = 0
-#ifdef DEBUG
-                                           , const StackTrace& stacktrace = StackTrace()
-#endif
-                                          )
+                                           STACKTRACE_PARAM)
             {
-#ifdef DEBUG
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, sizeof (T), poolID);
-                }
-#endif
-
                 // combine deleter with deallocation function
                 typedef boost::function<void (T*)> MainDeleter;
                 const MainDeleter mainDeleter = boost::bind(&MemoryManager::deallocate<T>, this, _1, 1);
                 const ComposedDeleter<T, Deleter, MainDeleter> deleter(preDeleter, mainDeleter);
 
-                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID)) T(obj), deleter);
+                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), deleter);
+
                 return ptr;
             }
 
@@ -136,66 +115,23 @@ namespace Utilities
              */
             template<typename T>
             boost::shared_ptr<T> construct(const T& obj, const pool_id poolID = 0
-#ifdef DEBUG
-                                           , const StackTrace& stacktrace = StackTrace()
-#endif
-                                          )
+                                           STACKTRACE_PARAM)
             {
-#ifdef DEBUG
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, sizeof (T), poolID);
-                }
-#endif
+                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
 
-                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID)) T(obj),
-                                         boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
-                return ptr;
-            }
-
-            template<typename T, size_t numObjects>
-            boost::shared_array<T> allocate(const pool_id poolID = 0
-#ifdef DEBUG
-                                            , const StackTrace& stacktrace = StackTrace()
-#endif
-                                           )
-            {
-#ifdef DEBUG
-                BOOST_STATIC_ASSERT(numObjects > 1);
-
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
-                }
-#endif
-
-                boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
-                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
                 return ptr;
             }
 
             template<typename T>
             boost::shared_array<T> allocate(const size_t numObjects, const pool_id poolID = 0
-#ifdef DEBUG
-                                            , const StackTrace& stacktrace = StackTrace()
-#endif
-                                           )
+                                            STACKTRACE_PARAM)
             {
-#ifdef DEBUG
-                assert(numObjects > 1);
+                DCHECK(numObjects > 1);
 
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects * sizeof (T), poolID);
-                }
-#endif
+                boost::shared_array<T> ptr(internalAllocate<T> (numObjects, poolID STACKTRACE), boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
 
-                boost::shared_array<T> ptr(internalAllocate<T > (numObjects, poolID),
-                                           boost::bind(&MemoryManager::deallocate<T>, this, _1, numObjects));
                 return ptr;
             }
-
-#ifdef DEBUG
 
             /**
              * Allocation without using smart pointers.
@@ -208,29 +144,15 @@ namespace Utilities
              */
             template<typename T>
             T* rawAllocate(const size_t numObjects
-#ifdef DEBUG
-                           , const StackTrace& stacktrace
-#endif
-                           , const pool_id poolID = 0)
+                           STACKTRACE_PARAM, const pool_id poolID = 0)
             {
-#ifdef DEBUG
-                {
-                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
-                    profilerClient->send_allocation_info(stacktrace, numObjects* sizeof (T), poolID);
-                }
-#endif
-
-                return internalAllocate<T > (numObjects, poolID);
+                return internalAllocate<T>(numObjects, poolID STACKTRACE);
             }
 
             template<typename T>
             void rawDeallocate(const T* ptr, const size_t n)
             {
                 const size_t BYTES_TO_DEALLOCATE = n * sizeof (T);
-
-#ifdef DEBUG
-//                RAW_VLOG(4, "Deallocating %lu bytes (address: %p, %lu objects of type %s)", BYTES_TO_DEALLOCATE, reinterpret_cast<const void*> (ptr), n, demangle(typeid (T).name()).c_str());
-#endif
 
                 const_byte_pointer rawPtr = reinterpret_cast<const_byte_pointer> (ptr);
 
@@ -248,6 +170,7 @@ namespace Utilities
                 }
             }
 
+#ifdef DEBUG
             /**
              * do not use directly
              */
@@ -276,7 +199,6 @@ namespace Utilities
             tbb::atomic<pool_id> latestPoolID;
 
 #ifdef DEBUG
-
             typedef tbb::spin_mutex ProfilerClientMutexType;
             ProfilerClientMutexType profilerClientMutex;
             boost::scoped_ptr<memprof::client> profilerClient;
@@ -291,11 +213,17 @@ namespace Utilities
              * @return a pointer to the beginning of the allocated space
              */
             template<typename T>
-            T* internalAllocate(const size_t numObjects, const pool_id poolID = 0)
+            T* internalAllocate(const size_t numObjects, const pool_id poolID = 0
+                                STACKTRACE_PARAM)
             {
                 const size_t BYTES_TO_ALLOCATE = numObjects * sizeof (T);
 
 #ifdef DEBUG
+                {
+                    ProfilerClientMutexType::scoped_lock lock(profilerClientMutex);
+                    profilerClient->send_allocation_info(stacktrace, numObjects* sizeof (T), poolID);
+                }
+
                 if (pools.find(poolID) == pools.end())
                 {
                     throw std::logic_error("Invalid pool id");
@@ -323,10 +251,12 @@ namespace Utilities
                     }
                     catch(const std::exception& e)
                     {
-                        RAW_LOG_FATAL("Allocation of %lu bytes for %li objects of type %s in pool '%s' failed\n%s",
+                        RAW_LOG_ERROR("Allocation of %lu bytes for %li objects of type %s in pool '%s' failed\n%s",
                                       BYTES_TO_ALLOCATE, numObjects,
                                       Utilities::demangle(typeid (T).name()).c_str(),
                                       pools[poolID]->getName(), e.what());
+
+                        throw;
                     }
 #else
                     ptr = reinterpret_cast<T*> (pools[poolID]->allocate(BYTES_TO_ALLOCATE));
@@ -344,7 +274,7 @@ namespace Utilities
                     }
                     catch(const AllocationException& e)
                     {
-                        RAW_LOG_WARNING("The memory tracker found a problem while tracking allocation\nBytes: %lu\nObjects: %li\nType: %s\nAddress: %p\nPool: '%s'\n%s",
+                        RAW_LOG_WARNING("The memory tracker found a problem\nAllocation details:\nBytes: %lu\nObjects: %li\nType: %s\nAddress: %p\nPool: '%s'\nProblem description: %s",
                                         BYTES_TO_ALLOCATE, numObjects,
                                         Utilities::demangle(typeid (T).name()).c_str(),
                                         reinterpret_cast<const void*> (ptr),

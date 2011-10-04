@@ -62,7 +62,7 @@ namespace Platform
          * @param name - the name of the key
          * @return the key id
          */
-        unsigned int getKeysym(const char* name) const;
+        unsigned int getKeysym(const char* const name) const;
 
         /**
          * Creates a window, an renderer and a corresponding graphics context.

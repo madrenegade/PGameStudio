@@ -35,12 +35,18 @@ namespace Core
     {
         class EventManager;
     }
+
+    class SceneManager;
+    class TaskScheduler;
 }
 
 namespace Platform
 {
     class PlatformManager;
 }
+
+class TaskScheduler;
+class QGLWidget;
 
 class EditorApplication : public Core::Application
 {
@@ -51,6 +57,9 @@ public:
     virtual void onRun();
     virtual bool onUpdate();
     virtual void onShutdown();
+
+    void setGLWidget(QGLWidget* glWidget);
+    void loadScene(const char* const name);
 
 protected:
     virtual void onInitialize();
@@ -63,6 +72,8 @@ private:
     void initializeEventManager();
     void initializePlatformManager();
     void initializeWindow();
+    void initializeTaskScheduler();
+    void initializeSceneManager();
 
     Controller* controller;
 
@@ -72,6 +83,10 @@ private:
     boost::shared_ptr<Core::Events::EventManager> eventManager;
     boost::shared_ptr<Platform::PlatformManager> platformManager;
     boost::shared_ptr<Graphics::Window> window;
+    boost::shared_ptr<Core::TaskScheduler> taskScheduler;
+    boost::shared_ptr<Core::SceneManager> sceneManager;
+
+    QGLWidget* glWidget;
 };
 
 #endif // EDITORAPPLICATION_H

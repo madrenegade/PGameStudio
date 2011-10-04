@@ -37,13 +37,13 @@ namespace Platform
         {
         }
 
-        unsigned int Platform::getKeysym(const char* name) const
+        unsigned int Platform::getKeysym(const char* const) const
         {
             return 0;
         }
 
         boost::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
-                const boost::shared_ptr<EventManager>& eventManager,
+                const boost::shared_ptr<EventManager>&,
                 const PropertyManager::Ptr& properties)
         {
             std::string renderer = properties->get<std::string > ("Graphics.renderer");
@@ -54,11 +54,11 @@ namespace Platform
                 throw std::logic_error("PGSEditor only supports OpenGL");
             }
 
-            boost::shared_ptr<Graphics::Window> window = memoryManager->construct(Window());
+            boost::shared_ptr<Graphics::Window> window = memoryManager->construct(Window(properties));
             return window;
         }
 
-        void Platform::centerMouse(const Core::Events::EventID& id, const boost::any& data)
+        void Platform::centerMouse(const Core::Events::EventID&, const boost::any&)
         {
 
         }

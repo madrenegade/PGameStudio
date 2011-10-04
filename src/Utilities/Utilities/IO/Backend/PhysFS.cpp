@@ -16,7 +16,7 @@ namespace Utilities
         namespace Backend
         {
 
-            PhysFS::PhysFS(const Memory::MemoryManager::Ptr& memory, const boost::shared_ptr<Properties::PropertyManager>& properties)
+            PhysFS::PhysFS(Memory::MemoryManager* const memory, const Properties::PropertyManager* const properties)
                 : FileSystem(memory, properties)
             {
             }

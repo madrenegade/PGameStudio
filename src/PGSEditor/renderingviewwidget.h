@@ -2,6 +2,7 @@
 #define RENDERINGVIEWWIDGET_H
 
 #include <QWidget>
+#include <QGLWidget>
 #include <QComboBox>
 
 namespace Ui {
@@ -18,11 +19,18 @@ public:
     explicit RenderingViewWidget(EditorApplication* app, QWidget *parent);
     ~RenderingViewWidget();
 
+    QGLWidget* getGLWidget()
+    {
+        return glWidget;
+    }
+
 private:
     Ui::RenderingViewWidget *ui;
 
     EditorApplication* app;
     QComboBox* possibleViews;
+
+    QGLWidget* glWidget;
 };
 
 #endif // RENDERINGVIEWWIDGET_H

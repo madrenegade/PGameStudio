@@ -29,7 +29,7 @@ namespace Utilities
              * @param properties - the property manager to add the options to
              * @param basename - the basename used for the property names
              */
-            void addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const basename) const;
+            void addOptionsTo(Properties::PropertyManager* const properties, const char* const basename) const;
 
             /**
              * Load memory pool settings from a property manager
@@ -37,7 +37,8 @@ namespace Utilities
              * @param basename
              * @return the loaded settings
              */
-            static const MemoryPoolSettings loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const basename);
+            static const MemoryPoolSettings loadFrom(const Properties::PropertyManager* const properties,
+                                                     const char* const basename);
 
             MemoryPoolSettings(const size_t smallObjectPoolSize = 16*KByte,
                                const size_t smallObjectPageSize = 4*KByte,
@@ -47,13 +48,7 @@ namespace Utilities
                                const size_t mediumObjectBlockSize = 128*Byte,
                                const size_t largeObjectPoolSize = 16*MByte,
                                const size_t largeObjectPageSize = 4*KByte,
-                               const size_t largeObjectBlockSize = 512*Byte)
-                : smallObjectPoolSize(smallObjectPoolSize), smallObjectPageSize(smallObjectPageSize),
-                  smallObjectBlockSize(smallObjectBlockSize), mediumObjectPoolSize(mediumObjectPoolSize),
-                  mediumObjectPageSize(mediumObjectPageSize), mediumObjectBlockSize(mediumObjectBlockSize),
-                  largeObjectPoolSize(largeObjectPoolSize), largeObjectPageSize(largeObjectPageSize),
-                  largeObjectBlockSize(largeObjectBlockSize)
-            {}
+                               const size_t largeObjectBlockSize = 512*Byte);
 
             const size_t smallObjectPoolSize;
             const size_t smallObjectPageSize;

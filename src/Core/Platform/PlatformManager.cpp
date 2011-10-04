@@ -66,7 +66,7 @@ namespace Platform
         impl->handleOSEvents();
     }
 
-    unsigned int PlatformManager::getKeysym(const char* name) const
+    unsigned int PlatformManager::getKeysym(const char* const name) const
     {
         return impl->getKeysym(name);
     }

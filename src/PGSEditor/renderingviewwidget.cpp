@@ -12,11 +12,10 @@ RenderingViewWidget::RenderingViewWidget(EditorApplication* app, QWidget *parent
 {
     ui->setupUi(this);
 
-
     auto scene = new Scene(app);
     ui->graphicsView->setScene(scene);
 
-    auto glWidget = new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::Rgba));
+    glWidget = new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::Rgba));
     ui->graphicsView->setViewport(glWidget);
 
 //    possibleViews = new QComboBox();
@@ -35,3 +34,4 @@ RenderingViewWidget::~RenderingViewWidget()
 {
     delete ui;
 }
+

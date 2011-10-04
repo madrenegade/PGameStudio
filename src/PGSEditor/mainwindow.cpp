@@ -39,8 +39,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+QGLWidget* MainWindow::getGLWidget()
+{
+    return viewWidget->getGLWidget();
+}
+
 void MainWindow::onSceneChanged()
 {
+
 }
 
 void MainWindow::onSetSingleView()
@@ -53,8 +59,8 @@ void MainWindow::onSetSingleView()
 
 void MainWindow::onSetMultiView()
 {
-    ui->centralWidget->layout()->removeWidget(viewWidget);
+//    ui->centralWidget->layout()->removeWidget(viewWidget);
 
-    viewWidget = new MultiViewWidget(controller->getEditorApplication(), this);
-    ui->centralWidget->layout()->addWidget(viewWidget);
+//    viewWidget = new MultiViewWidget(controller->getEditorApplication(), this);
+//    ui->centralWidget->layout()->addWidget(viewWidget);
 }

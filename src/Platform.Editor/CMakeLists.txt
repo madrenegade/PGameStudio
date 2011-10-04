@@ -10,8 +10,12 @@ file(GLOB Project_Sources
 	"${PROJECT_SOURCE_DIR}/Platform/*"
 	"${PROJECT_SOURCE_DIR}/Platform/Editor/*")
 
-
 add_library(${PROJECT_NAME} SHARED ${Project_Sources})
+
+SET(QT_USE_QTOPENGL TRUE)
+
+FIND_PACKAGE(Qt4 REQUIRED)
+include_directories(${QT_INCLUDE_DIR})
 
 add_dependencies(${PROJECT_NAME} Core Utilities)
 

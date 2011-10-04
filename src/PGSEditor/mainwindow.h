@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGLWidget>
 
 namespace Ui {
     class MainWindow;
@@ -9,6 +10,7 @@ namespace Ui {
 
 class Controller;
 class SceneDockWidget;
+class SingleViewWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +19,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    QGLWidget* getGLWidget();
 
 public slots:
     void onSceneChanged();
@@ -29,7 +33,7 @@ private:
 
     Controller* controller;
 
-    QWidget* viewWidget;
+    SingleViewWidget* viewWidget;
 
     SceneDockWidget* sceneDock;
 };

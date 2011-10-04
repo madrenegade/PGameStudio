@@ -26,14 +26,14 @@ namespace Utilities
         class FileSystemFactory
         {
         public:
-            static boost::shared_ptr<FileSystem> create(const Memory::MemoryManager::Ptr& memory,
-                    const boost::shared_ptr<Properties::PropertyManager>& properties);
+            static boost::shared_ptr<FileSystem> create(Memory::MemoryManager*const memory,
+                    const Properties::PropertyManager* const properties);
 
         private:
             FileSystemFactory();
             ~FileSystemFactory();
 
-            static boost::shared_ptr<Memory::Pool> createMemoryPool(const boost::shared_ptr<Properties::PropertyManager>& properties);
+            static boost::shared_ptr<Memory::Pool> createMemoryPool(const Properties::PropertyManager* const properties);
         };
     }
 }

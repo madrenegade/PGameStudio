@@ -43,7 +43,7 @@ namespace Input
         const MemoryPoolSettings inputPool(1 * KByte, 1 * KByte, 128 * Byte,
                                            1 * KByte, 1 * KByte, 128 * Byte,
                                            1 * KByte, 1 * KByte, 128 * Byte);
-        inputPool.addOptionsTo(properties, "Input");
+        inputPool.addOptionsTo(properties.get(), "Input");
     }
 
     const char* SystemScene::getSceneFileExtension() const

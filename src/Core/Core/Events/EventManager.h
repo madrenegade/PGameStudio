@@ -48,12 +48,6 @@ namespace Core
              */
             void registerEventHandler(const EventID& id, const EventHandlerFunction& fn);
 
-            template<typename T>
-            void pushEvent(const EventID& id, const T& data)
-            {
-                pushEvent(id, boost::any(data));
-            }
-
             /**
              * Push an event into the event queue.
              * This method is thread safe to allow pushing from the various
@@ -62,6 +56,12 @@ namespace Core
              * @param data - the data associated with this event
              */
             void pushEvent(const EventID& id, const boost::any& data);
+
+            template<typename T>
+            void pushEvent(const EventID& id, const T& data)
+            {
+                pushEvent(id, boost::any(data));
+            }
 
             /**
              * Process all events. This calls all registered event handler functions

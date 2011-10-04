@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   FileSystem.h
  * Author: madrenegade
  *
@@ -22,18 +22,43 @@ namespace Utilities
         class FileSystem
         {
         public:
-            static void addOptionsTo(const Properties::PropertyManager::Ptr& properties);
+            static void addOptionsTo(Properties::PropertyManager* const properties);
 
             virtual ~FileSystem();
 
+            /**
+             * Read a file into memory.
+             * @param path - The name of the file to read.
+             * @return A handle to the \ref Utilities::IO::File object containing
+             * the data of the file.
+             */
             File::Handle read(const char* const path);
+
+            /**
+             * Read a xml file into memory.
+             * @param path - The name of the file to read.
+             * @return An object of type \ref Utilities::IO::XmlReader to
+             * navigate through the xml document.
+             */
             boost::shared_ptr<XmlReader> readXml(const char* const path);
+
+            /**
+             * Read a xml file into memory.
+             * @param file - The file containing the xml data.
+             * @return An object of type \ref Utilities::IO::XmlReader to
+             * navigate through the xml document.
+             */
             boost::shared_ptr<XmlReader> readXml(const File::Handle& file);
 
+            /**
+             * Save a file in the writable directory. The writable directory is automatically determined using the settings.
+             * @param filename - The name of the file to write to.
+             * @param file - A \ref Utilities::IO::File object containing the data to write.
+             */
             void write(const char* const filename, const File& file);
 
         protected:
-            FileSystem(const Memory::MemoryManager::Ptr& memory, const Properties::PropertyManager::Ptr& properties);
+            FileSystem(Memory::MemoryManager* const memory, const Properties::PropertyManager* const properties);
 
             Memory::pool_id getMemoryPool() const;
 
@@ -58,14 +83,14 @@ namespace Utilities
             virtual void setWriteDirectory(const char* const organization, const char* const appName) = 0;
 
         private:
-            const Memory::MemoryManager::Ptr memory;
+            Memory::MemoryManager* const memory;
 
             void mountDirectories();
 
             void assertPathExists(const char* const path) const;
 
         protected:
-            const Properties::PropertyManager::Ptr properties;
+            const Properties::PropertyManager* const properties;
             Memory::pool_id memoryPool;
         };
     }

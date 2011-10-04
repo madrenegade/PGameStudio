@@ -1,11 +1,14 @@
 #include "Platform/Editor/GraphicsContext.h"
+#include "Utilities/Properties/PropertyManager.h"
+#include <Qt/QtOpenGL>
 
 namespace Platform
 {
     namespace Editor
     {
 
-        GraphicsContext::GraphicsContext()
+        GraphicsContext::GraphicsContext(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+        : properties(properties)
         {
             //ctor
         }
@@ -17,7 +20,8 @@ namespace Platform
 
         void GraphicsContext::MakeCurrent()
         {
-
+            QGLWidget* glWidget = properties->get<QGLWidget*>("GL_WIDGET");
+            glWidget->makeCurrent();
         }
 
         void GraphicsContext::Release()

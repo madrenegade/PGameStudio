@@ -100,7 +100,7 @@ namespace Core
             systemScene->setFileSystem(fileSystem);
             systemScene->setProperties(properties);
 
-            const boost::shared_ptr<Pool> pool = Pool::create(i->c_str(), MemoryPoolSettings::loadFrom(properties, i->c_str()));
+            const boost::shared_ptr<Pool> pool = Pool::create(i->c_str(), MemoryPoolSettings::loadFrom(properties.get(), i->c_str()));
             const pool_id systemPool = memoryManager->registerMemoryPool(pool);
 
             systemScene->setMemoryPool(systemPool);

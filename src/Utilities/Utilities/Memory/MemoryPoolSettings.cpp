@@ -6,9 +6,9 @@ namespace Utilities
     namespace Memory
     {
 
-        void MemoryPoolSettings::addOptionsTo(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const sbasename) const
+        void MemoryPoolSettings::addOptionsTo(Properties::PropertyManager* const properties, const char* const sbasename) const
         {
-            const std::string basename(sbasename);
+            const std::string basename(DCHECK_NOTNULL(sbasename));
 
             po::options_description options(basename + " memory pool options");
 
@@ -25,12 +25,13 @@ namespace Utilities
             ((basename + ".memory.largeObjects.pageSize").c_str(), po::value<size_t > ()->default_value(largeObjectPageSize), "Page size for the large object area")
             ((basename + ".memory.largeObjects.blockSize").c_str(), po::value<size_t > ()->default_value(largeObjectBlockSize), "Block size for the large object area");
 
-            properties->addOptions(options);
+            DCHECK_NOTNULL(properties)->addOptions(options);
         }
 
-        const MemoryPoolSettings MemoryPoolSettings::loadFrom(const boost::shared_ptr<Properties::PropertyManager>& properties, const char* const sbasename)
+        const MemoryPoolSettings MemoryPoolSettings::loadFrom(const Properties::PropertyManager* const properties, const char* const sbasename)
         {
-            const std::string basename(sbasename);
+            //DCHECK_NE(properties, nullptr);
+            const std::string basename(DCHECK_NOTNULL(sbasename));
 
             const size_t soMax = properties->get<size_t > ((basename + ".memory.smallObjects.maxSize").c_str());
             const size_t soPage = properties->get<size_t > ((basename + ".memory.smallObjects.pageSize").c_str());
@@ -48,6 +49,34 @@ namespace Utilities
                        soMax, soPage, soBlock,
                        moMax, moPage, moBlock,
                        loMax, loPage, loBlock);
+        }
+
+        MemoryPoolSettings::MemoryPoolSettings(const size_t smallObjectPoolSize,
+                                               const size_t smallObjectPageSize,
+                                               const size_t smallObjectBlockSize,
+                                               const size_t mediumObjectPoolSize,
+                                               const size_t mediumObjectPageSize,
+                                               const size_t mediumObjectBlockSize,
+                                               const size_t largeObjectPoolSize,
+                                               const size_t largeObjectPageSize,
+                                               const size_t largeObjectBlockSize)
+            : smallObjectPoolSize(smallObjectPoolSize), smallObjectPageSize(smallObjectPageSize),
+              smallObjectBlockSize(smallObjectBlockSize), mediumObjectPoolSize(mediumObjectPoolSize),
+              mediumObjectPageSize(mediumObjectPageSize), mediumObjectBlockSize(mediumObjectBlockSize),
+              largeObjectPoolSize(largeObjectPoolSize), largeObjectPageSize(largeObjectPageSize),
+              largeObjectBlockSize(largeObjectBlockSize)
+        {
+            CHECK_GT(smallObjectBlockSize, 0);
+            CHECK_GT(mediumObjectBlockSize, 0);
+            CHECK_GT(largeObjectBlockSize, 0);
+
+            CHECK_GT(smallObjectPageSize, smallObjectBlockSize);
+            CHECK_GT(mediumObjectPageSize, mediumObjectBlockSize);
+            CHECK_GT(largeObjectPageSize, largeObjectBlockSize);
+
+            CHECK_GE(smallObjectPoolSize, smallObjectPageSize);
+            CHECK_GE(mediumObjectPoolSize, mediumObjectPageSize);
+            CHECK_GE(largeObjectPoolSize, largeObjectPageSize);
         }
     }
 }

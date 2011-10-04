@@ -26,7 +26,7 @@ namespace Scripting
         MemoryPoolSettings scriptPool(1 * KByte, 1 * KByte, 128 * Byte,
                                       1 * KByte, 1 * KByte, 256 * Byte,
                                       1 * KByte, 1 * KByte, 512 * Byte);
-        scriptPool.addOptionsTo(properties, "Scripting");
+        scriptPool.addOptionsTo(properties.get(), "Scripting");
 
         po::options_description options("Scripting options");
 

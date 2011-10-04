@@ -19,8 +19,8 @@ Scene::Scene(EditorApplication* app, QObject *parent) :
 
 void Scene::drawBackground(QPainter* painter, const QRectF& /*rect*/)
 {
-    float width = float(painter->device()->width());
-    float height = float(painter->device()->height());
+//    float width = float(painter->device()->width());
+//    float height = float(painter->device()->height());
 
     painter->beginNativePainting();
 

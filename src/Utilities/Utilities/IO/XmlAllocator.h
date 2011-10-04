@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   XmlAllocator.h
  * Author: madrenegade
  *
@@ -29,12 +29,12 @@ namespace Utilities
             static void* allocate(const size_t bytes);
             static void deallocate(void* ptr);
 
-            static boost::shared_ptr<Memory::MemoryManager> memory;
-            
+            static Memory::MemoryManager* memory;
+
         private:
             XmlAllocator();
             ~XmlAllocator();
-            
+
             static std::map<void*, size_t> allocations;
         };
     }

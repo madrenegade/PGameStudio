@@ -20,7 +20,10 @@ Controller::Controller(MainWindow* mainWindow)
       editorApplication(new EditorApplication(this))
 {
     editorApplication->initialize();
+    editorApplication->setGLWidget(mainWindow->getGLWidget());
     editorApplication->onRun();
+
+    //editorApplication->loadScene("Menu");
 
     connect(newSceneWizard, SIGNAL(accepted()), this, SLOT(onNewSceneConfigured()));
     connect(assetImportWizard, SIGNAL(accepted()), this, SLOT(onImportConfigured()));

@@ -117,7 +117,7 @@ namespace Renderer
         cgGLSetTextureParameter(parameter, texture->getID());
     }
 
-    void Effect::CgErrorHandler(CGcontext context, CGerror error, void* pData)
+    void Effect::CgErrorHandler(CGcontext context, CGerror error, void*)
     {
         switch (error)
         {
