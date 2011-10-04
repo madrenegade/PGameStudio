@@ -38,7 +38,7 @@ namespace Utilities
                 other;
             };
 
-            static MemoryManager::Ptr memory;
+            static MemoryManager* memory;
         };
 
         /**
@@ -99,7 +99,7 @@ namespace Utilities
 #endif
                             )
             {
-                DCHECK(memory.get() != 0);
+                //DCHECK_NE(memory, nullptr);
 
 #ifdef DEBUG
                 return memory->rawAllocate<T > (n, StackTrace());
@@ -110,7 +110,7 @@ namespace Utilities
 
             void deallocate(pointer p, size_type n)
             {
-                DCHECK(memory.get() != 0);
+                //DCHECK_NE(memory, nullptr);
 
                 memory->rawDeallocate<T > (p, n);
             }
@@ -132,7 +132,7 @@ namespace Utilities
             }
 
         private:
-            static MemoryManager::Ptr memory;
+            static MemoryManager* memory;
 
             static void setMemoryManager()
             {
@@ -140,8 +140,8 @@ namespace Utilities
             }
         };
 
-
-        template <class T> MemoryManager::Ptr STLAllocator<T>::memory;
+        template <class T>
+        MemoryManager* STLAllocator<T>::memory;
 
         template <class T1, class T2>
         bool operator==(const STLAllocator<T1>&, const STLAllocator<T2>&) throw ()

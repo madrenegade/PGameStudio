@@ -16,19 +16,10 @@ namespace Utilities
 
         MemoryManager::Ptr MemoryManager::create(const MemoryTracker::Ptr& memoryTracker)
         {
-            // check platform details about type sizes
-
-            BOOST_STATIC_ASSERT(sizeof(char) == 1);
-            BOOST_STATIC_ASSERT(sizeof(short) == 2);
-            BOOST_STATIC_ASSERT(sizeof(int) == 4);
-            BOOST_STATIC_ASSERT(sizeof(long) == 8);
-            BOOST_STATIC_ASSERT(sizeof(float) == 4);
-            BOOST_STATIC_ASSERT(sizeof(double) == 8);
-            BOOST_STATIC_ASSERT(sizeof(void*) == 8);
+            verifyPlatformAssumptions();
 
             Ptr ptr(new MemoryManager(memoryTracker));
-
-            STLAllocator<void>::memory = ptr;
+            STLAllocator<void>::memory = ptr.get();
 
             return ptr;
         }
@@ -39,9 +30,6 @@ namespace Utilities
             , profilerClient(new memprof::client("127.0.0.1"))
 #endif
         {
-#ifdef DEBUG
-            profilerClient->connect();
-#endif
         }
 
         MemoryManager::~MemoryManager()
@@ -106,12 +94,11 @@ namespace Utilities
             }
 
             VLOG(1) << "Pointer " << reinterpret_cast<const void*> (ptr) << " not found in any of the registered memory pools";
-
             VLOG(1) << "Registered pools: " << pools.size();
 
             for (PoolMap::const_iterator i = pools.begin(); i != pools.end(); ++i)
             {
-                VLOG(1) << "[id: " << i->first << ", address: " << reinterpret_cast<const void*> (i->second.get()) << "]";
+                VLOG(1) << "[id: " << i->first << ", address: " << reinterpret_cast<const void*> (i->second.get()) << ", name: " << i->second->getName() << "]";
             }
 
             memoryTracker->printMemoryDump();
@@ -120,7 +107,6 @@ namespace Utilities
         }
 
 #ifdef DEBUG
-
         void MemoryManager::assertPoolIsUnique(const boost::shared_ptr<Pool>& pool)
         {
             PoolMapMutexType::scoped_lock lock(poolMapMutex, false);
@@ -134,6 +120,17 @@ namespace Utilities
             }
         }
 #endif
+
+        void MemoryManager::verifyPlatformAssumptions()
+        {
+            BOOST_STATIC_ASSERT(sizeof(char) == 1);
+            BOOST_STATIC_ASSERT(sizeof(short) == 2);
+            BOOST_STATIC_ASSERT(sizeof(int) == 4);
+            BOOST_STATIC_ASSERT(sizeof(long) == 8);
+            BOOST_STATIC_ASSERT(sizeof(float) == 4);
+            BOOST_STATIC_ASSERT(sizeof(double) == 8);
+            BOOST_STATIC_ASSERT(sizeof(void*) == 8);
+        }
     }
 }
 

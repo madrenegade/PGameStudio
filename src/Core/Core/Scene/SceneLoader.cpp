@@ -81,7 +81,7 @@ namespace Core
     {
         for (auto i = systems.begin(); i != systems.end(); ++i)
         {
-            const boost::shared_ptr<Platform::Library> lib = platform->libraries()->load(i->c_str());
+            const boost::shared_ptr<Platform::Library> lib = platform->libraries()->load(i->c_str(), true);
 
             // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
             CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createSystemScene"));

@@ -25,10 +25,10 @@ using boost::asio::ip::tcp;
 namespace memprof
 {
 
-    client::client(const char* host)
+    client::client(const char* const host)
         : host(host), connected(false)
     {
-
+        connect();
     }
 
     client::~client()
@@ -95,7 +95,7 @@ namespace memprof
         boost::asio::write(*socket, boost::asio::buffer(buffer));
     }
 
-    void client::send_allocation_info(const StackTrace& stacktrace, size_t bytes, size_t poolID)
+    void client::send_allocation_info(const StackTrace& stacktrace, const size_t bytes, const size_t poolID)
     {
         if(!connected) return;
 

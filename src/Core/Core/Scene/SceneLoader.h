@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   SceneLoader.h
  * Author: madrenegade
  *
@@ -17,12 +17,12 @@ namespace Utilities
     {
         class FileSystem;
     }
-    
+
     namespace Memory
     {
         class MemoryManager;
     }
-    
+
     namespace Properties
     {
         class PropertyManager;
@@ -32,20 +32,21 @@ namespace Utilities
 namespace Platform
 {
     class PlatformManager;
+    class Library;
 }
 
 namespace Core
 {
     class Scene;
     class SystemScene;
-    
+
     namespace Events
     {
         class EventManager;
     }
-    
+
     class TaskScheduler;
-    
+
     class SceneLoader
     {
     public:
@@ -55,22 +56,22 @@ namespace Core
                     const boost::shared_ptr<Events::EventManager>& eventManager,
                     const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~SceneLoader();
-        
+
         /**
          * Load the scene with the given name
          * @param name
          */
         const boost::shared_ptr<Scene> loadScene(const char* const filename) const;
-        
+
         void loadSystemScene(SystemScene* const systemScene, const char* const filename) const;
-        
+
     private:
         SceneLoader();
-        
+
         typedef std::vector<String, Utilities::Memory::STLAllocator<String>> SystemVector;
-        
+
         void loadSystemLibraries(const SystemVector& systems, Scene* const scene) const;
-        
+
         const boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
         const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
         const boost::shared_ptr<Platform::PlatformManager> platform;

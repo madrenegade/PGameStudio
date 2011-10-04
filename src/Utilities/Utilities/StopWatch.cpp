@@ -6,6 +6,7 @@
  */
 
 #include "Utilities/StopWatch.h"
+#include "Utilities/functions.h"
 
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
@@ -16,7 +17,9 @@ namespace Utilities
 {
     StopWatch::StopWatch(const char* const name)
         : name(DCHECK_NOTNULL(name)), start(std::chrono::system_clock::now())
-    {}
+    {
+        checkType<StopWatch>();
+    }
 
     StopWatch::~StopWatch()
     {

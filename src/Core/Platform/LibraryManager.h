@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   LibraryManager.h
  * Author: madrenegade
  *
@@ -16,22 +16,31 @@
 namespace Platform
 {
     class Library;
-    
+
     class LibraryManager
     {
     public:
         LibraryManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
         ~LibraryManager();
-        
-        boost::shared_ptr<Library> load(const char* const name);
-        
+
+        /**
+         * Load a shared library with the specified name. Prefixes and suffixes are autmatically added
+         * to the name depending on the platform.
+         * @param name - The basename of the library to load.
+         * @param keepOpen - True if the library should be kept open, false otherwise.
+         * Not keeping the library open means that the library will be closed when there are
+         * no more refences to the library.
+         * @return A pointer to the library.
+         */
+        boost::shared_ptr<Library> load(const char* const name, const bool keepOpen = false);
+
     private:
         void unload(Library* const lib);
-        
+
         const boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        
+
         typedef boost::shared_ptr<Library> LibPtr;
-        
+
         typedef std::list<LibPtr, Utilities::Memory::STLAllocator<LibPtr>> LibraryList;
         LibraryList loadedLibraries;
     };

@@ -11,6 +11,7 @@
 #include "Utilities/Memory/typedefs.h"
 #include <string>
 #include <sstream>
+#include <typeinfo>
 #include <glog/logging.h>
 
 namespace Utilities
@@ -59,7 +60,7 @@ namespace Utilities
         return static_cast<EnumType>(i);
     }
 
-    // TODO: implement this so that it can map strings to enum values
+// TODO: implement this so that it can map strings to enum values
 //    template<typename EnumType>
 //    EnumType valueOf(const char* s)
 //    {
@@ -80,6 +81,15 @@ namespace Utilities
         stream >> value;
 
         return value;
+    }
+
+    template<typename T>
+    inline void checkType()
+    {
+        static const size_t BITS = 32;
+
+        DLOG_IF(WARNING, sizeof(T) % BITS != 0) << "Size of type " << demangle(typeid(T).name())
+                                                << " is not a multiple of " << BITS << " bits";
     }
 }
 

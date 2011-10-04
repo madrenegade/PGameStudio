@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   client.h
  * Author: madrenegade
  *
@@ -21,29 +21,29 @@ namespace memprof
     class client
     {
     public:
-        client(const char* host);
+        client(const char* const host);
         ~client();
-        
-        void connect();
-        
+
         /**
          * notify the server that a new frame started
          */
         void begin_new_frame();
-        
+
         /**
          * send allocation data to the server
          * @param stacktrace
          * @param bytes
          */
-        void send_allocation_info(const StackTrace& stacktrace, size_t bytes, size_t poolID);
-        
+        void send_allocation_info(const StackTrace& stacktrace, const size_t bytes, const size_t poolID);
+
     private:
+        void connect();
+
         const std::string host;
-        
+
         boost::asio::io_service io_service;
         boost::shared_ptr<boost::asio::ip::tcp::socket> socket;
-        
+
         bool connected;
     };
 }

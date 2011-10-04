@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   STLAllocator.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 8, 2011, 12:04 PM
  */
 
@@ -11,6 +11,6 @@ namespace Utilities
 {
     namespace Memory
     {
-        MemoryManager::Ptr STLAllocator<void>::memory;
+        MemoryManager* STLAllocator<void>::memory = 0;
     }
 }

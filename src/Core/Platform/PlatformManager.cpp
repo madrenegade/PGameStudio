@@ -46,10 +46,10 @@ namespace Platform
         String platformPlugin("Platform.");
         platformPlugin.append(properties->get<std::string > ("Platform.plugin").c_str());
 
-        boost::shared_ptr<Library> platformLib = libraryManager->load(platformPlugin.c_str());
+        platformLibrary = libraryManager->load(platformPlugin.c_str());
 
         // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
-        CreateFn create = reinterpret_cast<CreateFn> (platformLib->getFunction("create"));
+        CreateFn create = reinterpret_cast<CreateFn> (platformLibrary->getFunction("create"));
 
         impl = create(memory);
 
@@ -73,12 +73,11 @@ namespace Platform
 
     boost::shared_ptr<Graphics::Window> PlatformManager::createWindow()
     {
-        if (properties->get<std::string > ("Graphics.renderer") == "NULL")
+        if (properties->get<std::string>("Graphics.renderer") == "NULL")
         {
             // null-renderer is meant for server usage
             // so all window and drawing functions result in doing nothing
             // input handling is done via command line
-
             throw std::runtime_error("Null-Renderer not yet implemented");
         }
 

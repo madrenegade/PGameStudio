@@ -327,6 +327,8 @@ namespace Utilities
 #ifdef DEBUG
             void assertPoolIsUnique(const boost::shared_ptr<Pool>& pool);
 #endif
+
+            static void verifyPlatformAssumptions();
         };
 
         /**

@@ -82,6 +82,7 @@ namespace Platform
         boost::shared_ptr<Core::Events::EventManager> eventManager;
         boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
         boost::shared_ptr<LibraryManager> libraryManager;
+        boost::shared_ptr<Library> platformLibrary;
 
         boost::shared_ptr<PlatformImpl> impl;
 

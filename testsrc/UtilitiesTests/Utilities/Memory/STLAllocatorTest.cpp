@@ -23,7 +23,7 @@ protected:
         memory = MemoryManager::create(tracker);
         memory->registerMemoryPool(pool);
 
-        STLAllocator<void>::memory = memory;
+        STLAllocator<void>::memory = memory.get();
     }
 };
 

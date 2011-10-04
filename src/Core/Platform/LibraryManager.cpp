@@ -26,7 +26,7 @@ namespace Platform
     {
     }
 
-    boost::shared_ptr<Library> LibraryManager::load(const char* const name)
+    boost::shared_ptr<Library> LibraryManager::load(const char* const name, const bool keepOpen)
     {
         String fullName(Library::PREFIX.c_str(), Library::PREFIX.size());
         fullName.append(name);
@@ -36,7 +36,11 @@ namespace Platform
         LOG(INFO) << "Loading library " << fullName;
 
         boost::shared_ptr<Library> lib = memoryManager->construct(Library(), boost::bind(&LibraryManager::unload, this, _1));
-        loadedLibraries.push_front(lib);
+
+        if(keepOpen)
+        {
+            loadedLibraries.push_front(lib);
+        }
 
         lib->open(fullName.c_str());
 
