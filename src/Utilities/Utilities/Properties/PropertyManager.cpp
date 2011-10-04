@@ -54,7 +54,7 @@ namespace Utilities
 
             po::variables_map vm;
 
-            std::ifstream in(filename);
+            std::ifstream in(DCHECK_NOTNULL(filename));
 
             if(!in)
             {
@@ -70,17 +70,17 @@ namespace Utilities
 
         void PropertyManager::addListener(PropertyChangeListener* const listener, const char* const property)
         {
-            listeners[property].push_front(listener);
+            listeners[CHECK_NOTNULL(property)].push_front(CHECK_NOTNULL(listener));
         }
 
         void PropertyManager::removeListener(PropertyChangeListener* const listener, const char* const property)
         {
-            listeners[property].remove(listener);
+            listeners[CHECK_NOTNULL(property)].remove(CHECK_NOTNULL(listener));
         }
 
         void PropertyManager::set(const char* const name, const boost::any& value)
         {
-            DCHECK(propertyExists(name));
+            DCHECK(propertyExists(DCHECK_NOTNULL(name)));
             DCHECK(properties[name].type() == value.type());
 
             properties[name] = value;

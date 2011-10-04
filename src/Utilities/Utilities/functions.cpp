@@ -19,7 +19,7 @@ namespace Utilities
 #ifdef GCC
         int status;
 
-        boost::shared_ptr<char> res(abi::__cxa_demangle(name,
+        boost::shared_ptr<char> res(abi::__cxa_demangle(DCHECK_NOTNULL(name),
                                     0,
                                     0,
                                     &status), free);
@@ -56,7 +56,7 @@ namespace Utilities
 
     void copy(Memory::const_byte_pointer src, Memory::byte_pointer dest, const size_t bytes)
     {
-        std::copy(src, &src[bytes], dest);
+        std::copy(DCHECK_NOTNULL(src), &src[bytes], DCHECK_NOTNULL(dest));
     }
 
     unsigned int countZeroBitsFromRight(const unsigned long v)

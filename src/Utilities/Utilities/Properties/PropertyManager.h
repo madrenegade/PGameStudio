@@ -21,7 +21,7 @@ namespace Utilities
     namespace Properties
     {
         class PropertyChangeListener;
-
+        // TODO: make property manager thread safe
         /**
          * A class for managing program options. This includes specifying which options are
          * allowed and loading settings from the command line or from ini-Files.
@@ -75,7 +75,7 @@ namespace Utilities
             T get(const char* const name) const
             {
 #ifdef DEBUG
-                assertPropertyExists(name);
+                assertPropertyExists(DCHECK_NOTNULL(name));
 
                 try
                 {

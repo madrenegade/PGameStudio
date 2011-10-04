@@ -11,6 +11,7 @@
 #include "Utilities/Memory/typedefs.h"
 #include <string>
 #include <sstream>
+#include <glog/logging.h>
 
 namespace Utilities
 {
@@ -75,7 +76,7 @@ namespace Utilities
     {
         T value;
         std::stringstream stream;
-        stream << s;
+        stream << DCHECK_NOTNULL(s);
         stream >> value;
 
         return value;

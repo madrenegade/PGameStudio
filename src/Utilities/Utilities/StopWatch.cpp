@@ -15,7 +15,7 @@ typedef std::chrono::duration<long, std::ratio<1, 1000>> ms;
 namespace Utilities
 {
     StopWatch::StopWatch(const char* const name)
-        : name(name), start(std::chrono::system_clock::now())
+        : name(DCHECK_NOTNULL(name)), start(std::chrono::system_clock::now())
     {}
 
     StopWatch::~StopWatch()

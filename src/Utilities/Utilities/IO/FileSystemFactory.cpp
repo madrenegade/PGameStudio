@@ -22,8 +22,8 @@ namespace Utilities
         boost::shared_ptr<FileSystem> FileSystemFactory::create(Memory::MemoryManager* const memory,
                 const Properties::PropertyManager* const properties)
         {
-            DCHECK_NOTNULL(memory);
-            DCHECK_NOTNULL(properties);
+            // FIXME: DCHECK_NE(memory, nullptr);
+            // FIXME: DCHECK_NE(properties, nullptr);
 
             const FileSystemBackend backend = valueOf<FileSystemBackend>(properties->get<unsigned char>("FileSystem.backend"));
 

@@ -24,7 +24,7 @@ namespace Utilities
 
         void FileSystem::addOptionsTo(PropertyManager* const properties)
         {
-            DCHECK_NOTNULL(properties);
+            // FIXME: DCHECK_NE(properties, nullptr);
 
             MemoryPoolSettings fileSystemPool(1 * KByte, 1 * KByte, 128 * Byte,
                                               1 * KByte, 1 * KByte, 128 * Byte,
@@ -72,7 +72,7 @@ namespace Utilities
 
         File::Handle FileSystem::read(const char* const path)
         {
-            DCHECK_NOTNULL(path);
+            //FIXME: DCHECK_NE(path, nullptr);
 
             boost::shared_ptr<void> handle(DCHECK_NOTNULL(openForReading(path)), boost::bind(&FileSystem::close, this, _1));
 
@@ -105,8 +105,8 @@ namespace Utilities
 
         void FileSystem::write(const char* const filename, const File& file)
         {
-            DCHECK_NOTNULL(filename);
-            DCHECK_NOTNULL(file.getData());
+            // FIXME: DCHECK_NE(filename, nullptr);
+            // FIXME: DCHECK_NE(file.getData(), nullptr);
             DCHECK_GT(file.getSize(), 0);
 
             const boost::shared_ptr<void> handle(DCHECK_NOTNULL(openForWriting(filename)), boost::bind(&FileSystem::close, this, _1));
@@ -139,7 +139,7 @@ namespace Utilities
 
         void FileSystem::assertPathExists(const char* const path) const
         {
-            DCHECK_NOTNULL(path);
+            // FIXME: DCHECK_NE(path, nullptr);
 
             if (!exists(path))
             {
