@@ -8,7 +8,7 @@
 #ifndef UTILITIES_MEMORY_PAGEMANAGER_H
 #define	UTILITIES_MEMORY_PAGEMANAGER_H
 
-#include <boost/shared_ptr.hpp>
+
 #include <boost/shared_array.hpp>
 
 #include "Utilities/Memory/typedefs.h"
@@ -23,7 +23,7 @@ namespace Utilities
         class PageManager
         {
         public:
-            typedef boost::shared_ptr<PageManager> Ptr;
+            typedef std::shared_ptr<PageManager> Ptr;
 
             /**
              * Create a page manager instance using the specified settings.

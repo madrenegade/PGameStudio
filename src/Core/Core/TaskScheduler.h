@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   TaskScheduler.h
  * Author: madrenegade
  *
@@ -8,7 +8,7 @@
 #ifndef CORE_TASKSCHEDULER_H
 #define	CORE_TASKSCHEDULER_H
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <tbb/task.h>
 
 namespace Utilities
@@ -22,15 +22,15 @@ namespace Utilities
 namespace Core
 {
     class Scene;
-    
+
     class TaskScheduler
     {
     public:
-        static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
-        
-        TaskScheduler(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static void addOptionsTo(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+
+        TaskScheduler(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~TaskScheduler();
-        
+
         /**
          * Schedule the given task for executing in the background.
          * If you want to get notified when the task finished you should use events.
@@ -42,21 +42,21 @@ namespace Core
             tbb::task& task = *new(backgroundTask->allocate_child()) T(t);
             backgroundTask->spawn(task);
         }
-        
+
         /**
          * Execute the all tasks from the system scenes.
          */
         void executeTasks(const Scene* const scene);
-        
+
     private:
         void startBackgroundTask();
         void waitForBackgroundTask();
-        
-        boost::shared_ptr<tbb::task_scheduler_init> tbbTaskScheduler;
-        
+
+        std::shared_ptr<tbb::task_scheduler_init> tbbTaskScheduler;
+
         tbb::task_group_context backgroundTaskContext;
         tbb::task* backgroundTask;
-        
+
         tbb::task_group_context taskContext;
         tbb::task* rootTask;
     };

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   EffectInitializer.h
  * Author: madrenegade
  *
@@ -8,7 +8,7 @@
 #ifndef RENDERER_EFFECTINITIALIZER_H
 #define	RENDERER_EFFECTINITIALIZER_H
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Renderer
 {
@@ -18,7 +18,7 @@ namespace Renderer
     class EffectInitializer
     {
     public:
-        static void initialize(const boost::shared_ptr<Effect>& effect, const EffectRequest& request);
+        static void initialize(const std::shared_ptr<Effect>& effect, const EffectRequest& request);
     };
 }
 

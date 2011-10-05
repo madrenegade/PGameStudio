@@ -9,7 +9,7 @@
 #define	RENDERER_FRAMEBUFFER_H
 
 #include <vector>
-#include <boost/shared_ptr.hpp>
+
 
 #include "Renderer/Texture.h"
 
@@ -51,10 +51,10 @@ namespace Renderer
 
         unsigned int id;
 
-        typedef boost::shared_ptr<Texture> TexturePtr;
+        typedef std::shared_ptr<Texture> TexturePtr;
         std::vector<TexturePtr, Utilities::Memory::STLAllocator<TexturePtr>> colorAttachments;
 
-        boost::shared_ptr<Texture> depthTexture;
+        std::shared_ptr<Texture> depthTexture;
     };
 }
 

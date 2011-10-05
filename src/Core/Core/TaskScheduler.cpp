@@ -30,7 +30,7 @@ namespace Core
         properties->addOptions(options);
     }
 
-    TaskScheduler::TaskScheduler(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    TaskScheduler::TaskScheduler(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties)
         : backgroundTask(0), rootTask(0)
     {
         const unsigned int numThreadsFromConfig = properties->get<unsigned int>("Scheduler.numThreads");

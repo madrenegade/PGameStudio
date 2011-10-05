@@ -19,7 +19,7 @@ namespace Utilities
     namespace IO
     {
 
-        boost::shared_ptr<FileSystem> FileSystemFactory::create(Memory::MemoryManager* const memory,
+        std::shared_ptr<FileSystem> FileSystemFactory::create(Memory::MemoryManager* const memory,
                 const Properties::PropertyManager* const properties)
         {
             // FIXME: DCHECK_NE(memory, nullptr);
@@ -29,7 +29,7 @@ namespace Utilities
 
             const pool_id pool = memory->registerMemoryPool(createMemoryPool(properties));
 
-            boost::shared_ptr<FileSystem> fileSystem;
+            std::shared_ptr<FileSystem> fileSystem;
 
             switch (backend)
             {
@@ -46,11 +46,11 @@ namespace Utilities
             return fileSystem;
         }
 
-        boost::shared_ptr<Memory::Pool> FileSystemFactory::createMemoryPool(const Properties::PropertyManager* const properties)
+        std::shared_ptr<Memory::Pool> FileSystemFactory::createMemoryPool(const Properties::PropertyManager* const properties)
         {
             MemoryPoolSettings fsPoolSettings(MemoryPoolSettings::loadFrom(properties, "FileSystem"));
 
-            boost::shared_ptr<Pool> pool = Pool::create("FileSystemPool", fsPoolSettings);
+            std::shared_ptr<Pool> pool = Pool::create("FileSystemPool", fsPoolSettings);
 
             return pool;
         }

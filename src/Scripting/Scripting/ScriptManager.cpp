@@ -39,7 +39,7 @@ namespace Scripting
 
     ScriptManager::ScriptManager(const MemoryManager::Ptr& memoryManager,
                                  Utilities::Memory::pool_id pool,
-                                 const boost::shared_ptr<FileSystem>& fileSystem,
+                                 const std::shared_ptr<FileSystem>& fileSystem,
                                  const PropertyManager::Ptr& properties)
         : startupScriptName(properties->get<std::string>("Scripting.startup")),
           memory(memoryManager), pool(pool), fileSystem(fileSystem)

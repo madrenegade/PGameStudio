@@ -39,11 +39,11 @@ namespace Core
     {
     }
 
-    const boost::shared_ptr<Scene> SceneLoader::loadScene(const char* const filename) const
+    const std::shared_ptr<Scene> SceneLoader::loadScene(const char* const filename) const
     {
         LOG(INFO) << "Loading scene " << filename;
 
-        boost::shared_ptr<XmlReader> reader = fileSystem->readXml(filename);
+        std::shared_ptr<XmlReader> reader = fileSystem->readXml(filename);
         const XmlReader::Document* doc = reader->getDocument();
 
         SystemVector neededSystems;
@@ -54,7 +54,7 @@ namespace Core
             neededSystems.push_back(node->first_attribute("name")->value());
         }
 
-        const boost::shared_ptr<Scene> scene = memoryManager->construct(Scene());
+        const std::shared_ptr<Scene> scene = memoryManager->construct(Scene());
 
         loadSystemLibraries(neededSystems, scene.get());
 
@@ -69,13 +69,13 @@ namespace Core
         systemScene->load(f);
     }
 
-    typedef boost::shared_ptr<SystemScene> (*CreateFn)(MemoryManager* const);
+    typedef std::shared_ptr<SystemScene> (*CreateFn)(MemoryManager* const);
 
     void SceneLoader::loadSystemLibraries(const SystemVector& systems, Scene* const scene) const
     {
         for (auto i = systems.begin(); i != systems.end(); ++i)
         {
-            const boost::shared_ptr<Platform::Library> lib = platform->libraries()->load(i->c_str(), true);
+            const std::shared_ptr<Platform::Library> lib = platform->libraries()->load(i->c_str(), true);
 
             // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
             CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createSystemScene"));
@@ -94,7 +94,7 @@ namespace Core
             systemScene->setFileSystem(fileSystem);
             systemScene->setProperties(properties);
 
-            const boost::shared_ptr<Pool> pool = Pool::create(i->c_str(), MemoryPoolSettings::loadFrom(properties, i->c_str()));
+            const std::shared_ptr<Pool> pool = Pool::create(i->c_str(), MemoryPoolSettings::loadFrom(properties, i->c_str()));
             const pool_id systemPool = memoryManager->registerMemoryPool(pool);
 
             systemScene->setMemoryPool(systemPool);

@@ -10,7 +10,7 @@
 
 #include "Core/Application.h"
 #include "Core/Events/typedefs.h"
-#include <boost/shared_ptr.hpp>
+
 
 namespace Utilities
 {
@@ -82,16 +82,16 @@ namespace Game
         virtual void onShutdown();
 
     private:
-        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
-        boost::shared_ptr<Core::Events::EventManager> eventManager;
-        boost::shared_ptr<Platform::PlatformManager> platformManager;
-        boost::shared_ptr<Graphics::Window> window;
-        boost::shared_ptr<Core::TaskScheduler> taskScheduler;
-        boost::shared_ptr<Scripting::ScriptManager> scriptManager;
-        boost::shared_ptr<Core::SceneManager> sceneManager;
-        boost::shared_ptr<StateManager> stateManager;
+        std::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        std::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        std::shared_ptr<Utilities::IO::FileSystem> fileSystem;
+        std::shared_ptr<Core::Events::EventManager> eventManager;
+        std::shared_ptr<Platform::PlatformManager> platformManager;
+        std::shared_ptr<Graphics::Window> window;
+        std::shared_ptr<Core::TaskScheduler> taskScheduler;
+        std::shared_ptr<Scripting::ScriptManager> scriptManager;
+        std::shared_ptr<Core::SceneManager> sceneManager;
+        std::shared_ptr<StateManager> stateManager;
 
         bool running;
 

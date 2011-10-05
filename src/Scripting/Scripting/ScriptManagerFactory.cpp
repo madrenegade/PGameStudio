@@ -20,11 +20,11 @@ using namespace Utilities::IO;
 namespace Scripting
 {
 
-    boost::shared_ptr<ScriptManager> ScriptManagerFactory::create(const boost::shared_ptr<MemoryManager>& memoryManager,
-            const boost::shared_ptr<FileSystem>& fileSystem,
-            const boost::shared_ptr<PropertyManager>& properties)
+    std::shared_ptr<ScriptManager> ScriptManagerFactory::create(const std::shared_ptr<MemoryManager>& memoryManager,
+            const std::shared_ptr<FileSystem>& fileSystem,
+            const std::shared_ptr<PropertyManager>& properties)
     {
-        const boost::shared_ptr<Pool> pool = createMemoryPool(properties);
+        const std::shared_ptr<Pool> pool = createMemoryPool(properties);
 
         const pool_id poolID = memoryManager->registerMemoryPool(pool);
 
@@ -39,7 +39,7 @@ namespace Scripting
     {
     }
 
-    boost::shared_ptr<Pool> ScriptManagerFactory::createMemoryPool(const boost::shared_ptr<PropertyManager>& properties)
+    std::shared_ptr<Pool> ScriptManagerFactory::createMemoryPool(const std::shared_ptr<PropertyManager>& properties)
     {
         size_t soMax = properties->get<size_t > ("Scripting.memory.smallObjects.maxSize");
         size_t soPage = properties->get<size_t > ("Scripting.memory.smallObjects.pageSize");
@@ -58,7 +58,7 @@ namespace Scripting
             moMax, moPage, moBlock,
             loMax, loPage, loBlock);
 
-        boost::shared_ptr<Pool> pool = Pool::create("ScriptingPool", scriptingPoolSettings);
+        std::shared_ptr<Pool> pool = Pool::create("ScriptingPool", scriptingPoolSettings);
 
         return pool;
     }

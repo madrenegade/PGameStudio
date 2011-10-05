@@ -5,7 +5,7 @@
 extern "C"
 {
 
-    boost::shared_ptr<Platform::PlatformImpl> create(const Utilities::Memory::MemoryManager::Ptr& memory)
+    std::shared_ptr<Platform::PlatformImpl> create(const Utilities::Memory::MemoryManager::Ptr& memory)
     {
         return memory->construct(Platform::Editor::Platform());
     }

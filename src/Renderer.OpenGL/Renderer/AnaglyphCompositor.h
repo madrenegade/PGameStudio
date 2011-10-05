@@ -8,7 +8,7 @@
 #ifndef RENDERER_ANAGLYPHCOMPOSITOR_H
 #define	RENDERER_ANAGLYPHCOMPOSITOR_H
 
-#include <boost/shared_ptr.hpp>
+
 #include "Renderer/MultiViewCompositor.h"
 #include "Renderer/Manager.h"
 
@@ -22,7 +22,7 @@ namespace Renderer
     class AnaglyphCompositor : public MultiViewCompositor
     {
     public:
-        AnaglyphCompositor(const Viewport* vp, const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
+        AnaglyphCompositor(const Viewport* vp, const std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
                            const unsigned int fx);
         virtual ~AnaglyphCompositor();
 
@@ -32,7 +32,7 @@ namespace Renderer
     private:
         const Viewport* const viewport;
 
-        boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>> effects;
+        std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>> effects;
 
         const unsigned int composeEffect;
     };

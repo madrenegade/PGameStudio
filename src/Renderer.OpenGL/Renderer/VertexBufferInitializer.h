@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   VertexBufferInitializer.h
  * Author: madrenegade
  *
@@ -8,7 +8,7 @@
 #ifndef RENDERER_VERTEXBUFFERINITIALIZER_H
 #define	RENDERER_VERTEXBUFFERINITIALIZER_H
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Renderer
 {
@@ -18,7 +18,7 @@ namespace Renderer
     class VertexBufferInitializer
     {
     public:
-        static void initialize(const boost::shared_ptr<VertexBuffer>& vb, const VertexBufferRequest& request);
+        static void initialize(const std::shared_ptr<VertexBuffer>& vb, const VertexBufferRequest& request);
     };
 }
 

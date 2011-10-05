@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   IndexBufferInitializer.h
  * Author: madrenegade
  *
@@ -8,17 +8,17 @@
 #ifndef RENDERER_INDEXBUFFERINITIALIZER_H
 #define	RENDERER_INDEXBUFFERINITIALIZER_H
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Renderer
 {
     class IndexBuffer;
     class IndexBufferRequest;
-    
+
     class IndexBufferInitializer
     {
     public:
-        static void initialize(const boost::shared_ptr<IndexBuffer>&, const IndexBufferRequest& request);
+        static void initialize(const std::shared_ptr<IndexBuffer>&, const IndexBufferRequest& request);
     };
 }
 

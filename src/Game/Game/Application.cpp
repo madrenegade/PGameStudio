@@ -158,7 +158,7 @@ namespace Game
     {
         VLOG(1) << "Initializing default memory pool";
 
-        boost::shared_ptr<Pool> pool = Pool::create("DefaultPool", MemoryPoolSettings::loadFrom(properties.get(), "Default"));
+        std::shared_ptr<Pool> pool = Pool::create("DefaultPool", MemoryPoolSettings::loadFrom(properties.get(), "Default"));
         memoryManager->registerMemoryPool(pool);
     }
 

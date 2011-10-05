@@ -82,7 +82,7 @@ namespace Graphics
     {
     }
 
-    boost::shared_ptr<SceneNode> SceneLoader::loadFrom(const Utilities::IO::File::Handle& file)
+    std::shared_ptr<SceneNode> SceneLoader::loadFrom(const Utilities::IO::File::Handle& file)
     {
         data = file->getData();
 
@@ -130,7 +130,7 @@ namespace Graphics
             String name(read<String > ());
             VLOG(2) << "Material: '" << name << "'";
 
-            boost::shared_ptr<Material> material = memoryManager->construct(Material(), pool);
+            std::shared_ptr<Material> material = memoryManager->construct(Material(), pool);
             material->diffuse = read<Math::Vector4 > ();
             VLOG(2) << "Diffuse: " << material->diffuse.X << ", " << material->diffuse.Y << ", " << material->diffuse.Z << ", " << material->diffuse.W;
             material->specular = read<Math::Vector4 > ();
@@ -169,7 +169,7 @@ namespace Graphics
 
         for (unsigned int i = 0; i < numMeshes; ++i)
         {
-            boost::shared_ptr<Mesh> mesh = memoryManager->construct(Mesh(), pool);
+            std::shared_ptr<Mesh> mesh = memoryManager->construct(Mesh(), pool);
 
             const unsigned int materialID = read<unsigned int>();
             VLOG(2) << "material: " << materialID;
@@ -257,7 +257,7 @@ namespace Graphics
         {
             String name(read<String>());
 
-            boost::shared_ptr<MonoViewCamera> camera = memoryManager->construct(MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+            std::shared_ptr<MonoViewCamera> camera = memoryManager->construct(MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
             camera->setPosition(read<Math::Vector3>());
             camera->setLookAt(read<Math::Vector3>());
             camera->setUp(read<Math::Vector3>());
@@ -269,7 +269,7 @@ namespace Graphics
         {
             VLOG(2) << "No cameras found in scene file, using default camera";
 
-            boost::shared_ptr<MonoViewCamera> camera = memoryManager->construct(MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
+            std::shared_ptr<MonoViewCamera> camera = memoryManager->construct(MonoViewCamera(fieldOfView, static_cast<double> (width) / static_cast<double> (height), zNear, zFar), pool);
             camera->setPosition(Math::Vector3(0, 0, 0));
             camera->setLookAt(Math::Vector3(0, 0, -1));
             camera->setUp(Math::Vector3(0, 1, 0));
@@ -278,16 +278,16 @@ namespace Graphics
         }
     }
 
-    boost::shared_ptr<SceneNode> SceneLoader::readSceneGraph()
+    std::shared_ptr<SceneNode> SceneLoader::readSceneGraph()
     {
         VLOG(2) << "Reading scene graph";
 
         return readNode();
     }
 
-    boost::shared_ptr<SceneNode> SceneLoader::readNode()
+    std::shared_ptr<SceneNode> SceneLoader::readNode()
     {
-        boost::shared_ptr<SceneNode> node = memoryManager->construct(SceneNode(), pool);
+        std::shared_ptr<SceneNode> node = memoryManager->construct(SceneNode(), pool);
 
         String name(read<String>());
         VLOG(2) << "Reading scene node " << name;

@@ -25,7 +25,7 @@ namespace Utilities
         class MediumObjectAllocator : public Allocator
         {
         public:
-            MediumObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize);
+            MediumObjectAllocator(const std::shared_ptr<PageManager>& pageManager, const size_t blockSize);
 
             virtual byte_pointer allocate(const size_t bytes);
             virtual void deallocate(const_byte_pointer ptr, const size_t sizeOfOneObject, const size_t numObjects);

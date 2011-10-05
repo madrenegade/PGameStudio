@@ -8,7 +8,7 @@
 #ifndef UTILITIES_MEMORY_MEMORYMANAGER_H
 #define	UTILITIES_MEMORY_MEMORYMANAGER_H
 
-#include <boost/shared_ptr.hpp>
+
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/static_assert.hpp>
@@ -51,7 +51,7 @@ namespace Utilities
         class MemoryManager
         {
         public:
-            typedef boost::shared_ptr<MemoryManager> Ptr;
+            typedef std::shared_ptr<MemoryManager> Ptr;
 
             /**
              * Create a memory manager instance. This instance is automatically set to be used by the STLAllocator.
@@ -67,7 +67,7 @@ namespace Utilities
              * @param pool - the pool to register
              * @return the id the pool is registered to
              */
-            pool_id registerMemoryPool(const boost::shared_ptr<Pool>& pool);
+            pool_id registerMemoryPool(const std::shared_ptr<Pool>& pool);
 
             /**
              * unregisters the memory pool
@@ -92,7 +92,7 @@ namespace Utilities
              * @return a pointer to the constructed object
              */
             template<typename T, typename Deleter>
-            boost::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, const pool_id poolID = 0
+            std::shared_ptr<T> construct(const T& obj, const Deleter& preDeleter, const pool_id poolID = 0
                                            STACKTRACE_PARAM)
             {
                 // combine deleter with deallocation function
@@ -100,7 +100,7 @@ namespace Utilities
                 const MainDeleter mainDeleter = boost::bind(&MemoryManager::deallocate<T>, this, _1, 1);
                 const ComposedDeleter<T, Deleter, MainDeleter> deleter(preDeleter, mainDeleter);
 
-                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), deleter);
+                std::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), deleter);
 
                 return ptr;
             }
@@ -114,10 +114,10 @@ namespace Utilities
              * @return a pointer to the constructed object
              */
             template<typename T>
-            boost::shared_ptr<T> construct(const T& obj, const pool_id poolID = 0
+            std::shared_ptr<T> construct(const T& obj, const pool_id poolID = 0
                                            STACKTRACE_PARAM)
             {
-                boost::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
+                std::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
 
                 return ptr;
             }
@@ -184,14 +184,14 @@ namespace Utilities
             ~MemoryManager();
 
         private:
-            MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker);
+            MemoryManager(const std::shared_ptr<MemoryTracker>& memoryTracker);
 
             typedef tbb::spin_mutex MemoryTrackerMutexType;
             MemoryTrackerMutexType memoryTrackerMutex;
-            boost::shared_ptr<MemoryTracker> memoryTracker;
+            std::shared_ptr<MemoryTracker> memoryTracker;
 
             typedef tbb::spin_rw_mutex PoolMapMutexType;
-            typedef std::map<pool_id, boost::shared_ptr<Pool > > PoolMap;
+            typedef std::map<pool_id, std::shared_ptr<Pool > > PoolMap;
 
             PoolMapMutexType poolMapMutex;
             PoolMap pools;
@@ -325,7 +325,7 @@ namespace Utilities
             }
 
 #ifdef DEBUG
-            void assertPoolIsUnique(const boost::shared_ptr<Pool>& pool);
+            void assertPoolIsUnique(const std::shared_ptr<Pool>& pool);
 #endif
 
             static void verifyPlatformAssumptions();

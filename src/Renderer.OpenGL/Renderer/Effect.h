@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Effect.h
  * Author: madrenegade
  *
@@ -9,7 +9,7 @@
 #define	RENDERER_EFFECT_H
 
 #include <Cg/cg.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Math
 {
@@ -22,40 +22,40 @@ namespace Math
 namespace Renderer
 {
     class Texture;
-    
+
     class Effect
     {
     public:
         Effect();
         ~Effect();
-        
+
         static void initialize();
         static void deinitialize();
-        
+
         void load(const char* code);
-        
+
         void set(const char* semantic, double d);
         void set(const char* semantic, const Math::Vector2& v);
         void set(const char* semantic, const Math::Vector3& v);
         void set(const char* semantic, const Math::Vector4& v);
         void set(const char* semantic, const Math::Matrix4& matrix);
-        
+
         void set(unsigned int level, const Texture* texture);
-        
+
         void activate();
-        
+
         bool hasNextPass();
         void gotoNextPass();
-        
+
         void deactivate();
-        
+
     private:
         static CGcontext context;
-        
-        boost::shared_ptr<_CGeffect> effect;
+
+        std::shared_ptr<_CGeffect> effect;
         CGtechnique technique;
         CGpass currentPass;
-        
+
         static void CgErrorHandler(CGcontext context, CGerror error, void* pData);
     };
 }

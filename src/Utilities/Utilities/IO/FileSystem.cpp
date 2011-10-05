@@ -74,7 +74,7 @@ namespace Utilities
         {
             //FIXME: DCHECK_NE(path, nullptr);
 
-            boost::shared_ptr<void> handle(DCHECK_NOTNULL(openForReading(path)), boost::bind(&FileSystem::close, this, _1));
+            std::shared_ptr<void> handle(DCHECK_NOTNULL(openForReading(path)), boost::bind(&FileSystem::close, this, _1));
 
             const size_t fileSize = getFileSize(handle.get());
 
@@ -92,14 +92,14 @@ namespace Utilities
             return memory->construct(File(data, fileSize));
         }
 
-        boost::shared_ptr<XmlReader> FileSystem::readXml(const char* const path)
+        std::shared_ptr<XmlReader> FileSystem::readXml(const char* const path)
         {
             return readXml(read(DCHECK_NOTNULL(path)));
         }
 
-        boost::shared_ptr<XmlReader> FileSystem::readXml(const File::Handle& file)
+        std::shared_ptr<XmlReader> FileSystem::readXml(const File::Handle& file)
         {
-            boost::shared_ptr<XmlReader> reader = memory->construct(XmlReader(memory, memoryPool, file));
+            std::shared_ptr<XmlReader> reader = memory->construct(XmlReader(memory, memoryPool, file));
             return reader;
         }
 
@@ -109,7 +109,7 @@ namespace Utilities
             // FIXME: DCHECK_NE(file.getData(), nullptr);
             DCHECK_GT(file.getSize(), 0);
 
-            const boost::shared_ptr<void> handle(DCHECK_NOTNULL(openForWriting(filename)), boost::bind(&FileSystem::close, this, _1));
+            const std::shared_ptr<void> handle(DCHECK_NOTNULL(openForWriting(filename)), boost::bind(&FileSystem::close, this, _1));
 
             const size_t bytesWritten = write(handle.get(), file.getData(), file.getSize());
 

@@ -24,7 +24,7 @@ namespace Utilities
     namespace Memory
     {
 
-        SmallObjectAllocator::SmallObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize)
+        SmallObjectAllocator::SmallObjectAllocator(const std::shared_ptr<PageManager>& pageManager, const size_t blockSize)
             : Allocator(pageManager, blockSize), USABLE_BLOCKS_PER_PAGE(pageManager->getPageSize() / blockSize - 1)
         {
             // the tail block can handle this amount of blocks

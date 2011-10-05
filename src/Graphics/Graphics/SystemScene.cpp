@@ -58,11 +58,11 @@ namespace Graphics
         properties->addOptions(options);
     }
 
-    typedef boost::shared_ptr<Renderer> (*CreateFn)(MemoryManager* const, const PropertyManager* const, pool_id pool);
+    typedef std::shared_ptr<Renderer> (*CreateFn)(MemoryManager* const, const PropertyManager* const, pool_id pool);
 
     void SystemScene::initialize()
     {
-        boost::shared_ptr<Platform::Library> lib = platformManager->libraries()->load("Renderer.OpenGL");
+        std::shared_ptr<Platform::Library> lib = platformManager->libraries()->load("Renderer.OpenGL");
 
         // NOTE: pointer-to-function and pointer-to-object conversion gives unfixable warning
         CreateFn create = reinterpret_cast<CreateFn> (lib->getFunction("createRenderer"));

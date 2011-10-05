@@ -28,7 +28,7 @@ namespace Graphics
         virtual ~Renderer();
 
         virtual void initialize() = 0;
-        virtual void setCamera(const boost::shared_ptr<Camera>& camera) = 0;
+        virtual void setCamera(const std::shared_ptr<Camera>& camera) = 0;
 
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data, const unsigned int numVertices, const VertexFormat& fmt) = 0;
 

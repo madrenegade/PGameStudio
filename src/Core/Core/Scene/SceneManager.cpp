@@ -14,11 +14,11 @@ namespace Core
 {
     const std::string SceneManager::SCENE_PATH("scenes");
 
-    SceneManager::SceneManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                               const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                               const boost::shared_ptr<Platform::PlatformManager>& platform,
-                               const boost::shared_ptr<Events::EventManager>& eventManager,
-                               const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    SceneManager::SceneManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                               const std::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
+                               const std::shared_ptr<Platform::PlatformManager>& platform,
+                               const std::shared_ptr<Events::EventManager>& eventManager,
+                               const std::shared_ptr<Utilities::Properties::PropertyManager>& properties)
         : memoryManager(memoryManager), fileSystem(fileSystem),
           platform(platform), eventManager(eventManager), properties(properties)
     {
@@ -41,7 +41,7 @@ namespace Core
 
         const auto& systemScenes = scene->getSystemScenes();
 
-        std::for_each(systemScenes.begin(), systemScenes.end(), [name, &loader](const boost::shared_ptr<SystemScene>& systemScene) {
+        std::for_each(systemScenes.begin(), systemScenes.end(), [name, &loader](const std::shared_ptr<SystemScene>& systemScene) {
             String systemSceneFile(SCENE_PATH.c_str(), SCENE_PATH.size());
             systemSceneFile.append("/");
             systemSceneFile.append(name);

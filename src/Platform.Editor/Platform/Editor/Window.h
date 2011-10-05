@@ -2,7 +2,7 @@
 #define PLATFORM_EDITOR_WINDOW_H
 
 #include "Graphics/Window.h"
-#include <boost/shared_ptr.hpp>
+
 
 namespace Platform
 {
@@ -13,13 +13,13 @@ namespace Platform
         class Window : public Graphics::Window
         {
         public:
-            Window(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+            Window(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
             virtual ~Window();
 
             virtual Graphics::GraphicsContext* getGraphicsContext() const;
 
         private:
-            boost::shared_ptr<GraphicsContext> context;
+            std::shared_ptr<GraphicsContext> context;
         };
 
     } // namespace Editor

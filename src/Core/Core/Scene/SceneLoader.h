@@ -8,7 +8,6 @@
 #ifndef CORE_SCENELOADER_H
 #define	CORE_SCENELOADER_H
 
-#include <boost/shared_ptr.hpp>
 #include "Utilities/string.h"
 
 namespace Utilities
@@ -61,7 +60,7 @@ namespace Core
          * Load the scene with the given name
          * @param name
          */
-        const boost::shared_ptr<Scene> loadScene(const char* const filename) const;
+        const std::shared_ptr<Scene> loadScene(const char* const filename) const;
 
         void loadSystemScene(SystemScene* const systemScene, const char* const filename) const;
 

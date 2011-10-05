@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <list>
 #include <boost/scoped_ptr.hpp>
-#include <boost/shared_ptr.hpp>
+
 
 using namespace Utilities::Memory;
 
@@ -15,9 +15,9 @@ const pool_id DEFAULT_POOL = 0;
 class MemoryManagerTest : public testing::Test
 {
 protected:
-    boost::shared_ptr<MemoryManager> memory;
-    boost::shared_ptr<Pool> pool;
-    boost::shared_ptr<MemoryTrackerMock> tracker;
+    std::shared_ptr<MemoryManager> memory;
+    std::shared_ptr<Pool> pool;
+    std::shared_ptr<MemoryTrackerMock> tracker;
 
     virtual void SetUp()
     {
@@ -33,7 +33,7 @@ TEST_F(MemoryManagerTest, construct)
     memory->registerMemoryPool(pool);
     int i = 5;
 
-    boost::shared_ptr<int> ptr = memory->construct(i, DEFAULT_POOL);
+    std::shared_ptr<int> ptr = memory->construct(i, DEFAULT_POOL);
 
     EXPECT_EQ(i, *ptr);
 }
@@ -61,11 +61,11 @@ TEST_F(MemoryManagerTest, registerPoolShouldFailIfPoolAlreadyExists)
 
 TEST_F(MemoryManagerTest, registerPoolShouldCreateUniqueIDs)
 {
-    std::map<pool_id, boost::shared_ptr<Pool> > ids;
+    std::map<pool_id, std::shared_ptr<Pool> > ids;
 
     for (int i = 0; i < 100; ++i)
     {
-        boost::shared_ptr<Pool> pool = Pool::create("Test");
+        std::shared_ptr<Pool> pool = Pool::create("Test");
         pool_id id = memory->registerMemoryPool(pool);
 
         EXPECT_TRUE(ids.find(id) == ids.end());

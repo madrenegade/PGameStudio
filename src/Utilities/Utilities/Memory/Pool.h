@@ -9,7 +9,7 @@
 #define	UTILITIES_MEMORY_POOL_H
 
 #include <boost/scoped_array.hpp>
-#include <boost/shared_ptr.hpp>
+
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/Memory/MemoryPoolSettings.h"
@@ -27,7 +27,7 @@ namespace Utilities
         class Pool
         {
         public:
-            typedef boost::shared_ptr<Pool> Ptr;
+            typedef std::shared_ptr<Pool> Ptr;
 
             /**
              * Create a new memory pool using the specified settings.

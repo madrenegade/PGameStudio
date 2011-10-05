@@ -11,9 +11,9 @@ const pool_id DEFAULT_POOL = 0;
 class STLAllocatorTest : public testing::Test
 {
 protected:
-    boost::shared_ptr<MemoryTracker> tracker;
-    boost::shared_ptr<MemoryManager> memory;
-    boost::shared_ptr<Pool> pool;
+    std::shared_ptr<MemoryTracker> tracker;
+    std::shared_ptr<MemoryManager> memory;
+    std::shared_ptr<Pool> pool;
 
     virtual void SetUp()
     {

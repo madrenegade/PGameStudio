@@ -10,7 +10,7 @@
 
 #include "Graphics/Window.h"
 #include <GL/glx.h>
-#include <boost/shared_ptr.hpp>
+
 
 namespace Utilities
 {
@@ -28,7 +28,7 @@ namespace Platform
         class XWindow : public Graphics::Window
         {
         public:
-            XWindow(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
+            XWindow(const std::shared_ptr<Utilities::Memory::MemoryManager>& memory,
                     unsigned int width, unsigned int height, unsigned int bpp, bool fullscreen);
 
             virtual ~XWindow();
@@ -39,7 +39,7 @@ namespace Platform
             ::Window getHandle() const;
 
         private:
-            boost::shared_ptr<Graphics::GraphicsContext> m_pGraphicsContext;
+            std::shared_ptr<Graphics::GraphicsContext> m_pGraphicsContext;
 
             Display* display;
             GLXFBConfig fbConfig;

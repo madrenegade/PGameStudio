@@ -41,10 +41,10 @@ namespace Renderer
     OpenGLRenderer::OpenGLRenderer(MemoryManager* const memory,
                                    pool_id pool,
                                    const PropertyManager* const properties,
-                                   const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
-                                   const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
-                                   const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
-                                   const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager)
+                                   const std::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > &vbManager,
+                                   const std::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > &ibManager,
+                                   const std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
+                                   const std::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager)
         : memory(memory), pool(pool), properties(properties), vertexBuffers(vbManager), indexBuffers(ibManager), effects(effectManager), textures(textureManager)
     {
     }
@@ -70,7 +70,7 @@ namespace Renderer
         ErrorHandler::checkForErrors();
     }
 
-    void OpenGLRenderer::setCamera(const boost::shared_ptr<Graphics::Camera>& camera)
+    void OpenGLRenderer::setCamera(const std::shared_ptr<Graphics::Camera>& camera)
     {
         this->camera = camera;
 
@@ -78,11 +78,11 @@ namespace Renderer
         viewport->setCamera(camera);
         viewport->activate();
 
-        boost::shared_ptr<FrameBuffer> frameBuffer = memory->construct(FrameBuffer(memory, pool, 4 * camera->getViewCount(), width, height), pool);
+        std::shared_ptr<FrameBuffer> frameBuffer = memory->construct(FrameBuffer(memory, pool, 4 * camera->getViewCount(), width, height), pool);
         viewport->attachFrameBuffer(frameBuffer);
 
-//        boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);
-        boost::shared_ptr<MultiViewCompositor> compositor = memory->construct(DefaultCompositor(viewport.get(), effects, 3), pool);
+//        std::shared_ptr<MultiViewCompositor> compositor = memory->construct(AnaglyphCompositor(viewport.get(), effects, 2), pool);
+        std::shared_ptr<MultiViewCompositor> compositor = memory->construct(DefaultCompositor(viewport.get(), effects, 3), pool);
         viewport->setCompositor(compositor);
     }
 

@@ -24,7 +24,7 @@ namespace Utilities
             return ptr;
         }
 
-        MemoryManager::MemoryManager(const boost::shared_ptr<MemoryTracker>& memoryTracker)
+        MemoryManager::MemoryManager(const std::shared_ptr<MemoryTracker>& memoryTracker)
             : memoryTracker(memoryTracker), latestPoolID()
 #ifdef DEBUG
             , profilerClient(new memprof::client("127.0.0.1"))
@@ -38,7 +38,7 @@ namespace Utilities
             LOG(INFO) << "Maximum memory used: " << memoryTracker->getMaxMemoryUsage() << " bytes";
         }
 
-        pool_id MemoryManager::registerMemoryPool(const boost::shared_ptr<Pool>& pool)
+        pool_id MemoryManager::registerMemoryPool(const std::shared_ptr<Pool>& pool)
         {
 #ifdef DEBUG
             assertPoolIsUnique(pool);
@@ -107,7 +107,7 @@ namespace Utilities
         }
 
 #ifdef DEBUG
-        void MemoryManager::assertPoolIsUnique(const boost::shared_ptr<Pool>& pool)
+        void MemoryManager::assertPoolIsUnique(const std::shared_ptr<Pool>& pool)
         {
             PoolMapMutexType::scoped_lock lock(poolMapMutex, false);
 

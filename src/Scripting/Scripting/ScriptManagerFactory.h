@@ -8,7 +8,7 @@
 #ifndef SCRIPTING_SCRIPTMANAGERFACTORY_H
 #define	SCRIPTING_SCRIPTMANAGERFACTORY_H
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Utilities
 {
@@ -36,15 +36,15 @@ namespace Scripting
     class ScriptManagerFactory
     {
     public:
-        static boost::shared_ptr<ScriptManager> create(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static std::shared_ptr<ScriptManager> create(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+                const std::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
+                const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
     private:
         ScriptManagerFactory();
         ~ScriptManagerFactory();
 
-        static boost::shared_ptr<Utilities::Memory::Pool> createMemoryPool(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static std::shared_ptr<Utilities::Memory::Pool> createMemoryPool(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
     };
 }
 

@@ -10,7 +10,7 @@
 
 #include "Utilities/Memory/MemoryManager.h"
 
-#include <boost/shared_ptr.hpp>
+
 
 namespace Utilities
 {
@@ -26,14 +26,14 @@ namespace Utilities
         class FileSystemFactory
         {
         public:
-            static boost::shared_ptr<FileSystem> create(Memory::MemoryManager*const memory,
+            static std::shared_ptr<FileSystem> create(Memory::MemoryManager*const memory,
                     const Properties::PropertyManager* const properties);
 
         private:
             FileSystemFactory();
             ~FileSystemFactory();
 
-            static boost::shared_ptr<Memory::Pool> createMemoryPool(const Properties::PropertyManager* const properties);
+            static std::shared_ptr<Memory::Pool> createMemoryPool(const Properties::PropertyManager* const properties);
         };
     }
 }

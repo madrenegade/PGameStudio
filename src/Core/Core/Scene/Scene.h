@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Scene.h
  * Author: madrenegade
  *
@@ -13,20 +13,20 @@
 namespace Core
 {
     class SystemScene;
-    
+
     class Scene
     {
     public:
-        typedef boost::shared_ptr<SystemScene> SystemScenePtr;
+        typedef std::shared_ptr<SystemScene> SystemScenePtr;
         typedef std::list<SystemScenePtr, Utilities::Memory::STLAllocator<SystemScenePtr>> SystemSceneList;
-        
+
         Scene();
         ~Scene();
-        
+
         void addSystemScene(const SystemScenePtr& scene);
-        
+
         const SystemSceneList& getSystemScenes() const;
-        
+
     private:
         SystemSceneList systemScenes;
     };

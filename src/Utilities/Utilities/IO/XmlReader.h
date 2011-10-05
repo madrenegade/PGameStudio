@@ -8,7 +8,7 @@
 #ifndef UTILITIES_IO_XMLREADER_H
 #define	UTILITIES_IO_XMLREADER_H
 
-#include <boost/shared_ptr.hpp>
+
 #include <sstream>
 
 #include "Utilities/string.h"
@@ -36,7 +36,7 @@ namespace Utilities
 
         private:
             const boost::shared_array<Memory::byte> data;
-            boost::shared_ptr<Document> doc;
+            std::shared_ptr<Document> doc;
         };
     }
 }

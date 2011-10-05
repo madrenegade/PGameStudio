@@ -40,7 +40,7 @@ namespace Utilities
              * @return An object of type \ref Utilities::IO::XmlReader to
              * navigate through the xml document.
              */
-            boost::shared_ptr<XmlReader> readXml(const char* const path);
+            std::shared_ptr<XmlReader> readXml(const char* const path);
 
             /**
              * Read a xml file into memory.
@@ -48,7 +48,7 @@ namespace Utilities
              * @return An object of type \ref Utilities::IO::XmlReader to
              * navigate through the xml document.
              */
-            boost::shared_ptr<XmlReader> readXml(const File::Handle& file);
+            std::shared_ptr<XmlReader> readXml(const File::Handle& file);
 
             /**
              * Save a file in the writable directory. The writable directory is automatically determined using the settings.

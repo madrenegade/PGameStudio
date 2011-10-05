@@ -2,14 +2,14 @@
 #include "Utilities/Memory/Exceptions/AllocationException.h"
 
 #include <gtest/gtest.h>
-#include <boost/shared_ptr.hpp>
+
 
 using namespace Utilities::Memory;
 
 class DebugMemoryTrackerTest : public testing::Test
 {
 protected:
-    boost::shared_ptr<MemoryTracker> tracker;
+    std::shared_ptr<MemoryTracker> tracker;
 
     virtual void SetUp()
     {

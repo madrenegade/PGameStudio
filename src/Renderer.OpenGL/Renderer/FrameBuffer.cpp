@@ -54,7 +54,7 @@ namespace Renderer
     {
         VLOG(2) << "Create color attachment " << colorAttachments.size();
 
-        boost::shared_ptr<Texture> colorAttachmentTexture = memoryManager->construct(Texture());
+        std::shared_ptr<Texture> colorAttachmentTexture = memoryManager->construct(Texture());
         colorAttachmentTexture->bind();
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

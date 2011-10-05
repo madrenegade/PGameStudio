@@ -14,7 +14,7 @@
 namespace Renderer
 {
 
-    AnaglyphCompositor::AnaglyphCompositor(const Viewport* vp, const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
+    AnaglyphCompositor::AnaglyphCompositor(const Viewport* vp, const std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
                                            unsigned int fx)
         : viewport(vp), effects(effects), composeEffect(fx)
     {

@@ -2,7 +2,7 @@
 #include "Utilities/Memory/constants.h"
 #include "Utilities/Memory/STLAllocator.h"
 
-#include <boost/shared_ptr.hpp>
+
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 
@@ -19,7 +19,7 @@ namespace Utilities
 #ifdef GCC
         int status;
 
-        boost::shared_ptr<char> res(abi::__cxa_demangle(DCHECK_NOTNULL(name),
+        std::shared_ptr<char> res(abi::__cxa_demangle(DCHECK_NOTNULL(name),
                                     0,
                                     0,
                                     &status), free);

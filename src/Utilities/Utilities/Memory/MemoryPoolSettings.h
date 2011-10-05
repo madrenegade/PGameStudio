@@ -9,7 +9,7 @@
 #define	UTILITIES_MEMORY_MEMORYPOOLSETTINGS_H
 
 #include "Utilities/Memory/constants.h"
-#include <boost/shared_ptr.hpp>
+
 
 namespace Utilities
 {

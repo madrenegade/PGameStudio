@@ -28,7 +28,7 @@ namespace Renderer
         glViewport(x, y, width, height);
     }
 
-    void Viewport::setCamera(const boost::shared_ptr<Graphics::Camera>& camera)
+    void Viewport::setCamera(const std::shared_ptr<Graphics::Camera>& camera)
     {
         this->camera = camera;
     }
@@ -38,7 +38,7 @@ namespace Renderer
         return camera.get();
     }
 
-    void Viewport::attachFrameBuffer(const boost::shared_ptr<FrameBuffer>& frameBuffer)
+    void Viewport::attachFrameBuffer(const std::shared_ptr<FrameBuffer>& frameBuffer)
     {
         this->frameBuffer = frameBuffer;
     }
@@ -48,7 +48,7 @@ namespace Renderer
         return frameBuffer.get();
     }
 
-    void Viewport::setCompositor(const boost::shared_ptr<MultiViewCompositor>& compositor)
+    void Viewport::setCompositor(const std::shared_ptr<MultiViewCompositor>& compositor)
     {
         this->compositor = compositor;
     }

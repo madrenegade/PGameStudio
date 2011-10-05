@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   SceneNode.cpp
  * Author: madrenegade
- * 
+ *
  * Created on September 17, 2011, 9:11 AM
  */
 
@@ -27,11 +27,11 @@ namespace Graphics
         for (unsigned int i = 0; i < meshes.size(); ++i)
         {
             Mesh* mesh = meshes.at(i).get();
-            
+
             if (renderer->isVertexBufferLoaded(mesh->vertexBuffer) && renderer->isIndexBufferLoaded(mesh->indexBuffer))
             {
                 bool allTexturesLoaded = true;
-                
+
                 Material* mat = mesh->material.get();
 
                 for (auto j = mat->textures.begin(); j != mat->textures.end(); ++j)
@@ -56,7 +56,7 @@ namespace Graphics
             }
         }
 
-        std::for_each(children.begin(), children.end(), [&renderer](boost::shared_ptr<SceneNode> child) {
+        std::for_each(children.begin(), children.end(), [&renderer](std::shared_ptr<SceneNode> child) {
             child->prepare(renderer);
         });
     }
@@ -66,12 +66,12 @@ namespace Graphics
         this->transform = transform;
     }
 
-    void SceneNode::addChild(const boost::shared_ptr<SceneNode>& node)
+    void SceneNode::addChild(const std::shared_ptr<SceneNode>& node)
     {
         children.push_back(node);
     }
-    
-    void SceneNode::addMesh(const boost::shared_ptr<Mesh>& mesh)
+
+    void SceneNode::addMesh(const std::shared_ptr<Mesh>& mesh)
     {
         meshes.push_back(mesh);
     }

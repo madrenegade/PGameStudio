@@ -42,7 +42,7 @@ namespace memprof
         const std::string host;
 
         boost::asio::io_service io_service;
-        boost::shared_ptr<boost::asio::ip::tcp::socket> socket;
+        std::shared_ptr<boost::asio::ip::tcp::socket> socket;
 
         bool connected;
     };

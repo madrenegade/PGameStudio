@@ -80,7 +80,7 @@ namespace Input
 
     void SystemScene::load(const Utilities::IO::File::Handle& file)
     {
-        boost::shared_ptr<XmlReader> reader = fileSystem->readXml(file);
+        std::shared_ptr<XmlReader> reader = fileSystem->readXml(file);
 
         XmlReader::Node* sceneNode = reader->getDocument()->first_node("input");
 

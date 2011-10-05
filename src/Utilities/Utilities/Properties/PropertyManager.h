@@ -29,7 +29,7 @@ namespace Utilities
         class PropertyManager
         {
         public:
-            typedef boost::shared_ptr<PropertyManager> Ptr;
+            typedef std::shared_ptr<PropertyManager> Ptr;
 
             PropertyManager();
             ~PropertyManager();

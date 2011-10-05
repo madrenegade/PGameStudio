@@ -25,7 +25,7 @@
 
 #include "Utilities/IO/File.h"
 
-#include <boost/shared_ptr.hpp>
+
 
 namespace Math
 {
@@ -56,15 +56,15 @@ namespace Renderer
         OpenGLRenderer(Utilities::Memory::MemoryManager* const memory,
                        Utilities::Memory::pool_id pool,
                        const Utilities::Properties::PropertyManager* const properties,
-                       const boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer> >& vbManager,
-                       const boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer> >& ibManager,
-                       const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
-                       const boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager);
+                       const std::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer> >& vbManager,
+                       const std::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer> >& ibManager,
+                       const std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> >& effectManager,
+                       const std::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> >& textureManager);
         virtual ~OpenGLRenderer();
 
         virtual void initialize();
 
-        virtual void setCamera(const boost::shared_ptr<Graphics::Camera>& camera);
+        virtual void setCamera(const std::shared_ptr<Graphics::Camera>& camera);
 
         virtual unsigned long requestVertexBuffer(const boost::shared_array<Utilities::Memory::byte>& data,
                 const unsigned int numVertices, const Graphics::VertexFormat& fmt);
@@ -106,10 +106,10 @@ namespace Renderer
 
         const Utilities::Properties::PropertyManager* const properties;
 
-        boost::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
-        boost::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
-        boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;
-        boost::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> > textures;
+        std::shared_ptr<Manager<VertexBuffer, VertexBufferRequest, VertexBufferInitializer > > vertexBuffers;
+        std::shared_ptr<Manager<IndexBuffer, IndexBufferRequest, IndexBufferInitializer > > indexBuffers;
+        std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer> > effects;
+        std::shared_ptr<Manager<Texture, TextureRequest, TextureInitializer> > textures;
 
         DrawCallOptimizer drawCallOptimizer;
 
@@ -119,8 +119,8 @@ namespace Renderer
         double zNear;
         double zFar;
 
-        boost::shared_ptr<Graphics::Camera> camera;
-        boost::shared_ptr<Viewport> viewport;
+        std::shared_ptr<Graphics::Camera> camera;
+        std::shared_ptr<Viewport> viewport;
     };
 }
 

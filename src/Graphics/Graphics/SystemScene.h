@@ -34,9 +34,9 @@ namespace Graphics
     private:
         static const std::string SCENE_FILE_EXTENSION;
 
-        boost::shared_ptr<Renderer> renderer;
+        std::shared_ptr<Renderer> renderer;
 
-        boost::shared_ptr<SceneNode> scene;
+        std::shared_ptr<SceneNode> scene;
     };
 }
 

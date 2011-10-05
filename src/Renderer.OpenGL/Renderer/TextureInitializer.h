@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   TextureInitializer.h
  * Author: madrenegade
  *
@@ -8,17 +8,17 @@
 #ifndef RENDERER_TEXTUREINITIALIZER_H
 #define	RENDERER_TEXTUREINITIALIZER_H
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Renderer
 {
     class Texture;
     class TextureRequest;
-    
+
     class TextureInitializer
     {
     public:
-        static void initialize(const boost::shared_ptr<Texture>& texture, const TextureRequest& request);
+        static void initialize(const std::shared_ptr<Texture>& texture, const TextureRequest& request);
     };
 }
 

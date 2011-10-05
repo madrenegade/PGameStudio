@@ -10,7 +10,7 @@
 
 #include "Utilities/Memory/typedefs.h"
 #include <cstddef>
-#include <boost/shared_ptr.hpp>
+
 #include <map>
 
 namespace Utilities

@@ -8,7 +8,7 @@
 #ifndef GRAPHICS_SCENELOADER_H
 #define	GRAPHICS_SCENELOADER_H
 
-#include <boost/shared_ptr.hpp>
+
 
 #include "Math/Vector4.h"
 #include "Math/Matrix4.h"
@@ -51,7 +51,7 @@ namespace Graphics
     class SceneLoader
     {
     public:
-        typedef boost::shared_ptr<Camera> CameraPtr;
+        typedef std::shared_ptr<Camera> CameraPtr;
         typedef std::vector<CameraPtr, Utilities::Memory::STLAllocator<CameraPtr>> Cameras;
 
         SceneLoader(Utilities::IO::FileSystem* const fileSystem,
@@ -60,7 +60,7 @@ namespace Graphics
                     Utilities::Memory::pool_id pool, Renderer* const renderer);
         ~SceneLoader();
 
-        boost::shared_ptr<SceneNode> loadFrom(const Utilities::IO::File::Handle& file);
+        std::shared_ptr<SceneNode> loadFrom(const Utilities::IO::File::Handle& file);
 
         const Cameras& getCameras() const;
 
@@ -71,8 +71,8 @@ namespace Graphics
         void readMeshes();
         void readCameras();
 
-        boost::shared_ptr<SceneNode> readSceneGraph();
-        boost::shared_ptr<SceneNode> readNode();
+        std::shared_ptr<SceneNode> readSceneGraph();
+        std::shared_ptr<SceneNode> readNode();
 
         template<typename T>
         const T read()
@@ -90,8 +90,8 @@ namespace Graphics
         const char* data;
         unsigned char numberSize;
 
-        typedef boost::shared_ptr<Material> MaterialPtr;
-        typedef boost::shared_ptr<Mesh> MeshPtr;
+        typedef std::shared_ptr<Material> MaterialPtr;
+        typedef std::shared_ptr<Mesh> MeshPtr;
 
         std::vector<MaterialPtr, Utilities::Memory::STLAllocator<MaterialPtr>> materials;
         std::vector<MeshPtr, Utilities::Memory::STLAllocator<MeshPtr>> meshes;

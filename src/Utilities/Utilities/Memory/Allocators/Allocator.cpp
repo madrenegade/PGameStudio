@@ -22,7 +22,7 @@ namespace Utilities
     namespace Memory
     {
 
-        Allocator::Allocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize)
+        Allocator::Allocator(const std::shared_ptr<PageManager>& pageManager, const size_t blockSize)
             : pageManager(pageManager), memoryUsage(0), BLOCK_SIZE(blockSize)
         {
             if(pageManager->getPageSize() % blockSize != 0)

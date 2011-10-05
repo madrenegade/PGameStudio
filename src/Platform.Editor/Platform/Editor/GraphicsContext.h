@@ -2,7 +2,7 @@
 #define PLATFORM_EDITOR_GRAPHICSCONTEXT_H
 
 #include "Graphics/GraphicsContext.h"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Utilities
 {
@@ -20,7 +20,7 @@ namespace Platform
         class GraphicsContext : public Graphics::GraphicsContext
         {
         public:
-            GraphicsContext(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+            GraphicsContext(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
             virtual ~GraphicsContext();
 
             virtual void MakeCurrent();
@@ -28,7 +28,7 @@ namespace Platform
             virtual void SwapBuffers();
 
         private:
-            const boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
+            const std::shared_ptr<Utilities::Properties::PropertyManager> properties;
         };
 
     } // namespace Editor

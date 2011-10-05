@@ -42,8 +42,8 @@ namespace Platform
             return 0;
         }
 
-        boost::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
-                const boost::shared_ptr<EventManager>&,
+        std::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
+                const std::shared_ptr<EventManager>&,
                 const PropertyManager::Ptr& properties)
         {
             std::string renderer = properties->get<std::string > ("Graphics.renderer");
@@ -54,7 +54,7 @@ namespace Platform
                 throw std::logic_error("PGSEditor only supports OpenGL");
             }
 
-            boost::shared_ptr<Graphics::Window> window = memoryManager->construct(Window(properties));
+            std::shared_ptr<Graphics::Window> window = memoryManager->construct(Window(properties));
             return window;
         }
 

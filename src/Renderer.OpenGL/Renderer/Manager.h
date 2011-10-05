@@ -9,7 +9,7 @@
 #define	RENDERER_MANAGER_H
 
 #include <map>
-#include <boost/shared_ptr.hpp>
+
 
 #include <tbb/atomic.h>
 #include <tbb/concurrent_queue.h>
@@ -71,7 +71,7 @@ namespace Renderer
                 {
                     VLOG(2) << "Handling request with id " << request.id;
 
-                    boost::shared_ptr<T> object = memory->construct(T(), pool);
+                    std::shared_ptr<T> object = memory->construct(T(), pool);
                     ObjectInitializerType::initialize(object, request);
 
                     data[request.id] = object;
@@ -107,7 +107,7 @@ namespace Renderer
         Utilities::Memory::MemoryManager* const memory;
         Utilities::Memory::pool_id pool;
 
-        typedef boost::shared_ptr<T> pointer;
+        typedef std::shared_ptr<T> pointer;
 
         typedef std::pair<const unsigned long, pointer> DataMapEntry;
         typedef Utilities::Memory::STLAllocator<DataMapEntry> DataMapEntryAllocator;

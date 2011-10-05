@@ -78,7 +78,7 @@ namespace Input
         Core::Events::EventID centerOnAxes;
         Core::Events::EventID centerMouse;
 
-        typedef boost::shared_ptr<Controller> ControllerPtr;
+        typedef std::shared_ptr<Controller> ControllerPtr;
 
         typedef std::pair<const String, ControllerPtr> ControllerMapEntry;
         typedef std::pair<const unsigned int, Controller*> ControlIDMapEntry;

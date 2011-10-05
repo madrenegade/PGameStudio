@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   LargeObjectAllocator.h
  * Author: madrenegade
  *
@@ -18,8 +18,8 @@ namespace Utilities
         class LargeObjectAllocator : public MediumObjectAllocator
         {
         public:
-            LargeObjectAllocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize);
-            
+            LargeObjectAllocator(const std::shared_ptr<PageManager>& pageManager, const size_t blockSize);
+
 //            virtual byte_pointer allocate(size_t bytes);
 //            virtual void deallocate(const_byte_pointer ptr, size_t sizeOfOneObject, size_t numObjects);
 //

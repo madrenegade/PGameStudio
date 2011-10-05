@@ -8,7 +8,7 @@
 #ifndef PLATFORM_PLATFORMMANAGER_H
 #define	PLATFORM_PLATFORMMANAGER_H
 
-#include <boost/shared_ptr.hpp>
+
 #include "Platform/LibraryManager.h"
 
 namespace Utilities
@@ -45,11 +45,11 @@ namespace Platform
     class PlatformManager
     {
     public:
-        static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static void addOptionsTo(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
-        PlatformManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memory,
-                        const boost::shared_ptr<Core::Events::EventManager>& eventManager,
-                        const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        PlatformManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memory,
+                        const std::shared_ptr<Core::Events::EventManager>& eventManager,
+                        const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
         ~PlatformManager();
 
         /**
@@ -68,7 +68,7 @@ namespace Platform
          * Creates a window, an renderer and a corresponding graphics context.
          * @return the created window
          */
-        boost::shared_ptr<Graphics::Window> createWindow();
+        std::shared_ptr<Graphics::Window> createWindow();
         Graphics::Window* getWindow() const;
 
         /**
@@ -78,13 +78,13 @@ namespace Platform
         LibraryManager* libraries() const;
 
     private:
-        boost::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        boost::shared_ptr<Core::Events::EventManager> eventManager;
-        boost::shared_ptr<Utilities::Properties::PropertyManager> properties;
-        boost::shared_ptr<LibraryManager> libraryManager;
-        boost::shared_ptr<Library> platformLibrary;
+        std::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        std::shared_ptr<Core::Events::EventManager> eventManager;
+        std::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        std::shared_ptr<LibraryManager> libraryManager;
+        std::shared_ptr<Library> platformLibrary;
 
-        boost::shared_ptr<PlatformImpl> impl;
+        std::shared_ptr<PlatformImpl> impl;
 
         Graphics::Window* window;
     };

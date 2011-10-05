@@ -8,7 +8,7 @@
 #ifdef GCC
 #include <cxxabi.h>
 #include <stdexcept>
-#include <boost/shared_ptr.hpp>
+
 #include <execinfo.h>
 #endif
 

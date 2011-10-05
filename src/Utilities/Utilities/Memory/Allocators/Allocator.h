@@ -12,7 +12,7 @@
 
 #include <map>
 #include <boost/shared_array.hpp>
-#include <boost/shared_ptr.hpp>
+
 #include <unordered_map>
 #include <vector>
 
@@ -63,9 +63,9 @@ namespace Utilities
             virtual size_t getFreeMemory() const = 0;
 
         protected:
-            Allocator(const boost::shared_ptr<PageManager>& pageManager, const size_t blockSize);
+            Allocator(const std::shared_ptr<PageManager>& pageManager, const size_t blockSize);
 
-            const boost::shared_ptr<PageManager> pageManager;
+            const std::shared_ptr<PageManager> pageManager;
 
             size_t memoryUsage;
 

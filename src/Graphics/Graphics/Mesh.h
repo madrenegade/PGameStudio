@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Mesh.h
  * Author: madrenegade
  *
@@ -16,8 +16,8 @@ namespace Graphics
     {
         unsigned long vertexBuffer;
         unsigned long indexBuffer;
-        
-        boost::shared_ptr<Material> material;
+
+        std::shared_ptr<Material> material;
     };
 }
 

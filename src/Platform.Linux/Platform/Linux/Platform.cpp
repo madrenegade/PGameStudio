@@ -44,8 +44,8 @@ namespace Platform
             return eventHandler->GetKeysym(name);
         }
 
-        boost::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
-                const boost::shared_ptr<EventManager>& eventManager,
+        std::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
+                const std::shared_ptr<EventManager>& eventManager,
                 const PropertyManager::Ptr& properties)
         {
             windowWidth = properties->get<unsigned int>("Window.width");
@@ -68,7 +68,7 @@ namespace Platform
 
             eventHandler.reset(new X11EventHandler(eventManager, x11Window->getDisplay(), x11Window->getHandle()));
 
-            boost::shared_ptr<Graphics::Window> window(x11Window);
+            std::shared_ptr<Graphics::Window> window(x11Window);
 
             return window;
         }

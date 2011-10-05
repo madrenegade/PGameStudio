@@ -1,7 +1,7 @@
 #ifndef RENDERER_DEFAULTCOMPOSITOR_H
 #define RENDERER_DEFAULTCOMPOSITOR_H
 
-#include <boost/shared_ptr.hpp>
+
 #include "Renderer/MultiViewCompositor.h"
 #include "Renderer/Manager.h"
 
@@ -15,7 +15,7 @@ namespace Renderer
     class DefaultCompositor : public Renderer::MultiViewCompositor
     {
     public:
-        DefaultCompositor(const Viewport* const viewport, const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
+        DefaultCompositor(const Viewport* const viewport, const std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>>& effects,
                           const unsigned int fx);
         virtual ~DefaultCompositor();
 
@@ -24,7 +24,7 @@ namespace Renderer
 
     private:
         const Viewport* const viewport;
-        const boost::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>> effects;
+        const std::shared_ptr<Manager<Effect, EffectRequest, EffectInitializer>> effects;
         const unsigned int composeEffect;
     };
 

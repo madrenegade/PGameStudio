@@ -8,7 +8,7 @@
 #ifndef SCRIPTING_SCRIPTMANAGER_H
 #define	SCRIPTING_SCRIPTMANAGER_H
 
-#include <boost/shared_ptr.hpp>
+
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 
@@ -51,7 +51,7 @@ namespace Scripting
     class ScriptManager
     {
     public:
-        static void addOptionsTo(const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static void addOptionsTo(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
         void runStartupScript();
 
@@ -77,25 +77,25 @@ namespace Scripting
     private:
         void logErrors(int status);
 
-        typedef boost::shared_ptr<Script> ScriptPtr;
+        typedef std::shared_ptr<Script> ScriptPtr;
         typedef std::pair<const String, ScriptPtr> ScriptMapEntry;
         typedef Utilities::Memory::STLAllocator<ScriptMapEntry> ScriptMapEntryAllocator;
         typedef std::map<String, ScriptPtr, std::less<String>, ScriptMapEntryAllocator> ScriptMap;
 
         friend class ScriptManagerFactory;
-        ScriptManager(const boost::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+        ScriptManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
                       Utilities::Memory::pool_id pool,
-                      const boost::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                      const boost::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+                      const std::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
+                      const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
 
         static const std::string SCRIPT_BASE_PATH;
 
         std::string startupScriptName;
 
-        const boost::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        const std::shared_ptr<Utilities::Memory::MemoryManager> memory;
         const Utilities::Memory::pool_id pool;
 
-        boost::shared_ptr<Utilities::IO::FileSystem> fileSystem;
+        std::shared_ptr<Utilities::IO::FileSystem> fileSystem;
 
         std::shared_ptr<lua_State> state;
 

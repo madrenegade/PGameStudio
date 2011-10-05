@@ -9,7 +9,7 @@
 #define	CORE_SYSTEMSCENE_H
 
 #include <tbb/task.h>
-#include <boost/shared_ptr.hpp>
+
 
 #include "Utilities/Memory/typedefs.h"
 #include "Utilities/IO/File.h"

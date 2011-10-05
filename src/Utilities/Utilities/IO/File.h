@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   File.h
  * Author: madrenegade
  *
@@ -19,14 +19,14 @@ namespace Utilities
         class File
         {
         public:
-            typedef boost::shared_ptr<File> Handle;
-            
+            typedef std::shared_ptr<File> Handle;
+
             File();
             File(const boost::shared_array<Memory::byte>& data, const size_t size);
-            
+
             Memory::byte_pointer getData() const;
             size_t getSize() const;
-            
+
         private:
             const boost::shared_array<Memory::byte> data;
             const size_t size;

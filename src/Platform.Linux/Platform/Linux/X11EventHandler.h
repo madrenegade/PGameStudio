@@ -28,7 +28,7 @@ namespace Platform
         class X11EventHandler
         {
         public:
-            X11EventHandler(const boost::shared_ptr<Core::Events::EventManager>& eventManager, Display* display, ::Window window);
+            X11EventHandler(const std::shared_ptr<Core::Events::EventManager>& eventManager, Display* display, ::Window window);
             virtual ~X11EventHandler();
 
             virtual void handleEvents();
@@ -37,7 +37,7 @@ namespace Platform
             void warpPointer(const unsigned int x, const unsigned int y);
 
         private:
-            boost::shared_ptr<Core::Events::EventManager> eventManager;
+            std::shared_ptr<Core::Events::EventManager> eventManager;
             Display* display;
             ::Window window;
 
