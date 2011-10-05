@@ -119,7 +119,7 @@ TEST_F(MediumObjectAllocatorTest, testAllocationPerformance)
     std::cout << "Allocating " << allocations << std::endl;
 
     {
-        boost::scoped_array<byte_pointer> ptrs(new byte_pointer[allocations]);
+        std::unique_ptr<byte_pointer[]> ptrs(new byte_pointer[allocations]);
 
         Utilities::StopWatch sw("Time (default new)");
 
@@ -135,7 +135,7 @@ TEST_F(MediumObjectAllocatorTest, testAllocationPerformance)
     }
 
     {
-        boost::scoped_array<byte_pointer> ptrs(new byte_pointer[allocations]);
+        std::unique_ptr<byte_pointer[]> ptrs(new byte_pointer[allocations]);
 
         Utilities::StopWatch sw("Time (allocate)");
 

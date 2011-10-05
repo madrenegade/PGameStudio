@@ -31,7 +31,6 @@
 
 #ifdef DEBUG
 #include "../MemoryProfiler/memprof/memprof/client.h"
-#include <boost/scoped_ptr.hpp>
 #include "StackTrace.h"
 #include "Utilities/Memory/Exceptions/AllocationException.h"
 #endif
@@ -201,7 +200,7 @@ namespace Utilities
 #ifdef DEBUG
             typedef tbb::spin_mutex ProfilerClientMutexType;
             ProfilerClientMutexType profilerClientMutex;
-            boost::scoped_ptr<memprof::client> profilerClient;
+            std::unique_ptr<memprof::client> profilerClient;
 #endif
 
             pool_id findPoolContaining(const_byte_pointer ptr) const;
