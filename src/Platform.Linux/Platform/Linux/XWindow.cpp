@@ -17,7 +17,7 @@ namespace Platform
     namespace Linux
     {
 
-        XWindow::XWindow(const std::shared_ptr<Utilities::Memory::MemoryManager>&, unsigned int w, unsigned int h,
+        XWindow::XWindow(Utilities::Memory::MemoryManager* const, unsigned int w, unsigned int h,
                          unsigned int, bool fullscreen)
             : fbConfig(0), window(0)
         {

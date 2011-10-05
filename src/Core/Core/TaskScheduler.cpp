@@ -20,7 +20,7 @@ using namespace Utilities::Properties;
 namespace Core
 {
 
-    void TaskScheduler::addOptionsTo(const PropertyManager::Ptr& properties)
+    void TaskScheduler::addOptionsTo(PropertyManager* const properties)
     {
         po::options_description options("Task scheduler options");
 
@@ -30,7 +30,7 @@ namespace Core
         properties->addOptions(options);
     }
 
-    TaskScheduler::TaskScheduler(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    TaskScheduler::TaskScheduler(const PropertyManager* const properties)
         : backgroundTask(0), rootTask(0)
     {
         const unsigned int numThreadsFromConfig = properties->get<unsigned int>("Scheduler.numThreads");

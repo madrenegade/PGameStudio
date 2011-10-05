@@ -50,14 +50,12 @@ namespace Utilities
         class MemoryManager
         {
         public:
-            typedef std::shared_ptr<MemoryManager> Ptr;
-
             /**
              * Create a memory manager instance. This instance is automatically set to be used by the STLAllocator.
              * @param memoryTracker - the memory tracker to use
              * @return the new memory manager instance
              */
-            static Ptr create(const MemoryTracker::Ptr& memoryTracker);
+            static std::shared_ptr<MemoryManager> create(const std::shared_ptr<MemoryTracker>& memoryTracker);
 
             /**
              * registers a new memory pool and returns an id to access it
@@ -99,9 +97,7 @@ namespace Utilities
                 const MainDeleter mainDeleter = boost::bind(&MemoryManager::deallocate<T>, this, _1, 1);
                 const ComposedDeleter<T, Deleter, MainDeleter> deleter(preDeleter, mainDeleter);
 
-                std::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), deleter);
-
-                return ptr;
+                return std::shared_ptr<T>(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), deleter);
             }
 
             /**
@@ -116,9 +112,7 @@ namespace Utilities
             std::shared_ptr<T> construct(const T& obj, const pool_id poolID = 0
                                            STACKTRACE_PARAM)
             {
-                std::shared_ptr<T> ptr(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
-
-                return ptr;
+                return std::shared_ptr<T>(new (internalAllocate<T > (1, poolID STACKTRACE)) T(obj), boost::bind(&MemoryManager::deallocate<T>, this, _1, 1));
             }
 
             template<typename T>
@@ -190,7 +184,7 @@ namespace Utilities
             std::shared_ptr<MemoryTracker> memoryTracker;
 
             typedef tbb::spin_rw_mutex PoolMapMutexType;
-            typedef std::map<pool_id, std::shared_ptr<Pool > > PoolMap;
+            typedef std::map<pool_id, std::shared_ptr<Pool>> PoolMap;
 
             PoolMapMutexType poolMapMutex;
             PoolMap pools;

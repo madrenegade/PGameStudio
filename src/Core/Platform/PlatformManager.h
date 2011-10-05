@@ -45,11 +45,11 @@ namespace Platform
     class PlatformManager
     {
     public:
-        static void addOptionsTo(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static void addOptionsTo(Utilities::Properties::PropertyManager* const properties);
 
-        PlatformManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memory,
-                        const std::shared_ptr<Core::Events::EventManager>& eventManager,
-                        const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        PlatformManager(Utilities::Memory::MemoryManager* const memory,
+                        Core::Events::EventManager* const eventManager,
+                        const Utilities::Properties::PropertyManager* const properties);
         ~PlatformManager();
 
         /**
@@ -78,12 +78,13 @@ namespace Platform
         LibraryManager* libraries() const;
 
     private:
-        std::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        std::shared_ptr<Core::Events::EventManager> eventManager;
-        std::shared_ptr<Utilities::Properties::PropertyManager> properties;
-        std::shared_ptr<LibraryManager> libraryManager;
-        std::shared_ptr<Library> platformLibrary;
+        Utilities::Memory::MemoryManager* const memoryManager;
+        Core::Events::EventManager* const eventManager;
+        const Utilities::Properties::PropertyManager* const properties;
 
+        const std::shared_ptr<LibraryManager> libraryManager;
+
+        std::shared_ptr<Library> platformLibrary;
         std::shared_ptr<PlatformImpl> impl;
 
         Graphics::Window* window;

@@ -29,8 +29,6 @@ namespace Utilities
         class PropertyManager
         {
         public:
-            typedef std::shared_ptr<PropertyManager> Ptr;
-
             PropertyManager();
             ~PropertyManager();
 

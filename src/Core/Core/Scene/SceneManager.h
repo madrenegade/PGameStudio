@@ -47,11 +47,11 @@ namespace Core
     class SceneManager
     {
     public:
-        SceneManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                     const std::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                     const std::shared_ptr<Platform::PlatformManager>& platform,
-                     const std::shared_ptr<Events::EventManager>& eventManager,
-                     const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        SceneManager(Utilities::Memory::MemoryManager* const memoryManager,
+                     Utilities::IO::FileSystem* const fileSystem,
+                     Platform::PlatformManager* const platform,
+                     Events::EventManager* const eventManager,
+                     Utilities::Properties::PropertyManager* const properties);
         ~SceneManager();
 
         void loadScene(const char* const name);
@@ -62,11 +62,11 @@ namespace Core
     private:
         static const std::string SCENE_PATH;
 
-        const std::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
-        const std::shared_ptr<Utilities::IO::FileSystem> fileSystem;
-        const std::shared_ptr<Platform::PlatformManager> platform;
-        const std::shared_ptr<Events::EventManager> eventManager;
-        const std::shared_ptr<Utilities::Properties::PropertyManager> properties;
+        Utilities::Memory::MemoryManager* const memoryManager;
+        Utilities::IO::FileSystem* const fileSystem;
+        Platform::PlatformManager* const platform;
+        Events::EventManager* const eventManager;
+        Utilities::Properties::PropertyManager* const properties;
 
         typedef std::shared_ptr<Scene> ScenePtr;
         typedef std::pair<const String, ScenePtr> SceneMapEntry;

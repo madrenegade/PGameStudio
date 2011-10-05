@@ -25,7 +25,7 @@ namespace Graphics
     class Window
     {
     public:
-        static void addOptionsTo(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static void addOptionsTo(Utilities::Properties::PropertyManager* const properties);
 
         virtual ~Window();
 

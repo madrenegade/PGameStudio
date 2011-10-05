@@ -15,7 +15,6 @@ namespace Utilities
         class MemoryTracker
         {
         public:
-            typedef std::shared_ptr<MemoryTracker> Ptr;
             typedef std::vector<AllocationInfo> MemoryDump;
 
             virtual ~MemoryTracker();

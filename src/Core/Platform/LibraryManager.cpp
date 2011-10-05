@@ -15,9 +15,11 @@
 #include <glog/logging.h>
 #include <list>
 
+using namespace Utilities::Memory;
+
 namespace Platform
 {
-    LibraryManager::LibraryManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager)
+    LibraryManager::LibraryManager(MemoryManager* const memoryManager)
         : memoryManager(memoryManager)
     {
     }

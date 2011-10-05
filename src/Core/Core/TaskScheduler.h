@@ -26,9 +26,9 @@ namespace Core
     class TaskScheduler
     {
     public:
-        static void addOptionsTo(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static void addOptionsTo(Utilities::Properties::PropertyManager* const properties);
 
-        TaskScheduler(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        TaskScheduler(const Utilities::Properties::PropertyManager* const properties);
         ~TaskScheduler();
 
         /**

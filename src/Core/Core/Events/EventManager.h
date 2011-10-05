@@ -77,14 +77,15 @@ namespace Core
 
             const Utilities::Memory::MemoryManager* const memory;
 
+            typedef std::shared_ptr<EventSignal> EventSignalPtr;
             typedef std::pair<const String, EventID> EventMapEntry;
-            typedef std::pair<const EventID, std::shared_ptr<EventSignal>> SignalMapEntry;
+            typedef std::pair<const EventID, EventSignalPtr> SignalMapEntry;
 
             typedef Utilities::Memory::STLAllocator<EventMapEntry> EventMapAllocator;
             typedef Utilities::Memory::STLAllocator<SignalMapEntry> SignalMapAllocator;
 
             typedef std::map<String, EventID, std::less<String>, EventMapAllocator> EventMap;
-            typedef std::map<EventID, std::shared_ptr<EventSignal>, std::less<EventID>, SignalMapAllocator> SignalMap;
+            typedef std::map<EventID, EventSignalPtr, std::less<EventID>, SignalMapAllocator> SignalMap;
 
             EventMap events;
             SignalMap signals;

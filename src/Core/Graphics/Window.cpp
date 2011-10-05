@@ -13,7 +13,7 @@ using namespace Utilities::Properties;
 namespace Graphics
 {
 
-    void Window::addOptionsTo(const PropertyManager::Ptr& properties)
+    void Window::addOptionsTo(PropertyManager* const properties)
     {
         po::options_description options("Filesystem options");
 

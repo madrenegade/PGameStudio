@@ -39,7 +39,7 @@ protected:
 
 TEST_F(MediumObjectAllocatorTest, assertBlockSizeIsBigEnough)
 {
-    PageManager::Ptr pageManager = PageManager::create(4 * KByte, 4 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(4 * KByte, 4 * KByte);
 
     EXPECT_THROW( {
         boost::scoped_ptr<MediumObjectAllocator> ptr(new MediumObjectAllocator(pageManager, 16 * Byte));
@@ -48,7 +48,7 @@ TEST_F(MediumObjectAllocatorTest, assertBlockSizeIsBigEnough)
 
 TEST_F(MediumObjectAllocatorTest, getMemoryUsage)
 {
-    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(1 * KByte, 1 * KByte);
 
     boost::scoped_ptr<MediumObjectAllocator> ptr(new MediumObjectAllocator(pageManager, 32 * Byte));
 
@@ -62,7 +62,7 @@ TEST_F(MediumObjectAllocatorTest, getMemoryUsage)
 
 TEST_F(MediumObjectAllocatorTest, getFreeMemory)
 {
-    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(1 * KByte, 1 * KByte);
 
     boost::scoped_ptr<MediumObjectAllocator> ptr(new MediumObjectAllocator(pageManager, 32 * Byte));
 
@@ -87,7 +87,7 @@ TEST_F(MediumObjectAllocatorTest, allocateShouldFailForTooManyBytes)
 
 TEST_F(MediumObjectAllocatorTest, testAllocateFailsWhenNotEnoughConsecutiveFreeBlocksAreAvailable)
 {
-    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(1 * KByte, 1 * KByte);
     boost::scoped_ptr<MediumObjectAllocator> ptr(new MediumObjectAllocator(pageManager, 128 * Byte));
 
     ptr->allocate(3 * 128*Byte);
@@ -99,7 +99,7 @@ TEST_F(MediumObjectAllocatorTest, testAllocateFailsWhenNotEnoughConsecutiveFreeB
 
 TEST_F(MediumObjectAllocatorTest, testAllocateUsesPageWithEnoughConsecutiveFreeBlocks)
 {
-    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(1 * KByte, 1 * KByte);
     boost::scoped_ptr<MediumObjectAllocator> ptr(new MediumObjectAllocator(pageManager, 128 * Byte));
 
     ptr->allocate(3 * 128*Byte);

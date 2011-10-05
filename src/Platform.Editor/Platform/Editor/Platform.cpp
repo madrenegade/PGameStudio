@@ -42,9 +42,9 @@ namespace Platform
             return 0;
         }
 
-        std::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
-                const std::shared_ptr<EventManager>&,
-                const PropertyManager::Ptr& properties)
+        std::shared_ptr<Graphics::Window> Platform::createWindow(Utilities::Memory::MemoryManager* const memoryManager,
+                Core::Events::EventManager* const eventManager,
+                const Utilities::Properties::PropertyManager* const properties)
         {
             std::string renderer = properties->get<std::string > ("Graphics.renderer");
 

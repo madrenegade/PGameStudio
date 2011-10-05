@@ -70,7 +70,7 @@ namespace Utilities
                               properties->get<std::string > ("FileSystem.appName").c_str());
         }
 
-        File::Handle FileSystem::read(const char* const path)
+        File::Handle FileSystem::read(const char* const path) const
         {
             //FIXME: DCHECK_NE(path, nullptr);
 
@@ -92,12 +92,12 @@ namespace Utilities
             return memory->construct(File(data, fileSize));
         }
 
-        std::shared_ptr<XmlReader> FileSystem::readXml(const char* const path)
+        std::shared_ptr<XmlReader> FileSystem::readXml(const char* const path) const
         {
             return readXml(read(DCHECK_NOTNULL(path)));
         }
 
-        std::shared_ptr<XmlReader> FileSystem::readXml(const File::Handle& file)
+        std::shared_ptr<XmlReader> FileSystem::readXml(const File::Handle& file) const
         {
             std::shared_ptr<XmlReader> reader = memory->construct(XmlReader(memory, memoryPool, file));
             return reader;

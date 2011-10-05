@@ -27,15 +27,13 @@ namespace Utilities
         class Pool
         {
         public:
-            typedef std::shared_ptr<Pool> Ptr;
-
             /**
              * Create a new memory pool using the specified settings.
              * @param name - A name for the memory pool.
              * @param settings - The settings used to create the memory pool.
              * @return A smart pointer to the newly created memory pool.
              */
-            static Ptr create(const char* const name, const MemoryPoolSettings& settings = MemoryPoolSettings());
+            static std::shared_ptr<Pool> create(const char* const name, const MemoryPoolSettings& settings = MemoryPoolSettings());
 
             const char* getName() const;
 

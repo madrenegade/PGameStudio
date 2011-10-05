@@ -36,15 +36,15 @@ namespace Scripting
     class ScriptManagerFactory
     {
     public:
-        static std::shared_ptr<ScriptManager> create(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                const std::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static std::shared_ptr<ScriptManager> create(Utilities::Memory::MemoryManager* const memoryManager,
+                const Utilities::IO::FileSystem* const fileSystem,
+                const Utilities::Properties::PropertyManager* const properties);
 
     private:
         ScriptManagerFactory();
         ~ScriptManagerFactory();
 
-        static std::shared_ptr<Utilities::Memory::Pool> createMemoryPool(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static std::shared_ptr<Utilities::Memory::Pool> createMemoryPool(const Utilities::Properties::PropertyManager* const properties);
     };
 }
 

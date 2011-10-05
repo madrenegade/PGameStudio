@@ -76,7 +76,7 @@ namespace Utilities
                 return PHYSFS_fileLength(internalHandle);
             }
 
-            void* PhysFS::openForReading(const char* const path)
+            void* PhysFS::openForReading(const char* const path) const
             {
 #ifdef DEBUG
                 RAW_LOG_INFO("Opening %s", path);
@@ -112,7 +112,7 @@ namespace Utilities
 #endif
             }
 
-            void PhysFS::close(void* const handle)
+            void PhysFS::close(void* const handle) const
             {
                 DCHECK(handle != 0);
 
@@ -122,7 +122,7 @@ namespace Utilities
                 }
             }
 
-            size_t PhysFS::read(void* const handle, Memory::byte_pointer const buffer, const size_t size)
+            size_t PhysFS::read(void* const handle, Memory::byte_pointer const buffer, const size_t size) const
             {
 #ifdef DEBUG
                 const size_t bytesRead = PHYSFS_read(static_cast<PHYSFS_File*>(handle), buffer, 1, size);

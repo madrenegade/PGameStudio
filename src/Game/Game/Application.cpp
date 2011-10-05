@@ -48,7 +48,7 @@ namespace Game
         google::InitGoogleLogging(argv[0]);
         google::InstallFailureSignalHandler();
 
-        MemoryTracker::Ptr memoryTracker(new DebugMemoryTracker());
+        std::shared_ptr<MemoryTracker> memoryTracker(new DebugMemoryTracker());
         memoryManager = MemoryManager::create(memoryTracker);
 
         BEGIN_NEW_FRAME(memoryManager);
@@ -145,11 +145,11 @@ namespace Game
                                            1 * KByte, 1 * KByte, 512 * Byte);
         defaultSettings.addOptionsTo(properties.get(), "Default");
 
-        PlatformManager::addOptionsTo(properties);
+        PlatformManager::addOptionsTo(properties.get());
         FileSystem::addOptionsTo(properties.get());
-        Graphics::Window::addOptionsTo(properties);
-        Core::TaskScheduler::addOptionsTo(properties);
-        Scripting::ScriptManager::addOptionsTo(properties);
+        Graphics::Window::addOptionsTo(properties.get());
+        Core::TaskScheduler::addOptionsTo(properties.get());
+        Scripting::ScriptManager::addOptionsTo(properties.get());
 
         properties->parse("settings.ini");
     }
@@ -190,7 +190,7 @@ namespace Game
     {
         VLOG(1) << "Initializing platform manager";
 
-        platformManager = memoryManager->construct(PlatformManager(memoryManager, eventManager, properties));
+        platformManager = memoryManager->construct(PlatformManager(memoryManager.get(), eventManager.get(), properties.get()));
     }
 
     void Application::initializeWindow()
@@ -205,7 +205,7 @@ namespace Game
         VLOG(1) << "Initializing task scheduler";
 
         // cannot use memory manager because tbb task scheduler is copy protected
-        taskScheduler.reset(new Core::TaskScheduler(properties));
+        taskScheduler.reset(new Core::TaskScheduler(properties.get()));
     }
 
     void Application::initializeStateManager()
@@ -218,15 +218,15 @@ namespace Game
     {
         VLOG(1) << "Initializing scene manager";
 
-        sceneManager = memoryManager->construct(Core::SceneManager(memoryManager,
-                                                fileSystem, platformManager, eventManager, properties));
+        sceneManager = memoryManager->construct(Core::SceneManager(memoryManager.get(),
+                                                fileSystem.get(), platformManager.get(), eventManager.get(), properties.get()));
     }
 
     void Application::initializeScriptManager()
     {
         VLOG(1) << "Initializing script manager";
 
-        scriptManager = Scripting::ScriptManagerFactory::create(memoryManager, fileSystem, properties);
+        scriptManager = Scripting::ScriptManagerFactory::create(memoryManager.get(), fileSystem.get(), properties.get());
         properties->set("SCRIPT_MANAGER", scriptManager.get());
 
         Core::Events::EventID setVar = eventManager->registerEvent("SET_SCRIPT_VAR");

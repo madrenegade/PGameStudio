@@ -18,9 +18,9 @@ namespace Utilities
     namespace Memory
     {
 
-        PageManager::Ptr PageManager::create(const size_t maxSize, const size_t pageSize)
+        std::shared_ptr<PageManager> PageManager::create(const size_t maxSize, const size_t pageSize)
         {
-            return Ptr(new DefaultPageManager(maxSize, pageSize));
+            return std::shared_ptr<PageManager>(new DefaultPageManager(maxSize, pageSize));
         }
 
         PageManager::PageManager(const size_t maxSize, const size_t pageSize)

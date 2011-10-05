@@ -32,12 +32,12 @@ namespace Utilities
 
                 virtual size_t getFileSize(void* const handle) const;
 
-                virtual void* openForReading(const char* const path);
+                virtual void* openForReading(const char* const path) const;
                 virtual void* openForWriting(const char* const filename);
 
-                virtual void close(void* const handle);
+                virtual void close(void* const handle) const;
 
-                virtual size_t read(void* const handle, Memory::byte_pointer const buffer, const size_t size);
+                virtual size_t read(void* const handle, Memory::byte_pointer const buffer, const size_t size) const;
                 virtual size_t write(void* const handle, Memory::const_byte_pointer const buffer, const size_t size);
 
                 virtual void setWriteDirectory(const char* const organization, const char* const appName);

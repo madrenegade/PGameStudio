@@ -49,9 +49,9 @@ namespace Platform
         virtual void handleOSEvents() = 0;
         virtual unsigned int getKeysym(const char* const) const = 0;
 
-        virtual std::shared_ptr<Graphics::Window> createWindow(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                const std::shared_ptr<Core::Events::EventManager>& eventManager,
-                const std::shared_ptr<Utilities::Properties::PropertyManager>& properties) = 0;
+        virtual std::shared_ptr<Graphics::Window> createWindow(Utilities::Memory::MemoryManager* const memoryManager,
+                Core::Events::EventManager* const eventManager,
+                const Utilities::Properties::PropertyManager* const properties) = 0;
 
         virtual void centerMouse(const Core::Events::EventID& id, const boost::any& data);
 

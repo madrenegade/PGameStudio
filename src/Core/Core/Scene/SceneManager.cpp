@@ -14,11 +14,11 @@ namespace Core
 {
     const std::string SceneManager::SCENE_PATH("scenes");
 
-    SceneManager::SceneManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
-                               const std::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                               const std::shared_ptr<Platform::PlatformManager>& platform,
-                               const std::shared_ptr<Events::EventManager>& eventManager,
-                               const std::shared_ptr<Utilities::Properties::PropertyManager>& properties)
+    SceneManager::SceneManager(Utilities::Memory::MemoryManager* const memoryManager,
+                               Utilities::IO::FileSystem* const fileSystem,
+                               Platform::PlatformManager* const platform,
+                               Events::EventManager* const eventManager,
+                               Utilities::Properties::PropertyManager* const properties)
         : memoryManager(memoryManager), fileSystem(fileSystem),
           platform(platform), eventManager(eventManager), properties(properties)
     {
@@ -35,7 +35,7 @@ namespace Core
         sceneFile.append(name);
         sceneFile.append(".scene");
 
-        const SceneLoader loader(fileSystem.get(), memoryManager.get(), platform.get(), eventManager.get(), properties.get());
+        const SceneLoader loader(fileSystem, memoryManager, platform, eventManager, properties);
 
         const ScenePtr scene = loader.loadScene(sceneFile.c_str());
 

@@ -28,7 +28,7 @@ namespace Platform
         class XWindow : public Graphics::Window
         {
         public:
-            XWindow(const std::shared_ptr<Utilities::Memory::MemoryManager>& memory,
+            XWindow(Utilities::Memory::MemoryManager* const memory,
                     unsigned int width, unsigned int height, unsigned int bpp, bool fullscreen);
 
             virtual ~XWindow();

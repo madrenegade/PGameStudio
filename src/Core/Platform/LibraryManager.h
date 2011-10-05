@@ -20,7 +20,7 @@ namespace Platform
     class LibraryManager
     {
     public:
-        LibraryManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager);
+        LibraryManager(Utilities::Memory::MemoryManager* const memoryManager);
         ~LibraryManager();
 
         /**
@@ -37,7 +37,7 @@ namespace Platform
     private:
         void unload(Library* const lib);
 
-        const std::shared_ptr<Utilities::Memory::MemoryManager> memoryManager;
+        Utilities::Memory::MemoryManager* const memoryManager;
 
         typedef std::shared_ptr<Library> LibPtr;
 

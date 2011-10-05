@@ -38,7 +38,7 @@ protected:
 
 TEST_F(SmallObjectAllocatorTest, assertBlockSizeIsBigEnough)
 {
-    PageManager::Ptr pageManager = PageManager::create(4 * KByte, 4 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(4 * KByte, 4 * KByte);
 
     EXPECT_THROW( {
         boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 16 * Byte));
@@ -55,7 +55,7 @@ TEST_F(SmallObjectAllocatorTest, allocateShouldCheckThatRequestedSizeFitsInOneBl
 
 TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
 {
-    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(1 * KByte, 1 * KByte);
 
     boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 32 * Byte));
 
@@ -69,7 +69,7 @@ TEST_F(SmallObjectAllocatorTest, getMemoryUsage)
 
 TEST_F(SmallObjectAllocatorTest, getFreeMemory)
 {
-    PageManager::Ptr pageManager = PageManager::create(1 * KByte, 1 * KByte);
+    std::shared_ptr<PageManager> pageManager = PageManager::create(1 * KByte, 1 * KByte);
 
     boost::scoped_ptr<SmallObjectAllocator> ptr(new SmallObjectAllocator(pageManager, 32 * Byte));
 

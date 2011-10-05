@@ -16,7 +16,7 @@ namespace Scripting
     class Allocator
     {
     public:
-        static Utilities::Memory::MemoryManager::Ptr memory;
+        static Utilities::Memory::MemoryManager* memory;
         static Utilities::Memory::pool_id pool;
 
         static void* allocate(void* ud, void* ptr, size_t osize, size_t nsize);

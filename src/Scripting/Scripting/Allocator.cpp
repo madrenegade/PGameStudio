@@ -12,7 +12,7 @@
 
 namespace Scripting
 {
-    Utilities::Memory::MemoryManager::Ptr Allocator::memory;
+    Utilities::Memory::MemoryManager* Allocator::memory;
     Utilities::Memory::pool_id Allocator::pool = 0;
 
     void* Allocator::allocate(void*, void* ptr, size_t oldSize, size_t newSize)

@@ -44,9 +44,9 @@ namespace Platform
             return eventHandler->GetKeysym(name);
         }
 
-        std::shared_ptr<Graphics::Window> Platform::createWindow(const MemoryManager::Ptr& memoryManager,
-                const std::shared_ptr<EventManager>& eventManager,
-                const PropertyManager::Ptr& properties)
+        std::shared_ptr<Graphics::Window> Platform::createWindow(Utilities::Memory::MemoryManager* const memoryManager,
+                Core::Events::EventManager* const eventManager,
+                const Utilities::Properties::PropertyManager* const properties)
         {
             windowWidth = properties->get<unsigned int>("Window.width");
             windowHeight = properties->get<unsigned int>("Window.height");

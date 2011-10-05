@@ -23,15 +23,13 @@ namespace Utilities
         class PageManager
         {
         public:
-            typedef std::shared_ptr<PageManager> Ptr;
-
             /**
              * Create a page manager instance using the specified settings.
              * @param maxSize - The maximum size in bytes all pages are allowed to use.
              * @param pageSize - The size in bytes of one page.
              * @return A smart pointer to the newly created page manager instance.
              */
-            static Ptr create(const size_t maxSize, const size_t pageSize);
+            static std::shared_ptr<PageManager> create(const size_t maxSize, const size_t pageSize);
 
             /**
              * Get the page size.

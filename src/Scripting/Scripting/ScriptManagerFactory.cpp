@@ -20,9 +20,9 @@ using namespace Utilities::IO;
 namespace Scripting
 {
 
-    std::shared_ptr<ScriptManager> ScriptManagerFactory::create(const std::shared_ptr<MemoryManager>& memoryManager,
-            const std::shared_ptr<FileSystem>& fileSystem,
-            const std::shared_ptr<PropertyManager>& properties)
+    std::shared_ptr<ScriptManager> ScriptManagerFactory::create(MemoryManager* const memoryManager,
+            const FileSystem* const fileSystem,
+            const PropertyManager* const properties)
     {
         const std::shared_ptr<Pool> pool = createMemoryPool(properties);
 
@@ -39,7 +39,7 @@ namespace Scripting
     {
     }
 
-    std::shared_ptr<Pool> ScriptManagerFactory::createMemoryPool(const std::shared_ptr<PropertyManager>& properties)
+    std::shared_ptr<Pool> ScriptManagerFactory::createMemoryPool(const PropertyManager* const properties)
     {
         size_t soMax = properties->get<size_t > ("Scripting.memory.smallObjects.maxSize");
         size_t soPage = properties->get<size_t > ("Scripting.memory.smallObjects.pageSize");

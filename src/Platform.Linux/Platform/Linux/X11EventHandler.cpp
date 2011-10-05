@@ -10,12 +10,14 @@
 
 #include <glog/logging.h>
 
+using namespace Core::Events;
+
 namespace Platform
 {
     namespace Linux
     {
 
-        X11EventHandler::X11EventHandler(const std::shared_ptr<Core::Events::EventManager>& eventManager, Display* display,
+        X11EventHandler::X11EventHandler(EventManager* const eventManager, Display* display,
                                          ::Window window)
             : eventManager(eventManager), display(display), window(window), pointerWarped(false)
         {

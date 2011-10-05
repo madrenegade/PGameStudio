@@ -32,7 +32,7 @@ namespace Utilities
              * @return A handle to the \ref Utilities::IO::File object containing
              * the data of the file.
              */
-            File::Handle read(const char* const path);
+            File::Handle read(const char* const path) const;
 
             /**
              * Read a xml file into memory.
@@ -40,7 +40,7 @@ namespace Utilities
              * @return An object of type \ref Utilities::IO::XmlReader to
              * navigate through the xml document.
              */
-            std::shared_ptr<XmlReader> readXml(const char* const path);
+            std::shared_ptr<XmlReader> readXml(const char* const path) const;
 
             /**
              * Read a xml file into memory.
@@ -48,7 +48,7 @@ namespace Utilities
              * @return An object of type \ref Utilities::IO::XmlReader to
              * navigate through the xml document.
              */
-            std::shared_ptr<XmlReader> readXml(const File::Handle& file);
+            std::shared_ptr<XmlReader> readXml(const File::Handle& file) const;
 
             /**
              * Save a file in the writable directory. The writable directory is automatically determined using the settings.
@@ -72,12 +72,12 @@ namespace Utilities
 
             virtual size_t getFileSize(void* const handle) const = 0;
 
-            virtual void* openForReading(const char* const path) = 0;
+            virtual void* openForReading(const char* const path) const = 0;
             virtual void* openForWriting(const char* const filename) = 0;
 
-            virtual void close(void* const handle) = 0;
+            virtual void close(void* const handle) const = 0;
 
-            virtual size_t read(void* const handle, Memory::byte_pointer const buffer, const size_t size) = 0;
+            virtual size_t read(void* const handle, Memory::byte_pointer const buffer, const size_t size) const = 0;
             virtual size_t write(void* const handle, Memory::const_byte_pointer const buffer, const size_t size) = 0;
 
             virtual void setWriteDirectory(const char* const organization, const char* const appName) = 0;

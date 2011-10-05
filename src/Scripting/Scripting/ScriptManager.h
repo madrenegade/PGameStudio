@@ -51,7 +51,7 @@ namespace Scripting
     class ScriptManager
     {
     public:
-        static void addOptionsTo(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+        static void addOptionsTo(Utilities::Properties::PropertyManager* const properties);
 
         void runStartupScript();
 
@@ -83,19 +83,19 @@ namespace Scripting
         typedef std::map<String, ScriptPtr, std::less<String>, ScriptMapEntryAllocator> ScriptMap;
 
         friend class ScriptManagerFactory;
-        ScriptManager(const std::shared_ptr<Utilities::Memory::MemoryManager>& memoryManager,
+        ScriptManager(Utilities::Memory::MemoryManager* const memoryManager,
                       Utilities::Memory::pool_id pool,
-                      const std::shared_ptr<Utilities::IO::FileSystem>& fileSystem,
-                      const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+                      const Utilities::IO::FileSystem* const fileSystem,
+                      const Utilities::Properties::PropertyManager* const properties);
 
         static const std::string SCRIPT_BASE_PATH;
 
         std::string startupScriptName;
 
-        const std::shared_ptr<Utilities::Memory::MemoryManager> memory;
+        Utilities::Memory::MemoryManager* const memory;
         const Utilities::Memory::pool_id pool;
 
-        std::shared_ptr<Utilities::IO::FileSystem> fileSystem;
+        const Utilities::IO::FileSystem* const fileSystem;
 
         std::shared_ptr<lua_State> state;
 

@@ -21,12 +21,12 @@ namespace Scripting
 {
     const std::string ScriptManager::SCRIPT_BASE_PATH("scripts");
 
-    void ScriptManager::addOptionsTo(const PropertyManager::Ptr& properties)
+    void ScriptManager::addOptionsTo(PropertyManager* const properties)
     {
         MemoryPoolSettings scriptPool(1 * KByte, 1 * KByte, 128 * Byte,
                                       1 * KByte, 1 * KByte, 256 * Byte,
                                       1 * KByte, 1 * KByte, 512 * Byte);
-        scriptPool.addOptionsTo(properties.get(), "Scripting");
+        scriptPool.addOptionsTo(properties, "Scripting");
 
         po::options_description options("Scripting options");
 
@@ -37,10 +37,10 @@ namespace Scripting
         properties->addOptions(options);
     }
 
-    ScriptManager::ScriptManager(const MemoryManager::Ptr& memoryManager,
-                                 Utilities::Memory::pool_id pool,
-                                 const std::shared_ptr<FileSystem>& fileSystem,
-                                 const PropertyManager::Ptr& properties)
+    ScriptManager::ScriptManager(MemoryManager* const memoryManager,
+                                 pool_id pool,
+                                 const FileSystem* const fileSystem,
+                                 const PropertyManager* const properties)
         : startupScriptName(properties->get<std::string>("Scripting.startup")),
           memory(memoryManager), pool(pool), fileSystem(fileSystem)
     {

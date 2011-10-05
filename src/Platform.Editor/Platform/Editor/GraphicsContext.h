@@ -20,7 +20,7 @@ namespace Platform
         class GraphicsContext : public Graphics::GraphicsContext
         {
         public:
-            GraphicsContext(const std::shared_ptr<Utilities::Properties::PropertyManager>& properties);
+            GraphicsContext(const Utilities::Properties::PropertyManager* const properties);
             virtual ~GraphicsContext();
 
             virtual void MakeCurrent();
@@ -28,7 +28,7 @@ namespace Platform
             virtual void SwapBuffers();
 
         private:
-            const std::shared_ptr<Utilities::Properties::PropertyManager> properties;
+            const Utilities::Properties::PropertyManager* const properties;
         };
 
     } // namespace Editor

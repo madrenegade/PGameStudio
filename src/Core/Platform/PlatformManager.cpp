@@ -19,12 +19,12 @@ using namespace Utilities::Memory;
 using namespace Utilities::Properties;
 using namespace Core::Events;
 
-typedef std::shared_ptr<Platform::PlatformImpl> (*CreateFn)(const MemoryManager::Ptr&);
+typedef std::shared_ptr<Platform::PlatformImpl> (*CreateFn)(MemoryManager*const);
 
 namespace Platform
 {
 
-    void PlatformManager::addOptionsTo(const PropertyManager::Ptr& properties)
+    void PlatformManager::addOptionsTo(PropertyManager* const properties)
     {
         po::options_description options("Platform options");
 
@@ -36,13 +36,12 @@ namespace Platform
         properties->addOptions(options);
     }
 
-    PlatformManager::PlatformManager(const MemoryManager::Ptr& memory,
-                                     const std::shared_ptr<EventManager>& eventManager,
-                                     const PropertyManager::Ptr& properties)
-        : memoryManager(memory), eventManager(eventManager), properties(properties)
+    PlatformManager::PlatformManager(MemoryManager* const memory,
+                                     EventManager* const eventManager,
+                                     const PropertyManager* const properties)
+        : memoryManager(memory), eventManager(eventManager), properties(properties),
+        libraryManager(memory->construct(LibraryManager(memory)))
     {
-        libraryManager = memory->construct(LibraryManager(memory));
-
         String platformPlugin("Platform.");
         platformPlugin.append(properties->get<std::string > ("Platform.plugin").c_str());
 

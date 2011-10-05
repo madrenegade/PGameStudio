@@ -14,9 +14,9 @@ namespace Utilities
 {
     namespace Memory
     {
-        Pool::Ptr Pool::create(const char* const name, const MemoryPoolSettings& settings)
+        std::shared_ptr<Pool> Pool::create(const char* const name, const MemoryPoolSettings& settings)
         {
-            return Ptr(new Pool(name, settings));
+            return std::shared_ptr<Pool>(new Pool(name, settings));
         }
 
         Pool::Pool(const char* const name, const MemoryPoolSettings& settings)

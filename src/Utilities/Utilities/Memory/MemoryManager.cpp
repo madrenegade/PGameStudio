@@ -14,11 +14,11 @@ namespace Utilities
     namespace Memory
     {
 
-        MemoryManager::Ptr MemoryManager::create(const MemoryTracker::Ptr& memoryTracker)
+        std::shared_ptr<MemoryManager> MemoryManager::create(const std::shared_ptr<MemoryTracker>& memoryTracker)
         {
             verifyPlatformAssumptions();
 
-            Ptr ptr(new MemoryManager(memoryTracker));
+            std::shared_ptr<MemoryManager> ptr(new MemoryManager(memoryTracker));
             STLAllocator<void>::memory = ptr.get();
 
             return ptr;
